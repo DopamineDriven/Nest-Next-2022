@@ -26,7 +26,7 @@ export const clearData = async () => {
 
 
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
-type SeedInferred = UnwrapPromise<ReturnType<typeof clearData>>;
+type CkearInferred = UnwrapPromise<ReturnType<typeof clearData>>;
 
 async function main() {
   const PrismaClient = (await import("@prisma/client")).PrismaClient;
@@ -35,7 +35,7 @@ async function main() {
     await prisma
       .$connect()
       .then(() => console.log("[clearing]: db connection opened"));
-    const s = async (): Promise<SeedInferred> =>
+    const s = async (): Promise<CkearInferred> =>
       await clearData().then(data => {
         console.log(
           `[clearing]: there are ${data.users.count} users, ${data.accounts.count} accounts, ${data.comments.count} comments, ${data.connections.count} connections, ${data.categories.count} categories, ${data.entries.count} entries, ${data.profile.count} profiles, ${data.sessions.count} sessions, and ${data.verificationRequests.count} verification requests remaining`
