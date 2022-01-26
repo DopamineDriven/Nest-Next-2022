@@ -349,7 +349,7 @@ type SeedInferred = UnwrapPromise<ReturnType<typeof seed>>;
 
 async function main() {
   const PrismaClient = (await import("@prisma/client")).PrismaClient;
-  const prisma = new PrismaClient();
+  const prisma = new PrismaClient({log: ["error", "info", "query", "warn"]});
   try {
     await prisma
       .$connect()

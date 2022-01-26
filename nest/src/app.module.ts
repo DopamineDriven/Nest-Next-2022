@@ -4,7 +4,9 @@ import { join } from "path";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import config from "./common/config/config.config";
 import { ApolloConfig, GraphqlConfig } from "./common";
+import { ExpressContext } from "apollo-server-express";
 import {
+  Context as ApolloContext,
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginInlineTrace
 } from "apollo-server-core";
@@ -15,7 +17,6 @@ import { PrismaModule } from "./prisma";
 import { loadSchema } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { ValidationContext } from "graphql";
-// import { ValidationContext } from "graphql";
 
 @Module({
   imports: [
@@ -47,7 +48,10 @@ import { ValidationContext } from "graphql";
           autoSchemaFile: "./src/schema.gql",
           definitions: {
             path: "./src/graphql.schema.ts" || graphqlConfig?.schemaDestination,
-            outputAs: "class"
+            outputAs: "class",
+            emitTypenameField: true,
+            skipResolverArgs: false,
+            enumsAsTypes: false
           },
           typeDefs: [
             join(process.cwd(), "/node_modules/.prisma/client/index.d.ts")
@@ -59,7 +63,7 @@ import { ValidationContext } from "graphql";
           },
           schema: rootSchema,
           validationRules: [
-            (context: ValidationContext) => context.getSchema()
+            (context: ValidationContext) => [context.getSchema()]
           ],
           plugins: [
             ApolloServerPluginLandingPageLocalDefault(),
@@ -71,10 +75,16 @@ import { ValidationContext } from "graphql";
                 ? graphqlConfig.debug
                 : true
               : false,
-          context: (data:any) => {
+          context: ({ req, res }: ApolloContext<ExpressContext>) => {
+            const token = req.header("authorization");
+            const sendToken = res.send(token);
+            const user = req.user;
             return {
-              token: undefined as string | undefined,
-              req: data.req
+              token: token,
+              sendToken,
+              user: user ?? {},
+              req,
+              res
             };
           }
         };
