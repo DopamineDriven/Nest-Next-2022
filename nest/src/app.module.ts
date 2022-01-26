@@ -1,19 +1,21 @@
 import { Module, CacheInterceptor, CacheModule } from "@nestjs/common";
-import { GraphQLModule } from "@nestjs/graphql";
+import { GraphQLModule, GraphQLSchemaHost } from "@nestjs/graphql";
 import { join } from "path";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import config from "./common/config/config.config";
-import {
-  GraphqlConfig
-} from "./common";
+import { ApolloConfig, GraphqlConfig } from "./common";
 import {
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginInlineTrace
 } from "apollo-server-core";
 import { AppController, AppResolver, AppService } from "./app";
-import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
+import { APP_FILTER } from "@nestjs/core";
 import { AllExceptionsFilter } from "./common";
 import { PrismaModule } from "./prisma";
+import { loadSchema } from '@graphql-tools/load';
+import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
+// import { ValidationContext } from "graphql";
+
 
 @Module({
   imports: [
@@ -26,8 +28,14 @@ import { PrismaModule } from "./prisma";
       envFilePath: "./env"
     }),
     GraphQLModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => {
+      useFactory: async (
+        configService: ConfigService
+      ) => {
+        const rootSchema = await loadSchema("./src/schema.gql", {
+          loaders: [new GraphQLFileLoader()]
+        })
         const graphqlConfig = configService.get<GraphqlConfig>("graphql");
+        const apolloConfig = configService.get<ApolloConfig>("apollo");
         return {
           installSubscriptionHandlers: true,
           cors: false,
@@ -35,11 +43,12 @@ import { PrismaModule } from "./prisma";
             dateScalarMode: "isoDate",
             numberScalarMode: "integer"
           },
-          sortSchema: graphqlConfig?.sortSchema ? graphqlConfig.sortSchema : true,
+          sortSchema: graphqlConfig?.sortSchema
+            ? graphqlConfig.sortSchema
+            : true,
           autoSchemaFile: "./src/schema.gql",
           definitions: {
-            path:
-              "./src/graphql.schema.ts" || graphqlConfig?.schemaDestination,
+            path: "./src/graphql.schema.ts" || graphqlConfig?.schemaDestination,
             outputAs: "class"
           },
           typeDefs: [
@@ -47,18 +56,21 @@ import { PrismaModule } from "./prisma";
           ],
           playground: false,
           introspection: true,
-          // apollo: {
-          //   key: process.env.APOLLO_API_KEY
-          // },
+          apollo: {
+            key: apolloConfig?.key ? apolloConfig.key : "",
+          },
+          schema: rootSchema,
+          // validationRules: ((context: ValidationContext) => [context.getSchema()]),
           plugins: [
             ApolloServerPluginLandingPageLocalDefault(),
             ApolloServerPluginInlineTrace()
           ],
-          debug: graphqlConfig?.debug
-            ? graphqlConfig.debug
-            : process.env.NODE_ENV !== "production"
-            ? true
-            : false,
+          debug:
+            process.env.NODE_ENV !== "production"
+              ? graphqlConfig?.debug
+                ? graphqlConfig.debug
+                : true
+              : true ?? false,
           context: (data: any) => {
             return {
               token: undefined as string | undefined,

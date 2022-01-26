@@ -39,6 +39,11 @@ const config: Config = {
     subdomain: process.env.GITHUB_SUBDOMAIN ?? "",
     timeout: 5000,
     serveBearer: process.env.GITHUB_BEARER_TOKEN
+  },
+  apollo: {
+    key: process.env.APOLLO_KEY ?? "",
+    reporting: Boolean.apply(process.env.APOLLO_SCHEMA_REPORTING) ?? true,
+    ref: process.env.APOLLO_GRAPH_REF ?? ""
   }
 };
 

@@ -7,13 +7,14 @@ export type ConfigMapped<T extends keyof ConfigCoalesced> = {
 export const ConfigMappedFunction = ({
   ...props
 }: ConfigMapped<
-  "cors" | "graphql" | "nest" | "security" | "swagger" | "github"
+  "cors" | "apollo" | "graphql" | "nest" | "security" | "swagger" | "github"
 >) => {
-  const { cors, graphql, nest, security, swagger, github } = props;
-  return { cors, graphql, nest, security, swagger, github };
+  const { cors, graphql, nest, security, swagger, github, apollo } = props;
+  return { cors, graphql, nest, security, swagger, github, apollo };
 };
 
 export type ConfigCoalesced = {
+  apollo: ApolloConfig;
   nest: NestConfig;
   cors: CorsConfig;
   swagger: SwaggerConfig;
@@ -62,4 +63,10 @@ export interface GitHubConfig {
   subdomain: string;
   maxRedirects: number;
   timeout: number | null;
+}
+
+export interface ApolloConfig {
+  key: string;
+  ref?: string;
+  reporting: boolean
 }

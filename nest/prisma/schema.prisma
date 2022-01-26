@@ -37,13 +37,11 @@ model User {
   image         String?
   role          Role         @default(USER)
   status        UserStatus?  @default(OFFLINE)
-  password      String       @default("")
-  accessToken   String?
-  refreshToken  String?
-  refreshSecret String?       
+  password      String       @default("") 
   createdAt     DateTime     @default(now())
   updatedAt     DateTime?    @updatedAt
   emailVerified DateTime?
+  accessToken   String?
   profile       Profile?     @relation("UserProfile")
   accounts      Account[]    @relation("UserAccounts")
   entries       Entry[]      @relation("Author")
@@ -104,7 +102,6 @@ model Comment {
 model Connection {
   id           String    @id @default(uuid())
   ownerId      String
-  caseId       String
   firstName    String?
   lastName     String?
   email        String

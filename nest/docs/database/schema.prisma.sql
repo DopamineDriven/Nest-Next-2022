@@ -15,12 +15,10 @@ Table User {
   role Role [not null, default: 'USER']
   status UserStatus [default: 'OFFLINE']
   password String [not null, default: '']
-  accessToken String
-  refreshToken String
-  refreshSecret String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime
   emailVerified DateTime
+  accessToken String
   profile Profile
   accounts Account [not null]
   entries Entry [not null]
@@ -74,7 +72,6 @@ Table Comment {
 Table Connection {
   id String [pk]
   ownerId String [not null]
-  caseId String [not null]
   firstName String
   lastName String
   email String [not null]
