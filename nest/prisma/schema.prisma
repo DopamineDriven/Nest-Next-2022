@@ -1,0 +1,224 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "interactiveTransactions", "filterJson"]
+}
+
+generator dbml {
+  provider            = "prisma-dbml-generator"
+  projectDatabaseType = "PostgreSQL"
+  projectName         = "2022 Nesting"
+  output              = "../docs/database"
+  outputName          = "schema.prisma.sql"
+  manyToMany          = true
+}
+
+generator docs {
+  provider = "node node_modules/prisma-docs-generator"
+  output   = "../docs/prisma-docs-generated"
+}
+
+generator nestgraphql {
+  provider          = "node node_modules/prisma-nestjs-graphql"
+  output            = "../src/.generated/prisma-nestjs-graphql"
+  reExport          = "Directories"
+  tsConfigFilePath  = "../tsconfig.json"
+  outputFilePattern = "{model}/{plural.type}/{name}.{type}.ts"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String       @id @default(uuid())
+  name          String?
+  email         String?      @unique
+  image         String?
+  role          Role         @default(USER)
+  status        UserStatus?  @default(OFFLINE)
+  password      String       @default("")
+  accessToken   String?
+  refreshToken  String?
+  refreshSecret String?       
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime?    @updatedAt
+  emailVerified DateTime?
+  profile       Profile?     @relation("UserProfile")
+  accounts      Account[]    @relation("UserAccounts")
+  entries       Entry[]      @relation("Author")
+  connections   Connection[] @relation("UserConnections")
+  categories    Category[]   @relation("CategoryCreator")
+  comments      Comment[]    @relation("CommentAuthor")
+  sessions      Session[]  @relation("UserSessions")
+
+}
+
+model Profile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  memberSince DateTime @default(now())
+  gender      Gender?  @default(OTHER)
+  pronouns    Pronouns?   @default(NOT_LISTED)
+  coverPhoto  String?
+  lastSeen    DateTime? @updatedAt
+  dob         String?
+  phoneNumber String?
+  occupation  String?
+  city        String?
+  country     String?
+  bio         Json[]
+  activiyFeed Json[]
+  user        User     @relation("UserProfile", fields: [userId], references: [id], onDelete: Cascade)
+  recentActivity Json?
+}
+
+model Session {
+  id           String    @id @default(uuid())
+  sessionToken String    @unique
+  userId       String
+  expires      DateTime
+  iat          DateTime?
+  user         User      @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+
+model Comment {
+  id        String             @id @default(uuid())
+  authorId  String
+  entryId   String
+  body      Json?
+  position  String?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime?          @updatedAt
+  reactions CommentReactions[]
+  entry     Entry              @relation("EntryComments", fields: [entryId], references: [id], onDelete: Cascade)
+  author    User               @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  
+  @@map("comments")
+}
+
+
+model Connection {
+  id           String    @id @default(uuid())
+  ownerId      String
+  caseId       String
+  firstName    String?
+  lastName     String?
+  email        String
+  phoneNumber  String?
+  ip           String?
+  lastModified DateTime? @updatedAt
+  owner        User      @relation("UserConnections", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@map("connections")
+}
+
+model Entry {
+  id            String     @id @default(uuid())
+  title         String     @unique
+  published     Boolean    @default(false)
+  authorId      String
+  content       String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime?  @updatedAt
+  featuredImage String?
+  categories    Category[] @relation("CategoryToEntry", fields: [categoryId], references: [id])
+  author        User       @relation("Author", fields: [authorId], references: [id], onDelete: Cascade)
+  comments      Comment[]  @relation("EntryComments")
+  categoryId    String?
+
+  @@map("entries")
+}
+
+model Account {
+  id                 String  @id @default(uuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  scope             String?
+  access_token       String?
+  expires_at         Int?
+  id_token           String?
+  token_type         String?
+  oauth_token        String?
+  oauth_token_secret String?
+  refresh_token      String?
+  refresh_secret     String?
+  session_state      String?
+  user               User    @relation("UserAccounts", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  creatorId String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  name      String    @unique
+  entries   Entry[]   @relation("CategoryToEntry", fields: [entryId], references: [id])
+  entryId   String?
+  creator   User      @relation("CategoryCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@map("categories")
+}
+
+/// Passwordless login for email providers
+model VerificationToken {
+  id         String   @id @default(uuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  MAINTAINER
+  USER
+}
+enum CommentReactions {
+  LIKE
+  LOVE
+  LAUGH
+  TEARS
+  DISLIKE
+  ANGRY
+  CONFUSED
+  CARE
+  WOW
+  PARROT
+  ROCKET
+}
+
+enum Pronouns {
+  HE_HIM_HIS
+  SHE_HER_HERS
+  NOT_LISTED
+  PREFER_NOT_TO_SAY
+  THEY_THEM_THEIRS
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  UNCERTAIN
+}
+
+enum UserStatus {
+  ONLINE
+  OFFLINE
+  SUSPENDED
+  DELETED
+  BANNED
+  DEACTIVATED
+}

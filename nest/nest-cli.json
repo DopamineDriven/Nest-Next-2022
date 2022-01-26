@@ -1,0 +1,52 @@
+{
+  "language": "ts",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "projects": {
+    "nesting": {
+      "type": "application",
+      "entryFile": "main",
+      "root": "src"
+    }
+  },
+  "compilerOptions": {
+    "tsConfigPath": "tsconfig.json",
+    "plugins": [
+      {
+        "name": "@nestjs/swagger",
+        "options": {
+          "classValidatorShim": false,
+          "introspectComments": true
+        }
+      },
+      {
+        "name": "@nestjs/graphql",
+        "options": {
+          "typeFileNameSuffcis": [
+            ".input.ts",
+            ".config.ts",
+            ".enum.ts",
+            ".dao.ts",
+            ".filter.ts",
+            ".interface.ts",
+            ".entity.ts",
+            ".module.ts",
+            ".helper.ts",
+            ".decorator.ts",
+            ".guard.ts",
+            ".schema.ts",
+            ".model.ts",
+            ".output.ts",
+            ".args.ts",
+            ".union.ts",
+            ".service.ts",
+            ".strategy.ts",
+            ".resolver.ts",
+            ".plugin.ts"
+          ],
+          "introspectComments": true
+        }
+      }
+    ]
+  }
+}

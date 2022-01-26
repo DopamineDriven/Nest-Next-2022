@@ -1,0 +1,42 @@
+FROM node:16 as base
+
+WORKDIR /app
+COPY package.json \
+.env \
+  yarn.lock \
+  ./
+COPY prisma ./prisma/
+RUN yarn --production
+RUN curl -sf https://gobinaries.com/tj/node-prune | sh
+RUN node-prune
+# lint and formatting configs are commented out
+# uncomment if you want to add them into the build process
+
+FROM base AS dev
+COPY nest-cli.json \
+  tsconfig.* \
+#  .eslintrc.json \
+#  .prettierrc.yaml \
+  ./
+# bring in src from context
+COPY ./src/ ./src/
+COPY ./prisma/ ./prisma/
+RUN yarn
+# RUN yarn lint
+RUN yarn prisma:generate && yarn nest build
+
+# use one of the smallest images possible
+FROM node:16-alpine
+# get package.json from base
+COPY --from=BASE /app/package.json ./
+COPY --from=BASE /app/.env ./
+# get the dist back
+COPY --from=DEV /app/dist/ ./dist/
+COPY --from=DEV /app/prisma/ ./prisma/
+# get the node_modules from the intial cache
+# COPY --from=BASE /app/node_modules/.prisma/client/index.d.ts ./node_modules/.prisma/client/index.d.ts
+COPY --from=BASE /app/node_modules/ ./node_modules/
+# expose application port
+EXPOSE 3000
+# start
+CMD ["yarn", "start:prod"]

@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  db:
+    image: "postgres:13"
+    restart: "always"
+    container_name: "pg-nest-db"
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    volumes:
+      - "../../Docker/2022/pgnestdb:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    privileged: true
+volumes:
+  postgres:
+    name: pg-nest-db

@@ -5,5 +5,8 @@
   "repository": "git@github.com:DopamineDriven/2022.git",
   "author": "Andrew Ross <andrew.simpson.ross@gmail.com>",
   "license": "MIT",
-  "private": false
+  "private": true,
+  "dependencies": {
+    "concurrently": "^7.0.0"
+  }
 }

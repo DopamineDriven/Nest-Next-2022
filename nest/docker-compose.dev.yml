@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  nest-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: nest-api
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    env_file:
+      - .env
+  db:
+    image: "postgres:13"
+    restart: "always"
+    container_name: "pg-nest-dev"
+    ports:
+      - 5432:5432
+    env_file:
+      - ".env"
+    volumes:
+      - "../../Docker/2022/pgdatadev:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    privileged: true
+volumes:
+  postgres:
+    name: pg-nest-dev

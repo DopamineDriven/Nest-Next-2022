@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+  rcli:
+    image: redis:latest
+    links:
+      - redis
+    command: redis-cli -h redis
+    depends_on:
+      - db
+    env_file:
+      - .env
+  db:
+    image: "postgres:13"
+    restart: "always"
+    container_name: "pg-redis-nest"
+    ports:
+      - 5432:5432
+    env_file:
+      - ".env"
+    volumes:
+      # keeps the docker __dir out of the codebase
+      - "../../Docker/2022/pgredisnest:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    privileged: true
+volumes:
+  postgres:
+    name: pg-redis-nest

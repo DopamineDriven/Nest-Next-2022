@@ -102,3 +102,11 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Nest
+nest/src/.generated/introspection/
+nest/src/.generated/prisma-nestjs-graphql
+nest/src/.generated/schema-ast.graphql
+nest/docs/prisma-docs-generated
+nest/.env.local
+# Next
