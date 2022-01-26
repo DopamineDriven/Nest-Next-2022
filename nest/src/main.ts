@@ -100,7 +100,7 @@ async function bootstrap() {
   const prismaService: PrismaService = app.get(PrismaService);
   prismaService.enableShutdownHooks(app)
   await app.listen(process.env.PORT || nestConfig?.port || 3000);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  console.log(`[swagger]: ${await app.getUrl()}/api \n[graphql]: ${await app.getUrl()}/graphql`);
 }
 
 bootstrap();

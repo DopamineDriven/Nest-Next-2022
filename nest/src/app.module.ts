@@ -1,5 +1,5 @@
-import { Module, CacheInterceptor, CacheModule } from "@nestjs/common";
-import { GraphQLModule, GraphQLSchemaHost } from "@nestjs/graphql";
+import { Module, CacheModule } from "@nestjs/common";
+import { GraphQLModule } from "@nestjs/graphql";
 import { join } from "path";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import config from "./common/config/config.config";
@@ -12,10 +12,10 @@ import { AppController, AppResolver, AppService } from "./app";
 import { APP_FILTER } from "@nestjs/core";
 import { AllExceptionsFilter } from "./common";
 import { PrismaModule } from "./prisma";
-import { loadSchema } from '@graphql-tools/load';
+import { loadSchema } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
+import { ValidationContext } from "graphql";
 // import { ValidationContext } from "graphql";
-
 
 @Module({
   imports: [
@@ -28,12 +28,10 @@ import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
       envFilePath: "./env"
     }),
     GraphQLModule.forRootAsync({
-      useFactory: async (
-        configService: ConfigService
-      ) => {
+      useFactory: async (configService: ConfigService) => {
         const rootSchema = await loadSchema("./src/schema.gql", {
           loaders: [new GraphQLFileLoader()]
-        })
+        });
         const graphqlConfig = configService.get<GraphqlConfig>("graphql");
         const apolloConfig = configService.get<ApolloConfig>("apollo");
         return {
@@ -57,10 +55,12 @@ import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
           playground: false,
           introspection: true,
           apollo: {
-            key: apolloConfig?.key ? apolloConfig.key : "",
+            key: apolloConfig?.key ? apolloConfig.key : ""
           },
           schema: rootSchema,
-          // validationRules: ((context: ValidationContext) => [context.getSchema()]),
+          validationRules: [
+            (context: ValidationContext) => context.getSchema()
+          ],
           plugins: [
             ApolloServerPluginLandingPageLocalDefault(),
             ApolloServerPluginInlineTrace()
@@ -70,8 +70,8 @@ import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
               ? graphqlConfig?.debug
                 ? graphqlConfig.debug
                 : true
-              : true ?? false,
-          context: (data: any) => {
+              : false,
+          context: (data:any) => {
             return {
               token: undefined as string | undefined,
               req: data.req
