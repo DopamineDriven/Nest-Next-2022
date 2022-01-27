@@ -1,21 +1,21 @@
 import { BigIntResolver } from 'graphql-scalars';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, InterfaceType, ObjectType } from '@nestjs/graphql';
 
-@ObjectType()
+@InterfaceType()
 export class JwtPayload {
   /**
    * User Id
    */
   @Field(_type => String, { nullable: true })
-  userId?: string;
+  userId: string;
   /**
    * Issued at
    */
   @Field(_type => BigIntResolver, { nullable: true })
-   iat?: number;
+   iat: number;
    /**
     * Expiration time
     */
   @Field(_type => BigIntResolver, { nullable: true })
-   exp?: number;
+   exp: number;
 }

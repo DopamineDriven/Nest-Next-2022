@@ -1,0 +1,67 @@
+overwrite: true
+schema: "./src/schema.gql"
+documents: "./graphql/**/*.graphql"
+generates:
+  src/.generated/nest/graphql.nest.ts:
+    hooks:
+      afterOneFileWrite:
+        - prettier --write
+    plugins:
+      - "@madsci/graphql-codegen-nestjs":
+          decoratorName:
+            type: "ObjectType"
+            interface: "InterfaceType"
+            arguments: "ArgsType"
+            field: "Field"
+            input: "InputType"
+          sort: true
+      - typescript-operations:
+          dedupeFragments: true
+      - typescript-document-nodes:
+          scalars:
+            Json: Prisma.Json
+            Date: Date
+            PhoneNumber: String
+            ID: string
+            Decimal: Prisma.Decimal
+      - typescript-resolvers:
+          useIndexSignature: true
+          defaultMapper: DeepPartial<{T}>
+          optionalInfoArgument: true
+          contextType: PrismaService
+          makeResolverTypeCallable: true
+          noSchemaStitching: false
+        config:
+          maybeValue: "T extends PromiseLike<infer U> ? Promise<U | null> : T | null"
+      - add:
+          content:
+            - "import {Prisma} from '@prisma/client';"
+            - "import { GraphQLDecimal } from 'prisma-graphql-type-decimal';"
+            - "import graphqlTypeJson from 'graphql-type-json';"
+            - "import { DeepPartial } from 'utility-types';"
+            - "import { InputMaybe, Exact } from '../../common/types/support.type'"
+            - "import { PrismaService } from '../../prisma/prisma.service'"
+            - "import { GraphQLJSON, GraphQLDateTime, GraphQLUUID, GraphQLPhoneNumber, PhoneNumberResolver } from 'graphql-scalars'"
+    config:
+      scalars:
+        Json: Prisma.Json
+        Date: Date
+        Decimal: Prisma.Decimal
+        PhoneNumber: String
+        ID: string
+
+  src/.generated/introspection/introspection.schema.json:
+    hooks:
+      afterOneFileWrite:
+        - prettier --write
+    plugins:
+      - "introspection"
+  src/.generated/ast/graphql.schema.graphql:
+    hooks:
+      afterOneFileWrite:
+        - prettier --write
+    plugins:
+      - "schema-ast"
+    config:
+      sort: true
+      includeIntrospectionTypes: true

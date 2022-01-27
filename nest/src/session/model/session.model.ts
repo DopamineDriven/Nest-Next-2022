@@ -1,7 +1,7 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { User } from '../../user';
+import { User } from '../../user/model/user.model';
 
-ObjectType("Session")
+@ObjectType("Session")
 export class Session {
   @Field(_type => ID, { nullable: false })
   id!: string;

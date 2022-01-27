@@ -1,17 +1,16 @@
 import { UserStatus } from "../../.generated/prisma-nestjs-graphql/prisma/enums/user-status.enum";
 import { Role } from "../../.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
 import { Field, HideField, ID, ObjectType } from "@nestjs/graphql";
-import { Connection } from "../../connection";
-import { Comment } from "../../comment";
-import { Account } from "../../.generated/prisma-nestjs-graphql/account/models/account.model";
-import { Entry } from "../../entry";
-import { Session } from "../../session";
+import { Connection } from "../../connection/model/connection.model";
+import { Comment } from "../../comment/model/comment.model";
+import { Account } from "../../account/model/account.model";
+import { Entry } from "../../entry/model/entry.model";
+import { Session } from "../../session/model/session.model";
 import { UserCount } from "../../.generated/prisma-nestjs-graphql/user/outputs/user-count.output";
-import { Profile } from "../../profile";
-import { Category } from "../../category";
+import { Profile } from "../../profile/model/profile.model";
+import { Category } from "../../category/model/category.model";
 @ObjectType("User")
 export class User {
-  __typename: "User";
   /** User Shape -- note, prisma uses uuid v4 -- uuid will be valid ACROSS all databases -- no conflicts */
   @Field(() => ID, {
     name: "id",
@@ -24,7 +23,7 @@ export class User {
   name?: string | null;
 
   @Field(() => String, { nullable: true })
-  email: string | null;
+  email!: string | null;
 
   @Field(() => String, { nullable: true })
   image?: string | null;
@@ -33,9 +32,9 @@ export class User {
   role?: keyof typeof Role;
 
   @Field(() => UserStatus, {
-    nullable: true
+    defaultValue: UserStatus.OFFLINE
   })
-  department?: keyof typeof UserStatus;
+  status!: keyof typeof UserStatus;
 
   @HideField()
   @Field(() => String, { nullable: false, defaultValue: "", name: "password" })
@@ -78,6 +77,9 @@ export class User {
 
   @Field(() => [Category], {nullable:true})
   categories?: Array<Category>;
+
+  @Field(_type => String, { nullable: true })
+  accessToken?: string;
 
   @Field(() => UserCount, { nullable: false })
   _count?: UserCount;

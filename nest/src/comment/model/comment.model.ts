@@ -1,10 +1,10 @@
 import { CommentReactions } from "../../.generated/prisma-nestjs-graphql/prisma/enums/comment-reactions.enum";
 import { ObjectType, Field, ID } from "@nestjs/graphql";
-import { User } from "../../user";
+import { User } from "../../user/model/user.model";
 import { Entry } from "../../entry";
 import { JSONObjectResolver } from "graphql-scalars";
 
-ObjectType("Comment")
+@ObjectType("Comment")
 export class Comment {
   @Field(() => ID, {nullable:false})
   id!: string;

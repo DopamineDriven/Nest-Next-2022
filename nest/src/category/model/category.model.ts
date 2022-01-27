@@ -1,7 +1,7 @@
 import { ObjectType, Field, ID } from "@nestjs/graphql";
-import { User } from "../../user";
+import { User } from "../../user/model/user.model";
 import { CategoryCount } from "../../.generated/prisma-nestjs-graphql/category/outputs/category-count.output";
-import { Entry } from "../../entry";
+import { Entry } from "../../entry/model/entry.model";
 
 @ObjectType("Category")
 export class Category {

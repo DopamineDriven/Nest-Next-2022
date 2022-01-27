@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { PhoneNumberResolver } from "graphql-scalars";
-import { User } from "../../user";
+import { User } from "../../user/model/user.model";
 
 @ObjectType("Connection")
 export class Connection {

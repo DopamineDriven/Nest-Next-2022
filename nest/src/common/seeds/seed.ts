@@ -317,7 +317,7 @@ export async function seed<T extends PrismaClient>(prisma: T) {
         },
         accounts: {
           create: [
-            {
+            { 
               provider: "custom",
               providerAccountId: `2022CustomAuth:${standardE164}`,
               type: "auth",

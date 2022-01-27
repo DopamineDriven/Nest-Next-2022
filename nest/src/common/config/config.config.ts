@@ -26,7 +26,7 @@ const config: Config = {
     sortSchema: true
   },
   security: {
-    expiresIn: "10m",
+    expiresIn: "1d",
     refreshIn: "7d",
     bcryptSaltOrRound: 10,
     refreshSecret: process.env.JWT_REFRESH_SECRET ?? ""

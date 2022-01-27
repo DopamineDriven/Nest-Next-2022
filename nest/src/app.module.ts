@@ -3,20 +3,25 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { join } from "path";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import config from "./common/config/config.config";
-import { ApolloConfig, GraphqlConfig } from "./common";
+import { ApolloConfig, GraphqlConfig } from "./common/config/config-interfaces.config";
 import { ExpressContext } from "apollo-server-express";
 import {
   Context as ApolloContext,
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginInlineTrace
 } from "apollo-server-core";
-import { AppController, AppResolver, AppService } from "./app";
+import { AppController } from "./app/app.controller";
+import { AppService } from "./app/app.service";
+import { AppResolver } from "./app/app.resolver";
 import { APP_FILTER } from "@nestjs/core";
-import { AllExceptionsFilter } from "./common";
-import { PrismaModule } from "./prisma";
+import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
+import { PrismaModule } from "./prisma/prisma.module";
 import { loadSchema } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
-import { ValidationContext } from "graphql";
+import { PasswordModule } from "./password/password.module";
+import { AuthJwtModule } from "./auth/auth-jwt.module";
+import { UserModule } from "./user/user.module";
+import { PaginationModule } from "./pagination/pagination.module";
 
 @Module({
   imports: [
@@ -62,9 +67,9 @@ import { ValidationContext } from "graphql";
             key: apolloConfig?.key ? apolloConfig.key : ""
           },
           schema: rootSchema,
-          validationRules: [
-            (context: ValidationContext) => [context.getSchema()]
-          ],
+          // validationRules: [
+          //   (context: ValidationContext) => [context.getSchema()]
+          // ],
           plugins: [
             ApolloServerPluginLandingPageLocalDefault(),
             ApolloServerPluginInlineTrace()
@@ -75,23 +80,33 @@ import { ValidationContext } from "graphql";
                 ? graphqlConfig.debug
                 : true
               : false,
-          context: ({ req, res }: ApolloContext<ExpressContext>) => {
-            const token = req.header("authorization");
-            const sendToken = res.send(token);
-            const user = req.user;
-            return {
-              token: token,
-              sendToken,
-              user: user ?? {},
-              req,
-              res
-            };
-          }
+          context: (data: any) => {
+                return {
+                  token: undefined as string | undefined,
+                  req: data.req
+                };
+              }
+          // context: ({ req, res }: ApolloContext<ExpressContext>) => {
+          //   const token = req.header("authorization");
+          //   const sendToken = res.send(token);
+          //   const user = req.user;
+          //   return {aec59ec5-db65-4fe6-a608-b1e61d646322
+          //     token: token,
+          //     sendToken,
+          //     user: user ?? {},
+          //     req,
+          //     res
+          //   };
+          // }
         };
       },
       inject: [ConfigService]
     }),
-    PrismaModule
+    PrismaModule,
+    PasswordModule,
+    AuthJwtModule,
+    UserModule,
+    PaginationModule
   ],
   controllers: [AppController],
   providers: [

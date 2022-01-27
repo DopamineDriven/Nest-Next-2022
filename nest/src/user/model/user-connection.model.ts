@@ -1,12 +1,12 @@
-import { User } from ".";
+import { User } from "./user.model";
 import { Field, registerEnumType, Int } from "@nestjs/graphql";
-import { UserOrderField } from "..";
+import { UserOrderField } from "../inputs/user-order.input";
 import {
   ConnectionEdgeObjectType,
   ConnectionFilterArgsType,
   ConnectionObjectType,
   ConnectionOrderingInputType
-} from "../../common";
+} from "../../common/pagination/pagination";
 
 export enum UserOrderByRelevance {
   id = "id",

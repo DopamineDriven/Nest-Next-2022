@@ -1,19 +1,18 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, InterfaceType, ObjectType } from "@nestjs/graphql";
 import { JwtSigningAlgorithm } from "../enums";
 
-@ObjectType()
+@InterfaceType()
 export class JwtHeaders {
   /**
    * Signing Algorithm
    */
   @Field(_type => JwtSigningAlgorithm, {
-    nullable: true,
     defaultValue: JwtSigningAlgorithm.None
   })
-  alg?: keyof typeof JwtSigningAlgorithm;
+  alg: keyof typeof JwtSigningAlgorithm;
   /**
    * Strategy Used
    */
-  @Field(_type => String, { nullable: true })
-  typ?: string;
+  @Field(_type => String)
+  typ: string;
 }

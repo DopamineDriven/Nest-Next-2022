@@ -2,7 +2,293 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Account {
+  access_token: String
+  expires_at: Int
+  id: ID!
+  id_token: String
+  oauth_token: String
+  oauth_token_secret: String
+  provider: String!
+  providerAccountId: String!
+  refresh_secret: String
+  refresh_token: String
+  scope: String
+  session_state: String
+  token_type: String
+  type: String!
+  user: User!
+  userId: String!
+}
+
+type Auth {
+  accessToken: String!
+  refreshToken: String!
+  user: User!
+}
+
+type Category {
+  _count: CategoryCount!
+  createdAt: DateTime
+  creator: User!
+  creatorId: String!
+  entries: [Entry!]
+  entryId: String
+  id: ID!
+  name: String!
+  updatedAt: DateTime
+}
+
+type CategoryCount {
+  entries: Int!
+}
+
+input ChangePasswordInput {
+  newPassword: String!
+  oldPassword: String!
+}
+
+type Comment {
+  author: User!
+  authorId: String!
+  body: JSONObject
+  createdAt: DateTime!
+  entry: Entry!
+  entryId: String!
+  id: ID!
+  position: String
+  reactions: [CommentReactions!]
+  updatedAt: DateTime
+}
+
+enum CommentReactions {
+  ANGRY
+  CARE
+  CONFUSED
+  DISLIKE
+  LAUGH
+  LIKE
+  LOVE
+  PARROT
+  ROCKET
+  TEARS
+  WOW
+}
+
+type Connection {
+  email: String!
+  firstName: String
+  id: ID!
+  ip: String
+  lastModified: DateTime
+  lastName: String
+  owner: User!
+  ownerId: String!
+  phoneNumber: PhoneNumber
+}
+
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Entry {
+  _count: EntryCount!
+  author: User!
+  authorId: String!
+  categories: [Category!]
+  categoryId: String
+  comments: [Comment!]
+  content: String
+  createdAt: DateTime!
+  featuredImage: String
+  id: ID!
+  published: Boolean
+  title: String
+  updatedAt: DateTime
+}
+
+type EntryCount {
+  categories: Int!
+  comments: Int!
+}
+
+enum Gender {
+  FEMALE
+  MALE
+  OTHER
+  UNCERTAIN
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+input LoginInput {
+  email: String
+  password: String
+}
+
+type Mutation {
+  changePassword(data: ChangePasswordInput!): User!
+  getUserFromAccessToken(token: String!): User!
+  login(data: LoginInput!): Auth!
+  refreshToken(token: String!): Token!
+  signup(data: SignupInput!): Auth!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+"""
+A field whose value conforms to the standard E.164 format as specified in: https://en.wikipedia.org/wiki/E.164. Basically this is +17895551234.
+"""
+scalar PhoneNumber
+
+type Profile {
+  activiyFeed: [JSONObject!]
+  bio: [JSONObject!]
+  city: String
+  country: String
+  coverPhoto: String
+  dob: Date
+  gender: Gender
+  id: ID!
+  lastSeen: DateTime
+  memberSince: DateTime!
+  occupation: String
+  phoneNumber: PhoneNumber
+  pronouns: Pronouns
+  recentActivity: JSONObject
+  user: User!
+  userId: String!
+}
+
+enum Pronouns {
+  HE_HIM_HIS
+  NOT_LISTED
+  PREFER_NOT_TO_SAY
+  SHE_HER_HERS
+  THEY_THEM_THEIRS
+}
+
 type Query {
+  entriesByStatus(isPublished: Boolean!): [User!]!
   hello(name: String!): String!
   helloWorld: String!
+  listUsers(after: String, before: String, first: Int = 10, last: Int, orderBy: UserOrder, query: String, role: Role = USER, skip: Int): UserConnection!
+  me(accessToken: String!): User!
+  userById(id: String!): User!
+  userByRelayId: User!
+}
+
+enum Role {
+  ADMIN
+  MAINTAINER
+  SUPERADMIN
+  USER
+}
+
+type Session {
+  expires: DateTime
+  iat: DateTime
+  id: ID!
+  sessionToken: String
+  user: User!
+  userId: String!
+}
+
+input SignupInput {
+  accessToken: String
+  email: String!
+  image: String
+  name: String
+  password: String!
+  role: Role = USER
+  status: UserStatus = OFFLINE
+}
+
+enum SortOrder {
+  asc
+  desc
+}
+
+type Token {
+  """JWT access token"""
+  accessToken: String!
+
+  """JWT refresh token"""
+  refreshToken: String!
+}
+
+type User {
+  _count: UserCount!
+  accessToken: String
+  accounts: [Account!]
+  categories: [Category!]
+  comments: [Comment!]
+  connections: [Connection!]
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  email: String
+  emailVerified: DateTime
+  entries: [Entry!]
+
+  """
+  User Shape -- note, prisma uses uuid v4 -- uuid will be valid ACROSS all databases -- no conflicts
+  """
+  id: ID!
+  image: String
+  name: String
+  password: String!
+  profile: Profile
+  role: Role!
+  sessions: [Session!]
+  status: UserStatus!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime
+}
+
+type UserConnection {
+  edges: [UserEdge!]!
+  pageInfo: PageInfo!
+}
+
+type UserCount {
+  accounts: Int!
+  categories: Int!
+  comments: Int!
+  connections: Int!
+  entries: Int!
+  sessions: Int!
+}
+
+type UserEdge {
+  cursor: String!
+  node: User!
+}
+
+input UserOrder {
+  direction: SortOrder!
+}
+
+enum UserStatus {
+  BANNED
+  DEACTIVATED
+  DELETED
+  OFFLINE
+  ONLINE
+  SUSPENDED
 }

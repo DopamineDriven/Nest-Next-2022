@@ -1,5 +1,5 @@
 import {  DateResolver, JSONObjectResolver, JSONResolver, PhoneNumberResolver } from "graphql-scalars";
-import { User } from "../../user";
+import { User } from "../../user/model/user.model";
 import { Field, ObjectType, ID } from "@nestjs/graphql";
 import { Gender } from "../../.generated/prisma-nestjs-graphql/prisma/enums/gender.enum";
 import { Pronouns } from "../../.generated/prisma-nestjs-graphql/prisma/enums/pronouns.enum";
