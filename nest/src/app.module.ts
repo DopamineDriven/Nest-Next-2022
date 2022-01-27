@@ -1,9 +1,12 @@
 import { Module, CacheModule } from "@nestjs/common";
-import { GraphQLModule } from "@nestjs/graphql";
+import { GraphQLExecutionContext, GraphQLModule } from "@nestjs/graphql";
 import { join } from "path";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import config from "./common/config/config.config";
-import { ApolloConfig, GraphqlConfig } from "./common/config/config-interfaces.config";
+import {
+  ApolloConfig,
+  GraphqlConfig
+} from "./common/config/config-interfaces.config";
 import { ExpressContext } from "apollo-server-express";
 import {
   Context as ApolloContext,
@@ -22,7 +25,15 @@ import { PasswordModule } from "./password/password.module";
 import { AuthJwtModule } from "./auth/auth-jwt.module";
 import { UserModule } from "./user/user.module";
 import { PaginationModule } from "./pagination/pagination.module";
+import { PrismaService } from "./prisma/prisma.service";
+import { GraphQLResolveInfo } from "graphql";
+import { User } from "./user/model/user.model";
 
+export type Context = {
+  req?: ExpressContext["req"];
+  token?: string;
+  res?: ExpressContext["res"];
+};
 @Module({
   imports: [
     CacheModule.register({
@@ -80,24 +91,18 @@ import { PaginationModule } from "./pagination/pagination.module";
                 ? graphqlConfig.debug
                 : true
               : false,
-          context: (data: any) => {
-                return {
-                  token: undefined as string | undefined,
-                  req: data.req
-                };
+          context: ({ req, res }: ApolloContext<ExpressContext>): Context => {
+            const token = req.headers.authorization;
+            if (token !== undefined) {
+              console.log(token ?? "still no token")
+              return { token: token, req, res };
+            } else {
+              return {
+                req,
+                res
               }
-          // context: ({ req, res }: ApolloContext<ExpressContext>) => {
-          //   const token = req.header("authorization");
-          //   const sendToken = res.send(token);
-          //   const user = req.user;
-          //   return {aec59ec5-db65-4fe6-a608-b1e61d646322
-          //     token: token,
-          //     sendToken,
-          //     user: user ?? {},
-          //     req,
-          //     res
-          //   };
-          // }
+            }
+          }
         };
       },
       inject: [ConfigService]

@@ -1,4 +1,5 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
+import { JwtSigningAlgorithm } from '../../auth/enums/jwt-signing-algorithm.enum';
 import { User } from '../../user/model/user.model';
 
 @ObjectType("Session")
@@ -6,18 +7,39 @@ export class Session {
   @Field(_type => ID, { nullable: false })
   id!: string;
 
-  @Field(() => String, { nullable:true })
-  sessionToken?: string;
+  @Field(() => String, { nullable: false })
+  accessToken!: string;
 
   @Field(() => String, { nullable:false })
   userId!: string;
 
-  @Field(() => Date, { nullable:true })
-  expires?: Date;
+  @Field(() => Int, { nullable:true })
+  exp: number | null
 
-  @Field(() => Date, { nullable:true })
-  iat?: Date | null;
+  @Field(() => Int, { nullable:true })
+  iat: number | null;
 
-  @Field(() => User, { nullable:false })
-  user!: User;
+  @Field(() => String, { nullable: true })
+  alg: string | null;
+
+  @Field(() => String, { nullable: true })
+  refreshToken: string | null
+
+  @Field(() => Date, { nullable: true })
+  lastVerified: Date | null;
+
+  @Field(() => String, { nullable: true })
+  tokenState: string | null;
+
+  @Field(() => String, { nullable: true })
+  signature: string | null;
+
+  @Field(() => String, { nullable: true })
+  provider: string | null;
+
+  @Field(() => [String], { nullable: true })
+  scopes: string[] | null;
+
+  @Field(() => User, { nullable:true })
+  user!: User | null;
 }

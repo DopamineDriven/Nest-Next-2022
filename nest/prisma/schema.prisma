@@ -49,8 +49,8 @@ model User {
   categories    Category[]   @relation("CategoryCreator")
   comments      Comment[]    @relation("CommentAuthor")
   sessions      Session[]  @relation("UserSessions")
-
 }
+
 
 model Profile {
   id          String   @id @default(uuid())
@@ -72,11 +72,18 @@ model Profile {
 }
 
 model Session {
-  id           String    @id @default(uuid())
-  sessionToken String    @unique
-  userId       String
-  expires      DateTime
-  iat          DateTime?
+  id            String @default(uuid())
+  userId        String
+  accessToken   String @unique
+  alg           String?
+  refreshToken  String? 
+  signature     String?
+  scopes        String[]
+  provider      String?
+  tokenState    String?
+  lastVerified  DateTime? @updatedAt
+  iat           Int?
+  exp           Int?
   user         User      @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")

@@ -1,0 +1,4 @@
+fragment JwtDecodedPartial on JwtDecoded {
+  signature
+  __typename
+}

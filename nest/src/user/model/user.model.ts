@@ -32,7 +32,7 @@ export class User {
   @Field(() => UserStatus, {
     defaultValue: UserStatus.OFFLINE
   })
-  status!: keyof typeof UserStatus;
+  status!: keyof typeof UserStatus | null;
 
   @HideField()
   @Field(() => String, { nullable: false, defaultValue: "", name: "password" })
@@ -77,7 +77,7 @@ export class User {
   categories?: Array<Category>;
 
   @Field(_type => String, { nullable: true })
-  accessToken?: string;
+  accessToken: string | null;
 
   @Field(() => UserCount, { nullable: false })
   _count?: UserCount;

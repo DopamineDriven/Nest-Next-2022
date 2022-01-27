@@ -7,6 +7,25 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export enum AlgorithmType {
+    ES256 = "ES256",
+    ES256K = "ES256K",
+    ES384 = "ES384",
+    ES512 = "ES512",
+    Ed448 = "Ed448",
+    Ed25519 = "Ed25519",
+    HS256 = "HS256",
+    HS384 = "HS384",
+    HS512 = "HS512",
+    None = "None",
+    PS256 = "PS256",
+    PS384 = "PS384",
+    PS512 = "PS512",
+    RS256 = "RS256",
+    RS384 = "RS384",
+    RS512 = "RS512"
+}
+
 export enum CommentReactions {
     ANGRY = "ANGRY",
     CARE = "CARE",
@@ -105,7 +124,14 @@ export class Auth {
     __typename?: 'Auth';
     accessToken: string;
     refreshToken: string;
-    user: User;
+    session?: Nullable<Session[]>;
+    user?: Nullable<User>;
+}
+
+export class AuthDetailed {
+    __typename?: 'AuthDetailed';
+    auth?: Nullable<Auth>;
+    jwt?: Nullable<JwtDecoded>;
 }
 
 export class Category {
@@ -176,12 +202,32 @@ export class EntryCount {
     comments: number;
 }
 
+export class JwtDecoded {
+    __typename?: 'JwtDecoded';
+    header: JwtHeaders;
+    payload: JwtPayload;
+    signature: string;
+}
+
+export class JwtHeaders {
+    __typename?: 'JwtHeaders';
+    alg: AlgorithmType;
+    typ: string;
+}
+
+export class JwtPayload {
+    __typename?: 'JwtPayload';
+    exp?: Nullable<BigInt>;
+    iat?: Nullable<BigInt>;
+    userId?: Nullable<string>;
+}
+
 export abstract class IMutation {
     __typename?: 'IMutation';
 
     abstract changePassword(data: ChangePasswordInput): User | Promise<User>;
 
-    abstract getUserFromAccessToken(token: string): User | Promise<User>;
+    abstract getUserFromAccessToken(token: string): AuthDetailed | Promise<AuthDetailed>;
 
     abstract login(data: LoginInput): Auth | Promise<Auth>;
 
@@ -238,11 +284,18 @@ export abstract class IQuery {
 
 export class Session {
     __typename?: 'Session';
-    expires?: Nullable<DateTime>;
-    iat?: Nullable<DateTime>;
+    accessToken: string;
+    alg?: Nullable<string>;
+    exp?: Nullable<number>;
+    iat?: Nullable<number>;
     id: string;
-    sessionToken?: Nullable<string>;
-    user: User;
+    lastVerified?: Nullable<DateTime>;
+    provider?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+    scopes?: Nullable<string[]>;
+    signature?: Nullable<string>;
+    tokenState?: Nullable<string>;
+    user?: Nullable<User>;
     userId: string;
 }
 
@@ -297,6 +350,7 @@ export class UserEdge {
     node: User;
 }
 
+export type BigInt = any;
 export type DateTime = any;
 export type JSONObject = any;
 export type PhoneNumber = any;

@@ -1,0 +1,13 @@
+fragment UserPartial on User {
+  accessToken
+  createdAt
+  email
+  id
+  image
+  name
+  password
+  role
+  status
+  updatedAt
+  __typename
+}
