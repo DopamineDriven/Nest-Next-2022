@@ -3,6 +3,29 @@
 ---
 # Nesting
 
+## Run e2e tests in Nest with Jest and Supertest
+- Once your database is up (instructions below) and the prisma client is generated, you can run e2e tests from the root of the nest directory
+
+```bash
+cd nest && yarn test
+```
+- running the above should output something resembling the following
+
+```bash
+dopamine_driven@LAPTOP-2IH011V4:~/personal/port/2022/nest$ yarn test
+yarn run v1.22.17
+$ jest
+ PASS  src/prisma/prisma.service.spec.ts
+ PASS  src/app/app.controller.spec.ts
+
+Test Suites: 2 passed, 2 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        5.229 s, estimated 7 s
+Ran all test suites.
+Done in 5.88s.
+```
+
 ## Getting Started with Postgres and Docker
 - To spin up docker, have Docker Hub (Docker Desktop) running locally. If using WSL/WSL2, ensure that the settings for Docker are configured accordingly in the desktop GUI
 - open your terminal and cd into the nest directory `cd nest`
@@ -107,4 +130,4 @@ JWT_ENCRYPTION_KEY={"kty":"oct","kid":"wrIWpR33b5i_1iSHx4CL1IM4V7xXnZuLr4jgKNuv4
 ## Windows OS Users -- IMPORTANT
 ### Repository built out using WSL2 Ubuntu-20.04 (Windows Subsystem Linux OS)
 
-- Windows OS Users: this repository does not have `cross-env` installed which makes many commands used compatible with WindowsOS users. If you are a windows user and are not using WSL or WSL2 as your coding environment, you will need to run `yarn add -D cross-env` in both the `nest` and `next` directories (then prefix scripts accordingly)
+- Windows OS Users: this repository does not have `cross-env` installed. Cross-env is used by prefixing certain scripts with `cross-env`. If you are a windows user and are not using WSL or WSL2 as your coding environment with this repo, you will need to run `yarn add -D cross-env` in both the `nest` and `next` directories (then prefix scripts accordingly)
