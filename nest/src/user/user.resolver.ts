@@ -1,5 +1,12 @@
 import { HostParam, Inject, UseGuards } from "@nestjs/common";
-import { Args, CONTEXT, Context, Parent, ResolveField, Resolver } from "@nestjs/graphql";
+import {
+  Args,
+  CONTEXT,
+  Context,
+  Parent,
+  ResolveField,
+  Resolver
+} from "@nestjs/graphql";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "./model/user.model";
 import { UserService } from "./user.service";
@@ -21,7 +28,12 @@ import { XOR } from "../common/types/helpers.type";
 import { ContextCreator } from "@nestjs/core/helpers/context-creator";
 import { Request } from "express";
 import * as JWT from "jsonwebtoken";
-import { JwtDecoded } from "src/auth/dto";
+import { JwtDecoded } from "../auth/dto";
+import {
+  EntryConnection,
+  EntryOrderBy
+} from "../entry/model/entry-connection.model";
+import { EntryOrderByWithRelationAndSearchRelevanceInput } from "../.generated/prisma-nestjs-graphql/entry/inputs/entry-order-by-with-relation-and-search-relevance.input";
 
 @Resolver(() => User)
 export class UserResolver {
@@ -95,10 +107,16 @@ export class UserResolver {
 
   @Query(() => User)
   async userByRelayId(@Context("CONTEXT") CONTEXT: Request) {
-    const token = CONTEXT.header("authorization") ? CONTEXT.header("authorization") : "";
-    const user = JWT.decode(token ? token : "", { complete: true }) as JwtDecoded;
+    const token = CONTEXT.header("authorization")
+      ? CONTEXT.header("authorization")
+      : "";
+    const user = JWT.decode(token ? token : "", {
+      complete: true
+    }) as JwtDecoded;
     console.log(user);
-    return await this.userService.relayFindUniqueUser({ id: user.payload.userId });
+    return await this.userService.relayFindUniqueUser({
+      id: user.payload.userId
+    });
   }
   // @UseGuards(GraphqlAuthGuard)
   // @Mutation()
@@ -130,14 +148,62 @@ export class UserResolver {
       ...data
     });
   }
-
-  @Query(_returns => [User])
+  // resolve entry connection query in entries service/resolver then import EntryModule in UserModule and Inject this file with EntryService
+  @Query(_returns => [EntryConnection])
   async entriesByStatus(@Args("isPublished") isPublished: boolean) {
-    return this.prismaService.user.findMany({
-      include: {
-        entries: { where: { published: isPublished } }
-      },
-      orderBy: { role: "asc" }
-    });
+    return this.prismaService.user
+      .findMany({
+        include: {
+          entries: { where: { published: isPublished } }
+        },
+        orderBy: { role: "asc" }
+      })
+      .then(data =>
+        data.map(mapped => {
+          mapped.entries;
+        })
+      );
+  }
+
+  @Query(() => EntryConnection)
+  async userToEntryConnection(
+    @Args() { after, before, first, last }: PaginationArgs,
+    @Args({ name: "filterByAuthor", type: () => String, nullable: true })
+    filterByAuthor: string,
+    @Args({
+      name: "orderBy",
+      type: () => EntryOrderByWithRelationAndSearchRelevanceInput,
+      nullable: true
+    })
+    orderBy: EntryOrderByWithRelationAndSearchRelevanceInput
+  ) {
+    // const edgingThoseEntries =  await this.prismaService.user
+    //   .findMany({ include: { entries: true } })
+    //   .then(userWithEntries =>
+    //     userWithEntries.map(async user => {
+          const entries = findManyCursorConnection(
+            args =>
+              this.prismaService.entry.findMany({
+                include: { _count: true },
+                orderBy: orderBy._relevance?.fields
+                  ? { ...orderBy }
+                  : undefined,
+                where: {
+                  id: args?.cursor?.id,
+                  author: { name: { search: filterByAuthor } }
+                },
+                ...args
+              }).then(),
+            () =>
+              this.prismaService.entry.count({
+                where: {
+                  author: { name: { search: filterByAuthor } }
+                }
+              }),
+            { first, last, before, after }
+          ).then(pageInfo => {return {...pageInfo}})
+          return entries
+      // ).then(entry => {return {...entry}})
+  
   }
 }

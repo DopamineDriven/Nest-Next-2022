@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-
-export async function seed<T extends PrismaClient>(prisma: T) {
+export async function seed<T extends import("@prisma/client").PrismaClient>(
+  prisma: T
+) {
   enum Gender {
     MALE = "MALE",
     FEMALE = "FEMALE",
@@ -280,7 +280,7 @@ export async function seed<T extends PrismaClient>(prisma: T) {
 
   const userCity = faker.address.city();
 
-  const signature = toBase64(refreshToken)
+  const signature = toBase64(refreshToken);
 
   const seedUser = async () => {
     return await prisma.user.create({
@@ -319,7 +319,8 @@ export async function seed<T extends PrismaClient>(prisma: T) {
         },
         accounts: {
           create: [
-            { 
+            {
+              id: faker.datatype.uuid(),
               provider: "custom",
               providerAccountId: `2022CustomAuth:${standardE164}`,
               type: "auth",
@@ -346,9 +347,27 @@ export async function seed<T extends PrismaClient>(prisma: T) {
               id: faker.datatype.uuid()
             }
           ]
+        },
+        entries: {
+          create: [
+            {
+              title: faker.lorem.words(8),
+              content: faker.lorem.paragraphs(4, "\n"),
+              featuredImage: faker.image.imageUrl(
+                1800,
+                1800,
+                "winter",
+                true,
+                true
+              ),
+              createdAt: new Date(Date.now()),
+              id: faker.datatype.uuid(),
+              published: [true, false, true, false][n(0, 3)]
+            }
+          ]
         }
       },
-      include: { sessions: true, accounts: true, profile: true }
+      include: { sessions: true, accounts: true, profile: true, comments: true }
     });
   };
   return seedUser();
@@ -358,7 +377,7 @@ type SeedInferred = UnwrapPromise<ReturnType<typeof seed>>;
 
 async function main() {
   const PrismaClient = (await import("@prisma/client")).PrismaClient;
-  const prisma = new PrismaClient({log: ["error", "info", "query", "warn"]});
+  const prisma = new PrismaClient({ log: ["error", "info", "query", "warn"] });
   try {
     await prisma
       .$connect()

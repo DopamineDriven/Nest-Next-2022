@@ -1,6 +1,10 @@
 {
   "name": "Nesting",
-  "documents": ["./graphql/**/*.graphql"],
+  "documents": [
+    "./graphql/Queries/**/*.graphql",
+    "./graphql/Mutations/**/*.graphql",
+    "./graphql/Fragments/**/*.graphql"
+  ],
   "extensions": {
     "languageService": {
       "useSchemaFileDefinitions": true

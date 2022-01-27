@@ -9,6 +9,7 @@ import { Session } from "../../session/model/session.model";
 import { UserCount } from "../../.generated/prisma-nestjs-graphql/user/outputs/user-count.output";
 import { Profile } from "../../profile/model/profile.model";
 import { Category } from "../../category/model/category.model";
+import { EntryConnection } from "../../entry/model/entry-connection.model";
 
 @ObjectType("User")
 export class User {
