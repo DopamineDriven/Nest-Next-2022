@@ -1,11 +1,6 @@
-# 2022 - Nest - Next
-
-### Repository built out using WSL2 Ubuntu-20.04 (Windows Subsystem Linux OS)
-
-- Windows OS Users: this repository does not have `cross-env` installed which makes many commands used compatible with WindowsOS users. If you are a windows user and are not using WSL or WSL2 as your coding environment, you will need to run `yarn add -D cross-env` in both the `nest` and `next` directories (then prefix scripts accordingly)
+# Nest - Next - 2022
 
 ---
-
 # Nesting
 
 ## Getting Started with Postgres and Docker
@@ -97,7 +92,7 @@ openssl rand -base64 64
 MOamlLawAekP3lxnZeXbJqFaUGn8dZbrBBBwUQ4ySE6WdJHw2GbC5DzOJupntofpM5fyq1ROBRGbgIgoRkYmDQ==
 ```
 
-### Populate your .env as follows
+### Populate the root nest .env as follows
 
 ```shell
 ## openssl rand -base64 64
@@ -109,3 +104,7 @@ JWT_ENCRYPTION_KEY={"kty":"oct","kid":"wrIWpR33b5i_1iSHx4CL1IM4V7xXnZuLr4jgKNuv4
 ```
 
 ---
+## Windows OS Users -- IMPORTANT
+### Repository built out using WSL2 Ubuntu-20.04 (Windows Subsystem Linux OS)
+
+- Windows OS Users: this repository does not have `cross-env` installed which makes many commands used compatible with WindowsOS users. If you are a windows user and are not using WSL or WSL2 as your coding environment, you will need to run `yarn add -D cross-env` in both the `nest` and `next` directories (then prefix scripts accordingly)

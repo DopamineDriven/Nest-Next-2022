@@ -9,14 +9,12 @@ import { Session } from "../../session/model/session.model";
 import { UserCount } from "../../.generated/prisma-nestjs-graphql/user/outputs/user-count.output";
 import { Profile } from "../../profile/model/profile.model";
 import { Category } from "../../category/model/category.model";
+
 @ObjectType("User")
 export class User {
-  /** User Shape -- note, prisma uses uuid v4 -- uuid will be valid ACROSS all databases -- no conflicts */
   @Field(() => ID, {
     name: "id",
-    nullable: false,
-    description:
-      "User Shape -- note, prisma uses uuid v4 -- uuid will be valid ACROSS all databases -- no conflicts"
+    nullable: false
   })
   id!: string;
   @Field(() => String, { nullable: true })
@@ -43,14 +41,14 @@ export class User {
   @Field(_type => Date, {
     name: "createdAt",
     defaultValue: new Date(Date.now()),
-    description: "Identifies the date and time when the object was created."
+    description: "Identifies the date and time when the user was created."
   })
   createdAt: Date;
   @Field(_type => Date, {
     name: "updatedAt",
     nullable: true,
     description:
-      "Identifies the date and time when the object was last updated."
+      "Identifies the date and time when the user was last updated."
   })
   updatedAt: Date | null;
 
