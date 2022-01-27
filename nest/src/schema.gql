@@ -239,15 +239,11 @@ type User {
   comments: [Comment!]
   connections: [Connection!]
 
-  """Identifies the date and time when the object was created."""
+  """Identifies the date and time when the user was created."""
   createdAt: DateTime!
   email: String
   emailVerified: DateTime
   entries: [Entry!]
-
-  """
-  User Shape -- note, prisma uses uuid v4 -- uuid will be valid ACROSS all databases -- no conflicts
-  """
   id: ID!
   image: String
   name: String
@@ -257,7 +253,7 @@ type User {
   sessions: [Session!]
   status: UserStatus!
 
-  """Identifies the date and time when the object was last updated."""
+  """Identifies the date and time when the user was last updated."""
   updatedAt: DateTime
 }
 
