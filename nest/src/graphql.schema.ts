@@ -40,11 +40,31 @@ export enum CommentReactions {
     WOW = "WOW"
 }
 
+export enum EntryOrderByRelevanceFieldEnum {
+    authorId = "authorId",
+    categoryId = "categoryId",
+    content = "content",
+    featuredImage = "featuredImage",
+    id = "id",
+    title = "title"
+}
+
 export enum Gender {
     FEMALE = "FEMALE",
     MALE = "MALE",
     OTHER = "OTHER",
     UNCERTAIN = "UNCERTAIN"
+}
+
+export enum ProfileOrderByRelevanceFieldEnum {
+    city = "city",
+    country = "country",
+    coverPhoto = "coverPhoto",
+    dob = "dob",
+    id = "id",
+    occupation = "occupation",
+    phoneNumber = "phoneNumber",
+    userId = "userId"
 }
 
 export enum Pronouns {
@@ -67,6 +87,15 @@ export enum SortOrder {
     desc = "desc"
 }
 
+export enum UserOrderByRelevanceFieldEnum {
+    accessToken = "accessToken",
+    email = "email",
+    id = "id",
+    image = "image",
+    name = "name",
+    password = "password"
+}
+
 export enum UserStatus {
     BANNED = "BANNED",
     DEACTIVATED = "DEACTIVATED",
@@ -76,14 +105,86 @@ export enum UserStatus {
     SUSPENDED = "SUSPENDED"
 }
 
+export class AccountOrderByRelationAggregateInput {
+    _count?: Nullable<SortOrder>;
+}
+
+export class CategoryOrderByRelationAggregateInput {
+    _count?: Nullable<SortOrder>;
+}
+
 export class ChangePasswordInput {
     newPassword: string;
     oldPassword: string;
 }
 
+export class CommentOrderByRelationAggregateInput {
+    _count?: Nullable<SortOrder>;
+}
+
+export class ConnectionOrderByRelationAggregateInput {
+    _count?: Nullable<SortOrder>;
+}
+
+export class EntryOrderByRelationAggregateInput {
+    _count?: Nullable<SortOrder>;
+}
+
+export class EntryOrderByRelevanceInput {
+    fields: EntryOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
+}
+
+export class EntryOrderByWithRelationAndSearchRelevanceInput {
+    _relevance?: Nullable<EntryOrderByRelevanceInput>;
+    author?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    authorId?: Nullable<SortOrder>;
+    categories?: Nullable<CategoryOrderByRelationAggregateInput>;
+    categoryId?: Nullable<SortOrder>;
+    comments?: Nullable<CommentOrderByRelationAggregateInput>;
+    content?: Nullable<SortOrder>;
+    createdAt?: Nullable<SortOrder>;
+    featuredImage?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    published?: Nullable<SortOrder>;
+    title?: Nullable<SortOrder>;
+    updatedAt?: Nullable<SortOrder>;
+}
+
 export class LoginInput {
     email?: Nullable<string>;
     password?: Nullable<string>;
+}
+
+export class ProfileOrderByRelevanceInput {
+    fields: ProfileOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
+}
+
+export class ProfileOrderByWithRelationAndSearchRelevanceInput {
+    _relevance?: Nullable<ProfileOrderByRelevanceInput>;
+    activiyFeed?: Nullable<SortOrder>;
+    bio?: Nullable<SortOrder>;
+    city?: Nullable<SortOrder>;
+    country?: Nullable<SortOrder>;
+    coverPhoto?: Nullable<SortOrder>;
+    dob?: Nullable<SortOrder>;
+    gender?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    lastSeen?: Nullable<SortOrder>;
+    memberSince?: Nullable<SortOrder>;
+    occupation?: Nullable<SortOrder>;
+    phoneNumber?: Nullable<SortOrder>;
+    pronouns?: Nullable<SortOrder>;
+    recentActivity?: Nullable<SortOrder>;
+    user?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    userId?: Nullable<SortOrder>;
+}
+
+export class SessionOrderByRelationAggregateInput {
+    _count?: Nullable<SortOrder>;
 }
 
 export class SignupInput {
@@ -98,6 +199,34 @@ export class SignupInput {
 
 export class UserOrder {
     direction: SortOrder;
+}
+
+export class UserOrderByRelevanceInput {
+    fields: UserOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
+}
+
+export class UserOrderByWithRelationAndSearchRelevanceInput {
+    _relevance?: Nullable<UserOrderByRelevanceInput>;
+    accessToken?: Nullable<SortOrder>;
+    accounts?: Nullable<AccountOrderByRelationAggregateInput>;
+    categories?: Nullable<CategoryOrderByRelationAggregateInput>;
+    comments?: Nullable<CommentOrderByRelationAggregateInput>;
+    connections?: Nullable<ConnectionOrderByRelationAggregateInput>;
+    createdAt?: Nullable<SortOrder>;
+    email?: Nullable<SortOrder>;
+    emailVerified?: Nullable<SortOrder>;
+    entries?: Nullable<EntryOrderByRelationAggregateInput>;
+    id?: Nullable<SortOrder>;
+    image?: Nullable<SortOrder>;
+    name?: Nullable<SortOrder>;
+    password?: Nullable<SortOrder>;
+    profile?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput>;
+    role?: Nullable<SortOrder>;
+    sessions?: Nullable<SessionOrderByRelationAggregateInput>;
+    status?: Nullable<SortOrder>;
+    updatedAt?: Nullable<SortOrder>;
 }
 
 export class Account {
@@ -196,10 +325,22 @@ export class Entry {
     updatedAt?: Nullable<DateTime>;
 }
 
+export class EntryConnection {
+    __typename?: 'EntryConnection';
+    edges: EntryEdge[];
+    pageInfo: PageInfo;
+}
+
 export class EntryCount {
     __typename?: 'EntryCount';
     categories: number;
     comments: number;
+}
+
+export class EntryEdge {
+    __typename?: 'EntryEdge';
+    cursor: string;
+    node: Entry;
 }
 
 export class JwtDecoded {
@@ -267,7 +408,7 @@ export class Profile {
 export abstract class IQuery {
     __typename?: 'IQuery';
 
-    abstract entriesByStatus(isPublished: boolean): User[] | Promise<User[]>;
+    abstract entriesByStatus(isPublished: boolean): EntryConnection[] | Promise<EntryConnection[]>;
 
     abstract hello(name: string): string | Promise<string>;
 
@@ -280,6 +421,8 @@ export abstract class IQuery {
     abstract userById(id: string): User | Promise<User>;
 
     abstract userByRelayId(): User | Promise<User>;
+
+    abstract userToEntryConnection(after?: Nullable<string>, before?: Nullable<string>, filterByAuthor?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput>, skip?: Nullable<number>): EntryConnection | Promise<EntryConnection>;
 }
 
 export class Session {

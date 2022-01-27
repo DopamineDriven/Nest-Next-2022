@@ -43,5 +43,5 @@ export class Entry {
   categoryId?: string | null;
 
   @Field(() => EntryCount, { nullable:false })
-  _count?: EntryCount;
+  _count!: EntryCount;
 }
