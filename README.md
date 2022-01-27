@@ -7,23 +7,21 @@
 - Once your database is up (instructions below) and the prisma client is generated, you can run e2e tests from the root of the nest directory
 
 ```bash
-cd nest && yarn test
+cd nest && yarn test:e2e
 ```
 - running the above should output something resembling the following
 
 ```bash
-dopamine_driven@LAPTOP-2IH011V4:~/personal/port/2022/nest$ yarn test
+dopamine_driven@LAPTOP-2IH011V4:~/personal/port/2022/nest$ yarn e2e:test
 yarn run v1.22.17
-$ jest
- PASS  src/prisma/prisma.service.spec.ts
- PASS  src/app/app.controller.spec.ts
+$ jest --config ./test/jest-e2e.json
 
 Test Suites: 2 passed, 2 total
-Tests:       3 passed, 3 total
+Tests:       4 passed, 4 total
 Snapshots:   0 total
-Time:        5.229 s, estimated 7 s
+Time:        9.322 s
 Ran all test suites.
-Done in 5.88s.
+Done in 9.91s.
 ```
 
 ## Getting Started with Postgres and Docker

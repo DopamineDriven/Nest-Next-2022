@@ -1,0 +1,5 @@
+fragment AuthPartial on Auth {
+  __typename
+  accessToken
+  refreshToken
+}

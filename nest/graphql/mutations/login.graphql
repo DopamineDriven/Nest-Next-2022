@@ -1,0 +1,15 @@
+# import UserPartial from "../fragments/user-partial.graphql";
+# import SessionPartial from "../fragments/session-partial.graphql";
+# import AuthPartial from "../fragments/auth-partial.graphql";
+
+mutation loginUser($loginData: LoginInput!) {
+  login(data: $loginData) {
+    ...AuthPartial
+    user {
+      ...UserPartial
+    }
+    session {
+      ...SessionPartial
+    }
+  }
+}

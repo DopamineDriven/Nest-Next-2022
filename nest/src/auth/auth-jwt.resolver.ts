@@ -21,6 +21,7 @@ import { GraphQLExecutionContext } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
 import { forwardRef, ForwardReference, Inject } from "@nestjs/common";
 import { User } from "../user/model/user.model";
+import { AuthDetailed } from "./model/auth-detailed.model";
 @Resolver(() => Auth)
 export class AuthJwtResolver {
   constructor(
@@ -31,10 +32,11 @@ export class AuthJwtResolver {
   @Mutation(() => Auth)
   async signup(
     @Args("data", { type: () => SignupInput }) data: SignupInput
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string; user: User }> {
     data.email = data.email.toLowerCase();
-    const { accessToken, refreshToken } = await this.auth.createUser(data);
+    const { user, accessToken, refreshToken } = await this.auth.createUser(data);
     return {
+      user,
       accessToken,
       refreshToken
     };
@@ -42,13 +44,13 @@ export class AuthJwtResolver {
   @Mutation(() => Auth)
   async login(@Args("data", { type: () => LoginInput }) data: LoginInput) {
     const { email, password } = data;
-    const token = await this.auth.login(email, password);
+    const payload = await this.auth.login(email, password);
 
-    const userFromToken = await this.auth
-      .getUserFromToken(token.accessToken)
-      .then(user => user);
+    // const userFromToken = await this.auth
+    //   .getUserWithDecodedToken(token.accessToken)
+    //   .then(user => user.auth.user);
 
-    return { ...token, userFromToken };
+    return { ...payload };
   }
 
   @Mutation(() => Token)
@@ -56,16 +58,16 @@ export class AuthJwtResolver {
     return this.auth.refreshToken(token);
   }
 
-  @Mutation(() => User)
-  async getUserFromAccessToken(@Args() { token }: RefreshTokenInput) {
-    return await this.auth.getUserFromToken(token).then(user => user);
+  @Mutation(() => AuthDetailed)
+  async getUserFromAccessToken(@Args() { token }: RefreshTokenInput): Promise<AuthDetailed> {
+    return await this.auth.getUserWithDecodedToken(token).then(authDetailed => authDetailed);
   }
 
   @ResolveField("user")
   async user(@Parent() auth: Auth, @Info() info: GraphQLResolveInfo) {
     console.log(info ?? "");
     return await this.auth
-      .getUserFromToken(auth.accessToken)
-      .then(user => user);
+      .getUserWithDecodedToken(auth.accessToken)
+      .then(user => user.auth.user);
   }
 }

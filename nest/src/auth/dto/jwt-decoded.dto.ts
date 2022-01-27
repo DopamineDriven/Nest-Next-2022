@@ -1,7 +1,7 @@
 import { Field, InterfaceType, ObjectType } from "@nestjs/graphql";
 import { JwtHeaders, JwtPayload } from ".";
 
-@InterfaceType("JwtDecoded")
+@ObjectType("JwtDecoded")
 export class JwtDecoded {
   @Field(_type => JwtHeaders)
   header: JwtHeaders;

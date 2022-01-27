@@ -1,8 +1,6 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import * as request from "supertest";
-import { AppModule } from "../src/app.module";
 import { Chance } from "chance";
 import { INestApplication } from "@nestjs/common";
+import * as request from "supertest";
 
 const chance = new Chance();
 
@@ -10,27 +8,25 @@ describe("AppController (e2e)", () => {
   let app: INestApplication;
 
   beforeEach(async () => {
-    const PrismaService = (await import("../src/prisma/prisma.service")).PrismaService;
-    const prismaService = new PrismaService(); 
-    app.get(PrismaService);
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    const AppModule = (await import("../src/app.module")).AppModule;
+    const Test = (await import("@nestjs/testing")).Test;
+
+    const moduleFixture = await Test.createTestingModule({
       imports: [AppModule]
     }).compile();
-    prismaService.enableShutdownHooks(app)
     app = moduleFixture.createNestApplication();
     await app.init();
   });
-
-  it("/ (GET)", () => {
-    return request(app.getHttpServer())
+  it("/ (GET)", async () => {
+    return await request(app.getHttpServer())
       .get("/")
       .expect(200)
       .expect("Hello World!");
   });
 
-  it("/hello/:name (GET)", () => {
+  it("/hello/:name (GET)", async () => {
     const name = chance.name();
-    return request(app.getHttpServer())
+    return await request(app.getHttpServer())
       .get(`/hello/${name}`)
       .expect(200)
       .expect(`Hello ${name}!`);

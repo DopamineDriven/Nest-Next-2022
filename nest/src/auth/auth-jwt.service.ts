@@ -13,11 +13,13 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { SignupInput } from "./inputs/signup.input";
 import { Prisma, User } from "@prisma/client";
-
+import { AuthDetailed } from "./model/auth-detailed.model";
 import { Token } from "./model/token.model";
 import { ConfigService } from "@nestjs/config";
 import { JwtDecoded } from "./dto/jwt-decoded.dto";
 import { SecurityConfig } from "../common/config/config-interfaces.config";
+import { Auth } from "./model/auth.model";
+import { Session } from "../session/model/session.model";
 
 @Injectable()
 export class AuthJwtService {
@@ -34,7 +36,7 @@ export class AuthJwtService {
     private readonly configService: ConfigService
   ) {}
 
-  async createUser(payload: SignupInput): Promise<Token> {
+  async createUser(payload: SignupInput): Promise<Auth> {
     const hashedPassword = await this.passwordService.hashPassword(
       payload.password
     );
@@ -52,9 +54,51 @@ export class AuthJwtService {
           image: payload.image
         }
       });
-      return this.generateTokens({
+      const { accessToken, refreshToken } = this.generateTokens({
         userId: user.id
       });
+
+      const {jwt, auth} = await this.getUserWithDecodedToken(accessToken)
+
+      const userAndSesh = await this.prismaService.user.update({
+        where: { id: auth.user.id },
+        data: {
+          accessToken: accessToken,
+          sessions: {
+          connectOrCreate: [
+            {
+              where: { accessToken: accessToken },
+              create: {
+                accessToken: accessToken,
+                alg: jwt.header.alg,
+                exp: jwt.payload.exp,
+                iat: jwt.payload.iat,
+                refreshToken: refreshToken,
+                signature: jwt.signature,
+                provider: jwt.header.typ,
+                lastVerified: new Date(Date.now()),
+                scopes: ["read", "write"],
+                tokenState: "VALID"
+              }
+            }
+          ]
+          }
+        },
+        include: { sessions: true }
+      });
+
+      const getSessionWithUser = await this.prismaService.session.findMany({
+        where: { userId: auth.user.id },
+        include: { user: true }
+      })
+
+      const { sessions, ...userInfo } = userAndSesh;
+      return {
+        accessToken,
+        refreshToken,
+        user: userInfo,
+        session: getSessionWithUser
+      };
     } catch (e) {
       if (
         e instanceof Prisma.PrismaClientKnownRequestError &&
@@ -82,16 +126,25 @@ export class AuthJwtService {
     if (!passwordValid) {
       throw new BadRequestException("Invalid password");
     }
-    // const signedToken = this.jwtService.sign(tokens, {
-    //   algorithm: "HS256",
-    //   noTimestamp: false,
-    //   header: { alg: "HS256", typ: "JWT" },
-    //   secret: jwtConstants.secret
-    // });
 
-    return this.generateTokens({
+    const { accessToken, refreshToken } = this.generateTokens({
       userId: user.id
     });
+
+    const updatedUser = await this.prismaService.user.update({
+      where: { id: user.id },
+      data: {
+        accessToken: accessToken,
+        updatedAt: new Date(Date.now()),
+        status: "ONLINE"
+      }
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      updatedUser
+    };
   }
 
   async validateUser(userId: string | null): Promise<User | null> {
@@ -100,22 +153,61 @@ export class AuthJwtService {
     });
   }
 
-  getUserFromToken(token: string): Promise<User | null> {
+  async getUserWithDecodedToken(token: string): Promise<AuthDetailed> {
     console.log(token ?? "");
     const id = this.jwtService.decode(token, {
       complete: true
     }) as JwtDecoded;
-    // new Storage().setItem("userId", id.payload.userId);
-    // // Use reflector class ja feel
-    // SetMetadata("USER_ID", id.payload.userId).KEY
 
-    console.log(id);
-    return this.prismaService.user.findUnique({
-      where: { id: id.payload?.userId }
+    const user = await this.prismaService.user.findUnique({
+      where: { id: id.payload?.userId ? id.payload.userId : "" }
     });
+
+    const { accessToken, refreshToken } = this.generateTokens({
+      userId: user?.id ? user.id : ""
+    });
+    await this.prismaService.user.update({
+      where: { id: user?.id },
+      data: {
+        accessToken: accessToken,
+        sessions: {
+          connectOrCreate: [
+            {
+              where: { accessToken: accessToken },
+              create: {
+                accessToken: accessToken,
+                alg: id.header.alg,
+                exp: id.payload.exp,
+                iat: id.payload.iat,
+                refreshToken: refreshToken,
+                signature: id.signature,
+                provider: id.header.typ,
+                lastVerified: new Date(Date.now()),
+                scopes: [""],
+                tokenState: "valid"
+              }
+            }
+          ]
+        }
+      },
+      include: {sessions: true}
+    });
+
+    const findSesh = await this.prismaService.session.findMany({
+      where: { userId: user?.id },
+      include: { user: true }
+    });
+    return {
+      auth: {
+        user: user ? user : (null as unknown as User),
+        accessToken,
+        refreshToken,
+        session: findSesh
+      },
+      jwt: id
+    };
   }
   generateTokens(payload: { userId: string }): Token {
-    const { userId } = payload;
     return {
       accessToken: this.generateAccessToken(payload),
       refreshToken: this.generateRefreshToken(payload)
@@ -123,12 +215,13 @@ export class AuthJwtService {
   }
 
   private generateAccessToken(payload: { userId: string }) {
-    return this.jwtService.sign(payload);
+    return this.jwtService.sign(payload, { algorithm: "HS512" });
   }
 
   private generateRefreshToken(payload: { userId: string }): string {
     const securityConfig = this.configService.get<SecurityConfig>("security");
     return this.jwtService.sign(payload, {
+      algorithm: "HS512",
       secret: this.configService.get("JWT_REFRESH_SECRET")
     });
   }

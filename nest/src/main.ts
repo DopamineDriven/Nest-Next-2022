@@ -22,7 +22,7 @@ type Options = NestApplicationOptions;
 
 const options: Options = {
   bufferLogs: true,
-  logger: ["debug", "error", "log", "warn", "verbose"],
+  logger: process.env.NODE_ENV !== "test" ? ["debug", "error", "log", "warn", "verbose"] : false,
   cors: {
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     maxAge: 0,
@@ -98,7 +98,7 @@ async function bootstrap() {
     SwaggerModule.setup(swaggerConfig.path || "api", app, document);
   }
   const prismaService: PrismaService = app.get(PrismaService);
-  prismaService.enableShutdownHooks(app)
+  await prismaService.enableShutdownHooks(app);
   await app.listen(process.env.PORT || nestConfig?.port || 3000);
   console.log(`[swagger]: ${await app.getUrl()}/api \n[graphql]: ${await app.getUrl()}/graphql`);
 }

@@ -48,11 +48,18 @@ Table Profile {
 }
 
 Table Session {
-  id String [pk]
-  sessionToken String [unique, not null]
+  id String [not null]
   userId String [not null]
-  expires DateTime [not null]
-  iat DateTime
+  accessToken String [unique, not null]
+  alg String
+  refreshToken String
+  signature String
+  scopes String [not null]
+  provider String
+  tokenState String
+  lastVerified DateTime
+  iat Int
+  exp Int
   user User [not null]
 }
 

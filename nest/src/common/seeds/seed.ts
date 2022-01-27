@@ -280,6 +280,8 @@ export async function seed<T extends PrismaClient>(prisma: T) {
 
   const userCity = faker.address.city();
 
+  const signature = toBase64(refreshToken)
+
   const seedUser = async () => {
     return await prisma.user.create({
       data: {
@@ -323,7 +325,7 @@ export async function seed<T extends PrismaClient>(prisma: T) {
               type: "auth",
               access_token: accessToken,
               refresh_token: refreshToken,
-              refresh_secret: toBase64(refreshToken),
+              refresh_secret: signature,
               expires_at: exp.getMilliseconds()
             }
           ]
@@ -331,9 +333,16 @@ export async function seed<T extends PrismaClient>(prisma: T) {
         sessions: {
           create: [
             {
-              expires: exp,
-              sessionToken: toBase64(accessToken),
-              iat: new Date(Date.now()),
+              exp: new Date(exp).getSeconds(),
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+              alg: "HS512",
+              provider: "custom",
+              scopes: ["read", "write"],
+              tokenState: "VERIFIED",
+              lastVerified: new Date(Date.now()),
+              signature: signature,
+              iat: new Date(Date.now()).getSeconds(),
               id: faker.datatype.uuid()
             }
           ]

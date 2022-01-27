@@ -105,6 +105,8 @@ dist
 
 # Nest
 nest/src/.generated/introspection/
+nest/src/.generated/nest
+nest/src/.generated/ast
 nest/src/.generated/prisma-nestjs-graphql
 nest/src/.generated/schema-ast.graphql
 nest/docs/prisma-docs-generated

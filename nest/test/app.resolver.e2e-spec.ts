@@ -1,6 +1,4 @@
-import { Test, TestingModule } from "@nestjs/testing";
 import * as request from "supertest";
-import { AppModule } from "../src/app.module";
 import { Chance } from "chance";
 import { INestApplication } from "@nestjs/common";
 
@@ -10,8 +8,9 @@ describe("AppResolver (e2e)", () => {
   let app: INestApplication;
 
   beforeEach(async () => {
-    const prisma = await import("@prisma/client");
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    const AppModule = (await import("../src/app.module")).AppModule;
+    const Test = (await import("@nestjs/testing")).Test;
+    const moduleFixture = await Test.createTestingModule({
       imports: [AppModule]
     }).compile();
 
@@ -20,19 +19,19 @@ describe("AppResolver (e2e)", () => {
     await app.init();
   });
 
-  it("helloWorld (Query)", () => {
+  it("helloWorld (Query)", async () => {
     // TODO assert return value
-    return request(app.getHttpServer())
+    return await request(app.getHttpServer())
       .post("/graphql")
       .send({
         query: "{ helloWorld }"
       })
       .expect(200);
   });
-  it("hello (Query)", () => {
+  it("hello (Query)", async () => {
     // TODO assert return value
     const name = chance.name();
-    return request(app.getHttpServer())
+    return await request(app.getHttpServer())
       .post("/graphql")
       .send({
         query: `{ hello(name: "${name}") }`

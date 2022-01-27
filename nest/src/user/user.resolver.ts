@@ -1,5 +1,5 @@
 import { HostParam, Inject, UseGuards } from "@nestjs/common";
-import { Args, Context, Parent, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, CONTEXT, Context, Parent, ResolveField, Resolver } from "@nestjs/graphql";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "./model/user.model";
 import { UserService } from "./user.service";
@@ -18,6 +18,10 @@ import { AuthJwtService } from "../auth/auth-jwt.service";
 import { UpdateManyUserArgs } from "../.generated/prisma-nestjs-graphql/user/args/update-many-user.args";
 import { ReturnTypedNode } from "ts-morph";
 import { XOR } from "../common/types/helpers.type";
+import { ContextCreator } from "@nestjs/core/helpers/context-creator";
+import { Request } from "express";
+import * as JWT from "jsonwebtoken";
+import { JwtDecoded } from "src/auth/dto";
 
 @Resolver(() => User)
 export class UserResolver {
@@ -90,8 +94,11 @@ export class UserResolver {
   }
 
   @Query(() => User)
-  async userByRelayId(@HostParam("user") user: User) {
-    return await this.userService.relayFindUniqueUser({ id: user.id });
+  async userByRelayId(@Context("CONTEXT") CONTEXT: Request) {
+    const token = CONTEXT.header("authorization") ? CONTEXT.header("authorization") : "";
+    const user = JWT.decode(token ? token : "", { complete: true }) as JwtDecoded;
+    console.log(user);
+    return await this.userService.relayFindUniqueUser({ id: user.payload.userId });
   }
   // @UseGuards(GraphqlAuthGuard)
   // @Mutation()

@@ -1,7 +1,7 @@
 import { BigIntResolver } from 'graphql-scalars';
 import { Field, InterfaceType, ObjectType } from '@nestjs/graphql';
 
-@InterfaceType()
+@ObjectType()
 export class JwtPayload {
   /**
    * User Id

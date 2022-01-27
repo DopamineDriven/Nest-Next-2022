@@ -1,0 +1,5 @@
+fragment JwtHeadersPartial on JwtHeaders {
+  alg
+  typ
+  __typename
+}
