@@ -108,9 +108,7 @@ class C extends A<3.14 | -7.28> {
 
   // thisObj deconstruction/reconstruction helper
   thisObjByIndex(thisIndex: number) {
-    const extractKeyFromThisObj = Object.keys(this.obj)[
-      thisIndex
-    ].toString();
+    const extractKeyFromThisObj = Object.keys(this.obj)[thisIndex].toString();
     const extractValueFromThisObj = Object.values(this.obj)[
       thisIndex
     ].valueOf();

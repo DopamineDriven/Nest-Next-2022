@@ -11,12 +11,12 @@ import {
 import * as cookieParser from "cookie-parser";
 import { PrismaService } from "./prisma/prisma.service";
 
-import * as fs from 'fs';
-import * as morgan from 'morgan';
+import * as fs from "fs";
+import * as morgan from "morgan";
 import { PrismaModule } from "./prisma/prisma.module";
 
-const logStream = fs.createWriteStream('api.log', {
-  flags: 'a', // append
+const logStream = fs.createWriteStream("api.log", {
+  flags: "a" // append
 });
 
 type Options = NestApplicationOptions;
@@ -81,7 +81,7 @@ async function bootstrap() {
 
   const { httpAdapter } = app.get(HttpAdapterHost);
   // app.useGlobalFilters(HttpAdapterHost.prototype.httpAdapter());
-  app.use(morgan('tiny', { stream: logStream }));
+  app.use(morgan("tiny", { stream: logStream }));
   const configService = app.get(ConfigService);
   const nestConfig = configService.get<NestConfig>("nest");
   const corsConfig = configService.get<CorsConfig>("cors");
@@ -99,7 +99,7 @@ async function bootstrap() {
     SwaggerModule.setup(swaggerConfig.path || "api", app, document);
   }
   const prismaService: PrismaService = app.get<PrismaService>(PrismaService);
-  prismaService.enableShutdownHooks(app)
+  prismaService.enableShutdownHooks(app);
   await app.listen(process.env.PORT || nestConfig?.port || 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }

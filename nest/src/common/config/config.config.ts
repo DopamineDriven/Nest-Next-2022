@@ -2,7 +2,7 @@ import { Config } from "./config-interfaces.config";
 
 export const toBase64 = (str: string) => {
   return Buffer.from(str).toString("base64");
- };
+};
 
 const config: Config = {
   nest: {
@@ -35,7 +35,9 @@ const config: Config = {
     adminEmail: process.env.GITHUB_EMAIL ?? "",
     adminPassword: process.env.GITHUB_PASSWORD ?? "",
     baseUrl: process.env.GITHUB_BASE_URL ?? "",
-    maxRedirects: process.env.GITHUB_MAX_REDIRECTS ? Number.parseInt(process.env.GITHUB_MAX_REDIRECTS, 10) : 10,
+    maxRedirects: process.env.GITHUB_MAX_REDIRECTS
+      ? Number.parseInt(process.env.GITHUB_MAX_REDIRECTS, 10)
+      : 10,
     subdomain: process.env.GITHUB_SUBDOMAIN ?? "",
     timeout: 5000,
     serveBearer: process.env.GITHUB_BEARER_TOKEN

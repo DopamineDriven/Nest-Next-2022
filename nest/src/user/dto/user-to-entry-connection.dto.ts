@@ -13,27 +13,28 @@ import { Type } from "ts-morph";
 import { Injectable } from "@nestjs/common";
 
 @ObjectType()
-  export class EntryCountFields {
- @Field(() => Int, {defaultValue: 0})
- categories: number;
+export class EntryCountFields {
   @Field(() => Int, { defaultValue: 0 })
-    comments: number;
+  categories: number;
+  @Field(() => Int, { defaultValue: 0 })
+  comments: number;
 }
 
 @ObjectType()
 export class EntryCountOutputType {
   @Field(_type => EntryCountFields)
-  _count: EntryCountFields
+  _count: EntryCountFields;
 }
 
 @ObjectType()
 export class UserToEntryConnection<
-  EntryConnection extends  EntryCountOutputType, EntryEdge extends EntryCountOutputType[]> {
-  @Field(_type => (EntryConnection && EntryCountOutputType))
+  EntryConnection extends EntryCountOutputType,
+  EntryEdge extends EntryCountOutputType[]
+> {
+  @Field(_type => EntryConnection && EntryCountOutputType)
   entryConnection?: EntryConnection & EntryCountOutputType;
   @Field(_type => EntryEdge && [EntryCountOutputType])
   entryEdge: EntryEdge & Array<EntryCountOutputType>;
-
 }
 
 export type EntryConnectionViaUser = {
@@ -59,6 +60,6 @@ export type EntryConnectionViaUser = {
 @ObjectType()
 export class EntryInterfaceExtendsEntryConnection<
   T extends EntryConnectionViaUser
-  > {
+> {
   userToEntryConnect: T;
 }

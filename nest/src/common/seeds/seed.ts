@@ -367,7 +367,13 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
           ]
         }
       },
-      include: { sessions: true, accounts: true, profile: true, entries: true, _count: true }
+      include: {
+        sessions: true,
+        accounts: true,
+        profile: true,
+        entries: true,
+        _count: true
+      }
     });
   };
   return seedUser();

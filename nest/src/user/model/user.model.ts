@@ -52,8 +52,7 @@ export class User {
   @Field(_type => Date, {
     name: "updatedAt",
     nullable: true,
-    description:
-      "Identifies the date and time when the user was last updated."
+    description: "Identifies the date and time when the user was last updated."
   })
   updatedAt: Date | null;
 
@@ -78,6 +77,6 @@ export class User {
   @Field(() => [Comment], { nullable: true })
   comments?: Array<Comment>;
 
-  @Field(() => [Category], {nullable:true})
+  @Field(() => [Category], { nullable: true })
   categories?: Array<Category>;
 }

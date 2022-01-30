@@ -5,8 +5,7 @@ import { Session } from "../../session/model";
 
 @ObjectType("Auth")
 export class Auth {
-
-  @Field(() => User, {nullable: true})
+  @Field(() => User, { nullable: true })
   user!: User | null;
 
   @Field(() => Session, { nullable: true })

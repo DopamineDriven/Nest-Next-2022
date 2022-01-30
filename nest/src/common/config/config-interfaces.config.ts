@@ -68,5 +68,5 @@ export interface GitHubConfig {
 export interface ApolloConfig {
   key: string;
   ref?: string;
-  reporting: boolean
+  reporting: boolean;
 }

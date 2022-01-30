@@ -1,7 +1,5 @@
 import { Module, CacheModule } from "@nestjs/common";
-import {
-  GraphQLModule
-} from "@nestjs/graphql";
+import { GraphQLModule } from "@nestjs/graphql";
 import { join } from "path";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import config from "./common/config/config.config";
@@ -50,9 +48,11 @@ import { EntryModule } from "./entry/entry.module";
 // import { UnwrapPromise } from "@prisma/client";
 // import { Request, Response } from "express";
 
-
-
-export type Context = { req: ExpressContext['req'], res: ExpressContext['res'], token: string | null };
+export type Context = {
+  req: ExpressContext["req"];
+  res: ExpressContext["res"];
+  token: string | null;
+};
 @Module({
   imports: [
     CacheModule.register({
@@ -64,9 +64,7 @@ export type Context = { req: ExpressContext['req'], res: ExpressContext['res'], 
       envFilePath: "./env"
     }),
     GraphQLModule.forRootAsync({
-      useFactory: async (
-        configService: ConfigService
-       ) => {
+      useFactory: async (configService: ConfigService) => {
         const rootSchema = await loadSchema("./src/schema.gql", {
           loaders: [new GraphQLFileLoader()]
         });
@@ -123,16 +121,15 @@ export type Context = { req: ExpressContext['req'], res: ExpressContext['res'], 
             : process.env.NODE_ENV !== "production"
             ? true
             : false,
-          context: async ({ req, res }: ExpressContext): Promise<Context>=> {
+          context: async ({ req, res }: ExpressContext): Promise<Context> => {
             const token = req.header("authorization");
-            const ctx = {req, res, token: token || null}
+            const ctx = { req, res, token: token || null };
             if (token != undefined) {
               console.log(token ?? "still no token");
               return { token: token, req, res };
             } else {
-              return {req, res, token: null}
+              return { req, res, token: null };
             }
-            
           }
         };
       },
@@ -158,10 +155,10 @@ export type Context = { req: ExpressContext['req'], res: ExpressContext['res'], 
 export class AppModule {}
 
 /**
- * { 
+ * {
           ...props
         }: GqlModuleOptions
       ): Promise<GqlModuleOptions
  * requestDidStart: (requestContext: GraphQLRequestContext<Context>) => ([requestContext.request.http?.headers.get("authorization")])})
-GraphQLRequestContextExecutionDidStart<Context> 
+GraphQLRequestContextExecutionDidStart<Context>
 */

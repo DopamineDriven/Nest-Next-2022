@@ -58,7 +58,7 @@ export type ValidObjects =
   | BigInt
   | Date
   | Buffer
-  | Upload['file']
+  | Upload["file"]
   | Record<string, unknown>;
 
 export type IsObject<T> = T extends Array<any>
@@ -69,7 +69,7 @@ export type IsObject<T> = T extends Array<any>
   ? False
   : T extends ValidObjects
   ? False
-  : T extends Upload['file']
+  : T extends Upload["file"]
   ? False
   : T extends Record<string, unknown>
   ? True

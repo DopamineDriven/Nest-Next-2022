@@ -1,4 +1,8 @@
-export const clearData = async <T extends import("@prisma/client").PrismaClient>(prisma: T) => {
+export const clearData = async <
+  T extends import("@prisma/client").PrismaClient
+>(
+  prisma: T
+) => {
   const users = await prisma.user.deleteMany({});
   const accounts = await prisma.account.deleteMany({});
   const entries = await prisma.entry.deleteMany({});
@@ -22,19 +26,33 @@ export const clearData = async <T extends import("@prisma/client").PrismaClient>
   };
 };
 
-export const clearUsers = async <T extends import("@prisma/client").PrismaClient>(prisma: T)  => {
-  const getUsers = async () => await prisma.user.findMany({
-    include: {accounts: true, categories: true, comments: true, connections: true, entries: true, profile: true, sessions: true, _count: true}
-  });
-  const clearUserData =async () => {
-    if ((await getUsers()).length  >  0) {
+export const clearUsers = async <
+  T extends import("@prisma/client").PrismaClient
+>(
+  prisma: T
+) => {
+  const getUsers = async () =>
+    await prisma.user.findMany({
+      include: {
+        accounts: true,
+        categories: true,
+        comments: true,
+        connections: true,
+        entries: true,
+        profile: true,
+        sessions: true,
+        _count: true
+      }
+    });
+  const clearUserData = async () => {
+    if ((await getUsers()).length > 0) {
       for (const user of await getUsers()) {
-        return await prisma.user.delete({ where: { id: user.id } })
+        return await prisma.user.delete({ where: { id: user.id } });
       }
     } else {
-      return "clear"
+      return "clear";
     }
-  }
+  };
   return await clearUserData();
   // for (const user of getUsers) {
   //   return await prisma.user.delete({where: {id: user.id}})
@@ -43,8 +61,7 @@ export const clearUsers = async <T extends import("@prisma/client").PrismaClient
   // if (users.count > 0) {
   //   return await prisma.user.deleteMany({where: {AND: [{id: ""}, {id: ""}]}});
   // }
-
-}
+};
 
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 type ClearInferred = UnwrapPromise<ReturnType<typeof clearData>>;

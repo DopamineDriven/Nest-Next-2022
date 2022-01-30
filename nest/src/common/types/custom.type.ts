@@ -1,7 +1,7 @@
-export type XGeneric<
-  Key extends string | number | symbol,
+export type XGeneric<Key extends string | number | symbol, T> = Record<
+  Key,
   T
-> = Record<Key, T> extends infer U
+> extends infer U
   ? U
   : Record<Key, T> extends Promise<(...args: unknown[]) => Promise<infer U>>
   ? U

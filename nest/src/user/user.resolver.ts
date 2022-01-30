@@ -97,10 +97,8 @@ export class UserResolver {
             role: roles,
             email: { contains: query || "" }
           },
-          orderBy: orderBy?._relevance?.fields
-            ? { ...orderBy }
-            : undefined,
-          ...(args)
+          orderBy: orderBy?._relevance?.fields ? { ...orderBy } : undefined,
+          ...args
         }),
       () =>
         this.prismaService.user.count({

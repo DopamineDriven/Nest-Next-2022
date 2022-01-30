@@ -16,7 +16,9 @@ export class EntryFilter {
 
 @ConnectionOrderingInputType()
 export class EntryOrderBy {
-  @Field(_type => EntryOrderByWithRelationAndSearchRelevanceInput, { nullable: true })
+  @Field(_type => EntryOrderByWithRelationAndSearchRelevanceInput, {
+    nullable: true
+  })
   sort: EntryOrderByWithRelationAndSearchRelevanceInput;
 }
 

@@ -20,7 +20,7 @@ export default class AuthJwtController {
     const userId = payload.payload?.userId;
     console.log(userId);
     const signedPayload = this.jwtService.sign(
-      payload?.payload ? payload.payload : {},
+      payload?.payload ? payload.payload : {}
     );
     console.log(signedPayload);
     return response

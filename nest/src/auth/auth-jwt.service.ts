@@ -77,7 +77,6 @@ export class AuthJwtService {
             sessions: {
               connectOrCreate: [
                 {
-            
                   where: { userId: jwt.payload.userId },
                   create: {
                     accessToken: accessToken,
@@ -89,8 +88,7 @@ export class AuthJwtService {
                     provider: jwt.header.typ,
                     lastVerified: new Date(Date.now()),
                     scopes: ["read", "write"],
-                    tokenState: "VALID",
-                    
+                    tokenState: "VALID"
                   }
                 }
               ]
@@ -103,11 +101,11 @@ export class AuthJwtService {
           where: { userId: jwt.payload.userId },
           orderBy: { lastVerified: "asc" }
         })
-      ])
+      ]);
 
       const { sessions, ...userInfo } = userUpdateToUserSesh[0];
-      const { ...session } = userUpdateToUserSesh[2]
-      const userData = {...userInfo, _count: userUpdateToUserSesh[1]}
+      const { ...session } = userUpdateToUserSesh[2];
+      const userData = { ...userInfo, _count: userUpdateToUserSesh[1] };
       return {
         refreshToken: auth.refreshToken ? auth.refreshToken : null,
         accessToken: auth.accessToken ? auth.accessToken : null,
@@ -127,7 +125,6 @@ export class AuthJwtService {
   }
 
   async login(email: string, password: string): Promise<Auth> {
-
     const user = await this.prismaService.user.findUnique({ where: { email } });
     if (!user) {
       throw new NotFoundException(`No user found for email: ${email}`);
@@ -148,53 +145,52 @@ export class AuthJwtService {
       accessToken ? accessToken : ""
     );
 
-      const loginTransaction = await this.prismaService.$transaction([
-          this.prismaService.user.update({
-            where: { id: user.id },
-            data: {
-              updatedAt: new Date(Date.now()),
-              status: "ONLINE",
-              sessions: {
-                connectOrCreate: [
-                  {
-                    where: { userId: jwt.payload.userId },
-                    create: {
-                      accessToken: accessToken,
-                      alg: jwt.header.alg,
-                      exp: jwt.payload.exp,
-                      iat: jwt.payload.iat,
-                      refreshToken: refreshToken,
-                      signature: jwt.signature,
-                      provider: jwt.header.typ,
-                      lastVerified: new Date(Date.now()),
-                      scopes: ["read", "write"],
-                      tokenState: "VALID"
-                    }
-                  }
-                ]
+    const loginTransaction = await this.prismaService.$transaction([
+      this.prismaService.user.update({
+        where: { id: user.id },
+        data: {
+          updatedAt: new Date(Date.now()),
+          status: "ONLINE",
+          sessions: {
+            connectOrCreate: [
+              {
+                where: { userId: jwt.payload.userId },
+                create: {
+                  accessToken: accessToken,
+                  alg: jwt.header.alg,
+                  exp: jwt.payload.exp,
+                  iat: jwt.payload.iat,
+                  refreshToken: refreshToken,
+                  signature: jwt.signature,
+                  provider: jwt.header.typ,
+                  lastVerified: new Date(Date.now()),
+                  scopes: ["read", "write"],
+                  tokenState: "VALID"
+                }
               }
-            },
-            include: { sessions: true, _count: true }
-          }),
-          this.prismaService.session.findFirst({
-            where: { userId: jwt.payload.userId },
-            orderBy: { lastVerified: "asc" }
-          })
-        ]
-      );
-      const { sessions, ...userInfo } = loginTransaction[0];
-      return {
-        accessToken: auth.accessToken,
-        refreshToken: auth.refreshToken,
-        user: userInfo,
-        session: loginTransaction[1]
-      }
+            ]
+          }
+        },
+        include: { sessions: true, _count: true }
+      }),
+      this.prismaService.session.findFirst({
+        where: { userId: jwt.payload.userId },
+        orderBy: { lastVerified: "asc" }
+      })
+    ]);
+    const { sessions, ...userInfo } = loginTransaction[0];
+    return {
+      accessToken: auth.accessToken,
+      refreshToken: auth.refreshToken,
+      user: userInfo,
+      session: loginTransaction[1]
+    };
   }
 
   async validateUser(userId: string | null): Promise<User | null> {
     return await this.prismaService.user.findUnique({
       where: { id: userId ? userId : "" },
-      include: {_count: true}
+      include: { _count: true }
     });
   }
 

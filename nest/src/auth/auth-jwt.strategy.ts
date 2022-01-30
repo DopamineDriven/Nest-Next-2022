@@ -19,8 +19,10 @@ import { AuthJwtService } from "./auth-jwt.service";
 @Injectable()
 export class AuthJwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @Inject<typeof AuthJwtService>(AuthJwtService) private readonly authService: AuthJwtService,
-    @Inject<typeof ConfigService>(ConfigService) readonly configService: ConfigService
+    @Inject<typeof AuthJwtService>(AuthJwtService)
+    private readonly authService: AuthJwtService,
+    @Inject<typeof ConfigService>(ConfigService)
+    readonly configService: ConfigService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
