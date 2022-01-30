@@ -49,8 +49,8 @@ Table Profile {
 
 Table Session {
   id String [not null]
-  userId String [not null]
-  accessToken String [unique, not null]
+  userId String [unique, not null]
+  accessToken String
   alg String
   refreshToken String
   signature String

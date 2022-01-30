@@ -7,10 +7,10 @@ import { Session } from "../../session/model";
 export class Auth {
 
   @Field(() => User, {nullable: true})
-  user!: User;
+  user!: User | null;
 
-  @Field(() => [Session], { nullable: true })
-  session!: Session[] | null;
+  @Field(() => Session, { nullable: true })
+  session!: Session | null;
 
   @Field(_type => String, { nullable: false })
   accessToken!: Token["accessToken"];

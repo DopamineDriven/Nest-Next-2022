@@ -47,7 +47,7 @@ enum AlgorithmType {
 type Auth {
   accessToken: String!
   refreshToken: String!
-  session: [Session!]
+  session: Session
   user: User
 }
 
@@ -346,7 +346,7 @@ enum Role {
 }
 
 type Session {
-  accessToken: String!
+  accessToken: String
   alg: String
   exp: Int
   iat: Int

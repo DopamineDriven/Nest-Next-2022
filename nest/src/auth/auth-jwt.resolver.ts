@@ -25,16 +25,18 @@ import { AuthDetailed } from "./model/auth-detailed.model";
 @Resolver(() => Auth)
 export class AuthJwtResolver {
   constructor(
-    @Inject<ForwardReference<AuthJwtService>>(forwardRef(() => AuthJwtService))
+    @Inject<typeof AuthJwtService>(AuthJwtService)
     private readonly auth: AuthJwtService
   ) {}
 
   @Mutation(() => Auth)
   async signup(
     @Args("data", { type: () => SignupInput }) data: SignupInput
-  ): Promise<{ accessToken: string; refreshToken: string; user: User }> {
+  ): Promise<{ accessToken: string; refreshToken: string; user: User | null }> {
     data.email = data.email.toLowerCase();
-    const { user, accessToken, refreshToken } = await this.auth.createUser(data);
+    const { user, accessToken, refreshToken } = await this.auth.createUser(
+      data
+    );
     return {
       user,
       accessToken,
@@ -59,8 +61,12 @@ export class AuthJwtResolver {
   }
 
   @Mutation(() => AuthDetailed)
-  async getUserFromAccessToken(@Args() { token }: RefreshTokenInput): Promise<AuthDetailed> {
-    return await this.auth.getUserWithDecodedToken(token).then(authDetailed => authDetailed);
+  async getUserFromAccessToken(
+    @Args() { token }: RefreshTokenInput
+  ): Promise<AuthDetailed> {
+    return await this.auth
+      .getUserWithDecodedToken(token)
+      .then(authDetailed => authDetailed);
   }
 
   @ResolveField("user")

@@ -253,7 +253,7 @@ export class Auth {
     __typename?: 'Auth';
     accessToken: string;
     refreshToken: string;
-    session?: Nullable<Session[]>;
+    session?: Nullable<Session>;
     user?: Nullable<User>;
 }
 
@@ -427,7 +427,7 @@ export abstract class IQuery {
 
 export class Session {
     __typename?: 'Session';
-    accessToken: string;
+    accessToken?: Nullable<string>;
     alg?: Nullable<string>;
     exp?: Nullable<number>;
     iat?: Nullable<number>;

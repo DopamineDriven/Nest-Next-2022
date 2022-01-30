@@ -13,6 +13,7 @@ import { PrismaService } from "./prisma/prisma.service";
 
 import * as fs from 'fs';
 import * as morgan from 'morgan';
+import { PrismaModule } from "./prisma/prisma.module";
 
 const logStream = fs.createWriteStream('api.log', {
   flags: 'a', // append
@@ -22,7 +23,7 @@ type Options = NestApplicationOptions;
 
 const options: Options = {
   bufferLogs: true,
-  logger: process.env.NODE_ENV !== "test" ? ["debug", "error", "log", "warn", "verbose"] : false,
+  logger: ["debug", "error", "log", "warn", "verbose"],
   cors: {
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     maxAge: 0,
@@ -86,7 +87,7 @@ async function bootstrap() {
   const corsConfig = configService.get<CorsConfig>("cors");
   const swaggerConfig = configService.get<SwaggerConfig>("swagger");
 
-  // 2022 Swagger Api
+  // Cortina Swagger Api
   if (swaggerConfig?.enabled) {
     const options = new DocumentBuilder()
       .setTitle(swaggerConfig.title || "Nestjs")
@@ -97,10 +98,10 @@ async function bootstrap() {
 
     SwaggerModule.setup(swaggerConfig.path || "api", app, document);
   }
-  const prismaService: PrismaService = app.get(PrismaService);
-  await prismaService.enableShutdownHooks(app);
+  const prismaService: PrismaService = app.get<PrismaService>(PrismaService);
+  prismaService.enableShutdownHooks(app)
   await app.listen(process.env.PORT || nestConfig?.port || 3000);
-  console.log(`[swagger]: ${await app.getUrl()}/api \n[graphql]: ${await app.getUrl()}/graphql`);
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 
 bootstrap();

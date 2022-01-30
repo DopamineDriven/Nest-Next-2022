@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "interactiveTransactions", "filterJson"]
+  previewFeatures = ["extendedIndexes", "fullTextSearch", "interactiveTransactions", "filterJson"]
 }
 
 generator dbml {
@@ -73,8 +73,8 @@ model Profile {
 
 model Session {
   id            String @default(uuid())
-  userId        String
-  accessToken   String @unique
+  userId        String @unique
+  accessToken   String?
   alg           String?
   refreshToken  String? 
   signature     String?

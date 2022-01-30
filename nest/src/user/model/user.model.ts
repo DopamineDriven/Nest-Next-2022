@@ -19,16 +19,16 @@ export class User {
   })
   id!: string;
   @Field(() => String, { nullable: true })
-  name?: string | null;
+  name: string | null;
 
   @Field(() => String, { nullable: true })
   email!: string | null;
 
   @Field(() => String, { nullable: true })
-  image?: string | null;
+  image: string | null;
 
   @Field(() => Role, { nullable: false, defaultValue: Role.USER })
-  role?: keyof typeof Role;
+  role: keyof typeof Role;
 
   @Field(() => UserStatus, {
     defaultValue: UserStatus.OFFLINE
@@ -54,7 +54,7 @@ export class User {
   updatedAt: Date | null;
 
   @Field(() => Date, { nullable: true })
-  emailVerified?: Date | null;
+  emailVerified: Date | null;
 
   @Field(() => Profile, { nullable: true })
   profile?: Profile | null;

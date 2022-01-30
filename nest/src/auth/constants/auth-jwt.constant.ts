@@ -12,4 +12,4 @@ export const jwtConstants = {
   signingKeyK: process.env.JWT_SIGNING_KEY_K
     ? process.env.JWT_SIGNING_KEY_K
     : ""
-} as const;
+};

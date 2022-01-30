@@ -17,7 +17,11 @@ export class GraphqlAuthGuard extends AuthGuard("jwt") {
     return graphqlContext.getContext().req;
   }
 
-  handleRequest<T extends User>(err: GraphQLError, info: GraphQLResolveInfo, user: T) {
+  handleRequest<T extends User>(
+    err: GraphQLError,
+    info: GraphQLResolveInfo,
+    user: T
+  ) {
     if (err) {
       throw err;
     }
@@ -34,3 +38,47 @@ export class GraphqlAuthGuard extends AuthGuard("jwt") {
     return user;
   }
 }
+
+/**
+ * import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  Type,
+  Scope,
+} from '@nestjs/common';
+import { ContextIdFactory, ModuleRef } from '@nestjs/core';
+import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import {
+  ROLES_KEY,
+  Roles
+} from '../decorators/role.decorator';
+
+@Injectable()
+export class PermissionsGuard implements CanActivate {
+  constructor(
+    private reflector: Reflector,
+    private abilityFactory: CaslAbilityFactory,
+  ) {}
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const requiredPermissions =
+      this.reflector.get<RequiredPermission[]>(
+        PERMISSION_CHECKER_KEY,
+        context.getHandler(),
+      ) || [];
+    const ctx = GqlExecutionContext.create(context);
+    const user = ctx.getContext().req.user;
+    const ability = await this.abilityFactory.createForUser(user);
+    return requiredPermissions.every((permission) =>
+      this.isAllowed(ability, permission),
+    );
+  }
+  private isAllowed(
+    ability: AppAbility,
+    permission: RequiredPermission,
+  ): boolean {
+    return ability.can(...permission);
+  }
+}
+ */

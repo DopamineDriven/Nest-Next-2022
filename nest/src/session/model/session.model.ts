@@ -7,8 +7,8 @@ export class Session {
   @Field(_type => ID, { nullable: false })
   id!: string;
 
-  @Field(() => String, { nullable: false })
-  accessToken!: string;
+  @Field(() => String, { nullable: true })
+  accessToken: string | null;
 
   @Field(() => String, { nullable:false })
   userId!: string;
@@ -41,5 +41,5 @@ export class Session {
   scopes: string[] | null;
 
   @Field(() => User, { nullable:true })
-  user!: User | null;
+  user: User | null;
 }
