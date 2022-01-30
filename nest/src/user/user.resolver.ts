@@ -4,6 +4,7 @@ import {
   CONTEXT,
   Context,
   Parent,
+  PartialType,
   ResolveField,
   Resolver
 } from "@nestjs/graphql";
@@ -11,7 +12,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { User } from "./model/user.model";
 import { UserService } from "./user.service";
 import { Query, Mutation } from "@nestjs/graphql";
-import { fromGlobalId } from "graphql-relay";
+import { Connection, Edge, fromGlobalId, toGlobalId } from "graphql-relay";
 import { UserConnection } from "./model/user-connection.model";
 import { PaginationArgs } from "../common/pagination/pagination.args";
 import { Prisma } from ".prisma/client";
@@ -24,16 +25,25 @@ import { Role } from "../.generated/prisma-nestjs-graphql/prisma/enums/role.enum
 import { AuthJwtService } from "../auth/auth-jwt.service";
 import { UpdateManyUserArgs } from "../.generated/prisma-nestjs-graphql/user/args/update-many-user.args";
 import { ReturnTypedNode } from "ts-morph";
-import { XOR } from "../common/types/helpers.type";
+import { Without, XOR } from "../common/types/helpers.type";
 import { ContextCreator } from "@nestjs/core/helpers/context-creator";
 import { Request } from "express";
 import * as JWT from "jsonwebtoken";
 import { JwtDecoded } from "../auth/dto";
+import { PickType } from "@nestjs/graphql";
 import {
   EntryConnection,
   EntryOrderBy
 } from "../entry/model/entry-connection.model";
 import { EntryOrderByWithRelationAndSearchRelevanceInput } from "../.generated/prisma-nestjs-graphql/entry/inputs/entry-order-by-with-relation-and-search-relevance.input";
+import { EnumRoleNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-role-nullable-filter.input";
+import { UserOrderByWithRelationAndSearchRelevanceInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-order-by-with-relation-and-search-relevance.input";
+import { Omit } from "@nestjs/graphql/dist/interfaces/gql-module-options.interface";
+import { toBase64 } from "src/common";
+import { UpdateOneUserArgs } from "./args/update-one.args";
+import { UserWhereInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where.input";
+import { InputType } from "zlib";
+import { Optional } from "utility-types";
 
 @Resolver(() => User)
 export class UserResolver {
@@ -67,36 +77,35 @@ export class UserResolver {
     @Args() { after, before, first, last }: PaginationArgs,
     @Args({ name: "query", type: () => String, nullable: true }) query: string,
     @Args({
-      name: "role",
-      type: () => Role,
-      nullable: true,
-      defaultValue: Role.USER
-    })
-    role: Role,
-    @Args({
-      name: "orderBy",
-      type: () => UserOrder,
+      name: "roles",
+      type: () => EnumRoleNullableFilter,
       nullable: true
     })
-    orderBy: UserOrder
+    roles: EnumRoleNullableFilter,
+    @Args({
+      name: "orderBy",
+      type: () => UserOrderByWithRelationAndSearchRelevanceInput,
+      nullable: true
+    })
+    orderBy: UserOrderByWithRelationAndSearchRelevanceInput
   ) {
     const edgingUserNodes = await findManyCursorConnection(
       args =>
         this.prismaService.user.findMany({
           include: { entries: true },
           where: {
-            role: role,
+            role: roles,
             email: { contains: query || "" }
           },
-          orderBy: orderBy?.field
-            ? { [orderBy.field]: orderBy?.direction }
+          orderBy: orderBy?._relevance?.fields
+            ? { ...orderBy }
             : undefined,
-          ...args
+          ...(args)
         }),
       () =>
         this.prismaService.user.count({
           where: {
-            role: role,
+            role: roles,
             email: { contains: query || "" }
           }
         }),
@@ -119,22 +128,14 @@ export class UserResolver {
     });
   }
   // @UseGuards(GraphqlAuthGuard)
-  // @Mutation()
+  // @Mutation(() => User)
   // async updateUser(
-  //   @Args()
-  //   user: XOR<
-  //     {
-  //       id: string;
-  //     },
-  //     { email: string }
-  //   >,
-  //   @Args("updateUserDate") updateUserData: UpdateManyUserArgs
+  //   @Args() email: string,
+  //   @Args("data") data: Prisma.UserUpdateInput
   // ) {
-  //   return await this.userService.updatingUser({
-  //     userWhereUniqueInput: user?.id
-  //       ? { id: user.id }
-  //       : { email: user?.email ? user.email : "" },
-  //     data: { ...updateUserData }
+  //   return await this.prismaService.user.update({
+  //     where: { email: email },
+  //     data: {...data}
   //   });
   // }
 
@@ -149,61 +150,53 @@ export class UserResolver {
     });
   }
   // resolve entry connection query in entries service/resolver then import EntryModule in UserModule and Inject this file with EntryService
-  @Query(_returns => [EntryConnection])
-  async entriesByStatus(@Args("isPublished") isPublished: boolean) {
-    return this.prismaService.user
-      .findMany({
-        include: {
-          entries: { where: { published: isPublished } }
-        },
-        orderBy: { role: "asc" }
-      })
-      .then(data =>
-        data.map(mapped => {
-          mapped.entries;
-        })
-      );
-  }
+  // @Query(_returns => [EntryConnection])
+  // async entriesByStatus(@Args("isPublished") isPublished: boolean) {
+  //   return this.prismaService.user
+  //     .findMany({
+  //       include: {
+  //         entries: { where: { published: isPublished } }
+  //       },
+  //       orderBy: { role: "asc" }
+  //     })
+  //     .then(data =>
+  //       data.map(mapped => {
+  //         mapped.entries;
+  //       })
+  //     );
+  // }
 
-  @Query(() => EntryConnection)
-  async userToEntryConnection(
-    @Args() { after, before, first, last }: PaginationArgs,
-    @Args({ name: "filterByAuthor", type: () => String, nullable: true })
-    filterByAuthor: string,
-    @Args({
-      name: "orderBy",
-      type: () => EntryOrderByWithRelationAndSearchRelevanceInput,
-      nullable: true
-    })
-    orderBy: EntryOrderByWithRelationAndSearchRelevanceInput
-  ) {
-    // const edgingThoseEntries =  await this.prismaService.user
-    //   .findMany({ include: { entries: true } })
-    //   .then(userWithEntries =>
-    //     userWithEntries.map(async user => {
-          const entries = findManyCursorConnection(
-            args =>
-              this.prismaService.entry.findMany({
-                include: { _count: true },
-                orderBy: orderBy._relevance?.fields
-                  ? { ...orderBy }
-                  : undefined,
-                where: {
-                  id: args?.cursor?.id,
-                  author: { name: { search: filterByAuthor } }
-                },
-                ...args
-              }).then(),
-            () =>
-              this.prismaService.entry.count({
-                where: {
-                  author: { name: { search: filterByAuthor } }
-                }
-              }),
-            { first, last, before, after }
-          ).then(pageInfo => {return {...pageInfo}})
-          return entries
-      // ).then(entry => {return {...entry}})
-  
-  }
+  // @Query(() => EntryConnection)
+  // async userToEntryConnection(
+  //   @Args() { after, before, first, last }: PaginationArgs,
+  //   @Args({ name: "filterByTitle", type: () => String, nullable: true })
+  //   filterByTitle: string,
+  //   @Args({
+  //     name: "orderBy",
+  //     type: () => EntryOrderByWithRelationAndSearchRelevanceInput,
+  //     nullable: true
+  //   })
+  //   orderBy: EntryOrderByWithRelationAndSearchRelevanceInput
+  // ) {
+  //   const entries = await findManyCursorConnection(
+  //     args =>
+  //       this.prismaService.entry.findMany({
+  //         include: { author: true },
+  //         orderBy: orderBy._relevance?.fields ? { ...orderBy } : undefined,
+  //         where: {
+  //           title: filterByTitle
+  //         },
+  //         ...args
+  //       }),
+  //     () =>
+  //       this.prismaService.entry.count({
+  //         where: {
+  //           title: filterByTitle
+  //         },
+  //       }),
+  //     { first, last, before, after }
+  //   );
+  //   return entries;
+  //   // ).then(entry => {return {...entry}})
+  // }
 }

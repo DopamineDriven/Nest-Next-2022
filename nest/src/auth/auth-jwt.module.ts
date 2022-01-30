@@ -21,7 +21,7 @@ import { jwtConstants } from "./constants/auth-jwt.constant";
       useFactory: async (configService: ConfigService) => {
         const securityConfig = configService.get<SecurityConfig>("security");
         return {
-          secret: jwtConstants.secret,
+          secret: configService.get<string>("JWT_ACCESS_SECRET"),
           signOptions: {
             expiresIn: securityConfig?.expiresIn
           }

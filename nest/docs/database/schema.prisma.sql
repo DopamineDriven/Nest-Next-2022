@@ -9,16 +9,16 @@ Project "2022 Nesting" {
 
 Table User {
   id String [pk]
-  name String
-  email String [unique]
+  firstName String
+  lastName String
+  email String [unique, not null]
   image String
-  role Role [not null, default: 'USER']
+  role Role [default: 'USER']
   status UserStatus [default: 'OFFLINE']
   password String [not null, default: '']
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime
   emailVerified DateTime
-  accessToken String
   profile Profile
   accounts Account [not null]
   entries Entry [not null]
@@ -49,8 +49,8 @@ Table Profile {
 
 Table Session {
   id String [not null]
-  userId String [not null]
-  accessToken String [unique, not null]
+  userId String [unique, not null]
+  accessToken String
   alg String
   refreshToken String
   signature String

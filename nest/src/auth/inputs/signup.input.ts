@@ -2,7 +2,7 @@ import { UserStatus } from "../../.generated/prisma-nestjs-graphql/prisma/enums/
 import { Role } from "../../.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
 import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
 import { InputType, Field } from "@nestjs/graphql";
-
+import { ProfileCreateNestedOneWithoutUserInput } from "../../.generated/prisma-nestjs-graphql/profile/inputs/profile-create-nested-one-without-user.input";
 @InputType()
 export class SignupInput {
   @Field(_type => String)
@@ -15,20 +15,12 @@ export class SignupInput {
   password!: string;
 
   @Field(_type => String, { nullable: true })
-  name?: string;
-
-  @Field(_type => UserStatus, {
-    nullable: true,
-    defaultValue: UserStatus.OFFLINE
-  })
-  status?: keyof typeof UserStatus;
-
-  @Field(_type => Role, { nullable: true, defaultValue: Role.USER })
-  role?: keyof typeof Role;
-
+  firstName?: string;
+  @Field(_type => String, { nullable: true })
+  lastName?: string;
   @Field(_type => String, { nullable: true })
   image?: string;
 
-  @Field(_type => String, { nullable: true })
-  accessToken?: string;
+  // @Field(() => ProfileCreateNestedOneWithoutUserInput, {nullable:true})
+  // profile?: ProfileCreateNestedOneWithoutUserInput;
 }

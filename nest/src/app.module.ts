@@ -11,6 +11,8 @@ import { ExpressContext } from "apollo-server-express";
 import {
   Context as ApolloContext,
   ApolloServerPluginLandingPageLocalDefault,
+  ApolloServerPluginLandingPageGraphQLPlaygroundOptions,
+  ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginInlineTrace
 } from "apollo-server-core";
 import { AppController } from "./app/app.controller";
@@ -26,12 +28,13 @@ import { AuthJwtModule } from "./auth/auth-jwt.module";
 import { UserModule } from "./user/user.module";
 import { PaginationModule } from "./pagination/pagination.module";
 import { PrismaService } from "./prisma/prisma.service";
-import { GraphQLResolveInfo } from "graphql";
+import { GraphQLResolveInfo, lexicographicSortSchema } from "graphql";
 import { User } from "./user/model/user.model";
+import { EntryModule } from "./entry/entry.module";
 
 export type Context = {
   req?: ExpressContext["req"];
-  token?: string;
+  token: string | null;
   res?: ExpressContext["res"];
 };
 @Module({
@@ -54,6 +57,7 @@ export type Context = {
         return {
           installSubscriptionHandlers: true,
           cors: false,
+          nodeEnv: process.env.NODE_ENV,
           buildSchemaOptions: {
             dateScalarMode: "isoDate",
             numberScalarMode: "integer"
@@ -65,42 +69,45 @@ export type Context = {
           definitions: {
             path: "./src/graphql.schema.ts" || graphqlConfig?.schemaDestination,
             outputAs: "class",
-            emitTypenameField: true,
-            skipResolverArgs: false,
-            enumsAsTypes: false
+            emitTypenameField: true
           },
           typeDefs: [
             join(process.cwd(), "/node_modules/.prisma/client/index.d.ts")
           ],
-          playground: false,
           introspection: true,
           apollo: {
             key: apolloConfig?.key ? apolloConfig.key : ""
           },
           schema: rootSchema,
+          playground: {              env: ".env",
+          settings: {
+            "general.betaUpdates": true,
+            "tracing.hideTracingResponse": false,
+            "request.credentials": "include",
+            "schema.polling.interval": 5000
+          }},
           // validationRules: [
           //   (context: ValidationContext) => [context.getSchema()]
           // ],
-          plugins: [
-            ApolloServerPluginLandingPageLocalDefault(),
-            ApolloServerPluginInlineTrace()
-          ],
-          debug:
-            process.env.NODE_ENV !== "production"
-              ? graphqlConfig?.debug
-                ? graphqlConfig.debug
-                : true
-              : false,
-          context: ({ req, res }: ApolloContext<ExpressContext>): Context => {
+          // plugins: [
+          //   ApolloServerPluginLandingPageLocalDefault(),
+          //   ApolloServerPluginInlineTrace()
+          // ],
+          debug: graphqlConfig?.debug
+          ? graphqlConfig.debug
+          : process.env.NODE_ENV !== "production"
+          ? true
+          : false,
+          context: ({ req, res }: ExpressContext): any => {
             const token = req.headers.authorization;
-            if (token !== undefined) {
-              console.log(token ?? "still no token")
+            if (token != undefined) {
+              console.log(token ?? "still no token");
               return { token: token, req, res };
             } else {
               return {
                 req,
                 res
-              }
+              };
             }
           }
         };
@@ -111,6 +118,7 @@ export type Context = {
     PasswordModule,
     AuthJwtModule,
     UserModule,
+    EntryModule,
     PaginationModule
   ],
   controllers: [AppController],

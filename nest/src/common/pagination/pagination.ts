@@ -1,4 +1,8 @@
-import { PageInfo as PageInfoRelay, ConnectionCursor } from "graphql-relay";
+import {
+  PageInfo as PageInfoRelay,
+  ConnectionCursor,
+  toGlobalId
+} from "graphql-relay";
 import {
   ObjectType,
   Field,
@@ -7,10 +11,10 @@ import {
   ReturnTypeFuncValue,
   ArgsType,
   InputType,
-  EnumOptions
+  PickType,
+  ID
 } from "@nestjs/graphql";
 
-// Mixin strategy
 type Constructor = { new (...args: any[]): any };
 
 @ObjectType()
@@ -32,9 +36,7 @@ enum Direction {
   ASC = "ASC",
   DESC = "DESC"
 }
-registerEnumType<typeof Direction>(Direction, {
-  name: "Direction"
-} as EnumOptions<typeof Direction>);
+registerEnumType(Direction, { name: "Direction" });
 
 export function ConnectionFilterArgsType<T extends Constructor>() {
   return (target: T): Constructor => {
@@ -99,6 +101,9 @@ export function ConnectionObjectType<
 
       @Field(() => [edgeType])
       edges: V[];
+
+      // @Field(() => , { nullable: true })
+      // count: number = Number.parseInt(`${Array.from((target.name)).length}`)
     }
 
     return ConnectionObjectType;

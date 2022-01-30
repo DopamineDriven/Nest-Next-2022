@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "introspect:rover": "rover graph introspect src/schema.gql",
-    "update:schema": "ts-node generate-typings",
+    "update:schema": "ts-node ./src/graphql.schema.ts",
     "generate:secret": "openssl rand -hex 32",
     "codegen": "graphql-codegen --config codegen.yml",
     "seed": "ts-node --transpile-only ./src/common/seeds/seed.ts",
@@ -143,7 +143,7 @@
     "@types/jsonwebtoken": "^8.5.8",
     "@types/morgan": "^1.9.3",
     "@types/multer": "^1.4.7",
-    "@types/node": "^17.0.12",
+    "@types/node": "^16.11.12",
     "@types/passport": "^1.0.7",
     "@types/passport-google-oauth20": "^2.0.11",
     "@types/passport-jwt": "^3.0.6",

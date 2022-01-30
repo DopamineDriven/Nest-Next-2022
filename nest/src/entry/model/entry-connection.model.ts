@@ -1,11 +1,11 @@
-import { Entry } from "./entry.model";
-import { Field, registerEnumType, Int } from "@nestjs/graphql";
 import {
   ConnectionEdgeObjectType,
   ConnectionFilterArgsType,
   ConnectionObjectType,
   ConnectionOrderingInputType
 } from "../../common/pagination/pagination";
+import { Field, Int } from "@nestjs/graphql";
+import { Entry } from "./entry.model";
 import { EntryOrderByWithRelationAndSearchRelevanceInput } from "../../.generated/prisma-nestjs-graphql/entry/inputs/entry-order-by-with-relation-and-search-relevance.input";
 
 @ConnectionFilterArgsType()

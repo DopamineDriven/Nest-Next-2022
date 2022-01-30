@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "interactiveTransactions", "filterJson"]
+  previewFeatures = ["extendedIndexes", "fullTextSearch", "interactiveTransactions", "filterJson"]
 }
 
 generator dbml {
@@ -32,16 +32,16 @@ datasource db {
 
 model User {
   id            String       @id @default(uuid())
-  name          String?
-  email         String?      @unique
+  firstName          String?
+  lastName String?
+  email         String       @unique
   image         String?
-  role          Role         @default(USER)
+  role          Role?        @default(USER)
   status        UserStatus?  @default(OFFLINE)
   password      String       @default("") 
   createdAt     DateTime     @default(now())
-  updatedAt     DateTime?    @updatedAt
+  updatedAt     DateTime?    @updatedAt()
   emailVerified DateTime?
-  accessToken   String?
   profile       Profile?     @relation("UserProfile")
   accounts      Account[]    @relation("UserAccounts")
   entries       Entry[]      @relation("Author")
@@ -73,8 +73,8 @@ model Profile {
 
 model Session {
   id            String @default(uuid())
-  userId        String
-  accessToken   String @unique
+  userId        String @unique
+  accessToken   String?
   alg           String?
   refreshToken  String? 
   signature     String?
@@ -85,8 +85,6 @@ model Session {
   iat           Int?
   exp           Int?
   user         User      @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("sessions")
 }
 
 
@@ -100,9 +98,7 @@ model Comment {
   updatedAt DateTime?          @updatedAt
   reactions CommentReactions[]
   entry     Entry              @relation("EntryComments", fields: [entryId], references: [id], onDelete: Cascade)
-  author    User               @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
-  
-  @@map("comments")
+  author    User               @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)  
 }
 
 
@@ -116,8 +112,6 @@ model Connection {
   ip           String?
   lastModified DateTime? @updatedAt
   owner        User      @relation("UserConnections", fields: [ownerId], references: [id], onDelete: Cascade)
-
-  @@map("connections")
 }
 
 model Entry {
@@ -133,8 +127,6 @@ model Entry {
   author        User       @relation("Author", fields: [authorId], references: [id], onDelete: Cascade)
   comments      Comment[]  @relation("EntryComments")
   categoryId    String?
-
-  @@map("entries")
 }
 
 model Account {
@@ -156,7 +148,6 @@ model Account {
   user               User    @relation("UserAccounts", fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@map("accounts")
 }
 
 model Category {
@@ -168,8 +159,6 @@ model Category {
   entries   Entry[]   @relation("CategoryToEntry", fields: [entryId], references: [id])
   entryId   String?
   creator   User      @relation("CategoryCreator", fields: [creatorId], references: [id], onDelete: Cascade)
-
-  @@map("categories")
 }
 
 /// Passwordless login for email providers
@@ -180,7 +169,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-  @@map("verification_tokens")
 }
 
 enum Role {
