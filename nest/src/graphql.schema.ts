@@ -88,11 +88,11 @@ export enum SortOrder {
 }
 
 export enum UserOrderByRelevanceFieldEnum {
-    accessToken = "accessToken",
     email = "email",
+    firstName = "firstName",
     id = "id",
     image = "image",
-    name = "name",
+    lastName = "lastName",
     password = "password"
 }
 
@@ -105,12 +105,132 @@ export enum UserStatus {
     SUSPENDED = "SUSPENDED"
 }
 
+export class AccountCreateManyUserInput {
+    access_token?: Nullable<string>;
+    expires_at?: Nullable<number>;
+    id?: Nullable<string>;
+    id_token?: Nullable<string>;
+    oauth_token?: Nullable<string>;
+    oauth_token_secret?: Nullable<string>;
+    provider: string;
+    providerAccountId: string;
+    refresh_secret?: Nullable<string>;
+    refresh_token?: Nullable<string>;
+    scope?: Nullable<string>;
+    session_state?: Nullable<string>;
+    token_type?: Nullable<string>;
+    type: string;
+}
+
+export class AccountCreateManyUserInputEnvelope {
+    data: AccountCreateManyUserInput[];
+    skipDuplicates?: Nullable<boolean>;
+}
+
+export class AccountCreateNestedManyWithoutUserInput {
+    connect?: Nullable<AccountWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<AccountCreateOrConnectWithoutUserInput[]>;
+    create?: Nullable<AccountCreateWithoutUserInput[]>;
+    createMany?: Nullable<AccountCreateManyUserInputEnvelope>;
+}
+
+export class AccountCreateOrConnectWithoutUserInput {
+    create: AccountCreateWithoutUserInput;
+    where: AccountWhereUniqueInput;
+}
+
+export class AccountCreateWithoutUserInput {
+    access_token?: Nullable<string>;
+    expires_at?: Nullable<number>;
+    id?: Nullable<string>;
+    id_token?: Nullable<string>;
+    oauth_token?: Nullable<string>;
+    oauth_token_secret?: Nullable<string>;
+    provider: string;
+    providerAccountId: string;
+    refresh_secret?: Nullable<string>;
+    refresh_token?: Nullable<string>;
+    scope?: Nullable<string>;
+    session_state?: Nullable<string>;
+    token_type?: Nullable<string>;
+    type: string;
+}
+
 export class AccountOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
 }
 
+export class AccountProviderProviderAccountIdCompoundUniqueInput {
+    provider: string;
+    providerAccountId: string;
+}
+
+export class AccountWhereUniqueInput {
+    id?: Nullable<string>;
+    provider_providerAccountId?: Nullable<AccountProviderProviderAccountIdCompoundUniqueInput>;
+}
+
+export class CategoryCreateManyCreatorInput {
+    createdAt?: Nullable<DateTime>;
+    entryId?: Nullable<string>;
+    id?: Nullable<string>;
+    name: string;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class CategoryCreateManyCreatorInputEnvelope {
+    data: CategoryCreateManyCreatorInput[];
+    skipDuplicates?: Nullable<boolean>;
+}
+
+export class CategoryCreateNestedManyWithoutCreatorInput {
+    connect?: Nullable<CategoryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CategoryCreateOrConnectWithoutCreatorInput[]>;
+    create?: Nullable<CategoryCreateWithoutCreatorInput[]>;
+    createMany?: Nullable<CategoryCreateManyCreatorInputEnvelope>;
+}
+
+export class CategoryCreateNestedManyWithoutEntriesInput {
+    connect?: Nullable<CategoryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CategoryCreateOrConnectWithoutEntriesInput[]>;
+    create?: Nullable<CategoryCreateWithoutEntriesInput[]>;
+}
+
+export class CategoryCreateOrConnectWithoutCreatorInput {
+    create: CategoryCreateWithoutCreatorInput;
+    where: CategoryWhereUniqueInput;
+}
+
+export class CategoryCreateOrConnectWithoutEntriesInput {
+    create: CategoryCreateWithoutEntriesInput;
+    where: CategoryWhereUniqueInput;
+}
+
+export class CategoryCreateWithoutCreatorInput {
+    createdAt?: Nullable<DateTime>;
+    entries?: Nullable<EntryCreateNestedManyWithoutCategoriesInput>;
+    entryId?: Nullable<string>;
+    id?: Nullable<string>;
+    name: string;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class CategoryCreateWithoutEntriesInput {
+    createdAt?: Nullable<DateTime>;
+    creator: UserCreateNestedOneWithoutCategoriesInput;
+    entryId?: Nullable<string>;
+    id?: Nullable<string>;
+    name: string;
+    updatedAt?: Nullable<DateTime>;
+}
+
 export class CategoryOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
+}
+
+export class CategoryWhereUniqueInput {
+    id?: Nullable<string>;
+    name?: Nullable<string>;
 }
 
 export class ChangePasswordInput {
@@ -118,12 +238,242 @@ export class ChangePasswordInput {
     oldPassword: string;
 }
 
+export class CommentCreateManyAuthorInput {
+    body?: Nullable<JSON>;
+    createdAt?: Nullable<DateTime>;
+    entryId: string;
+    id?: Nullable<string>;
+    position?: Nullable<string>;
+    reactions?: Nullable<CommentCreateManyreactionsInput>;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class CommentCreateManyAuthorInputEnvelope {
+    data: CommentCreateManyAuthorInput[];
+    skipDuplicates?: Nullable<boolean>;
+}
+
+export class CommentCreateManyEntryInput {
+    authorId: string;
+    body?: Nullable<JSON>;
+    createdAt?: Nullable<DateTime>;
+    id?: Nullable<string>;
+    position?: Nullable<string>;
+    reactions?: Nullable<CommentCreateManyreactionsInput>;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class CommentCreateManyEntryInputEnvelope {
+    data: CommentCreateManyEntryInput[];
+    skipDuplicates?: Nullable<boolean>;
+}
+
+export class CommentCreateManyreactionsInput {
+    set: CommentReactions[];
+}
+
+export class CommentCreateNestedManyWithoutAuthorInput {
+    connect?: Nullable<CommentWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CommentCreateOrConnectWithoutAuthorInput[]>;
+    create?: Nullable<CommentCreateWithoutAuthorInput[]>;
+    createMany?: Nullable<CommentCreateManyAuthorInputEnvelope>;
+}
+
+export class CommentCreateNestedManyWithoutEntryInput {
+    connect?: Nullable<CommentWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CommentCreateOrConnectWithoutEntryInput[]>;
+    create?: Nullable<CommentCreateWithoutEntryInput[]>;
+    createMany?: Nullable<CommentCreateManyEntryInputEnvelope>;
+}
+
+export class CommentCreateOrConnectWithoutAuthorInput {
+    create: CommentCreateWithoutAuthorInput;
+    where: CommentWhereUniqueInput;
+}
+
+export class CommentCreateOrConnectWithoutEntryInput {
+    create: CommentCreateWithoutEntryInput;
+    where: CommentWhereUniqueInput;
+}
+
+export class CommentCreateWithoutAuthorInput {
+    body?: Nullable<JSON>;
+    createdAt?: Nullable<DateTime>;
+    entry: EntryCreateNestedOneWithoutCommentsInput;
+    id?: Nullable<string>;
+    position?: Nullable<string>;
+    reactions?: Nullable<CommentCreatereactionsInput>;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class CommentCreateWithoutEntryInput {
+    author: UserCreateNestedOneWithoutCommentsInput;
+    body?: Nullable<JSON>;
+    createdAt?: Nullable<DateTime>;
+    id?: Nullable<string>;
+    position?: Nullable<string>;
+    reactions?: Nullable<CommentCreatereactionsInput>;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class CommentCreatereactionsInput {
+    set: CommentReactions[];
+}
+
 export class CommentOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
 }
 
+export class CommentWhereUniqueInput {
+    id?: Nullable<string>;
+}
+
+export class ConnectionCreateManyOwnerInput {
+    email: string;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    ip?: Nullable<string>;
+    lastModified?: Nullable<DateTime>;
+    lastName?: Nullable<string>;
+    phoneNumber?: Nullable<string>;
+}
+
+export class ConnectionCreateManyOwnerInputEnvelope {
+    data: ConnectionCreateManyOwnerInput[];
+    skipDuplicates?: Nullable<boolean>;
+}
+
+export class ConnectionCreateNestedManyWithoutOwnerInput {
+    connect?: Nullable<ConnectionWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<ConnectionCreateOrConnectWithoutOwnerInput[]>;
+    create?: Nullable<ConnectionCreateWithoutOwnerInput[]>;
+    createMany?: Nullable<ConnectionCreateManyOwnerInputEnvelope>;
+}
+
+export class ConnectionCreateOrConnectWithoutOwnerInput {
+    create: ConnectionCreateWithoutOwnerInput;
+    where: ConnectionWhereUniqueInput;
+}
+
+export class ConnectionCreateWithoutOwnerInput {
+    email: string;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    ip?: Nullable<string>;
+    lastModified?: Nullable<DateTime>;
+    lastName?: Nullable<string>;
+    phoneNumber?: Nullable<string>;
+}
+
 export class ConnectionOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
+}
+
+export class ConnectionWhereUniqueInput {
+    id?: Nullable<string>;
+}
+
+export class EntryCreateInput {
+    author: UserCreateNestedOneWithoutEntriesInput;
+    categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
+    categoryId?: Nullable<string>;
+    comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
+    content?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<string>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class EntryCreateManyAuthorInput {
+    categoryId?: Nullable<string>;
+    content?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<string>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class EntryCreateManyAuthorInputEnvelope {
+    data: EntryCreateManyAuthorInput[];
+    skipDuplicates?: Nullable<boolean>;
+}
+
+export class EntryCreateNestedManyWithoutAuthorInput {
+    connect?: Nullable<EntryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutAuthorInput[]>;
+    create?: Nullable<EntryCreateWithoutAuthorInput[]>;
+    createMany?: Nullable<EntryCreateManyAuthorInputEnvelope>;
+}
+
+export class EntryCreateNestedManyWithoutCategoriesInput {
+    connect?: Nullable<EntryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCategoriesInput[]>;
+    create?: Nullable<EntryCreateWithoutCategoriesInput[]>;
+}
+
+export class EntryCreateNestedOneWithoutCommentsInput {
+    connect?: Nullable<EntryWhereUniqueInput>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCommentsInput>;
+    create?: Nullable<EntryCreateWithoutCommentsInput>;
+}
+
+export class EntryCreateOrConnectWithoutAuthorInput {
+    create: EntryCreateWithoutAuthorInput;
+    where: EntryWhereUniqueInput;
+}
+
+export class EntryCreateOrConnectWithoutCategoriesInput {
+    create: EntryCreateWithoutCategoriesInput;
+    where: EntryWhereUniqueInput;
+}
+
+export class EntryCreateOrConnectWithoutCommentsInput {
+    create: EntryCreateWithoutCommentsInput;
+    where: EntryWhereUniqueInput;
+}
+
+export class EntryCreateWithoutAuthorInput {
+    categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
+    categoryId?: Nullable<string>;
+    comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
+    content?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<string>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class EntryCreateWithoutCategoriesInput {
+    author: UserCreateNestedOneWithoutEntriesInput;
+    categoryId?: Nullable<string>;
+    comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
+    content?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<string>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class EntryCreateWithoutCommentsInput {
+    author: UserCreateNestedOneWithoutEntriesInput;
+    categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
+    categoryId?: Nullable<string>;
+    content?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<string>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class EntryOrderByRelationAggregateInput {
@@ -152,9 +502,64 @@ export class EntryOrderByWithRelationAndSearchRelevanceInput {
     updatedAt?: Nullable<SortOrder>;
 }
 
+export class EntryWhereUniqueInput {
+    id?: Nullable<string>;
+    title?: Nullable<string>;
+}
+
+export class EnumRoleNullableFilter {
+    equals?: Nullable<Role>;
+    in?: Nullable<Role[]>;
+    not?: Nullable<NestedEnumRoleNullableFilter>;
+    notIn?: Nullable<Role[]>;
+}
+
 export class LoginInput {
     email?: Nullable<string>;
     password?: Nullable<string>;
+}
+
+export class NestedEnumRoleNullableFilter {
+    equals?: Nullable<Role>;
+    in?: Nullable<Role[]>;
+    not?: Nullable<NestedEnumRoleNullableFilter>;
+    notIn?: Nullable<Role[]>;
+}
+
+export class ProfileCreateNestedOneWithoutUserInput {
+    connect?: Nullable<ProfileWhereUniqueInput>;
+    connectOrCreate?: Nullable<ProfileCreateOrConnectWithoutUserInput>;
+    create?: Nullable<ProfileCreateWithoutUserInput>;
+}
+
+export class ProfileCreateOrConnectWithoutUserInput {
+    create: ProfileCreateWithoutUserInput;
+    where: ProfileWhereUniqueInput;
+}
+
+export class ProfileCreateWithoutUserInput {
+    activiyFeed?: Nullable<ProfileCreateactiviyFeedInput>;
+    bio?: Nullable<ProfileCreatebioInput>;
+    city?: Nullable<string>;
+    country?: Nullable<string>;
+    coverPhoto?: Nullable<string>;
+    dob?: Nullable<string>;
+    gender?: Nullable<Gender>;
+    id?: Nullable<string>;
+    lastSeen?: Nullable<DateTime>;
+    memberSince?: Nullable<DateTime>;
+    occupation?: Nullable<string>;
+    phoneNumber?: Nullable<string>;
+    pronouns?: Nullable<Pronouns>;
+    recentActivity?: Nullable<JSON>;
+}
+
+export class ProfileCreateactiviyFeedInput {
+    set: JSON[];
+}
+
+export class ProfileCreatebioInput {
+    set: JSON[];
 }
 
 export class ProfileOrderByRelevanceInput {
@@ -183,22 +588,171 @@ export class ProfileOrderByWithRelationAndSearchRelevanceInput {
     userId?: Nullable<SortOrder>;
 }
 
+export class ProfileWhereUniqueInput {
+    id?: Nullable<string>;
+    userId?: Nullable<string>;
+}
+
+export class SessionCreateManyUserInput {
+    accessToken?: Nullable<string>;
+    alg?: Nullable<string>;
+    exp?: Nullable<number>;
+    iat?: Nullable<number>;
+    id?: Nullable<string>;
+    lastVerified?: Nullable<DateTime>;
+    provider?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+    scopes?: Nullable<SessionCreateManyscopesInput>;
+    signature?: Nullable<string>;
+    tokenState?: Nullable<string>;
+}
+
+export class SessionCreateManyUserInputEnvelope {
+    data: SessionCreateManyUserInput[];
+    skipDuplicates?: Nullable<boolean>;
+}
+
+export class SessionCreateManyscopesInput {
+    set: string[];
+}
+
+export class SessionCreateNestedManyWithoutUserInput {
+    connect?: Nullable<SessionWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<SessionCreateOrConnectWithoutUserInput[]>;
+    create?: Nullable<SessionCreateWithoutUserInput[]>;
+    createMany?: Nullable<SessionCreateManyUserInputEnvelope>;
+}
+
+export class SessionCreateOrConnectWithoutUserInput {
+    create: SessionCreateWithoutUserInput;
+    where: SessionWhereUniqueInput;
+}
+
+export class SessionCreateWithoutUserInput {
+    accessToken?: Nullable<string>;
+    alg?: Nullable<string>;
+    exp?: Nullable<number>;
+    iat?: Nullable<number>;
+    id?: Nullable<string>;
+    lastVerified?: Nullable<DateTime>;
+    provider?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+    scopes?: Nullable<SessionCreatescopesInput>;
+    signature?: Nullable<string>;
+    tokenState?: Nullable<string>;
+}
+
+export class SessionCreatescopesInput {
+    set: string[];
+}
+
 export class SessionOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
 }
 
-export class SignupInput {
-    accessToken?: Nullable<string>;
-    email: string;
-    image?: Nullable<string>;
-    name?: Nullable<string>;
-    password: string;
-    role?: Nullable<Role>;
-    status?: Nullable<UserStatus>;
+export class SessionWhereUniqueInput {
+    userId?: Nullable<string>;
 }
 
-export class UserOrder {
-    direction: SortOrder;
+export class SignupInput {
+    email: string;
+    firstName?: Nullable<string>;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    password: string;
+}
+
+export class UserCreateNestedOneWithoutCategoriesInput {
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutCategoriesInput>;
+    create?: Nullable<UserCreateWithoutCategoriesInput>;
+}
+
+export class UserCreateNestedOneWithoutCommentsInput {
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutCommentsInput>;
+    create?: Nullable<UserCreateWithoutCommentsInput>;
+}
+
+export class UserCreateNestedOneWithoutEntriesInput {
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutEntriesInput>;
+    create?: Nullable<UserCreateWithoutEntriesInput>;
+}
+
+export class UserCreateOrConnectWithoutCategoriesInput {
+    create: UserCreateWithoutCategoriesInput;
+    where: UserWhereUniqueInput;
+}
+
+export class UserCreateOrConnectWithoutCommentsInput {
+    create: UserCreateWithoutCommentsInput;
+    where: UserWhereUniqueInput;
+}
+
+export class UserCreateOrConnectWithoutEntriesInput {
+    create: UserCreateWithoutEntriesInput;
+    where: UserWhereUniqueInput;
+}
+
+export class UserCreateWithoutCategoriesInput {
+    accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
+    comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
+    connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTime>;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    password?: Nullable<string>;
+    profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
+    role?: Nullable<Role>;
+    sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
+    status?: Nullable<UserStatus>;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class UserCreateWithoutCommentsInput {
+    accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
+    categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
+    connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTime>;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    password?: Nullable<string>;
+    profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
+    role?: Nullable<Role>;
+    sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
+    status?: Nullable<UserStatus>;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class UserCreateWithoutEntriesInput {
+    accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
+    categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
+    comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
+    connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTime>;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    password?: Nullable<string>;
+    profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
+    role?: Nullable<Role>;
+    sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
+    status?: Nullable<UserStatus>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class UserOrderByRelevanceInput {
@@ -209,7 +763,6 @@ export class UserOrderByRelevanceInput {
 
 export class UserOrderByWithRelationAndSearchRelevanceInput {
     _relevance?: Nullable<UserOrderByRelevanceInput>;
-    accessToken?: Nullable<SortOrder>;
     accounts?: Nullable<AccountOrderByRelationAggregateInput>;
     categories?: Nullable<CategoryOrderByRelationAggregateInput>;
     comments?: Nullable<CommentOrderByRelationAggregateInput>;
@@ -218,15 +771,21 @@ export class UserOrderByWithRelationAndSearchRelevanceInput {
     email?: Nullable<SortOrder>;
     emailVerified?: Nullable<SortOrder>;
     entries?: Nullable<EntryOrderByRelationAggregateInput>;
+    firstName?: Nullable<SortOrder>;
     id?: Nullable<SortOrder>;
     image?: Nullable<SortOrder>;
-    name?: Nullable<SortOrder>;
+    lastName?: Nullable<SortOrder>;
     password?: Nullable<SortOrder>;
     profile?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput>;
     role?: Nullable<SortOrder>;
     sessions?: Nullable<SessionOrderByRelationAggregateInput>;
     status?: Nullable<SortOrder>;
     updatedAt?: Nullable<SortOrder>;
+}
+
+export class UserWhereUniqueInput {
+    email?: Nullable<string>;
+    id?: Nullable<string>;
 }
 
 export class Account {
@@ -251,8 +810,8 @@ export class Account {
 
 export class Auth {
     __typename?: 'Auth';
-    accessToken: string;
-    refreshToken: string;
+    accessToken?: Nullable<string>;
+    refreshToken?: Nullable<string>;
     session?: Nullable<Session>;
     user?: Nullable<User>;
 }
@@ -368,6 +927,8 @@ export abstract class IMutation {
 
     abstract changePassword(data: ChangePasswordInput): User | Promise<User>;
 
+    abstract createEntry(data: EntryCreateInput): Entry | Promise<Entry>;
+
     abstract getUserFromAccessToken(token: string): AuthDetailed | Promise<AuthDetailed>;
 
     abstract login(data: LoginInput): Auth | Promise<Auth>;
@@ -408,13 +969,15 @@ export class Profile {
 export abstract class IQuery {
     __typename?: 'IQuery';
 
-    abstract entriesByStatus(isPublished: boolean): EntryConnection[] | Promise<EntryConnection[]>;
+    abstract entryById(id: string): Entry | Promise<Entry>;
+
+    abstract entryCursorConnection(after?: Nullable<string>, before?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput>, query?: Nullable<string>, skip?: Nullable<number>): EntryConnection | Promise<EntryConnection>;
 
     abstract hello(name: string): string | Promise<string>;
 
     abstract helloWorld(): string | Promise<string>;
 
-    abstract listUsers(after?: Nullable<string>, before?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<UserOrder>, query?: Nullable<string>, role?: Nullable<Role>, skip?: Nullable<number>): UserConnection | Promise<UserConnection>;
+    abstract listUsers(after?: Nullable<string>, before?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>, query?: Nullable<string>, roles?: Nullable<EnumRoleNullableFilter>, skip?: Nullable<number>): UserConnection | Promise<UserConnection>;
 
     abstract me(accessToken: string): User | Promise<User>;
 
@@ -422,7 +985,7 @@ export abstract class IQuery {
 
     abstract userByRelayId(): User | Promise<User>;
 
-    abstract userToEntryConnection(after?: Nullable<string>, before?: Nullable<string>, filterByAuthor?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput>, skip?: Nullable<number>): EntryConnection | Promise<EntryConnection>;
+    abstract userPosts(userId: string): Entry[] | Promise<Entry[]>;
 }
 
 export class Session {
@@ -442,30 +1005,35 @@ export class Session {
     userId: string;
 }
 
+export abstract class ISubscription {
+    __typename?: 'ISubscription';
+
+    abstract entryCreated(): Entry | Promise<Entry>;
+}
+
 export class Token {
     __typename?: 'Token';
-    accessToken: string;
-    refreshToken: string;
+    accessToken?: Nullable<string>;
+    refreshToken?: Nullable<string>;
 }
 
 export class User {
     __typename?: 'User';
-    _count: UserCount;
-    accessToken?: Nullable<string>;
     accounts?: Nullable<Account[]>;
     categories?: Nullable<Category[]>;
     comments?: Nullable<Comment[]>;
     connections?: Nullable<Connection[]>;
     createdAt: DateTime;
-    email?: Nullable<string>;
+    email: string;
     emailVerified?: Nullable<DateTime>;
     entries?: Nullable<Entry[]>;
+    firstName?: Nullable<string>;
     id: string;
     image?: Nullable<string>;
-    name?: Nullable<string>;
+    lastName?: Nullable<string>;
     password: string;
     profile?: Nullable<Profile>;
-    role: Role;
+    role?: Nullable<Role>;
     sessions?: Nullable<Session[]>;
     status: UserStatus;
     updatedAt?: Nullable<DateTime>;
@@ -477,16 +1045,6 @@ export class UserConnection {
     pageInfo: PageInfo;
 }
 
-export class UserCount {
-    __typename?: 'UserCount';
-    accounts: number;
-    categories: number;
-    comments: number;
-    connections: number;
-    entries: number;
-    sessions: number;
-}
-
 export class UserEdge {
     __typename?: 'UserEdge';
     cursor: string;
@@ -495,6 +1053,7 @@ export class UserEdge {
 
 export type BigInt = any;
 export type DateTime = any;
+export type JSON = any;
 export type JSONObject = any;
 export type PhoneNumber = any;
 type Nullable<T> = T | null;

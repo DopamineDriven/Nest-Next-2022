@@ -10,6 +10,7 @@ import { UserCount } from "../../.generated/prisma-nestjs-graphql/user/outputs/u
 import { Profile } from "../../profile/model/profile.model";
 import { Category } from "../../category/model/category.model";
 import { EntryConnection } from "../../entry/model/entry-connection.model";
+type Nullable<T> = T | null;
 
 @ObjectType("User")
 export class User {
@@ -19,16 +20,19 @@ export class User {
   })
   id!: string;
   @Field(() => String, { nullable: true })
-  name: string | null;
+  firstName: string | null;
 
   @Field(() => String, { nullable: true })
-  email!: string | null;
+  lastName: string | null;
+
+  @Field(() => String, { nullable: false })
+  email!: string;
 
   @Field(() => String, { nullable: true })
   image: string | null;
 
-  @Field(() => Role, { nullable: false, defaultValue: Role.USER })
-  role: keyof typeof Role;
+  @Field(() => Role, { nullable: true, defaultValue: Role.USER })
+  role: Nullable<keyof typeof Role>;
 
   @Field(() => UserStatus, {
     defaultValue: UserStatus.OFFLINE
@@ -63,7 +67,7 @@ export class User {
   accounts?: Array<Account>;
 
   @Field(() => [Entry], { nullable: true })
-  entries?: Array<Entry>;
+  entries?: Entry[];
 
   @Field(() => [Session], { nullable: true })
   sessions?: Array<Session>;
@@ -76,10 +80,4 @@ export class User {
 
   @Field(() => [Category], {nullable:true})
   categories?: Array<Category>;
-
-  @Field(_type => String, { nullable: true })
-  accessToken: string | null;
-
-  @Field(() => UserCount, { nullable: false })
-  _count?: UserCount;
 }

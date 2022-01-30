@@ -30,6 +30,7 @@ import { PaginationModule } from "./pagination/pagination.module";
 import { PrismaService } from "./prisma/prisma.service";
 import { GraphQLResolveInfo, lexicographicSortSchema } from "graphql";
 import { User } from "./user/model/user.model";
+import { EntryModule } from "./entry/entry.module";
 
 export type Context = {
   req?: ExpressContext["req"];
@@ -117,6 +118,7 @@ export type Context = {
     PasswordModule,
     AuthJwtModule,
     UserModule,
+    EntryModule,
     PaginationModule
   ],
   controllers: [AppController],

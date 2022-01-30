@@ -2,7 +2,7 @@ import { Token } from "./model/token.model";
 import { Auth } from "./model/auth.model";
 import { LoginInput } from "./inputs/login.input";
 import { SignupInput } from "./inputs/signup.input";
-import { RefreshTokenInput } from "./inputs/refresh-token.input";
+import { TokenInput } from "./inputs/refresh-token.input";
 import {
   Resolver,
   Mutation,
@@ -39,8 +39,8 @@ export class AuthJwtResolver {
     );
     return {
       user,
-      accessToken,
-      refreshToken
+      accessToken: accessToken ? accessToken : "",
+      refreshToken: refreshToken ? refreshToken : ""
     };
   }
   @Mutation(() => Auth)
@@ -56,13 +56,13 @@ export class AuthJwtResolver {
   }
 
   @Mutation(() => Token)
-  async refreshToken(@Args() { token }: RefreshTokenInput) {
+  async refreshToken(@Args() { token }: TokenInput) {
     return this.auth.refreshToken(token);
   }
 
   @Mutation(() => AuthDetailed)
   async getUserFromAccessToken(
-    @Args() { token }: RefreshTokenInput
+    @Args() { token }: TokenInput
   ): Promise<AuthDetailed> {
     return await this.auth
       .getUserWithDecodedToken(token)
@@ -73,7 +73,7 @@ export class AuthJwtResolver {
   async user(@Parent() auth: Auth, @Info() info: GraphQLResolveInfo) {
     console.log(info ?? "");
     return await this.auth
-      .getUserWithDecodedToken(auth.accessToken)
+      .getUserWithDecodedToken(auth.accessToken ? auth.accessToken : "")
       .then(user => user.auth.user);
   }
 }

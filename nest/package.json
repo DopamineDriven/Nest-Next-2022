@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "introspect:rover": "rover graph introspect src/schema.gql",
-    "update:schema": "ts-node generate-typings",
+    "update:schema": "ts-node ./src/graphql.schema.ts",
     "generate:secret": "openssl rand -hex 32",
     "codegen": "graphql-codegen --config codegen.yml",
     "seed": "ts-node --transpile-only ./src/common/seeds/seed.ts",

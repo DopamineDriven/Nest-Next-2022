@@ -37,83 +37,83 @@ export class AuthJwtService {
   ) {}
 
   async createUser(payload: SignupInput): Promise<Auth> {
+    const hashedPassword = await this.passwordService.hashPassword(
+      payload.password
+    );
+
+    const prismaTransactionUpsertAndQueryData =
+      await this.prismaService.user.create({
+        data: {
+          ...payload,
+          email: payload.email,
+          password: hashedPassword,
+          role: payload.email.includes("andrew@windycitydevs.io")
+            ? "SUPERADMIN"
+            : payload.email.includes("andrew.simpson.ross@gmail.com")
+            ? "SUPERADMIN"
+            : "USER",
+          firstName: payload.firstName,
+          lastName: payload.lastName,
+          status: "ONLINE",
+          createdAt: new Date(Date.now()),
+          emailVerified: new Date(Date.now()),
+          image: payload.image
+        }
+      });
+    const { accessToken, refreshToken } = this.generateTokens({
+      userId: prismaTransactionUpsertAndQueryData.id
+    });
+
+    const { jwt, auth } = await this.getUserWithDecodedToken(
+      accessToken ? accessToken : ""
+    );
     try {
-      return await this.prismaService.$transaction(
-        async prisma => {
-          const hashedPassword = await this.passwordService.hashPassword(
-            payload.password
-          );
-
-          const prismaTransactionUpsertAndQueryData = await prisma.user.create({
-            data: {
-              ...payload,
-              email: payload.email,
-              password: hashedPassword,
-              role: payload.email.includes(
-                "andrew@windycitydevs.io" || "andrew.simpson.ross@gmail.com"
-              )
-                ? Role.SUPERADMIN
-                : Role.USER,
-              name: payload.name,
-              status: payload.status,
-              createdAt: new Date(Date.now()),
-              emailVerified: new Date(Date.now()),
-              image: payload.image
-            }
-          });
-
-          const { accessToken, refreshToken } = this.generateTokens({
-            userId: prismaTransactionUpsertAndQueryData.id
-          });
-
-          const { jwt, auth } = await this.getUserWithDecodedToken(accessToken);
-
-          const userUpdate = await prisma.user.update({
-            where: { id: jwt.payload.userId },
-            data: {
-              accessToken: accessToken,
-              status: "ONLINE",
-              updatedAt: new Date(Date.now()),
-              sessions: {
-                connectOrCreate: [
-                  {
-                    where: { userId: jwt.payload.userId },
-                    create: {
-                      accessToken: accessToken,
-                      alg: jwt.header.alg,
-                      exp: jwt.payload.exp,
-                      iat: jwt.payload.iat,
-                      refreshToken: refreshToken,
-                      signature: jwt.signature,
-                      provider: jwt.header.typ,
-                      lastVerified: new Date(Date.now()),
-                      scopes: ["read", "write"],
-                      tokenState: "VALID"
-                    }
+      const userUpdateToUserSesh = await this.prismaService.$transaction([
+        this.prismaService.user.update({
+          where: { id: jwt.payload.userId },
+          data: {
+            status: "ONLINE",
+            updatedAt: new Date(Date.now()),
+            sessions: {
+              connectOrCreate: [
+                {
+            
+                  where: { userId: jwt.payload.userId },
+                  create: {
+                    accessToken: accessToken,
+                    alg: jwt.header.alg,
+                    exp: jwt.payload.exp,
+                    iat: jwt.payload.iat,
+                    refreshToken: refreshToken,
+                    signature: jwt.signature,
+                    provider: jwt.header.typ,
+                    lastVerified: new Date(Date.now()),
+                    scopes: ["read", "write"],
+                    tokenState: "VALID",
+                    
                   }
-                ]
-              }
-            },
-            include: { sessions: true }
-          });
+                }
+              ]
+            }
+          },
+          include: { sessions: true, _count: true }
+        }),
+        this.prismaService.user.count(),
+        this.prismaService.session.findFirst({
+          where: { userId: jwt.payload.userId },
+          orderBy: { lastVerified: "asc" }
+        })
+      ])
 
-          const findCurrentUserSesh = await prisma.session.findFirst({
-            where: { userId: jwt.payload.userId },
-            include: { user: true },
-            orderBy: { lastVerified: "asc" }
-          });
-
-          const { sessions, ...userInfo } = userUpdate;
-
-          return {
-            refreshToken: auth.refreshToken,
-            accessToken: auth.accessToken,
-            user: userInfo,
-            session: findCurrentUserSesh
-          };
-        },
-        { maxWait: 2500, timeout: 5000 }
-      );
+      const { sessions, ...userInfo } = userUpdateToUserSesh[0];
+      const { ...session } = userUpdateToUserSesh[2]
+      const userData = {...userInfo, _count: userUpdateToUserSesh[1]}
+      return {
+        refreshToken: auth.refreshToken ? auth.refreshToken : null,
+        accessToken: auth.accessToken ? auth.accessToken : null,
+        user: userInfo,
+        session: userUpdateToUserSesh[2]
+      };
     } catch (e) {
       if (
         e instanceof Prisma.PrismaClientKnownRequestError &&
@@ -126,31 +126,32 @@ export class AuthJwtService {
     }
   }
 
-  async login(email: string, password: string) {
-    try {
-      return await this.prismaService.$transaction(
-        async prisma => {
-          const user = await prisma.user.findUnique({ where: { email } });
-          if (!user) {
-            throw new NotFoundException(`No user found for email: ${email}`);
-          }
-          const passwordValid = await this.passwordService.validatePassword(
-            password,
-            user.password
-          );
+  async login(email: string, password: string): Promise<Auth> {
 
-          if (!passwordValid) {
-            throw new BadRequestException("Invalid password");
-          }
+    const user = await this.prismaService.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new NotFoundException(`No user found for email: ${email}`);
+    }
+    const passwordValid = await this.passwordService.validatePassword(
+      password,
+      user.password
+    );
 
-          const { accessToken, refreshToken } = this.generateTokens({
-            userId: user.id
-          });
-          const { jwt, auth } = await this.getUserWithDecodedToken(accessToken);
-          const updatedUser = await prisma.user.update({
+    if (!passwordValid) {
+      throw new BadRequestException("Invalid password");
+    }
+
+    const { accessToken, refreshToken } = this.generateTokens({
+      userId: user.id
+    });
+    const { jwt, auth } = await this.getUserWithDecodedToken(
+      accessToken ? accessToken : ""
+    );
+
+      const loginTransaction = await this.prismaService.$transaction([
+          this.prismaService.user.update({
             where: { id: user.id },
             data: {
-              accessToken: accessToken,
               updatedAt: new Date(Date.now()),
               status: "ONLINE",
               sessions: {
@@ -173,23 +174,27 @@ export class AuthJwtService {
                 ]
               }
             },
-            include: { sessions: true }
-          });
-
-          return {
-            accessToken,
-            refreshToken,
-            updatedUser
-          };
-        },
-        { maxWait: 2500, timeout: 5000 }
+            include: { sessions: true, _count: true }
+          }),
+          this.prismaService.session.findFirst({
+            where: { userId: jwt.payload.userId },
+            orderBy: { lastVerified: "asc" }
+          })
+        ]
       );
-    } catch (err) {}
+      const { sessions, ...userInfo } = loginTransaction[0];
+      return {
+        accessToken: auth.accessToken,
+        refreshToken: auth.refreshToken,
+        user: userInfo,
+        session: loginTransaction[1]
+      }
   }
 
   async validateUser(userId: string | null): Promise<User | null> {
     return await this.prismaService.user.findUnique({
-      where: { id: userId ? userId : "" }
+      where: { id: userId ? userId : "" },
+      include: {_count: true}
     });
   }
 
@@ -208,7 +213,6 @@ export class AuthJwtService {
         this.prismaService.user.update({
           where: { id: id.payload.userId },
           data: {
-            accessToken: accessToken,
             status: "ONLINE",
             updatedAt: new Date(Date.now()),
             sessions: {
@@ -238,11 +242,10 @@ export class AuthJwtService {
               ]
             }
           },
-          include: { sessions: true }
+          include: { sessions: true, _count: true }
         }),
         this.prismaService.session.findFirst({
           where: { userId: id.payload.userId },
-          include: { user: true },
           orderBy: { lastVerified: "asc" }
         })
       ]);

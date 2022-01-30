@@ -4,9 +4,9 @@ import { Field, ObjectType } from "@nestjs/graphql";
 export class Token {
   __typename?: "Token";
 
-  @Field(() => String, { description: "JWT access token" })
-  accessToken!: string;
+  @Field(() => String, { nullable: true, description: "JWT access token" })
+  accessToken!: string | null;
 
-  @Field(() => String, { description: "JWT refresh token" })
-  refreshToken!: string;
+  @Field(() => String, { nullable: true, description: "JWT refresh token" })
+  refreshToken!: string | null;
 }

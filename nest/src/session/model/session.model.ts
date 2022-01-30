@@ -41,5 +41,5 @@ export class Session {
   scopes: string[] | null;
 
   @Field(() => User, { nullable:true })
-  user: User | null;
+  user?: User | null;
 }

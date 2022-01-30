@@ -12,6 +12,8 @@ import {
 } from "../pagination/pagination.service";
 import { UserOrder } from "./inputs/user-order.input";
 import { XOR } from "../common/types/helpers.type";
+import { UserWhereInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where.input";
+import { UserWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where-unique.input";
 
 
 @Injectable()
@@ -101,7 +103,7 @@ export class UserService {
     {
       id: string;
     },
-    { email: string | null }
+    { email: string }
     >) {
     const { id, email } = where;
     return this.prisma.user.delete({
@@ -138,8 +140,8 @@ export class UserService {
       .then();
   }
 
-  updateUser(data: Prisma.UserUpdateInput, email: string | undefined) {
-    return this.prisma.user.update({ where: { email: email }, data });
+  updateUser(data: Prisma.UserUpdateInput, email: string) {
+    return this.prisma.user.update({ where: { email: email }, data: {...data} });
   }
 
   create(data: Prisma.UserCreateInput, account: Prisma.AccountCreateInput) {

@@ -250,7 +250,7 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
       Country.France
     ][
       indexGenerator.randomCountryIndexGenerator[n(0, 20)]
-    ].toString() as unknown as keyof typeof Country
+    ] as unknown as keyof typeof Country
   };
 
   const thoseDigits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -285,7 +285,6 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
   const seedUser = async () => {
     return await prisma.user.create({
       data: {
-        accessToken: accessToken,
         createdAt: new Date(Date.now()),
         role: enumSeeder.quasiRandomRole,
         email: `${seedFirstName.toLowerCase()}.${seedSurname.toLowerCase()}@gmail.com`,
@@ -293,7 +292,8 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
         password: hashedPassword,
         id: seedUserId,
         status: enumSeeder.quasiRandomUserStatus,
-        name: `${seedFirstName} ${seedSurname}`,
+        firstName: seedFirstName,
+        lastName: seedSurname,
         emailVerified: new Date(Date.now()),
         updatedAt: new Date(Date.now()),
         profile: {
@@ -367,7 +367,7 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
           ]
         }
       },
-      include: { sessions: true, accounts: true, profile: true, comments: true }
+      include: { sessions: true, accounts: true, profile: true, entries: true, _count: true }
     });
   };
   return seedUser();
@@ -385,7 +385,7 @@ async function main() {
     const s = async (): Promise<SeedInferred> =>
       await seed(prisma).then(data => {
         console.log(
-          `[seeding]: success 🎉 created ${data.role} with id ${data.id} and email ${data.email} -- in country ${data.profile?.country} having phone number ${data.profile?.phoneNumber} -- gender: ${data.profile?.gender}; pronouns: ${data.profile?.pronouns}`
+          `[seeding]: success 🎉 created ${data.role} with id ${data.id} and email ${data.email} -- in country ${data.profile?.country} having phone number ${data.profile?.phoneNumber} -- gender: ${data.profile?.gender}; pronouns: ${data.profile?.pronouns} -- authored ${data.entries[0].title} having id ${data.entries[0].id}`
         );
         return data;
       });

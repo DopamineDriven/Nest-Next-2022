@@ -1,9 +1,9 @@
 {
   "name": "Nesting",
   "documents": [
-    "./graphql/Queries/**/*.graphql",
-    "./graphql/Mutations/**/*.graphql",
-    "./graphql/Fragments/**/*.graphql"
+    "./nest/graphql/Queries/**/*.graphql",
+    "./nest/graphql/Mutations/**/*.graphql",
+    "./nest/graphql/Fragments/**/*.graphql"
   ],
   "extensions": {
     "languageService": {
@@ -13,5 +13,5 @@
       "dev": "http://localhost:3000/graphql"
     }
   },
-  "schema": "./src/schema.gql"
+  "schema": "./nest/src/schema.gql"
 }
