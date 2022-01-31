@@ -1,10 +1,10 @@
 fragment UserPartial on User {
-  accessToken
   createdAt
   email
   id
   image
-  name
+  firstName
+  lastName
   password
   role
   status

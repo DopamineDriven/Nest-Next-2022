@@ -1,5 +1,5 @@
 import { HttpAdapterHost, NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
+import { AppModule, Context } from "./app.module";
 import { NestApplicationOptions, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
@@ -14,6 +14,13 @@ import { PrismaService } from "./prisma/prisma.service";
 import * as fs from "fs";
 import * as morgan from "morgan";
 import { PrismaModule } from "./prisma/prisma.module";
+import { request, response, Request } from "express";
+import { ApolloServer, ExpressContext } from "apollo-server-express";
+import { AuthModule } from "./auth/auth-jwt.module";
+import { GraphQLSchemaHost } from "@nestjs/graphql";
+import {ExpressAdapter, NestExpressApplication} from '@nestjs/platform-express'
+import { ExternalExceptionsHandler } from "@nestjs/core/exceptions/external-exceptions-handler";
+import { RequestHandler } from "@nestjs/common/interfaces";
 
 const logStream = fs.createWriteStream("api.log", {
   flags: "a" // append
@@ -27,7 +34,7 @@ const options: Options = {
   cors: {
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     maxAge: 0,
-    origin: true,
+    origin: true, // reflects dynamic origin -- vary
     allowedHeaders: [
       "Access-Control-Allow-Methods",
       "Access-Control-Expose-Headers",
@@ -75,11 +82,18 @@ const options: Options = {
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { ...options });
+  const app = await NestFactory.create(AppModule, {...options});
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+/**
+ *   const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter().get((handler: RequestHandler<AppModule, ExpressContext>) => ({
+apolloServer: new ApolloServer(new AppModule())
+  })), { ...options });
+ */
+
   app.use(cookieParser());
 
-  const { httpAdapter } = app.get(HttpAdapterHost);
+  const httpAdapter = app.get(HttpAdapterHost);
+  app.getHttpAdapter();
   // app.useGlobalFilters(HttpAdapterHost.prototype.httpAdapter());
   app.use(morgan("tiny", { stream: logStream }));
   const configService = app.get(ConfigService);
@@ -98,9 +112,10 @@ async function bootstrap() {
 
     SwaggerModule.setup(swaggerConfig.path || "api", app, document);
   }
+
   const prismaService: PrismaService = app.get<PrismaService>(PrismaService);
   prismaService.enableShutdownHooks(app);
-  await app.listen(process.env.PORT || nestConfig?.port || 3000);
+  await app.listen(process.env.PORT ?? nestConfig?.port ?? 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 

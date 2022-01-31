@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { Upload } from "graphql-upload";
 
 /**
@@ -151,3 +152,9 @@ export type Either<
   K extends Key,
   strict extends 1
 > = O extends unknown ? _Either<O, K, strict> : never;
+
+export type SelectingSubset<T, U> = {
+  [key in keyof T]: key extends keyof U ? T[key] : never;
+} & (T extends Prisma.SelectAndInclude
+  ? "Please either choose `select` or `include`."
+  : Record<string, never>);

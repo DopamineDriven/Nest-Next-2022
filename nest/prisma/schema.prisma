@@ -38,9 +38,9 @@ model User {
   image         String?
   role          Role?        @default(USER)
   status        UserStatus?  @default(OFFLINE)
-  password      String       @default("") 
+  password      String       @default("")
   createdAt     DateTime     @default(now())
-  updatedAt     DateTime?    @updatedAt()
+  updatedAt     DateTime?    @updatedAt
   emailVerified DateTime?
   profile       Profile?     @relation("UserProfile")
   accounts      Account[]    @relation("UserAccounts")
@@ -76,7 +76,7 @@ model Session {
   userId        String @unique
   accessToken   String?
   alg           String?
-  refreshToken  String? 
+  refreshToken  String?
   signature     String?
   scopes        String[]
   provider      String?
@@ -98,7 +98,7 @@ model Comment {
   updatedAt DateTime?          @updatedAt
   reactions CommentReactions[]
   entry     Entry              @relation("EntryComments", fields: [entryId], references: [id], onDelete: Cascade)
-  author    User               @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)  
+  author    User               @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
 }
 
 

@@ -15,11 +15,13 @@ import { XOR } from "../common/types/helpers.type";
 import { UserWhereInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where.input";
 import { UserWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where-unique.input";
 import { UserUncheckedUpdateInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-unchecked-update.input";
+import { AuthService } from "../auth/auth-jwt.service";
 @Injectable()
 export class UserService {
   constructor(
     private prisma: PrismaService,
     private passwordService: PasswordService,
+    private readonly authService: AuthService,
     private readonly paginationService: PaginationService
   ) {}
   async user(params: {

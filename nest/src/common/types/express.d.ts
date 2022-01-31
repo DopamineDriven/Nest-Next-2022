@@ -8,6 +8,6 @@ declare module "express" {
     ReqQuery = core.Query,
     Locals extends Record<string, any> = Record<string, any>
   > extends core.Request<P, ResBody, ReqBody, ReqQuery, Locals, User> {
-    user: User;
+    user: typeof User;
   }
 }

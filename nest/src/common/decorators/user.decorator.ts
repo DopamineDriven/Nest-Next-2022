@@ -4,12 +4,24 @@ import {
   SetMetadata
 } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
+import { JwtService } from "@nestjs/jwt";
+import { PassportModule } from "@nestjs/passport";
+import { Request } from "express";
+import { ClientRequest } from "http";
+import { AuthService } from "src/auth/auth-jwt.service";
 import { User } from "../../user/model/user.model";
 
 export const UserEntity = createParamDecorator(
-  (_data: unknown, ctx: ExecutionContext) => {
-    const context = GqlExecutionContext.create(ctx);
-    return context.getContext().req.user;
+  async <T extends AuthService>(
+    data: T,
+    ctx: ExecutionContext
+  ): Promise<User | null> => {
+    const context = GqlExecutionContext.create(ctx)
+      .switchToHttp()
+      .getRequest<Request>();
+    const token = context.headers.authorization?.split(" ")[1];
+    const userFromToken = await data.getUserFromToken(token ? token : "");
+    return userFromToken;
   }
 );
 // user.decorator.ts
