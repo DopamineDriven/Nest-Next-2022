@@ -24,7 +24,7 @@ Ran all test suites.
 Done in 9.91s.
 ```
 
-## Getting Started with Postgres and Docker
+## Getting Started with Postgres, Redis, and Docker
 - To spin up docker, have Docker Hub (Docker Desktop) running locally. If using WSL/WSL2, ensure that the settings for Docker are configured accordingly in the desktop GUI
 - open your terminal and cd into the nest directory `cd nest`
 - run `touch .env` to create a new .env file
@@ -44,17 +44,17 @@ DATABASE_URL=postgresql://${POSTGRES_BASE_URL}/${POSTGRES_DB}?${POSTGRES_ARGS}
 - these variables are exposed by the `dotenv-cli` package and are used by prisma to establish a connection to your containerized PG instance
 - ensure that your docker container is running prior to running any prisma commands or starting the nest app
 ---
-## Starting the PostgreSQL service
-- You'll notice a number of `docker-compose*` files in the root of the nest directory. The only one of importance for the task at hand is the `docker-compose.db.yml` file.
+## Starting & Stopping the PostgreSQL & Redis services
+- You'll notice a number of `docker-compose*` files in the root of the nest directory. The only one of importance for the task at hand is the `docker-compose.with-redis.yml` file.
 ### To start
 - From the root of the nest directory, run
 ```bash
-yarn docker:pg:up
+yarn docker:pgredis:up
 ```
 ### To stop
 - From the root of the nest directory, run
 ```bash
-yarn docker:pg:down
+yarn docker:pgredis:down
 ```
 ---
 ## [Node Jose Tools](https://github.com/phish108/node-jose-tools) -- Generating Secrets, JWT Signing Keys, etc
