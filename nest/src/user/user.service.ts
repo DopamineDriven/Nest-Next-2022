@@ -14,7 +14,7 @@ import { UserOrder } from "./inputs/user-order.input";
 import { XOR } from "../common/types/helpers.type";
 import { UserWhereInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where.input";
 import { UserWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where-unique.input";
-
+import { UserUncheckedUpdateInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-unchecked-update.input";
 @Injectable()
 export class UserService {
   constructor(
@@ -144,7 +144,7 @@ export class UserService {
   ): Promise<UserConnection> {
     const counting = this.prisma.user.count({
       where: {
-        email: { contains: "cortinahealth" }
+        email: { contains: "gmail" }
       },
       orderBy: { [orderBy.field]: orderBy.direction }
     });
@@ -155,7 +155,7 @@ export class UserService {
       .then();
   }
 
-  updateUser(data: Prisma.UserUpdateInput, email: string) {
+  updateUser(data: Prisma.UserUncheckedUpdateInput, email: string) {
     return this.prisma.user.update({
       where: { email: email },
       data: { ...data }

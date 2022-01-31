@@ -1,30 +1,21 @@
-import { HostParam, Inject, UseGuards } from "@nestjs/common";
+import { Inject, UseGuards } from "@nestjs/common";
 import {
   Args,
-  CONTEXT,
   Context,
-  Parent,
-  PartialType,
-  ResolveField,
   Resolver
 } from "@nestjs/graphql";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "./model/user.model";
 import { UserService } from "./user.service";
 import { Query, Mutation } from "@nestjs/graphql";
-import { Connection, Edge, fromGlobalId, toGlobalId } from "graphql-relay";
 import { UserConnection } from "./model/user-connection.model";
 import { PaginationArgs } from "../common/pagination/pagination.args";
-import { Prisma } from ".prisma/client";
-import { UserOrder } from "./inputs/user-order.input";
 import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
 import { UserEntity } from "../common/decorators/user.decorator";
 import { ChangePasswordInput } from "./inputs/change-passsword.input";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { Role } from "../.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
 import { AuthJwtService } from "../auth/auth-jwt.service";
-import { UpdateManyUserArgs } from "../.generated/prisma-nestjs-graphql/user/args/update-many-user.args";
-import { ReturnTypedNode } from "ts-morph";
 import { Without, XOR } from "../common/types/helpers.type";
 import { ContextCreator } from "@nestjs/core/helpers/context-creator";
 import { Request } from "express";

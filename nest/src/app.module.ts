@@ -32,6 +32,9 @@ import { PaginationModule } from "./pagination/pagination.module";
 // import { User } from "./user/model/user.model";
 // import * as ApolloServerOperationRegistery from "apollo-server-plugin-operation-registry/src/index";
 import { EntryModule } from "./entry/entry.module";
+import { AuthJwtService } from "./auth/auth-jwt.service";
+import { PrismaService } from "./prisma";
+import { AuthDetailed } from "./auth/model/auth-detailed.model";
 // import {
 //   ClientRequest,
 //   IncomingMessage,
@@ -121,12 +124,19 @@ export type Context = {
             : process.env.NODE_ENV !== "production"
             ? true
             : false,
-          context: async ({ req, res }: ExpressContext): Promise<Context> => {
-            const token = req.header("authorization");
-            const ctx = { req, res, token: token || null };
-            if (token != undefined) {
-              console.log(token ?? "still no token");
-              return { token: token, req, res };
+          context: async <T extends AuthJwtService>({
+            req,
+            res
+          }: ExpressContext): Promise<Context> => {
+            const { then } = AuthJwtService.prototype.getUserWithDecodedToken(
+              String.apply(req.header("authorization")?.split(" ")[1])
+            );
+
+
+            const ctx = { req, res, token: then() || null };
+            if (then() != undefined) {
+              console.log(then() ?? "still no token");
+              return {token: (await then<AuthDetailed | never>()).auth.accessToken, req, res };
             } else {
               return { req, res, token: null };
             }
