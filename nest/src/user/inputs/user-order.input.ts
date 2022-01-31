@@ -13,7 +13,7 @@ export enum UserOrderField {
 registerEnumType(UserOrderField, {
   name: "UserOrderField",
   description: "Properties by which user connections may be ordered"
-})
+});
 
 @InputType()
 export class UserOrder implements Order {

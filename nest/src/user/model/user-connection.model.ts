@@ -41,8 +41,6 @@ export class UserEdge {}
 
 @ConnectionObjectType(UserEdge)
 export class UserConnection {
-  @Field(() => Int, {defaultValue: 0})
+  @Field(() => Int, { defaultValue: 0 })
   userCount!: number;
 }
-
-

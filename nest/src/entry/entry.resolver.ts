@@ -1,18 +1,25 @@
-import { Resolver, Query, Mutation, Args, ResolveField, Subscription } from "@nestjs/graphql";
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Subscription
+} from "@nestjs/graphql";
 import { HostParam, Inject, UseGuards } from "@nestjs/common";
 import { Entry } from "./model/entry.model";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { PrismaService } from "../prisma/prisma.service";
 import { PubSub } from "graphql-subscriptions";
 import { PaginationArgs } from "../common/pagination/pagination.args";
-import {UserIdArgs} from "../user/args/user-id.args"
+import { UserIdArgs } from "../user/args/user-id.args";
 import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
 import { EntryService } from "./entry.service";
 import { EntryConnection } from "./model/entry-connection.model";
 import { EntryCreateInput } from "../.generated/prisma-nestjs-graphql/entry/inputs/entry-create.input";
 import { EntryOrderByWithRelationAndSearchRelevanceInput } from "../.generated/prisma-nestjs-graphql/entry/inputs/entry-order-by-with-relation-and-search-relevance.input";
 
-const pubSub = new PubSub()
+const pubSub = new PubSub();
 @Resolver(() => Entry)
 export class EntryResolver {
   constructor(
@@ -27,9 +34,7 @@ export class EntryResolver {
 
   @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Entry)
-  async createEntry(
-    @Args("data") data: EntryCreateInput
-  ) {
+  async createEntry(@Args("data") data: EntryCreateInput) {
     const newEntry = this.prisma.entry.create({
       data
     });
@@ -57,9 +62,7 @@ export class EntryResolver {
             title: { contains: query || "" }
           },
 
-          orderBy: orderBy?._relevance?.fields
-            ? { ...orderBy }
-            : undefined,
+          orderBy: orderBy?._relevance?.fields ? { ...orderBy } : undefined,
           ...args
         }),
       () =>

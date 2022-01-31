@@ -1,6 +1,4 @@
-import {
-  ConnectionCursor,
-} from "graphql-relay";
+import { ConnectionCursor } from "graphql-relay";
 import { InterfaceType, Field, Int } from "@nestjs/graphql";
 import { Global, Injectable } from "@nestjs/common";
 import * as Relay from "graphql-relay";

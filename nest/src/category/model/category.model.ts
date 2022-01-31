@@ -5,30 +5,30 @@ import { Entry } from "../../entry/model/entry.model";
 
 @ObjectType("Category")
 export class Category {
-  @Field(() => ID, {nullable:false})
+  @Field(() => ID, { nullable: false })
   id!: string;
 
-  @Field(() => String, {nullable:false})
+  @Field(() => String, { nullable: false })
   creatorId!: string;
 
-  @Field(() => Date, {nullable:true})
+  @Field(() => Date, { nullable: true })
   createdAt!: Date | null;
 
-  @Field(() => Date, {nullable:true})
+  @Field(() => Date, { nullable: true })
   updatedAt?: Date | null;
 
-  @Field(() => String, {nullable:false})
+  @Field(() => String, { nullable: false })
   name!: string;
 
-  @Field(() => [Entry], {nullable:true})
+  @Field(() => [Entry], { nullable: true })
   entries?: Array<Entry>;
 
-  @Field(() => String, {nullable:true})
+  @Field(() => String, { nullable: true })
   entryId?: string | null;
 
-  @Field(() => User, {nullable:false})
+  @Field(() => User, { nullable: false })
   creator?: User;
 
-  @Field(() => CategoryCount, {nullable:false})
+  @Field(() => CategoryCount, { nullable: false })
   _count?: CategoryCount;
 }

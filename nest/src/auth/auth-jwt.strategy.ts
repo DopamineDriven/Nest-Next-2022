@@ -14,13 +14,14 @@ import { User } from "@prisma/client";
 import { ConfigService } from "@nestjs/config";
 import { jwtConstants } from "./constants/auth-jwt.constant";
 import { JwtDecoded } from "./dto/jwt-decoded.dto";
-import { AuthJwtService } from "./auth-jwt.service";
+import { AuthService } from "./auth-jwt.service";
+import { SecurityConfig } from "src/common";
 
 @Injectable()
 export class AuthJwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @Inject<typeof AuthJwtService>(AuthJwtService) private readonly authService: AuthJwtService,
-    @Inject<typeof ConfigService>(ConfigService) readonly configService: ConfigService
+    private readonly authService: AuthService,
+    readonly configService: ConfigService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -82,7 +83,7 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy) {
     };
   }
 
-  async validate<T extends JwtDecoded>(payload: T): Promise<User> {
+  async validate(payload: JwtDecoded): Promise<User> {
     const user = await this.authService.validateUser(payload.payload.userId);
     if (!user) {
       throw new UnauthorizedException();

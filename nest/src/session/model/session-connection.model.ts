@@ -29,7 +29,9 @@ export class UserFilter {
 }
 @ConnectionOrderingInputType()
 export class SessionOrderBy {
-  @Field(_type => SessionOrderByWithRelationAndSearchRelevanceInput, { nullable: true })
+  @Field(_type => SessionOrderByWithRelationAndSearchRelevanceInput, {
+    nullable: true
+  })
   sort: SessionOrderByWithRelationAndSearchRelevanceInput;
 }
 

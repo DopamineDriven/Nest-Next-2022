@@ -6,42 +6,42 @@ import { Category } from "../../category/model/category.model";
 
 @ObjectType("Entry")
 export class Entry {
-  @Field(() => ID, {nullable:false})
+  @Field(() => ID, { nullable: false })
   id!: string;
 
-  @Field(() => String, {nullable:true})
+  @Field(() => String, { nullable: true })
   title?: string;
 
-  @Field(() => Boolean, { nullable:true, defaultValue:false })
+  @Field(() => Boolean, { nullable: true, defaultValue: false })
   published?: boolean;
 
-  @Field(() => String, {nullable:false})
+  @Field(() => String, { nullable: false })
   authorId!: string;
 
-  @Field(() => String, {nullable:true})
+  @Field(() => String, { nullable: true })
   content?: string | null;
 
-  @Field(() => Date, {nullable:false})
+  @Field(() => Date, { nullable: false })
   createdAt!: Date;
 
-  @Field(() => Date, {nullable:true})
+  @Field(() => Date, { nullable: true })
   updatedAt?: Date | null;
 
-  @Field(() => String, {nullable:true})
+  @Field(() => String, { nullable: true })
   featuredImage?: string | null;
 
-  @Field(() => [Category], {nullable:true})
+  @Field(() => [Category], { nullable: true })
   categories?: Array<Category>;
 
-  @Field(() => User, {nullable:false})
+  @Field(() => User, { nullable: false })
   author?: User;
 
-  @Field(() => [Comment], {nullable:true})
+  @Field(() => [Comment], { nullable: true })
   comments?: Array<Comment>;
 
-  @Field(() => String, {nullable:true})
+  @Field(() => String, { nullable: true })
   categoryId?: string | null;
 
-  @Field(() => EntryCount, { nullable:false })
+  @Field(() => EntryCount, { nullable: false })
   _count!: EntryCount;
 }

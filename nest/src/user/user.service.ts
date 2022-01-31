@@ -14,13 +14,14 @@ import { UserOrder } from "./inputs/user-order.input";
 import { XOR } from "../common/types/helpers.type";
 import { UserWhereInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where.input";
 import { UserWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where-unique.input";
-
-
+import { UserUncheckedUpdateInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-unchecked-update.input";
+import { AuthService } from "../auth/auth-jwt.service";
 @Injectable()
 export class UserService {
   constructor(
     private prisma: PrismaService,
     private passwordService: PasswordService,
+    private readonly authService: AuthService,
     private readonly paginationService: PaginationService
   ) {}
   async user(params: {
@@ -35,10 +36,14 @@ export class UserService {
       userWhereUniqueInput: { email, id }
     } = params;
 
-    return this.prisma.user.findFirst({
-      where: id ? { id: id } : { email: email },
-      include: {profile: true}
-    }).profile().user().then()
+    return this.prisma.user
+      .findFirst({
+        where: id ? { id: id } : { email: email },
+        include: { profile: true }
+      })
+      .profile()
+      .user()
+      .then();
   }
 
   async users(params: Omit<Prisma.UserFindManyArgs, "select">) {
@@ -99,17 +104,29 @@ export class UserService {
     });
   }
 
-  async deleteUser(where: XOR<
-    {
-      id: string;
-    },
-    { email: string }
-    >) {
+  async deleteUser(
+    where: XOR<
+      {
+        id: string;
+      },
+      { email: string }
+    >
+  ) {
     const { id, email } = where;
     return this.prisma.user.delete({
-      where: id ? { id: id } : { email: email ? email : "" as unknown as string },
-      include: { _count: true, accounts: true, categories: true, comments: true, connections: true, entries: true, profile: true, sessions: true }
-      
+      where: id
+        ? { id: id }
+        : { email: email ? email : ("" as unknown as string) },
+      include: {
+        _count: true,
+        accounts: true,
+        categories: true,
+        comments: true,
+        connections: true,
+        entries: true,
+        profile: true,
+        sessions: true
+      }
     });
   }
 
@@ -129,7 +146,7 @@ export class UserService {
   ): Promise<UserConnection> {
     const counting = this.prisma.user.count({
       where: {
-        email: { contains: "cortinahealth" }
+        email: { contains: "gmail" }
       },
       orderBy: { [orderBy.field]: orderBy.direction }
     });
@@ -140,8 +157,11 @@ export class UserService {
       .then();
   }
 
-  updateUser(data: Prisma.UserUpdateInput, email: string) {
-    return this.prisma.user.update({ where: { email: email }, data: {...data} });
+  updateUser(data: Prisma.UserUncheckedUpdateInput, email: string) {
+    return this.prisma.user.update({
+      where: { email: email },
+      data: { ...data }
+    });
   }
 
   create(data: Prisma.UserCreateInput, account: Prisma.AccountCreateInput) {

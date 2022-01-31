@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { Upload } from "graphql-upload";
 
 /**
@@ -58,7 +59,7 @@ export type ValidObjects =
   | BigInt
   | Date
   | Buffer
-  | Upload['file']
+  | Upload["file"]
   | Record<string, unknown>;
 
 export type IsObject<T> = T extends Array<any>
@@ -69,7 +70,7 @@ export type IsObject<T> = T extends Array<any>
   ? False
   : T extends ValidObjects
   ? False
-  : T extends Upload['file']
+  : T extends Upload["file"]
   ? False
   : T extends Record<string, unknown>
   ? True
@@ -151,3 +152,9 @@ export type Either<
   K extends Key,
   strict extends 1
 > = O extends unknown ? _Either<O, K, strict> : never;
+
+export type SelectingSubset<T, U> = {
+  [key in keyof T]: key extends keyof U ? T[key] : never;
+} & (T extends Prisma.SelectAndInclude
+  ? "Please either choose `select` or `include`."
+  : Record<string, never>);

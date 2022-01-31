@@ -1,35 +1,22 @@
-import { HostParam, Inject, UseGuards } from "@nestjs/common";
-import {
-  Args,
-  CONTEXT,
-  Context,
-  Parent,
-  PartialType,
-  ResolveField,
-  Resolver
-} from "@nestjs/graphql";
+import { CacheInterceptor, CacheKey, CacheModule, ExecutionContext, Inject, UseGuards } from "@nestjs/common";
+import { Args, CONTEXT, Context, GqlExecutionContext, Info, Resolver } from "@nestjs/graphql";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "./model/user.model";
 import { UserService } from "./user.service";
 import { Query, Mutation } from "@nestjs/graphql";
-import { Connection, Edge, fromGlobalId, toGlobalId } from "graphql-relay";
 import { UserConnection } from "./model/user-connection.model";
 import { PaginationArgs } from "../common/pagination/pagination.args";
-import { Prisma } from ".prisma/client";
-import { UserOrder } from "./inputs/user-order.input";
 import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
 import { UserEntity } from "../common/decorators/user.decorator";
 import { ChangePasswordInput } from "./inputs/change-passsword.input";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { Role } from "../.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
-import { AuthJwtService } from "../auth/auth-jwt.service";
-import { UpdateManyUserArgs } from "../.generated/prisma-nestjs-graphql/user/args/update-many-user.args";
-import { ReturnTypedNode } from "ts-morph";
 import { Without, XOR } from "../common/types/helpers.type";
 import { ContextCreator } from "@nestjs/core/helpers/context-creator";
 import { Request } from "express";
 import * as JWT from "jsonwebtoken";
 import { JwtDecoded } from "../auth/dto";
+import { JwtService } from "@nestjs/jwt";
 import { PickType } from "@nestjs/graphql";
 import {
   EntryConnection,
@@ -39,29 +26,40 @@ import { EntryOrderByWithRelationAndSearchRelevanceInput } from "../.generated/p
 import { EnumRoleNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-role-nullable-filter.input";
 import { UserOrderByWithRelationAndSearchRelevanceInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-order-by-with-relation-and-search-relevance.input";
 import { Omit } from "@nestjs/graphql/dist/interfaces/gql-module-options.interface";
-import { toBase64 } from "src/common";
+import { Roles, toBase64 } from "src/common";
 import { UpdateOneUserArgs } from "./args/update-one.args";
 import { UserWhereInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where.input";
 import { InputType } from "zlib";
 import { Optional } from "utility-types";
+import { AuthService } from "../auth/auth-jwt.service";
+import { PasswordService } from "../password";
+import { Context as AppContext } from "../app.module";
+import { GraphQLResolveInfo } from "graphql";
+import { CacheScope } from "apollo-server-types";
+import { Cache } from "cache-manager";
 
 @Resolver(() => User)
 export class UserResolver {
   constructor(
     @Inject(PrismaService) private prismaService: PrismaService,
-    private readonly userService: UserService
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+    private readonly passwordService: PasswordService
   ) {}
-
+  @CacheKey("me")
   @Query(() => User)
   async me(
-    @Args("accessToken") accessToken: string,
-    @UserEntity("user") user: User
-  ) {
-    return await this.userService.user({
-      userWhereUniqueInput: user.id
-        ? { id: user.id }
-        : { email: user.email ? user.email : "" }
-    });
+
+    @Context("cache") cache: Cache
+  ): Promise<User | null> {
+    // const token = context.switchToHttp().getRequest<Request>().headers.authorization?.split(" ")[1];
+    //  ((error: any, result: string | undefined): void => { return result ? result : error })
+    const token = await cache.get<string>("login");
+    const getUser = await this.authService.getUserFromToken(
+      token ? token : ""
+    );
+    const userId = getUser?.id ? getUser.id : "";
+    return await this.prismaService.user.findFirst({ where: { id: userId } });
   }
 
   @Query(() => User)
@@ -97,10 +95,8 @@ export class UserResolver {
             role: roles,
             email: { contains: query || "" }
           },
-          orderBy: orderBy?._relevance?.fields
-            ? { ...orderBy }
-            : undefined,
-          ...(args)
+          orderBy: orderBy?._relevance?.fields ? { ...orderBy } : undefined,
+          ...args
         }),
       () =>
         this.prismaService.user.count({
@@ -138,16 +134,21 @@ export class UserResolver {
   //     data: {...data}
   //   });
   // }
-
   @UseGuards(GraphqlAuthGuard)
   @Mutation(() => User)
   async changePassword(
-    @UserEntity() userentity: User,
+    @Args("accessToken", { type: () => String }) accessToken: string,
     @Args("data") data: ChangePasswordInput
   ) {
-    return this.userService.changePassword(userentity.id, userentity.password, {
-      ...data
-    });
+    const jwtDecoded = (await this.authService.getUserFromToken(
+      accessToken
+    )) as User | null;
+
+    return await this.userService.changePassword(
+      jwtDecoded?.id ? jwtDecoded.id : "",
+      jwtDecoded?.password ? jwtDecoded.password : data.oldPassword,
+      { ...data }
+    );
   }
   // resolve entry connection query in entries service/resolver then import EntryModule in UserModule and Inject this file with EntryService
   // @Query(_returns => [EntryConnection])

@@ -6,33 +6,33 @@ import { JSONObjectResolver } from "graphql-scalars";
 
 @ObjectType("Comment")
 export class Comment {
-  @Field(() => ID, {nullable:false})
+  @Field(() => ID, { nullable: false })
   id!: string;
 
-  @Field(() => String, {nullable:false})
+  @Field(() => String, { nullable: false })
   authorId!: string;
 
-  @Field(() => String, {nullable:false})
+  @Field(() => String, { nullable: false })
   entryId!: string;
 
-  @Field(() => JSONObjectResolver, {nullable:true})
+  @Field(() => JSONObjectResolver, { nullable: true })
   body?: typeof JSONObjectResolver | null;
 
-  @Field(() => String, {nullable:true})
+  @Field(() => String, { nullable: true })
   position?: string | null;
 
-  @Field(() => Date, {nullable:false})
+  @Field(() => Date, { nullable: false })
   createdAt!: Date;
 
-  @Field(() => Date, {nullable:true})
+  @Field(() => Date, { nullable: true })
   updatedAt?: Date | null;
 
-  @Field(() => [CommentReactions], {nullable:true})
+  @Field(() => [CommentReactions], { nullable: true })
   reactions?: Array<keyof typeof CommentReactions>;
 
-  @Field(() => Entry, {nullable:false})
+  @Field(() => Entry, { nullable: false })
   entry?: Entry;
 
-  @Field(() => User, {nullable:false})
+  @Field(() => User, { nullable: false })
   author!: User;
 }

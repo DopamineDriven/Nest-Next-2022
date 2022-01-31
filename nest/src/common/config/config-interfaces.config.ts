@@ -51,6 +51,7 @@ export interface SecurityConfig {
   expiresIn: string;
   refreshIn: string;
   bcryptSaltOrRound: string | number;
+  secret: string;
   refreshSecret: string;
 }
 
@@ -68,5 +69,5 @@ export interface GitHubConfig {
 export interface ApolloConfig {
   key: string;
   ref?: string;
-  reporting: boolean
+  reporting: boolean;
 }

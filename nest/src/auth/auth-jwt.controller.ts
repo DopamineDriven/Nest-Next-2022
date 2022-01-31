@@ -1,5 +1,5 @@
 import { Controller, Post, Req, Res, Param } from "@nestjs/common";
-import { AuthJwtService } from "./auth-jwt.service";
+import { AuthService } from "./auth-jwt.service";
 import { JwtService } from "@nestjs/jwt";
 import { Response, Request } from "express";
 import { JwtDecoded } from "./dto/jwt-decoded.dto";
@@ -9,7 +9,7 @@ import { LoginInput } from "./inputs/login.input";
 export default class AuthJwtController {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly authService: AuthJwtService
+    private readonly authService: AuthService
   ) {}
 
   @Post("/login")
@@ -20,7 +20,7 @@ export default class AuthJwtController {
     const userId = payload.payload?.userId;
     console.log(userId);
     const signedPayload = this.jwtService.sign(
-      payload?.payload ? payload.payload : {},
+      payload?.payload ? payload.payload : {}
     );
     console.log(signedPayload);
     return response
@@ -35,8 +35,8 @@ export default class AuthJwtController {
       .json({ payload: signedPayload })
       .end();
   }
-  @Post("/loginInput")
-  async loginInput(@Param("LoginInput") { email, password }: LoginInput) {
-    return this.authService.login(email, password);
-  }
+  // @Post("/loginInput")
+  // async loginInput(@Param("LoginInput") { email, password }: LoginInput) {
+  //   return this.authService.login(email, password);
+  // }
 }

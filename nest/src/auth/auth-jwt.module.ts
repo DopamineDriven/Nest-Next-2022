@@ -1,4 +1,4 @@
-import { AuthJwtResolver } from "./auth-jwt.resolver";
+import { AuthResolver } from "./auth-jwt.resolver";
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
@@ -6,11 +6,11 @@ import { AuthJwtStrategy } from "./auth-jwt.strategy";
 import { ConfigService } from "@nestjs/config";
 import { SecurityConfig } from "../common/config/config-interfaces.config";
 import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
-import { AuthJwtService } from "./auth-jwt.service";
-import AuthJwtController from "./auth-jwt.controller";
+import { AuthService } from "./auth-jwt.service";
 import { PasswordModule } from "../password/password.module";
 import { PrismaModule } from "../prisma/prisma.module";
 import { jwtConstants } from "./constants/auth-jwt.constant";
+import AuthJwtController from "./auth-jwt.controller";
 
 @Module({
   imports: [
@@ -23,6 +23,7 @@ import { jwtConstants } from "./constants/auth-jwt.constant";
         return {
           secret: configService.get<string>("JWT_ACCESS_SECRET"),
           signOptions: {
+            algorithm: "HS512",
             expiresIn: securityConfig?.expiresIn
           }
         };
@@ -31,12 +32,12 @@ import { jwtConstants } from "./constants/auth-jwt.constant";
     })
   ],
   providers: [
-    AuthJwtService,
-    AuthJwtResolver,
+    AuthResolver,
+    AuthService,
     AuthJwtStrategy,
     GraphqlAuthGuard
   ],
   controllers: [AuthJwtController],
-  exports: [GraphqlAuthGuard, AuthJwtService]
+  exports: [GraphqlAuthGuard, AuthService]
 })
-export class AuthJwtModule {}
+export class AuthModule {}

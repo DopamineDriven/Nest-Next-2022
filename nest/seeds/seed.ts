@@ -48,9 +48,9 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
 
   const faker = await import("faker");
   const bcrypt = await import("bcrypt");
-  const { Country, CountryCode } = await import("../../profile");
+  const { Country, CountryCode } = await import("../src/profile");
   const hashPassword = async (input: string): Promise<string> => {
-    const salt = await bcrypt.genSalt(12);
+    const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(input, salt);
     return hash;
   };
@@ -199,7 +199,7 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
       Role.ADMIN,
       Role.USER,
       Role.USER,
-      Role.SUPERADMIN,
+      Role.ADMIN,
       Role.USER,
       Role.USER
     ][
@@ -367,7 +367,13 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
           ]
         }
       },
-      include: { sessions: true, accounts: true, profile: true, entries: true, _count: true }
+      include: {
+        sessions: true,
+        accounts: true,
+        profile: true,
+        entries: true,
+        _count: true
+      }
     });
   };
   return seedUser();
@@ -401,56 +407,3 @@ async function main() {
 }
 
 main();
-/**
- * toLocaleLowerCase([
-    "en-US",
-    "en-GB",
-    "en-AU",
-    "de-DE",
-    "en-ZA",
-    "en-BS",
-    "zh-TW",
-    "ja-JP",
-    "vi-VN",
-    "en-IN",
-    "gu-IN",
-    "hi-IN",
-    "ks-IN",
-    "ur-IN",
-    "bn-IN",
-    "nb-NO",
-    "nb-SJ",
-    "nn-NO",
-    "en-CA",
-    "fr-CA",
-    "es-MX",
-    "es-CL",
-    "ar-SA",
-    "es-AR",
-    "it-IT",
-    "ca-IT",
-    "de-IT",
-    "fur-IT",
-    "pl-PL",
-    "ru-BY",
-    "ru-KG",
-    "ru-KZ",
-    "ru-MD",
-    "ru-RU",
-    "ru-UA"
-  ]);
-
-    function nIndexesAveragedAndRounded(nArr: number[]): number {
-    return Math.round(
-      Number.parseInt(
-        `${nArr}`
-          .split(/([ [ ])/)
-          .join()
-          .split(/([ ] ])/)
-          .join()
-          .replace(",", "+"),
-        10
-      ) / nArr.length
-    );
-  }
- */

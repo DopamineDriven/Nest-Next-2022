@@ -10,6 +10,8 @@ import { UserCount } from "../../.generated/prisma-nestjs-graphql/user/outputs/u
 import { Profile } from "../../profile/model/profile.model";
 import { Category } from "../../category/model/category.model";
 import { EntryConnection } from "../../entry/model/entry-connection.model";
+import { isNullableType } from "graphql";
+import { NullLiteral } from "ts-morph";
 type Nullable<T> = T | null;
 
 @ObjectType("User")
@@ -37,7 +39,7 @@ export class User {
   @Field(() => UserStatus, {
     defaultValue: UserStatus.OFFLINE
   })
-  status!: keyof typeof UserStatus | null;
+  status!: Nullable<keyof typeof UserStatus>;
 
   @HideField()
   @Field(() => String, { nullable: false, defaultValue: "", name: "password" })
@@ -52,32 +54,31 @@ export class User {
   @Field(_type => Date, {
     name: "updatedAt",
     nullable: true,
-    description:
-      "Identifies the date and time when the user was last updated."
+    description: "Identifies the date and time when the user was last updated."
   })
   updatedAt: Date | null;
 
   @Field(() => Date, { nullable: true })
   emailVerified: Date | null;
 
-  @Field(() => Profile, { nullable: true })
+  @Field(() => Profile || NullLiteral, { nullable: true })
   profile?: Profile | null;
 
-  @Field(() => [Account], { nullable: true })
-  accounts?: Array<Account>;
+  @Field(() => [Account] || [NullLiteral], { nullable: true })
+  accounts?: Array<Account> | null;
 
-  @Field(() => [Entry], { nullable: true })
-  entries?: Entry[];
+  @Field(() => [Entry] || [NullLiteral], { nullable: true })
+  entries?: Entry[] | null;
 
-  @Field(() => [Session], { nullable: true })
-  sessions?: Array<Session>;
+  @Field(() => [Session] || [NullLiteral], { nullable: true })
+  sessions?: Array<Session> | null;
 
-  @Field(() => [Connection], { nullable: true })
+  @Field(() => [Connection] || [NullLiteral], { nullable: true })
   connections?: Array<Connection>;
 
-  @Field(() => [Comment], { nullable: true })
+  @Field(() => [Comment] || [NullLiteral], { nullable: true })
   comments?: Array<Comment>;
 
-  @Field(() => [Category], {nullable:true})
+  @Field(() => [Category] || [NullLiteral], { nullable: true })
   categories?: Array<Category>;
 }

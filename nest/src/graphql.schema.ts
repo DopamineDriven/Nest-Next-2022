@@ -7,25 +7,6 @@
 
 /* tslint:disable */
 /* eslint-disable */
-export enum AlgorithmType {
-    ES256 = "ES256",
-    ES256K = "ES256K",
-    ES384 = "ES384",
-    ES512 = "ES512",
-    Ed448 = "Ed448",
-    Ed25519 = "Ed25519",
-    HS256 = "HS256",
-    HS384 = "HS384",
-    HS512 = "HS512",
-    None = "None",
-    PS256 = "PS256",
-    PS384 = "PS384",
-    PS512 = "PS512",
-    RS256 = "RS256",
-    RS384 = "RS384",
-    RS512 = "RS512"
-}
-
 export enum CommentReactions {
     ANGRY = "ANGRY",
     CARE = "CARE",
@@ -808,18 +789,11 @@ export class Account {
     userId: string;
 }
 
-export class Auth {
-    __typename?: 'Auth';
+export class AuthSansSession {
+    __typename?: 'AuthSansSession';
     accessToken?: Nullable<string>;
     refreshToken?: Nullable<string>;
-    session?: Nullable<Session>;
     user?: Nullable<User>;
-}
-
-export class AuthDetailed {
-    __typename?: 'AuthDetailed';
-    auth?: Nullable<Auth>;
-    jwt?: Nullable<JwtDecoded>;
 }
 
 export class Category {
@@ -902,40 +876,22 @@ export class EntryEdge {
     node: Entry;
 }
 
-export class JwtDecoded {
-    __typename?: 'JwtDecoded';
-    header: JwtHeaders;
-    payload: JwtPayload;
-    signature: string;
-}
-
-export class JwtHeaders {
-    __typename?: 'JwtHeaders';
-    alg: AlgorithmType;
-    typ: string;
-}
-
-export class JwtPayload {
-    __typename?: 'JwtPayload';
-    exp?: Nullable<BigInt>;
-    iat?: Nullable<BigInt>;
-    userId?: Nullable<string>;
-}
-
 export abstract class IMutation {
     __typename?: 'IMutation';
 
-    abstract changePassword(data: ChangePasswordInput): User | Promise<User>;
+    abstract changePassword(accessToken: string, data: ChangePasswordInput): User | Promise<User>;
 
     abstract createEntry(data: EntryCreateInput): Entry | Promise<Entry>;
 
-    abstract getUserFromAccessToken(token: string): AuthDetailed | Promise<AuthDetailed>;
+    abstract getUserFromAccessToken(token: string): User | Promise<User>;
 
-    abstract login(data: LoginInput): Auth | Promise<Auth>;
+    abstract login(data: LoginInput): Token | Promise<Token>;
 
     abstract refreshToken(token: string): Token | Promise<Token>;
 
-    abstract signup(data: SignupInput): Auth | Promise<Auth>;
+    abstract register(dataRegister: SignupInput): AuthSansSession | Promise<AuthSansSession>;
+
+    abstract signup(data: SignupInput): Token | Promise<Token>;
 }
 
 export class PageInfo {
@@ -973,13 +929,15 @@ export abstract class IQuery {
 
     abstract entryCursorConnection(after?: Nullable<string>, before?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput>, query?: Nullable<string>, skip?: Nullable<number>): EntryConnection | Promise<EntryConnection>;
 
+    abstract getViewer(id: string): Viewer | Promise<Viewer>;
+
     abstract hello(name: string): string | Promise<string>;
 
     abstract helloWorld(): string | Promise<string>;
 
     abstract listUsers(after?: Nullable<string>, before?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>, query?: Nullable<string>, roles?: Nullable<EnumRoleNullableFilter>, skip?: Nullable<number>): UserConnection | Promise<UserConnection>;
 
-    abstract me(accessToken: string): User | Promise<User>;
+    abstract me(): User | Promise<User>;
 
     abstract userById(id: string): User | Promise<User>;
 
@@ -1051,7 +1009,29 @@ export class UserEdge {
     node: User;
 }
 
-export type BigInt = any;
+export class Viewer {
+    __typename?: 'Viewer';
+    accessToken?: Nullable<string>;
+    accounts?: Nullable<Account[]>;
+    categories?: Nullable<Category[]>;
+    comments?: Nullable<Comment[]>;
+    connections?: Nullable<Connection[]>;
+    createdAt: DateTime;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<Entry[]>;
+    firstName?: Nullable<string>;
+    id: string;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    password: string;
+    profile?: Nullable<Profile>;
+    role?: Nullable<Role>;
+    sessions?: Nullable<Session[]>;
+    status: UserStatus;
+    updatedAt?: Nullable<DateTime>;
+}
+
 export type DateTime = any;
 export type JSON = any;
 export type JSONObject = any;
