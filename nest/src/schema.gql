@@ -351,11 +351,6 @@ input ConnectionWhereUniqueInput {
 }
 
 """
-A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar Date
-
-"""
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
@@ -534,6 +529,20 @@ input EntryWhereUniqueInput {
   title: String
 }
 
+input EnumGenderNullableFilter {
+  equals: Gender
+  in: [Gender!]
+  not: NestedEnumGenderNullableFilter
+  notIn: [Gender!]
+}
+
+input EnumPronounsNullableFilter {
+  equals: Pronouns
+  in: [Pronouns!]
+  not: NestedEnumPronounsNullableFilter
+  notIn: [Pronouns!]
+}
+
 input EnumRoleNullableFilter {
   equals: Role
   in: [Role!]
@@ -558,6 +567,22 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 """
 scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+input JsonNullableFilter {
+  array_contains: JSON
+  array_ends_with: JSON
+  array_starts_with: JSON
+  equals: JSON
+  gt: JSON
+  gte: JSON
+  lt: JSON
+  lte: JSON
+  not: JSON
+  path: [String!]
+  string_contains: String
+  string_ends_with: String
+  string_starts_with: String
+}
+
 input LoginInput {
   email: String
   password: String
@@ -566,11 +591,26 @@ input LoginInput {
 type Mutation {
   changePassword(accessToken: String!, data: ChangePasswordInput!): User!
   createEntry(data: EntryCreateInput!): Entry!
+  createProfile(data: ProfileCreateInput!, userId: String!): Profile!
   getUserFromAccessToken(token: String!): User!
   login(data: LoginInput!): Token!
   refreshToken(token: String!): Token!
   register(dataRegister: SignupInput!): AuthSansSession!
   signup(data: SignupInput!): Token!
+}
+
+input NestedEnumGenderNullableFilter {
+  equals: Gender
+  in: [Gender!]
+  not: NestedEnumGenderNullableFilter
+  notIn: [Gender!]
+}
+
+input NestedEnumPronounsNullableFilter {
+  equals: Pronouns
+  in: [Pronouns!]
+  not: NestedEnumPronounsNullableFilter
+  notIn: [Pronouns!]
 }
 
 input NestedEnumRoleNullableFilter {
@@ -580,11 +620,34 @@ input NestedEnumRoleNullableFilter {
   notIn: [Role!]
 }
 
+input NestedStringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
+}
+
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
+}
+
+input PaginationArgsInput {
+  after: String
+  before: String
+  first: Int = 10
+  last: Int
+  skip: Int
 }
 
 """
@@ -593,22 +656,46 @@ A field whose value conforms to the standard E.164 format as specified in: https
 scalar PhoneNumber
 
 type Profile {
-  activiyFeed: [JSONObject!]
-  bio: [JSONObject!]
+  activiyFeed: [JSON!]
+  bio: [JSON!]
   city: String
   country: String
   coverPhoto: String
-  dob: Date
+  dob: String
   gender: Gender
   id: ID!
   lastSeen: DateTime
   memberSince: DateTime!
   occupation: String
-  phoneNumber: PhoneNumber
+  phoneNumber: String
   pronouns: Pronouns
-  recentActivity: JSONObject
+  recentActivity: [JSON!]
   user: User!
   userId: String!
+  userInProfile: User!
+}
+
+type ProfileConnection {
+  edges: [ProfileEdge!]!
+  pageInfo: PageInfo!
+}
+
+input ProfileCreateInput {
+  activiyFeed: ProfileCreateactiviyFeedInput
+  bio: ProfileCreatebioInput
+  city: String
+  country: String
+  coverPhoto: String
+  dob: String
+  gender: Gender
+  id: String
+  lastSeen: DateTime
+  memberSince: DateTime
+  occupation: String
+  phoneNumber: String
+  pronouns: Pronouns
+  recentActivity: ProfileCreaterecentActivityInput
+  user: UserCreateNestedOneWithoutProfileInput!
 }
 
 input ProfileCreateNestedOneWithoutUserInput {
@@ -636,7 +723,7 @@ input ProfileCreateWithoutUserInput {
   occupation: String
   phoneNumber: String
   pronouns: Pronouns
-  recentActivity: JSON
+  recentActivity: ProfileCreaterecentActivityInput
 }
 
 input ProfileCreateactiviyFeedInput {
@@ -645,6 +732,15 @@ input ProfileCreateactiviyFeedInput {
 
 input ProfileCreatebioInput {
   set: [JSON!]!
+}
+
+input ProfileCreaterecentActivityInput {
+  set: [JSON!]!
+}
+
+type ProfileEdge {
+  cursor: String!
+  node: Profile!
 }
 
 enum ProfileOrderByRelevanceFieldEnum {
@@ -689,6 +785,15 @@ input ProfileWhereUniqueInput {
   userId: String
 }
 
+input ProfilesInput {
+  bioFilter: JsonNullableFilter
+  dobFilter: StringNullableFilter
+  genderFilter: EnumGenderNullableFilter
+  orderBy: ProfileOrderByWithRelationAndSearchRelevanceInput
+  paginationArgs: PaginationArgsInput
+  pronounsFilter: EnumPronounsNullableFilter
+}
+
 enum Pronouns {
   HE_HIM_HIS
   NOT_LISTED
@@ -700,14 +805,22 @@ enum Pronouns {
 type Query {
   entryById(id: String!): Entry!
   entryCursorConnection(after: String, before: String, first: Int = 10, last: Int, orderBy: EntryOrderByWithRelationAndSearchRelevanceInput, query: String, skip: Int): EntryConnection!
+  getProfiles(after: String, before: String, first: Int = 10, last: Int, orderBy: ProfileOrderByWithRelationAndSearchRelevanceInput, query: String, skip: Int): ProfileConnection!
   getViewer(id: String!): Viewer!
   hello(name: String!): String!
   helloWorld: String!
   listUsers(after: String, before: String, first: Int = 10, last: Int, orderBy: UserOrderByWithRelationAndSearchRelevanceInput, query: String, roles: EnumRoleNullableFilter, skip: Int): UserConnection!
   me: User!
+  profileByRelayId: Profile!
+  profiles(profilesArgs: ProfilesInput!): ProfileConnection!
   userById(id: String!): User!
   userByRelayId: User!
   userPosts(userId: ID!): [Entry!]!
+}
+
+enum QueryMode {
+  default
+  insensitive
 }
 
 enum Role {
@@ -807,8 +920,25 @@ enum SortOrder {
   desc
 }
 
+input StringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
+}
+
 type Subscription {
   entryCreated: Entry!
+  profileCreated: Profile!
 }
 
 type Token {
@@ -867,6 +997,12 @@ input UserCreateNestedOneWithoutEntriesInput {
   create: UserCreateWithoutEntriesInput
 }
 
+input UserCreateNestedOneWithoutProfileInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutProfileInput
+  create: UserCreateWithoutProfileInput
+}
+
 input UserCreateOrConnectWithoutCategoriesInput {
   create: UserCreateWithoutCategoriesInput!
   where: UserWhereUniqueInput!
@@ -879,6 +1015,11 @@ input UserCreateOrConnectWithoutCommentsInput {
 
 input UserCreateOrConnectWithoutEntriesInput {
   create: UserCreateWithoutEntriesInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutProfileInput {
+  create: UserCreateWithoutProfileInput!
   where: UserWhereUniqueInput!
 }
 
@@ -936,6 +1077,26 @@ input UserCreateWithoutEntriesInput {
   lastName: String
   password: String
   profile: ProfileCreateNestedOneWithoutUserInput
+  role: Role
+  sessions: SessionCreateNestedManyWithoutUserInput
+  status: UserStatus
+  updatedAt: DateTime
+}
+
+input UserCreateWithoutProfileInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  categories: CategoryCreateNestedManyWithoutCreatorInput
+  comments: CommentCreateNestedManyWithoutAuthorInput
+  connections: ConnectionCreateNestedManyWithoutOwnerInput
+  createdAt: DateTime
+  email: String!
+  emailVerified: DateTime
+  entries: EntryCreateNestedManyWithoutAuthorInput
+  firstName: String
+  id: String
+  image: String
+  lastName: String
+  password: String
   role: Role
   sessions: SessionCreateNestedManyWithoutUserInput
   status: UserStatus

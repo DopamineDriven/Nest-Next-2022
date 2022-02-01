@@ -21,45 +21,76 @@ type Account {
   userId: String!
 }
 
+input AccountCreateManyUserInput {
+  access_token: String
+  expires_at: Int
+  id: String
+  id_token: String
+  oauth_token: String
+  oauth_token_secret: String
+  provider: String!
+  providerAccountId: String!
+  refresh_secret: String
+  refresh_token: String
+  scope: String
+  session_state: String
+  token_type: String
+  type: String!
+}
+
+input AccountCreateManyUserInputEnvelope {
+  data: [AccountCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input AccountCreateNestedManyWithoutUserInput {
+  connect: [AccountWhereUniqueInput!]
+  connectOrCreate: [AccountCreateOrConnectWithoutUserInput!]
+  create: [AccountCreateWithoutUserInput!]
+  createMany: AccountCreateManyUserInputEnvelope
+}
+
+input AccountCreateOrConnectWithoutUserInput {
+  create: AccountCreateWithoutUserInput!
+  where: AccountWhereUniqueInput!
+}
+
+input AccountCreateWithoutUserInput {
+  access_token: String
+  expires_at: Int
+  id: String
+  id_token: String
+  oauth_token: String
+  oauth_token_secret: String
+  provider: String!
+  providerAccountId: String!
+  refresh_secret: String
+  refresh_token: String
+  scope: String
+  session_state: String
+  token_type: String
+  type: String!
+}
+
 input AccountOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
-enum AlgorithmType {
-  ES256
-  ES256K
-  ES384
-  ES512
-  Ed448
-  Ed25519
-  HS256
-  HS384
-  HS512
-  None
-  PS256
-  PS384
-  PS512
-  RS256
-  RS384
-  RS512
+input AccountProviderProviderAccountIdCompoundUniqueInput {
+  provider: String!
+  providerAccountId: String!
 }
 
-type Auth {
-  accessToken: String!
-  refreshToken: String!
-  session: [Session!]
+input AccountWhereUniqueInput {
+  id: String
+  provider_providerAccountId: AccountProviderProviderAccountIdCompoundUniqueInput
+}
+
+type AuthSansSession {
+  accessToken: String
+  refreshToken: String
   user: User
 }
-
-type AuthDetailed {
-  auth: Auth
-  jwt: JwtDecoded
-}
-
-"""
-The `BigInt` scalar type represents non-fractional signed whole numeric values.
-"""
-scalar BigInt
 
 type Category {
   _count: CategoryCount!
@@ -77,8 +108,67 @@ type CategoryCount {
   entries: Int!
 }
 
+input CategoryCreateManyCreatorInput {
+  createdAt: DateTime
+  entryId: String
+  id: String
+  name: String!
+  updatedAt: DateTime
+}
+
+input CategoryCreateManyCreatorInputEnvelope {
+  data: [CategoryCreateManyCreatorInput!]!
+  skipDuplicates: Boolean
+}
+
+input CategoryCreateNestedManyWithoutCreatorInput {
+  connect: [CategoryWhereUniqueInput!]
+  connectOrCreate: [CategoryCreateOrConnectWithoutCreatorInput!]
+  create: [CategoryCreateWithoutCreatorInput!]
+  createMany: CategoryCreateManyCreatorInputEnvelope
+}
+
+input CategoryCreateNestedManyWithoutEntriesInput {
+  connect: [CategoryWhereUniqueInput!]
+  connectOrCreate: [CategoryCreateOrConnectWithoutEntriesInput!]
+  create: [CategoryCreateWithoutEntriesInput!]
+}
+
+input CategoryCreateOrConnectWithoutCreatorInput {
+  create: CategoryCreateWithoutCreatorInput!
+  where: CategoryWhereUniqueInput!
+}
+
+input CategoryCreateOrConnectWithoutEntriesInput {
+  create: CategoryCreateWithoutEntriesInput!
+  where: CategoryWhereUniqueInput!
+}
+
+input CategoryCreateWithoutCreatorInput {
+  createdAt: DateTime
+  entries: EntryCreateNestedManyWithoutCategoriesInput
+  entryId: String
+  id: String
+  name: String!
+  updatedAt: DateTime
+}
+
+input CategoryCreateWithoutEntriesInput {
+  createdAt: DateTime
+  creator: UserCreateNestedOneWithoutCategoriesInput!
+  entryId: String
+  id: String
+  name: String!
+  updatedAt: DateTime
+}
+
 input CategoryOrderByRelationAggregateInput {
   _count: SortOrder
+}
+
+input CategoryWhereUniqueInput {
+  id: String
+  name: String
 }
 
 input ChangePasswordInput {
@@ -99,6 +189,88 @@ type Comment {
   updatedAt: DateTime
 }
 
+input CommentCreateManyAuthorInput {
+  body: JSON
+  createdAt: DateTime
+  entryId: String!
+  id: String
+  position: String
+  reactions: CommentCreateManyreactionsInput
+  updatedAt: DateTime
+}
+
+input CommentCreateManyAuthorInputEnvelope {
+  data: [CommentCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input CommentCreateManyEntryInput {
+  authorId: String!
+  body: JSON
+  createdAt: DateTime
+  id: String
+  position: String
+  reactions: CommentCreateManyreactionsInput
+  updatedAt: DateTime
+}
+
+input CommentCreateManyEntryInputEnvelope {
+  data: [CommentCreateManyEntryInput!]!
+  skipDuplicates: Boolean
+}
+
+input CommentCreateManyreactionsInput {
+  set: [CommentReactions!]!
+}
+
+input CommentCreateNestedManyWithoutAuthorInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutAuthorInput!]
+  create: [CommentCreateWithoutAuthorInput!]
+  createMany: CommentCreateManyAuthorInputEnvelope
+}
+
+input CommentCreateNestedManyWithoutEntryInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutEntryInput!]
+  create: [CommentCreateWithoutEntryInput!]
+  createMany: CommentCreateManyEntryInputEnvelope
+}
+
+input CommentCreateOrConnectWithoutAuthorInput {
+  create: CommentCreateWithoutAuthorInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentCreateOrConnectWithoutEntryInput {
+  create: CommentCreateWithoutEntryInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentCreateWithoutAuthorInput {
+  body: JSON
+  createdAt: DateTime
+  entry: EntryCreateNestedOneWithoutCommentsInput!
+  id: String
+  position: String
+  reactions: CommentCreatereactionsInput
+  updatedAt: DateTime
+}
+
+input CommentCreateWithoutEntryInput {
+  author: UserCreateNestedOneWithoutCommentsInput!
+  body: JSON
+  createdAt: DateTime
+  id: String
+  position: String
+  reactions: CommentCreatereactionsInput
+  updatedAt: DateTime
+}
+
+input CommentCreatereactionsInput {
+  set: [CommentReactions!]!
+}
+
 input CommentOrderByRelationAggregateInput {
   _count: SortOrder
 }
@@ -117,6 +289,10 @@ enum CommentReactions {
   WOW
 }
 
+input CommentWhereUniqueInput {
+  id: String
+}
+
 type Connection {
   email: String!
   firstName: String
@@ -129,14 +305,50 @@ type Connection {
   phoneNumber: PhoneNumber
 }
 
+input ConnectionCreateManyOwnerInput {
+  email: String!
+  firstName: String
+  id: String
+  ip: String
+  lastModified: DateTime
+  lastName: String
+  phoneNumber: String
+}
+
+input ConnectionCreateManyOwnerInputEnvelope {
+  data: [ConnectionCreateManyOwnerInput!]!
+  skipDuplicates: Boolean
+}
+
+input ConnectionCreateNestedManyWithoutOwnerInput {
+  connect: [ConnectionWhereUniqueInput!]
+  connectOrCreate: [ConnectionCreateOrConnectWithoutOwnerInput!]
+  create: [ConnectionCreateWithoutOwnerInput!]
+  createMany: ConnectionCreateManyOwnerInputEnvelope
+}
+
+input ConnectionCreateOrConnectWithoutOwnerInput {
+  create: ConnectionCreateWithoutOwnerInput!
+  where: ConnectionWhereUniqueInput!
+}
+
+input ConnectionCreateWithoutOwnerInput {
+  email: String!
+  firstName: String
+  id: String
+  ip: String
+  lastModified: DateTime
+  lastName: String
+  phoneNumber: String
+}
+
 input ConnectionOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
-"""
-A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
-"""
-scalar Date
+input ConnectionWhereUniqueInput {
+  id: String
+}
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
@@ -167,6 +379,109 @@ type EntryConnection {
 type EntryCount {
   categories: Int!
   comments: Int!
+}
+
+input EntryCreateInput {
+  author: UserCreateNestedOneWithoutEntriesInput!
+  categories: CategoryCreateNestedManyWithoutEntriesInput
+  categoryId: String
+  comments: CommentCreateNestedManyWithoutEntryInput
+  content: String
+  createdAt: DateTime
+  featuredImage: String
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+input EntryCreateManyAuthorInput {
+  categoryId: String
+  content: String
+  createdAt: DateTime
+  featuredImage: String
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+input EntryCreateManyAuthorInputEnvelope {
+  data: [EntryCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input EntryCreateNestedManyWithoutAuthorInput {
+  connect: [EntryWhereUniqueInput!]
+  connectOrCreate: [EntryCreateOrConnectWithoutAuthorInput!]
+  create: [EntryCreateWithoutAuthorInput!]
+  createMany: EntryCreateManyAuthorInputEnvelope
+}
+
+input EntryCreateNestedManyWithoutCategoriesInput {
+  connect: [EntryWhereUniqueInput!]
+  connectOrCreate: [EntryCreateOrConnectWithoutCategoriesInput!]
+  create: [EntryCreateWithoutCategoriesInput!]
+}
+
+input EntryCreateNestedOneWithoutCommentsInput {
+  connect: EntryWhereUniqueInput
+  connectOrCreate: EntryCreateOrConnectWithoutCommentsInput
+  create: EntryCreateWithoutCommentsInput
+}
+
+input EntryCreateOrConnectWithoutAuthorInput {
+  create: EntryCreateWithoutAuthorInput!
+  where: EntryWhereUniqueInput!
+}
+
+input EntryCreateOrConnectWithoutCategoriesInput {
+  create: EntryCreateWithoutCategoriesInput!
+  where: EntryWhereUniqueInput!
+}
+
+input EntryCreateOrConnectWithoutCommentsInput {
+  create: EntryCreateWithoutCommentsInput!
+  where: EntryWhereUniqueInput!
+}
+
+input EntryCreateWithoutAuthorInput {
+  categories: CategoryCreateNestedManyWithoutEntriesInput
+  categoryId: String
+  comments: CommentCreateNestedManyWithoutEntryInput
+  content: String
+  createdAt: DateTime
+  featuredImage: String
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+input EntryCreateWithoutCategoriesInput {
+  author: UserCreateNestedOneWithoutEntriesInput!
+  categoryId: String
+  comments: CommentCreateNestedManyWithoutEntryInput
+  content: String
+  createdAt: DateTime
+  featuredImage: String
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+input EntryCreateWithoutCommentsInput {
+  author: UserCreateNestedOneWithoutEntriesInput!
+  categories: CategoryCreateNestedManyWithoutEntriesInput
+  categoryId: String
+  content: String
+  createdAt: DateTime
+  featuredImage: String
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
 }
 
 type EntryEdge {
@@ -209,6 +524,32 @@ input EntryOrderByWithRelationAndSearchRelevanceInput {
   updatedAt: SortOrder
 }
 
+input EntryWhereUniqueInput {
+  id: String
+  title: String
+}
+
+input EnumGenderNullableFilter {
+  equals: Gender
+  in: [Gender!]
+  not: NestedEnumGenderNullableFilter
+  notIn: [Gender!]
+}
+
+input EnumPronounsNullableFilter {
+  equals: Pronouns
+  in: [Pronouns!]
+  not: NestedEnumPronounsNullableFilter
+  notIn: [Pronouns!]
+}
+
+input EnumRoleNullableFilter {
+  equals: Role
+  in: [Role!]
+  not: NestedEnumRoleNullableFilter
+  notIn: [Role!]
+}
+
 enum Gender {
   FEMALE
   MALE
@@ -217,25 +558,29 @@ enum Gender {
 }
 
 """
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+"""
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
-type JwtDecoded {
-  header: JwtHeaders!
-  payload: JwtPayload!
-  signature: String!
-}
-
-type JwtHeaders {
-  alg: AlgorithmType!
-  typ: String!
-}
-
-type JwtPayload {
-  exp: BigInt
-  iat: BigInt
-  userId: String
+input JsonNullableFilter {
+  array_contains: JSON
+  array_ends_with: JSON
+  array_starts_with: JSON
+  equals: JSON
+  gt: JSON
+  gte: JSON
+  lt: JSON
+  lte: JSON
+  not: JSON
+  path: [String!]
+  string_contains: String
+  string_ends_with: String
+  string_starts_with: String
 }
 
 input LoginInput {
@@ -244,11 +589,50 @@ input LoginInput {
 }
 
 type Mutation {
-  changePassword(data: ChangePasswordInput!): User!
-  getUserFromAccessToken(token: String!): AuthDetailed!
-  login(data: LoginInput!): Auth!
+  changePassword(accessToken: String!, data: ChangePasswordInput!): User!
+  createEntry(data: EntryCreateInput!): Entry!
+  createProfile(data: ProfileCreateInput!, userId: String!): Profile!
+  getUserFromAccessToken(token: String!): User!
+  login(data: LoginInput!): Token!
   refreshToken(token: String!): Token!
-  signup(data: SignupInput!): Auth!
+  register(dataRegister: SignupInput!): AuthSansSession!
+  signup(data: SignupInput!): Token!
+}
+
+input NestedEnumGenderNullableFilter {
+  equals: Gender
+  in: [Gender!]
+  not: NestedEnumGenderNullableFilter
+  notIn: [Gender!]
+}
+
+input NestedEnumPronounsNullableFilter {
+  equals: Pronouns
+  in: [Pronouns!]
+  not: NestedEnumPronounsNullableFilter
+  notIn: [Pronouns!]
+}
+
+input NestedEnumRoleNullableFilter {
+  equals: Role
+  in: [Role!]
+  not: NestedEnumRoleNullableFilter
+  notIn: [Role!]
+}
+
+input NestedStringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
 }
 
 type PageInfo {
@@ -258,28 +642,105 @@ type PageInfo {
   startCursor: String
 }
 
+input PaginationArgsInput {
+  after: String
+  before: String
+  first: Int = 10
+  last: Int
+  skip: Int
+}
+
 """
 A field whose value conforms to the standard E.164 format as specified in: https://en.wikipedia.org/wiki/E.164. Basically this is +17895551234.
 """
 scalar PhoneNumber
 
 type Profile {
-  activiyFeed: [JSONObject!]
-  bio: [JSONObject!]
+  activiyFeed: [JSON!]
+  bio: [JSON!]
   city: String
   country: String
   coverPhoto: String
-  dob: Date
+  dob: String
   gender: Gender
   id: ID!
   lastSeen: DateTime
   memberSince: DateTime!
   occupation: String
-  phoneNumber: PhoneNumber
+  phoneNumber: String
   pronouns: Pronouns
-  recentActivity: JSONObject
+  recentActivity: [JSON!]
   user: User!
   userId: String!
+  userInProfile: User!
+}
+
+type ProfileConnection {
+  edges: [ProfileEdge!]!
+  pageInfo: PageInfo!
+}
+
+input ProfileCreateInput {
+  activiyFeed: ProfileCreateactiviyFeedInput
+  bio: ProfileCreatebioInput
+  city: String
+  country: String
+  coverPhoto: String
+  dob: String
+  gender: Gender
+  id: String
+  lastSeen: DateTime
+  memberSince: DateTime
+  occupation: String
+  phoneNumber: String
+  pronouns: Pronouns
+  recentActivity: ProfileCreaterecentActivityInput
+  user: UserCreateNestedOneWithoutProfileInput!
+}
+
+input ProfileCreateNestedOneWithoutUserInput {
+  connect: ProfileWhereUniqueInput
+  connectOrCreate: ProfileCreateOrConnectWithoutUserInput
+  create: ProfileCreateWithoutUserInput
+}
+
+input ProfileCreateOrConnectWithoutUserInput {
+  create: ProfileCreateWithoutUserInput!
+  where: ProfileWhereUniqueInput!
+}
+
+input ProfileCreateWithoutUserInput {
+  activiyFeed: ProfileCreateactiviyFeedInput
+  bio: ProfileCreatebioInput
+  city: String
+  country: String
+  coverPhoto: String
+  dob: String
+  gender: Gender
+  id: String
+  lastSeen: DateTime
+  memberSince: DateTime
+  occupation: String
+  phoneNumber: String
+  pronouns: Pronouns
+  recentActivity: ProfileCreaterecentActivityInput
+}
+
+input ProfileCreateactiviyFeedInput {
+  set: [JSON!]!
+}
+
+input ProfileCreatebioInput {
+  set: [JSON!]!
+}
+
+input ProfileCreaterecentActivityInput {
+  set: [JSON!]!
+}
+
+type ProfileEdge {
+  cursor: String!
+  node: Profile!
 }
 
 enum ProfileOrderByRelevanceFieldEnum {
@@ -319,6 +780,20 @@ input ProfileOrderByWithRelationAndSearchRelevanceInput {
   userId: SortOrder
 }
 
+input ProfileWhereUniqueInput {
+  id: String
+  userId: String
+}
+
+input ProfilesInput {
+  bioFilter: JsonNullableFilter
+  dobFilter: StringNullableFilter
+  genderFilter: EnumGenderNullableFilter
+  orderBy: ProfileOrderByWithRelationAndSearchRelevanceInput
+  paginationArgs: PaginationArgsInput
+  pronounsFilter: EnumPronounsNullableFilter
+}
+
 enum Pronouns {
   HE_HIM_HIS
   NOT_LISTED
@@ -328,14 +803,24 @@ enum Pronouns {
 }
 
 type Query {
-  entriesByStatus(isPublished: Boolean!): [EntryConnection!]!
+  entryById(id: String!): Entry!
+  entryCursorConnection(after: String, before: String, first: Int = 10, last: Int, orderBy: EntryOrderByWithRelationAndSearchRelevanceInput, query: String, skip: Int): EntryConnection!
+  getProfiles(after: String, before: String, first: Int = 10, last: Int, orderBy: ProfileOrderByWithRelationAndSearchRelevanceInput, query: String, skip: Int): ProfileConnection!
+  getViewer(id: String!): Viewer!
   hello(name: String!): String!
   helloWorld: String!
-  listUsers(after: String, before: String, first: Int = 10, last: Int, orderBy: UserOrder, query: String, role: Role = USER, skip: Int): UserConnection!
-  me(accessToken: String!): User!
+  listUsers(after: String, before: String, first: Int = 10, last: Int, orderBy: UserOrderByWithRelationAndSearchRelevanceInput, query: String, roles: EnumRoleNullableFilter, skip: Int): UserConnection!
+  me: User!
+  profileByRelayId: Profile!
+  profiles(profilesArgs: ProfilesInput!): ProfileConnection!
   userById(id: String!): User!
   userByRelayId: User!
-  userToEntryConnection(after: String, before: String, filterByAuthor: String, first: Int = 10, last: Int, orderBy: EntryOrderByWithRelationAndSearchRelevanceInput, skip: Int): EntryConnection!
+  userPosts(userId: ID!): [Entry!]!
+}
+
+enum QueryMode {
+  default
+  insensitive
 }
 
 enum Role {
@@ -346,7 +831,7 @@ enum Role {
 }
 
 type Session {
-  accessToken: String!
+  accessToken: String
   alg: String
   exp: Int
   iat: Int
@@ -361,18 +846,73 @@ type Session {
   userId: String!
 }
 
+input SessionCreateManyUserInput {
+  accessToken: String
+  alg: String
+  exp: Int
+  iat: Int
+  id: String
+  lastVerified: DateTime
+  provider: String
+  refreshToken: String
+  scopes: SessionCreateManyscopesInput
+  signature: String
+  tokenState: String
+}
+
+input SessionCreateManyUserInputEnvelope {
+  data: [SessionCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input SessionCreateManyscopesInput {
+  set: [String!]!
+}
+
+input SessionCreateNestedManyWithoutUserInput {
+  connect: [SessionWhereUniqueInput!]
+  connectOrCreate: [SessionCreateOrConnectWithoutUserInput!]
+  create: [SessionCreateWithoutUserInput!]
+  createMany: SessionCreateManyUserInputEnvelope
+}
+
+input SessionCreateOrConnectWithoutUserInput {
+  create: SessionCreateWithoutUserInput!
+  where: SessionWhereUniqueInput!
+}
+
+input SessionCreateWithoutUserInput {
+  accessToken: String
+  alg: String
+  exp: Int
+  iat: Int
+  id: String
+  lastVerified: DateTime
+  provider: String
+  refreshToken: String
+  scopes: SessionCreatescopesInput
+  signature: String
+  tokenState: String
+}
+
+input SessionCreatescopesInput {
+  set: [String!]!
+}
+
 input SessionOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
+input SessionWhereUniqueInput {
+  userId: String
+}
+
 input SignupInput {
-  accessToken: String
   email: String!
+  firstName: String
   image: String
-  name: String
+  lastName: String
   password: String!
-  role: Role = USER
-  status: UserStatus = OFFLINE
 }
 
 enum SortOrder {
@@ -380,17 +920,36 @@ enum SortOrder {
   desc
 }
 
+input StringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
+}
+
+type Subscription {
+  entryCreated: Entry!
+  profileCreated: Profile!
+}
+
 type Token {
   """JWT access token"""
-  accessToken: String!
+  accessToken: String
 
   """JWT refresh token"""
-  refreshToken: String!
+  refreshToken: String
 }
 
 type User {
-  _count: UserCount!
-  accessToken: String
   accounts: [Account!]
   categories: [Category!]
   comments: [Comment!]
@@ -398,15 +957,16 @@ type User {
 
   """Identifies the date and time when the user was created."""
   createdAt: DateTime!
-  email: String
+  email: String!
   emailVerified: DateTime
   entries: [Entry!]
+  firstName: String
   id: ID!
   image: String
-  name: String
+  lastName: String
   password: String!
   profile: Profile
-  role: Role!
+  role: Role
   sessions: [Session!]
   status: UserStatus!
 
@@ -419,13 +979,128 @@ type UserConnection {
   pageInfo: PageInfo!
 }
 
-type UserCount {
-  accounts: Int!
-  categories: Int!
-  comments: Int!
-  connections: Int!
-  entries: Int!
-  sessions: Int!
+input UserCreateNestedOneWithoutCategoriesInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutCategoriesInput
+  create: UserCreateWithoutCategoriesInput
+}
+
+input UserCreateNestedOneWithoutCommentsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutCommentsInput
+  create: UserCreateWithoutCommentsInput
+}
+
+input UserCreateNestedOneWithoutEntriesInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutEntriesInput
+  create: UserCreateWithoutEntriesInput
+}
+
+input UserCreateNestedOneWithoutProfileInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutProfileInput
+  create: UserCreateWithoutProfileInput
+}
+
+input UserCreateOrConnectWithoutCategoriesInput {
+  create: UserCreateWithoutCategoriesInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutCommentsInput {
+  create: UserCreateWithoutCommentsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutEntriesInput {
+  create: UserCreateWithoutEntriesInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutProfileInput {
+  create: UserCreateWithoutProfileInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateWithoutCategoriesInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  comments: CommentCreateNestedManyWithoutAuthorInput
+  connections: ConnectionCreateNestedManyWithoutOwnerInput
+  createdAt: DateTime
+  email: String!
+  emailVerified: DateTime
+  entries: EntryCreateNestedManyWithoutAuthorInput
+  firstName: String
+  id: String
+  image: String
+  lastName: String
+  password: String
+  profile: ProfileCreateNestedOneWithoutUserInput
+  role: Role
+  sessions: SessionCreateNestedManyWithoutUserInput
+  status: UserStatus
+  updatedAt: DateTime
+}
+
+input UserCreateWithoutCommentsInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  categories: CategoryCreateNestedManyWithoutCreatorInput
+  connections: ConnectionCreateNestedManyWithoutOwnerInput
+  createdAt: DateTime
+  email: String!
+  emailVerified: DateTime
+  entries: EntryCreateNestedManyWithoutAuthorInput
+  firstName: String
+  id: String
+  image: String
+  lastName: String
+  password: String
+  profile: ProfileCreateNestedOneWithoutUserInput
+  role: Role
+  sessions: SessionCreateNestedManyWithoutUserInput
+  status: UserStatus
+  updatedAt: DateTime
+}
+
+input UserCreateWithoutEntriesInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  categories: CategoryCreateNestedManyWithoutCreatorInput
+  comments: CommentCreateNestedManyWithoutAuthorInput
+  connections: ConnectionCreateNestedManyWithoutOwnerInput
+  createdAt: DateTime
+  email: String!
+  emailVerified: DateTime
+  firstName: String
+  id: String
+  image: String
+  lastName: String
+  password: String
+  profile: ProfileCreateNestedOneWithoutUserInput
+  role: Role
+  sessions: SessionCreateNestedManyWithoutUserInput
+  status: UserStatus
+  updatedAt: DateTime
+}
+
+input UserCreateWithoutProfileInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  categories: CategoryCreateNestedManyWithoutCreatorInput
+  comments: CommentCreateNestedManyWithoutAuthorInput
+  connections: ConnectionCreateNestedManyWithoutOwnerInput
+  createdAt: DateTime
+  email: String!
+  emailVerified: DateTime
+  entries: EntryCreateNestedManyWithoutAuthorInput
+  firstName: String
+  id: String
+  image: String
+  lastName: String
+  password: String
+  role: Role
+  sessions: SessionCreateNestedManyWithoutUserInput
+  status: UserStatus
+  updatedAt: DateTime
 }
 
 type UserEdge {
@@ -433,16 +1108,12 @@ type UserEdge {
   node: User!
 }
 
-input UserOrder {
-  direction: SortOrder!
-}
-
 enum UserOrderByRelevanceFieldEnum {
-  accessToken
   email
+  firstName
   id
   image
-  name
+  lastName
   password
 }
 
@@ -454,7 +1125,6 @@ input UserOrderByRelevanceInput {
 
 input UserOrderByWithRelationAndSearchRelevanceInput {
   _relevance: UserOrderByRelevanceInput
-  accessToken: SortOrder
   accounts: AccountOrderByRelationAggregateInput
   categories: CategoryOrderByRelationAggregateInput
   comments: CommentOrderByRelationAggregateInput
@@ -463,9 +1133,10 @@ input UserOrderByWithRelationAndSearchRelevanceInput {
   email: SortOrder
   emailVerified: SortOrder
   entries: EntryOrderByRelationAggregateInput
+  firstName: SortOrder
   id: SortOrder
   image: SortOrder
-  name: SortOrder
+  lastName: SortOrder
   password: SortOrder
   profile: ProfileOrderByWithRelationAndSearchRelevanceInput
   role: SortOrder
@@ -481,4 +1152,35 @@ enum UserStatus {
   OFFLINE
   ONLINE
   SUSPENDED
+}
+
+input UserWhereUniqueInput {
+  email: String
+  id: String
+}
+
+type Viewer {
+  accessToken: String
+  accounts: [Account!]
+  categories: [Category!]
+  comments: [Comment!]
+  connections: [Connection!]
+
+  """Identifies the date and time when the user was created."""
+  createdAt: DateTime!
+  email: String!
+  emailVerified: DateTime
+  entries: [Entry!]
+  firstName: String
+  id: String!
+  image: String
+  lastName: String
+  password: String!
+  profile: Profile
+  role: Role
+  sessions: [Session!]
+  status: UserStatus!
+
+  """Identifies the date and time when the user was last updated."""
+  updatedAt: DateTime
 }

@@ -28,6 +28,7 @@ import {
 } from "apollo-server-core";
 import { IResolvers } from "@graphql-tools/utils/Interfaces";
 import * as Redis from "redis";
+import { ProfileModule } from "./profile/profile.module";
 
 
 export type Context = {
@@ -136,7 +137,8 @@ export type Context = {
     AuthModule,
     UserModule,
     PaginationModule,
-    EntryModule
+    EntryModule,
+    ProfileModule
   ],
   controllers: [AppController],
   providers: [
