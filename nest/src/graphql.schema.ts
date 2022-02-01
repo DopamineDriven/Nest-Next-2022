@@ -1159,7 +1159,7 @@ export abstract class IQuery {
 
     abstract listUsers(after?: Nullable<string>, before?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>, query?: Nullable<string>, roles?: Nullable<EnumRoleNullableFilter>, skip?: Nullable<number>): UserConnection | Promise<UserConnection>;
 
-    abstract me(): User | Promise<User>;
+    abstract me(): AuthDetailed | Promise<AuthDetailed>;
 
     abstract profileByRelayId(): Profile | Promise<Profile>;
 

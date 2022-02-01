@@ -864,7 +864,7 @@ type Query {
   hello(name: String!): String!
   helloWorld: String!
   listUsers(after: String, before: String, first: Int = 10, last: Int, orderBy: UserOrderByWithRelationAndSearchRelevanceInput, query: String, roles: EnumRoleNullableFilter, skip: Int): UserConnection!
-  me: User!
+  me: AuthDetailed!
   profileByRelayId: Profile!
   profiles(profilesArgs: ProfilesInput!): ProfileConnection!
   userById(id: String!): User!
