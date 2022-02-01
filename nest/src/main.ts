@@ -4,24 +4,22 @@ import { NestApplicationOptions, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import {
-  CorsConfig,
   NestConfig,
+  RedisConfig,
+  PostgresConfig,
   SwaggerConfig
 } from "./common/config/config-interfaces.config";
 import * as cookieParser from "cookie-parser";
 import { PrismaService } from "./prisma/prisma.service";
-
 import * as fs from "fs";
 import * as morgan from "morgan";
-import { PrismaModule } from "./prisma/prisma.module";
-import { request, response, Request } from "express";
-import { ApolloServer, ExpressContext } from "apollo-server-express";
-import { AuthModule } from "./auth/auth-jwt.module";
-import { GraphQLSchemaHost } from "@nestjs/graphql";
-import {ExpressAdapter, NestExpressApplication} from '@nestjs/platform-express'
-import { ExternalExceptionsHandler } from "@nestjs/core/exceptions/external-exceptions-handler";
-import { RequestHandler } from "@nestjs/common/interfaces";
+import {
+  Transport,
+  MicroserviceOptions,
+  CustomStrategy
+} from "@nestjs/microservices";
 
+// .gitignored logs output in root as api.log and error.log
 const logStream = fs.createWriteStream("api.log", {
   flags: "a" // append
 });
@@ -82,26 +80,21 @@ const options: Options = {
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {...options});
+  const app = await NestFactory.create(AppModule, { ...options });
+
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-/**
- *   const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter().get((handler: RequestHandler<AppModule, ExpressContext>) => ({
-apolloServer: new ApolloServer(new AppModule())
-  })), { ...options });
- */
 
   app.use(cookieParser());
 
   const httpAdapter = app.get(HttpAdapterHost);
   app.getHttpAdapter();
-  // app.useGlobalFilters(HttpAdapterHost.prototype.httpAdapter());
   app.use(morgan("tiny", { stream: logStream }));
   const configService = app.get(ConfigService);
   const nestConfig = configService.get<NestConfig>("nest");
-  const corsConfig = configService.get<CorsConfig>("cors");
+  const redisConfig = configService.get<RedisConfig>("redis");
+  const postgresConfig = configService.get<PostgresConfig>("postgres");
   const swaggerConfig = configService.get<SwaggerConfig>("swagger");
-
-  // Cortina Swagger Api
+  const redisStrategy = configService.get<CustomStrategy>("customStrategy");
   if (swaggerConfig?.enabled) {
     const options = new DocumentBuilder()
       .setTitle(swaggerConfig.title || "Nestjs")
@@ -112,11 +105,31 @@ apolloServer: new ApolloServer(new AppModule())
 
     SwaggerModule.setup(swaggerConfig.path || "api", app, document);
   }
-
   const prismaService: PrismaService = app.get<PrismaService>(PrismaService);
+
+  const microServiceRedis = app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.REDIS,
+    options: {
+      retry_unfulfilled_commands: process.env.NODE_ENV !== "production" ? true : false,
+      connect_timeout: 10000,
+      max_attempts: 10,
+      password: redisConfig?.password
+        ? redisConfig.password
+        : process.env.PWD ?? "",
+      url: redisConfig?.url ? redisConfig.url : process.env.REDIS_URL ?? "",
+      host: redisConfig?.host ? redisConfig.host : "",
+      port: redisConfig?.port ? redisConfig.port : 6379
+    }
+  });
+  await app.startAllMicroservices();
   prismaService.enableShutdownHooks(app);
-  await app.listen(process.env.PORT ?? nestConfig?.port ?? 3000);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  await app
+    .listen(process.env.PORT ?? nestConfig?.port ?? 3000)
+    .then(async () => {
+      return console.log(
+        `[GraphQL Playground]: ${await app.getUrl()}/graphql  \n[Swagger Api]: ${await app.getUrl()}/api`
+      );
+    });
 }
 
 bootstrap();

@@ -7,6 +7,25 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export enum AlgorithmType {
+    ES256 = "ES256",
+    ES256K = "ES256K",
+    ES384 = "ES384",
+    ES512 = "ES512",
+    Ed448 = "Ed448",
+    Ed25519 = "Ed25519",
+    HS256 = "HS256",
+    HS384 = "HS384",
+    HS512 = "HS512",
+    None = "None",
+    PS256 = "PS256",
+    PS384 = "PS384",
+    PS512 = "PS512",
+    RS256 = "RS256",
+    RS384 = "RS384",
+    RS512 = "RS512"
+}
+
 export enum CommentReactions {
     ANGRY = "ANGRY",
     CARE = "CARE",
@@ -939,6 +958,20 @@ export class Account {
     userId: string;
 }
 
+export class Auth {
+    __typename?: 'Auth';
+    accessToken?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+    session?: Nullable<Session>;
+    user?: Nullable<User>;
+}
+
+export class AuthDetailed {
+    __typename?: 'AuthDetailed';
+    auth?: Nullable<Auth>;
+    jwt?: Nullable<JwtDecoded>;
+}
+
 export class AuthSansSession {
     __typename?: 'AuthSansSession';
     accessToken?: Nullable<string>;
@@ -1026,6 +1059,26 @@ export class EntryEdge {
     node: Entry;
 }
 
+export class JwtDecoded {
+    __typename?: 'JwtDecoded';
+    header: JwtHeaders;
+    payload: JwtPayload;
+    signature: string;
+}
+
+export class JwtHeaders {
+    __typename?: 'JwtHeaders';
+    alg: AlgorithmType;
+    typ: string;
+}
+
+export class JwtPayload {
+    __typename?: 'JwtPayload';
+    exp?: Nullable<BigInt>;
+    iat?: Nullable<BigInt>;
+    userId?: Nullable<string>;
+}
+
 export abstract class IMutation {
     __typename?: 'IMutation';
 
@@ -1042,6 +1095,8 @@ export abstract class IMutation {
     abstract refreshToken(token: string): Token | Promise<Token>;
 
     abstract register(dataRegister: SignupInput): AuthSansSession | Promise<AuthSansSession>;
+
+    abstract signin(loginInput: LoginInput): AuthDetailed | Promise<AuthDetailed>;
 
     abstract signup(data: SignupInput): Token | Promise<Token>;
 }
@@ -1205,6 +1260,7 @@ export class Viewer {
     updatedAt?: Nullable<DateTime>;
 }
 
+export type BigInt = any;
 export type DateTime = any;
 export type JSON = any;
 export type JSONObject = any;

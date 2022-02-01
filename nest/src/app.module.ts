@@ -1,10 +1,17 @@
-import { Module, CacheModule, CacheInterceptor, CACHE_MANAGER } from "@nestjs/common";
+import {
+  Module,
+  CacheModule,
+  CacheInterceptor,
+  CACHE_MANAGER
+} from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { join } from "path";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import {
   ApolloConfig,
-  GraphqlConfig
+  RedisConfig,
+  GraphqlConfig,
+  PostgresConfig
 } from "./common/config/config-interfaces.config";
 import config from "./common/config/config.config";
 import { ExpressContext } from "apollo-server-express";
@@ -30,7 +37,6 @@ import { IResolvers } from "@graphql-tools/utils/Interfaces";
 import * as Redis from "redis";
 import { ProfileModule } from "./profile/profile.module";
 
-
 export type Context = {
   req: ExpressContext["req"];
   res: ExpressContext["res"];
@@ -38,12 +44,58 @@ export type Context = {
 };
 @Module({
   imports: [
-    CacheModule.register<Redis.ClientOpts>({
+    CacheModule.registerAsync<Redis.ClientOpts>({
       isGlobal: true,
-      host: "localhost",
-      port: 6379,
-      store: CacheManagerRedisStore.create(),
-      db: process.env.DATABASE_URL ?? ""
+      useFactory: async (configService: ConfigService) => {
+        const redisConfig = configService.get<RedisConfig>("redis");
+        const postgresConfig = configService.get<PostgresConfig>("postgres");
+        console.log({...redisConfig } ?? "no redis config...")
+        return {
+          isGlobal: true,
+          retry_strategy: function (options) {
+            if (options.error && options.error.code === "ECONNREFUSED") {
+              // End reconnecting on a specific error and flush all commands with
+              // a individual error
+              return new Error("The server refused the connection");
+            }
+            if (options.total_retry_time > 1000 * 60 * 60) {
+              // End reconnecting after a specific timeout and flush all commands
+              // with a individual error
+              return new Error("Retry time exhausted");
+            }
+            if (options.attempt > 10) {
+              // End reconnecting with built in error
+              return undefined;
+            }
+            console.log(options.error);
+            // reconnect after
+            return Math.min(options.attempt * 100, 3000);
+          },
+          host: redisConfig?.host ? redisConfig.host : "",
+          port: redisConfig?.port ? redisConfig.port : 6379,
+          connect_timeout: 10000,
+          retry_unfulfilled_commands: true,
+          max_attempts: 10,
+          password: redisConfig?.password
+            ? redisConfig.password
+            : process.env.PWD ?? "",
+          url: redisConfig?.url ? redisConfig.url : process.env.REDIS_URL ?? "",
+          store: CacheManagerRedisStore.create({
+            password: redisConfig?.password
+              ? redisConfig.password
+              : process.env.PWD ?? "",
+            url: redisConfig?.url
+              ? redisConfig.url
+              : process.env.REDIS_URL ?? "",
+            host: redisConfig?.host ? redisConfig.host : "",
+            port: redisConfig?.port ? redisConfig.port : 6379,
+            retry_unfulfilled_commands: true,
+            connect_timeout: 10000,
+            max_attempts: 10
+          })
+        };
+      },
+      inject: [ConfigService]
     }),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -71,7 +123,8 @@ export type Context = {
           sortSchema: graphqlConfig?.sortSchema
             ? graphqlConfig.sortSchema
             : true,
-          autoSchemaFile: "./src/schema.gql", autoTransformHttpErrors: true,
+          autoSchemaFile: "./src/schema.gql",
+          autoTransformHttpErrors: true,
 
           definitions: {
             path: "./src/graphql.schema.ts" || graphqlConfig?.schemaDestination,
@@ -86,9 +139,7 @@ export type Context = {
           //   key: apolloConfig?.key ? apolloConfig.key : ""
           // },
           schema: rootSchema,
-          playground:
-          {
-
+          playground: {
             settings: {
               "general.betaUpdates": true,
               "tracing.hideTracingResponse": false,
@@ -107,12 +158,9 @@ export type Context = {
           debug: graphqlConfig?.debug
             ? graphqlConfig.debug
             : process.env.NODE_ENV !== "production"
-              ? true
-              : false,
-          context: ({
-            req,
-            res
-          }: ExpressContext): any => {
+            ? true
+            : false,
+          context: ({ req, res }: ExpressContext): any => {
             const token = req.header("authorization")?.split(" ")[1] ?? "";
 
             const ctx = {
@@ -122,7 +170,6 @@ export type Context = {
             };
 
             if (ctx.token != null && ctx.token.length > 0) {
-              console.log(ctx.token ?? "no token")
               return { ...ctx };
             } else {
               return { req, res, token: null };
@@ -155,76 +202,3 @@ export type Context = {
   ]
 })
 export class AppModule {}
-
-/**
- import {
-  CacheModuleOptions,
-  CacheOptionsFactory,
-  CACHE_MANAGER,
-  CACHE_MODULE_OPTIONS,
-  Inject,
-  Injectable
-} from "@nestjs/common";
-import * as Redis from "redis";
-import * as CacheManagerRedisStore from "cache-manager-redis-store";
-import { Cache } from "cache-manager";
-
-@Injectable()
-export class CacheConfigService
-  implements CacheOptionsFactory<Redis.ClientOpts>
-{
-  constructor(private cacheModule: Cache) {
-    CACHE_MANAGER;
-    CACHE_MODULE_OPTIONS;
-
-  }
-  createCacheOptions():
-    | CacheModuleOptions<Redis.ClientOpts>
-    | Promise<CacheModuleOptions<Redis.ClientOpts>> {
-    return {isGlobal: true,
-      ttl: 5,
-      host: "localhost",
-      port: 6379,
-      store: CacheManagerRedisStore.create()
-    };
-  }
-  get<T>(
-    key: string,
-    callback: (error: any, result: T | undefined) => void
-  ): void;
-  get<T>(key: string): Promise<T | undefined>;
-  get<T>(key: any, callback?: any): void | Promise<T | undefined> {
-    return this.cacheModule.get(key, callback);
-  }
-}import { CacheInterceptor, ExecutionContext, Injectable } from '@nestjs/common';
-
-@Injectable()
-export class HttpCacheInterceptor extends CacheInterceptor {
-  trackBy(context: ExecutionContext): string | undefined {
-    const request = context.switchToHttp().getRequest();
-    const { httpAdapter } = this.httpAdapterHost;
-
-    const isGetRequest = httpAdapter.getRequestMethod(request) === 'GET';
-    // const excludePaths = [
-    //   "/"
-    // ];
-    if (
-      !isGetRequest
-    // || (isGetRequest && excludePaths.includes(httpAdapter.getRequestUrl(request)))
-    )
-    {
-      return undefined;
-    }
-    return httpAdapter.getRequestUrl(request);
-  }
-}
-
-
- * {
- *
-          ...props
-        }: GqlModuleOptions
-      ): Promise<GqlModuleOptions
- * requestDidStart: (requestContext: GraphQLRequestContext<Context>) => ([requestContext.request.http?.headers.get("authorization")])})
-GraphQLRequestContextExecutionDidStart<Context>
-*/

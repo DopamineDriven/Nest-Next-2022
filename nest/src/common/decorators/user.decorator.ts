@@ -3,7 +3,7 @@ import {
   ExecutionContext,
   SetMetadata
 } from "@nestjs/common";
-import { GqlExecutionContext } from "@nestjs/graphql";
+import { GqlExecutionContext, ReturnTypeFunc } from "@nestjs/graphql";
 import { JwtService } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { Request } from "express";
@@ -22,6 +22,21 @@ export const UserEntity = createParamDecorator(
     const token = context.headers.authorization?.split(" ")[1];
     const userFromToken = await data.getUserFromToken(token ? token : "");
     return userFromToken;
+  }
+);
+
+export const UserMeta = createParamDecorator(
+  <
+    T extends { user: User } extends infer U
+      ? U
+      : T extends { user: User }
+      ? { user: User }
+      : unknown
+  >(
+    data: T,
+    ctx: ExecutionContext
+  ) => {
+    GqlExecutionContext.create(ctx).getContext<T>().user;
   }
 );
 // user.decorator.ts

@@ -52,7 +52,7 @@ import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import {
   ROLES_KEY,
-  Roles
+  RoleMeta
 } from '../decorators/role.decorator';
 
 @Injectable()

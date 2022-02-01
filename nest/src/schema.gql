@@ -86,11 +86,47 @@ input AccountWhereUniqueInput {
   provider_providerAccountId: AccountProviderProviderAccountIdCompoundUniqueInput
 }
 
+enum AlgorithmType {
+  ES256
+  ES256K
+  ES384
+  ES512
+  Ed448
+  Ed25519
+  HS256
+  HS384
+  HS512
+  None
+  PS256
+  PS384
+  PS512
+  RS256
+  RS384
+  RS512
+}
+
+type Auth {
+  accessToken: String
+  refreshToken: String
+  session: Session
+  user: User
+}
+
+type AuthDetailed {
+  auth: Auth
+  jwt: JwtDecoded
+}
+
 type AuthSansSession {
   accessToken: String
   refreshToken: String
   user: User
 }
+
+"""
+The `BigInt` scalar type represents non-fractional signed whole numeric values.
+"""
+scalar BigInt
 
 type Category {
   _count: CategoryCount!
@@ -583,6 +619,23 @@ input JsonNullableFilter {
   string_starts_with: String
 }
 
+type JwtDecoded {
+  header: JwtHeaders!
+  payload: JwtPayload!
+  signature: String!
+}
+
+type JwtHeaders {
+  alg: AlgorithmType!
+  typ: String!
+}
+
+type JwtPayload {
+  exp: BigInt
+  iat: BigInt
+  userId: String
+}
+
 input LoginInput {
   email: String
   password: String
@@ -596,6 +649,7 @@ type Mutation {
   login(data: LoginInput!): Token!
   refreshToken(token: String!): Token!
   register(dataRegister: SignupInput!): AuthSansSession!
+  signin(loginInput: LoginInput!): AuthDetailed!
   signup(data: SignupInput!): Token!
 }
 

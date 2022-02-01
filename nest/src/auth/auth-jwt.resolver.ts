@@ -3,42 +3,17 @@ import { Auth, AuthSansSession } from "./model/auth.model";
 import { LoginInput } from "./inputs/login.input";
 import { SignupInput } from "./inputs/signup.input";
 import { TokenInput } from "./inputs/refresh-token.input";
-import { createContextId } from "@nestjs/core";
-import {
-  Resolver,
-  Mutation,
-  Args,
-  Parent,
-  ResolveField,
-  PartialType,
-  Context,
-  Info,
-  Query,
-  OmitType,
-  ResolveReference,
-  ResolveProperty
-} from "@nestjs/graphql";
+import { Resolver, Mutation, Args, Info, Query } from "@nestjs/graphql";
 import { AuthService } from "./auth-jwt.service";
-import { Prisma } from "@prisma/client";
-import { JwtService } from "@nestjs/jwt";
-import { GraphQLExecutionContext } from "@nestjs/graphql";
 import { GraphQLResolveInfo } from "graphql";
-import { CacheKey, forwardRef, ForwardReference, Inject } from "@nestjs/common";
 import { User } from "../user/model/user.model";
 import { AuthDetailed } from "./model/auth-detailed.model";
-import { Session } from "src/session/model";
 import { PrismaService } from "../prisma";
-import { Type } from "ts-morph";
 import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
 import { PasswordService } from "src/password";
 import { CacheScope } from "apollo-server-types";
-import {
-  Viewer,
-  PrismaViewer,
-  GetViewer,
-  ViewerOutput
-} from "./model/auth.model";
-import { PrismaClientUnknownRequestError } from "@prisma/client/runtime";
+import { Viewer, PrismaViewer } from "./model/auth.model";
+
 @Resolver(() => Auth)
 export class AuthResolver {
   constructor(
@@ -91,7 +66,15 @@ export class AuthResolver {
       refreshToken: refreshToken ? refreshToken : ""
     };
   }
-  @CacheKey("login")
+
+  @Mutation(() => AuthDetailed)
+  async signin(
+    @Args("loginInput") loginInput: LoginInput
+  ): Promise<AuthDetailed> {
+    return await this.auth.signIn({ ...loginInput });
+  }
+
+  // @CacheKey("login")
   @Mutation(() => Token)
   async login(
     @Args("data") data: LoginInput,

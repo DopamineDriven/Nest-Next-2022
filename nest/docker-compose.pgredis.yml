@@ -1,0 +1,54 @@
+version: "3.2"
+services:
+  postgres:
+      image: "postgres:13"
+      restart: "always"
+      container_name: "pgredis-nest"
+      ports:
+        - 5432:5432
+      env_file:
+        - ".env"
+      volumes:
+        # keeps the Docker __dir out of the codebase
+        - "../../Docker/2022/pgredis:/var/lib/postgresql/data"
+      environment:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        - POSTGRES_DB=${POSTGRES_DB}
+      privileged: true
+
+  redis:
+    image: "redis:alpine"
+    env_file:
+      - ".env"
+    depends_on:
+      - postgres
+    privileged: true
+
+    command: redis-server --requirepass Dillard20!8!
+    ports:
+     - ${REDIS_PORTS}
+    expose:
+      - ${REDIS_PORT}
+    volumes:
+     - ../../Docker/2022/redis-data:/var/lib/redis
+      - ../../Docker/2022/redis.conf:/usr/local/etc/redis/redis.conf
+
+    environment:
+     - REDIS_REPLICATION_MODE=${REDIS_REPLICATION_ENV}
+
+    networks:
+      node_net:
+        ipv4_address: ${REDIS_IPV4_ADDY}
+
+# networking for the Redis container
+networks:
+  node_net:
+    ipam:
+      driver: ${REDIS_IPAM_DRIVER}
+      config:
+        - subnet: ${REDIS_IPAM_CONFIG_SUBNET}
+# Volumes for Postgres DB
+volumes:
+  postgres:
+    name: pgredis-nest
