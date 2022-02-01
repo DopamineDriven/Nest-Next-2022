@@ -1,5 +1,5 @@
-import { CacheInterceptor, CacheKey, CacheModule, ExecutionContext, Inject, UseGuards, ArgumentsHost, INestApplicationContext } from "@nestjs/common";
-import { Args, CONTEXT, Context, GqlExecutionContext, Info, Resolver, GqlContextType, GqlArgumentsHost, ArgsType, Root } from "@nestjs/graphql";
+import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
+import { Args, Context, Resolver } from "@nestjs/graphql";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "./model/user.model";
 import { UserService } from "./user.service";
@@ -7,40 +7,18 @@ import { Query, Mutation } from "@nestjs/graphql";
 import { UserConnection } from "./model/user-connection.model";
 import { PaginationArgs } from "../common/pagination/pagination.args";
 import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
-import { UserEntity } from "../common/decorators/user.decorator";
 import { ChangePasswordInput } from "./inputs/change-passsword.input";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
-import { Role } from "../.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
-import { Without, XOR } from "../common/types/helpers.type";
-import { ContextCreator } from "@nestjs/core/helpers/context-creator";
 import { Request } from "express";
 import * as JWT from "jsonwebtoken";
 import { JwtDecoded } from "../auth/dto";
-import { JwtService } from "@nestjs/jwt";
-import { PickType } from "@nestjs/graphql";
-import {
-  EntryConnection,
-  EntryOrderBy
-} from "../entry/model/entry-connection.model";
-import { EntryOrderByWithRelationAndSearchRelevanceInput } from "../.generated/prisma-nestjs-graphql/entry/inputs/entry-order-by-with-relation-and-search-relevance.input";
 import { EnumRoleNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-role-nullable-filter.input";
 import { UserOrderByWithRelationAndSearchRelevanceInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-order-by-with-relation-and-search-relevance.input";
-import { Omit } from "@nestjs/graphql/dist/interfaces/gql-module-options.interface";
-import { RoleMeta, toBase64 } from "src/common";
-import { UpdateOneUserArgs } from "./args/update-one.args";
-import { UserWhereInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where.input";
-import { InputType } from "zlib";
-import { Optional } from "utility-types";
 import { AuthService } from "../auth/auth-jwt.service";
 import { PasswordService } from "../password";
-import { Context as AppContext } from "../app.module";
-import { GraphQLResolveInfo } from "graphql";
-import { CacheScope } from "apollo-server-types";
-import { Cache } from "cache-manager";
 import { UserMeta } from "../common/decorators/user.decorator";
-import { hostname } from "os";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
-import { Parser } from "graphql/language/parser";
+import { AuthDetailed } from "src/auth/model/auth-detailed.model";
 
 @Resolver(() => User)
 export class UserResolver {
@@ -51,12 +29,12 @@ export class UserResolver {
     private readonly passwordService: PasswordService
   ) {}
   // @CacheKey("me")
-  @Query(() => User)
+  @Query(() => AuthDetailed)
   @UseGuards(AuthGuard)
   async me(@Context("token") ctx: ExecutionContext,
     @UserMeta() user: User // todo remove obj of user: User to just User in conditional generic
     // @Context("cache") cache: Cache
-  ): Promise<User | null> {
+  ): Promise<AuthDetailed | null> {
     console.log(user ?? null);
     console.log(ctx ? ctx : null)
     // if (ctx.getType<GqlContextType>() === "graphql") {
@@ -64,9 +42,9 @@ export class UserResolver {
     //   console.log(gqlCtx);
     //   return gqlCtx;
     // }
-    // const tokenToData = await this.authService.getUserWithDecodedToken(ctx as unknown as string);
+    return await this.authService.getUserWithDecodedToken(ctx as unknown as string);
 
-    return await this.authService.getUserFromToken(ctx as unknown as string)
+    // return await this.authService.getUserFromToken(ctx as unknown as string)
 
   }
 

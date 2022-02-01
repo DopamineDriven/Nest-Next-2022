@@ -150,11 +150,11 @@ export class UserService {
       },
       orderBy: { [orderBy.field]: orderBy.direction }
     });
-    return this.prisma.user
+    return await this.prisma.user
       .findMany({
         ...(await this.paginationService.relayToPrismaPagination(params))
-      })
-      .then();
+      }).then()
+
   }
 
   updateUser(data: Prisma.UserUncheckedUpdateInput, email: string) {
