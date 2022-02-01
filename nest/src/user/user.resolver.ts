@@ -1,5 +1,5 @@
-import { CacheInterceptor, CacheKey, CacheModule, ExecutionContext, Inject, UseGuards } from "@nestjs/common";
-import { Args, CONTEXT, Context, GqlExecutionContext, Info, Resolver } from "@nestjs/graphql";
+import { CacheInterceptor, CacheKey, CacheModule, ExecutionContext, Inject, UseGuards, ArgumentsHost, INestApplicationContext } from "@nestjs/common";
+import { Args, CONTEXT, Context, GqlExecutionContext, Info, Resolver, GqlContextType, GqlArgumentsHost, ArgsType, Root } from "@nestjs/graphql";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "./model/user.model";
 import { UserService } from "./user.service";
@@ -26,7 +26,7 @@ import { EntryOrderByWithRelationAndSearchRelevanceInput } from "../.generated/p
 import { EnumRoleNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-role-nullable-filter.input";
 import { UserOrderByWithRelationAndSearchRelevanceInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-order-by-with-relation-and-search-relevance.input";
 import { Omit } from "@nestjs/graphql/dist/interfaces/gql-module-options.interface";
-import { Roles, toBase64 } from "src/common";
+import { RoleMeta, toBase64 } from "src/common";
 import { UpdateOneUserArgs } from "./args/update-one.args";
 import { UserWhereInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where.input";
 import { InputType } from "zlib";
@@ -37,6 +37,10 @@ import { Context as AppContext } from "../app.module";
 import { GraphQLResolveInfo } from "graphql";
 import { CacheScope } from "apollo-server-types";
 import { Cache } from "cache-manager";
+import { UserMeta } from "../common/decorators/user.decorator";
+import { hostname } from "os";
+import { AuthGuard } from "src/common/guards/gql-context.guard";
+import { Parser } from "graphql/language/parser";
 
 @Resolver(() => User)
 export class UserResolver {
@@ -46,21 +50,26 @@ export class UserResolver {
     private readonly userService: UserService,
     private readonly passwordService: PasswordService
   ) {}
-  @CacheKey("me")
+  // @CacheKey("me")
   @Query(() => User)
-  async me(
-
-    @Context("cache") cache: Cache
+  @UseGuards(AuthGuard)
+  async me(@Context("token") ctx: ExecutionContext,
+    @UserMeta() user: User // todo remove obj of user: User to just User in conditional generic
+    // @Context("cache") cache: Cache
   ): Promise<User | null> {
-    // const token = context.switchToHttp().getRequest<Request>().headers.authorization?.split(" ")[1];
-    //  ((error: any, result: string | undefined): void => { return result ? result : error })
-    const token = await cache.get<string>("login");
-    const getUser = await this.authService.getUserFromToken(
-      token ? token : ""
-    );
-    const userId = getUser?.id ? getUser.id : "";
-    return await this.prismaService.user.findFirst({ where: { id: userId } });
+    console.log(user ?? null);
+    console.log(ctx ? ctx : null)
+    // if (ctx.getType<GqlContextType>() === "graphql") {
+    //   const gqlCtx =  (GqlExecutionContext.create(ctx).getContext())
+    //   console.log(gqlCtx);
+    //   return gqlCtx;
+    // }
+    // const tokenToData = await this.authService.getUserWithDecodedToken(ctx as unknown as string);
+
+    return await this.authService.getUserFromToken(ctx as unknown as string)
+
   }
+
 
   @Query(() => User)
   async userById(@Args("id") id: string) {

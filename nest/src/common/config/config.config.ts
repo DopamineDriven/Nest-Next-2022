@@ -1,10 +1,12 @@
+import * as dotenv from "dotenv";
+dotenv.config({path: ".env"})
 import { Config } from "./config-interfaces.config";
 
 export const toBase64 = (str: string) => {
   return Buffer.from(str).toString("base64");
 };
 
-const config: Config = {
+const config = {
   nest: {
     port: 3000
   },
@@ -47,6 +49,25 @@ const config: Config = {
     key: process.env.APOLLO_KEY ?? "",
     reporting: Boolean.apply(process.env.APOLLO_SCHEMA_REPORTING) ?? true,
     ref: process.env.APOLLO_GRAPH_REF ?? ""
+  },
+  postgres: {
+    dbUrl: process.env.DATABASE_URL ? process.env.DATABASE_URL : ""
+  },
+  redis: {
+    url: process.env.REDIS_URL ? process.env.REDIS_URL : `redis://${process.env.PWD}@${process.env.REDIS_HOST ?? '127.0.0.1'}:${process.env.REDIS_PORT ?? 6379}`.trim(),
+    host: process.env.REDIS_HOST ? process.env.REDIS_HOST : "localhost",
+    password: process.env.PWD ?? "",
+    port: process.env.REDIS_PORT
+      ? Number.parseInt(process.env.REDIS_PORT, 10)
+      : 6379,
+    ports: process.env.REDIS_PORTS ? process.env.REDIS_PORTS : "6379:6379",
+    replicationEnv: process.env.REDIS_REPLICATION_ENV
+      ? process.env.REDIS_REPLICATION_ENV
+      : "",
+    ipv4Addy: process.env.REDIS_IPV4_ADDY ? process.env.REDIS_IPV4_ADDY : "",
+    ipamConfigSubnet: process.env.REDIS_IPAM_CONFIG_SUBNET
+      ? process.env.REDIS_IPAM_CONFIG_SUBNET
+      : ""
   }
 };
 

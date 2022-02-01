@@ -1,17 +1,13 @@
 version: "3.8"
 services:
   redis:
-    image: redis:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.pgredis
+    container_name: pgredis
+    restart: always
     ports:
-      - "6379:6379"
-    env_file:
-      - ".env"
-    privileged: true
-  rcli:
-    image: redis:latest
-    links:
-      - redis
-    command: redis-cli -h redis
+      - 6379:6379
     depends_on:
       - db
     env_file:

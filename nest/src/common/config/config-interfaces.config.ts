@@ -7,18 +7,20 @@ export type ConfigMapped<T extends keyof ConfigCoalesced> = {
 export const ConfigMappedFunction = ({
   ...props
 }: ConfigMapped<
-  "cors" | "apollo" | "graphql" | "nest" | "security" | "swagger" | "github"
+  "cors" | "apollo" | "graphql" | "nest" | "security" | "swagger" | "github" | "redis" | "postgres"
 >) => {
-  const { cors, graphql, nest, security, swagger, github, apollo } = props;
-  return { cors, graphql, nest, security, swagger, github, apollo };
+  const { cors, graphql, nest, security, swagger, github, apollo, redis, postgres } = props;
+  return { cors, graphql, nest, security, swagger, github, apollo, redis, postgres };
 };
 
 export type ConfigCoalesced = {
   apollo: ApolloConfig;
   nest: NestConfig;
   cors: CorsConfig;
+  postgres: PostgresConfig;
   swagger: SwaggerConfig;
   graphql: GraphqlConfig;
+  redis: RedisConfig;
   security: SecurityConfig;
   github: GitHubConfig;
 };
@@ -27,10 +29,23 @@ export interface NestConfig {
   port: number;
 }
 
+export interface RedisConfig {
+  password: string;
+  port: number | null;
+  url: string;
+  ports?: string;
+  host: string;
+  replicationEnv?: string;
+  ipv4Addy?: string;
+  ipamConfigSubnet?: string;
+}
+
 export interface CorsConfig {
   enabled: boolean;
 }
-
+export interface PostgresConfig {
+  dbUrl: string;
+}
 export interface SwaggerConfig {
   enabled: boolean;
   title: string;
