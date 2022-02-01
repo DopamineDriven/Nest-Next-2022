@@ -46,15 +46,39 @@ DATABASE_URL=postgresql://${POSTGRES_BASE_URL}/${POSTGRES_DB}?${POSTGRES_ARGS}
 ---
 ## Starting & Stopping the PostgreSQL & Redis services
 - You'll notice a number of `docker-compose*` files in the root of the nest directory. The only one of importance for the task at hand is the `docker-compose.with-redis.yml` file.
+
+### To first Build the Image
+- From teh root of the nest directory, run
+```bash
+yarn docker:postgres:redis:build
+```
 ### To start
 - From the root of the nest directory, run
 ```bash
-yarn docker:pgredis:up
+yarn docker:postgres:redis:up
 ```
 ### To stop
 - From the root of the nest directory, run
 ```bash
-yarn docker:pgredis:down
+yarn docker:postgres:redis:down
+```
+
+### Linux users
+- If you get a "overcommit_memory set to 0" warning in the inspector of your containerized Redis instance, run the following command to assume elevated permissions
+```bash
+sudo -i
+```
+- then, after entering your password, run
+```bash
+echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
+```
+
+- the whole process should be muy rapido & muy limpia and look something like this
+
+```shell
+dopamine_driven@LAPTOP-2IH011V4:~/personal/port/2022/nest$ sudo -i
+[sudo] password for dopamine_driven:
+root@LAPTOP-2IH011V4:~# echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
 ```
 ---
 ## [Node Jose Tools](https://github.com/phish108/node-jose-tools) -- Generating Secrets, JWT Signing Keys, etc
