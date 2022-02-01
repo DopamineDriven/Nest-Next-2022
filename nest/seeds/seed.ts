@@ -48,7 +48,7 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
 
   const faker = await import("faker");
   const bcrypt = await import("bcrypt");
-  const { Country, CountryCode } = await import("../src/profile");
+  const { Country, CountryCode } = await import("../src/profile/enums");
   const hashPassword = async (input: string): Promise<string> => {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(input, salt);
@@ -226,7 +226,7 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
       CountryCode.Poland,
       CountryCode.Russia,
       CountryCode.France
-    ][indexGenerator.randomCountryCodeIndexGenerator[n(0, 20)]].valueOf(),
+    ][indexGenerator.randomCountryCodeIndexGenerator[n(0, 20)]],
     randomCountrySubset: [
       Country.UnitedStates,
       Country.UnitedKingdom,

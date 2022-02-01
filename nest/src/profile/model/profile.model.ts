@@ -9,6 +9,9 @@ import { Field, ObjectType, ID } from "@nestjs/graphql";
 import { Gender } from "../../.generated/prisma-nestjs-graphql/prisma/enums/gender.enum";
 import { Pronouns } from "../../.generated/prisma-nestjs-graphql/prisma/enums/pronouns.enum";
 import { Country } from "..";
+import { JSONValue } from "src/common/types/json.type";
+import { isInputObjectType } from "graphql";
+import GraphQLJSON from "graphql-type-json";
 @ObjectType("Profile")
 export class Profile {
   @Field(() => ID, { nullable: false })
@@ -32,11 +35,11 @@ export class Profile {
   @Field(() => Date, { nullable: true })
   lastSeen?: Date | null;
 
-  @Field(() => DateResolver, { nullable: true })
-  dob?: typeof DateResolver | null;
+  @Field(() => String, { nullable: true })
+  dob: string | null;
 
-  @Field(() => PhoneNumberResolver, { nullable: true })
-  phoneNumber?: typeof PhoneNumberResolver | null;
+  @Field(() => String, { nullable: true })
+  phoneNumber?: string | null;
 
   @Field(() => String, { nullable: true })
   occupation?: string | null;
@@ -45,17 +48,17 @@ export class Profile {
   city?: string | null;
 
   @Field(() => String, { nullable: true })
-  country?: keyof typeof Country | null;
+  country?: string | null;
 
-  @Field(() => [JSONObjectResolver], { nullable: true })
-  bio?: Array<typeof JSONObjectResolver>;
+  @Field(() => [GraphQLJSON], {nullable:true})
+  bio!: Array<any>;
 
-  @Field(() => [JSONObjectResolver], { nullable: true })
-  activiyFeed?: Array<typeof JSONObjectResolver>;
+  @Field(() => [GraphQLJSON], {nullable:true})
+  activiyFeed!: Array<any>;
 
   @Field(() => User, { nullable: false })
   user!: User;
 
-  @Field(() => JSONObjectResolver, { nullable: true })
-  recentActivity?: typeof JSONObjectResolver | null;
+  @Field(() => [GraphQLJSON], {nullable:true})
+  recentActivity!: Array<any>;
 }

@@ -68,7 +68,7 @@ model Profile {
   bio         Json[]
   activiyFeed Json[]
   user        User     @relation("UserProfile", fields: [userId], references: [id], onDelete: Cascade)
-  recentActivity Json?
+  recentActivity Json[]
 }
 
 model Session {

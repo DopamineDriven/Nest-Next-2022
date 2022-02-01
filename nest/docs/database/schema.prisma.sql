@@ -44,7 +44,7 @@ Table Profile {
   bio Json [not null]
   activiyFeed Json [not null]
   user User [not null]
-  recentActivity Json
+  recentActivity Json [not null]
 }
 
 Table Session {

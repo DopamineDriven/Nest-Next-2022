@@ -56,6 +56,11 @@ export enum Pronouns {
     THEY_THEM_THEIRS = "THEY_THEM_THEIRS"
 }
 
+export enum QueryMode {
+    "default" = "default",
+    insensitive = "insensitive"
+}
+
 export enum Role {
     ADMIN = "ADMIN",
     MAINTAINER = "MAINTAINER",
@@ -488,6 +493,20 @@ export class EntryWhereUniqueInput {
     title?: Nullable<string>;
 }
 
+export class EnumGenderNullableFilter {
+    equals?: Nullable<Gender>;
+    in?: Nullable<Gender[]>;
+    not?: Nullable<NestedEnumGenderNullableFilter>;
+    notIn?: Nullable<Gender[]>;
+}
+
+export class EnumPronounsNullableFilter {
+    equals?: Nullable<Pronouns>;
+    in?: Nullable<Pronouns[]>;
+    not?: Nullable<NestedEnumPronounsNullableFilter>;
+    notIn?: Nullable<Pronouns[]>;
+}
+
 export class EnumRoleNullableFilter {
     equals?: Nullable<Role>;
     in?: Nullable<Role[]>;
@@ -495,9 +514,39 @@ export class EnumRoleNullableFilter {
     notIn?: Nullable<Role[]>;
 }
 
+export class JsonNullableFilter {
+    array_contains?: Nullable<JSON>;
+    array_ends_with?: Nullable<JSON>;
+    array_starts_with?: Nullable<JSON>;
+    equals?: Nullable<JSON>;
+    gt?: Nullable<JSON>;
+    gte?: Nullable<JSON>;
+    lt?: Nullable<JSON>;
+    lte?: Nullable<JSON>;
+    not?: Nullable<JSON>;
+    path?: Nullable<string[]>;
+    string_contains?: Nullable<string>;
+    string_ends_with?: Nullable<string>;
+    string_starts_with?: Nullable<string>;
+}
+
 export class LoginInput {
     email?: Nullable<string>;
     password?: Nullable<string>;
+}
+
+export class NestedEnumGenderNullableFilter {
+    equals?: Nullable<Gender>;
+    in?: Nullable<Gender[]>;
+    not?: Nullable<NestedEnumGenderNullableFilter>;
+    notIn?: Nullable<Gender[]>;
+}
+
+export class NestedEnumPronounsNullableFilter {
+    equals?: Nullable<Pronouns>;
+    in?: Nullable<Pronouns[]>;
+    not?: Nullable<NestedEnumPronounsNullableFilter>;
+    notIn?: Nullable<Pronouns[]>;
 }
 
 export class NestedEnumRoleNullableFilter {
@@ -505,6 +554,47 @@ export class NestedEnumRoleNullableFilter {
     in?: Nullable<Role[]>;
     not?: Nullable<NestedEnumRoleNullableFilter>;
     notIn?: Nullable<Role[]>;
+}
+
+export class NestedStringNullableFilter {
+    contains?: Nullable<string>;
+    endsWith?: Nullable<string>;
+    equals?: Nullable<string>;
+    gt?: Nullable<string>;
+    gte?: Nullable<string>;
+    in?: Nullable<string[]>;
+    lt?: Nullable<string>;
+    lte?: Nullable<string>;
+    not?: Nullable<NestedStringNullableFilter>;
+    notIn?: Nullable<string[]>;
+    search?: Nullable<string>;
+    startsWith?: Nullable<string>;
+}
+
+export class PaginationArgsInput {
+    after?: Nullable<string>;
+    before?: Nullable<string>;
+    first?: Nullable<number>;
+    last?: Nullable<number>;
+    skip?: Nullable<number>;
+}
+
+export class ProfileCreateInput {
+    activiyFeed?: Nullable<ProfileCreateactiviyFeedInput>;
+    bio?: Nullable<ProfileCreatebioInput>;
+    city?: Nullable<string>;
+    country?: Nullable<string>;
+    coverPhoto?: Nullable<string>;
+    dob?: Nullable<string>;
+    gender?: Nullable<Gender>;
+    id?: Nullable<string>;
+    lastSeen?: Nullable<DateTime>;
+    memberSince?: Nullable<DateTime>;
+    occupation?: Nullable<string>;
+    phoneNumber?: Nullable<string>;
+    pronouns?: Nullable<Pronouns>;
+    recentActivity?: Nullable<ProfileCreaterecentActivityInput>;
+    user: UserCreateNestedOneWithoutProfileInput;
 }
 
 export class ProfileCreateNestedOneWithoutUserInput {
@@ -532,7 +622,7 @@ export class ProfileCreateWithoutUserInput {
     occupation?: Nullable<string>;
     phoneNumber?: Nullable<string>;
     pronouns?: Nullable<Pronouns>;
-    recentActivity?: Nullable<JSON>;
+    recentActivity?: Nullable<ProfileCreaterecentActivityInput>;
 }
 
 export class ProfileCreateactiviyFeedInput {
@@ -540,6 +630,10 @@ export class ProfileCreateactiviyFeedInput {
 }
 
 export class ProfileCreatebioInput {
+    set: JSON[];
+}
+
+export class ProfileCreaterecentActivityInput {
     set: JSON[];
 }
 
@@ -572,6 +666,15 @@ export class ProfileOrderByWithRelationAndSearchRelevanceInput {
 export class ProfileWhereUniqueInput {
     id?: Nullable<string>;
     userId?: Nullable<string>;
+}
+
+export class ProfilesInput {
+    bioFilter?: Nullable<JsonNullableFilter>;
+    dobFilter?: Nullable<StringNullableFilter>;
+    genderFilter?: Nullable<EnumGenderNullableFilter>;
+    orderBy?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput>;
+    paginationArgs?: Nullable<PaginationArgsInput>;
+    pronounsFilter?: Nullable<EnumPronounsNullableFilter>;
 }
 
 export class SessionCreateManyUserInput {
@@ -643,6 +746,22 @@ export class SignupInput {
     password: string;
 }
 
+export class StringNullableFilter {
+    contains?: Nullable<string>;
+    endsWith?: Nullable<string>;
+    equals?: Nullable<string>;
+    gt?: Nullable<string>;
+    gte?: Nullable<string>;
+    in?: Nullable<string[]>;
+    lt?: Nullable<string>;
+    lte?: Nullable<string>;
+    mode?: Nullable<QueryMode>;
+    not?: Nullable<NestedStringNullableFilter>;
+    notIn?: Nullable<string[]>;
+    search?: Nullable<string>;
+    startsWith?: Nullable<string>;
+}
+
 export class UserCreateNestedOneWithoutCategoriesInput {
     connect?: Nullable<UserWhereUniqueInput>;
     connectOrCreate?: Nullable<UserCreateOrConnectWithoutCategoriesInput>;
@@ -661,6 +780,12 @@ export class UserCreateNestedOneWithoutEntriesInput {
     create?: Nullable<UserCreateWithoutEntriesInput>;
 }
 
+export class UserCreateNestedOneWithoutProfileInput {
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutProfileInput>;
+    create?: Nullable<UserCreateWithoutProfileInput>;
+}
+
 export class UserCreateOrConnectWithoutCategoriesInput {
     create: UserCreateWithoutCategoriesInput;
     where: UserWhereUniqueInput;
@@ -673,6 +798,11 @@ export class UserCreateOrConnectWithoutCommentsInput {
 
 export class UserCreateOrConnectWithoutEntriesInput {
     create: UserCreateWithoutEntriesInput;
+    where: UserWhereUniqueInput;
+}
+
+export class UserCreateOrConnectWithoutProfileInput {
+    create: UserCreateWithoutProfileInput;
     where: UserWhereUniqueInput;
 }
 
@@ -730,6 +860,26 @@ export class UserCreateWithoutEntriesInput {
     lastName?: Nullable<string>;
     password?: Nullable<string>;
     profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
+    role?: Nullable<Role>;
+    sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
+    status?: Nullable<UserStatus>;
+    updatedAt?: Nullable<DateTime>;
+}
+
+export class UserCreateWithoutProfileInput {
+    accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
+    categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
+    comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
+    connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTime>;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    password?: Nullable<string>;
     role?: Nullable<Role>;
     sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
     status?: Nullable<UserStatus>;
@@ -883,6 +1033,8 @@ export abstract class IMutation {
 
     abstract createEntry(data: EntryCreateInput): Entry | Promise<Entry>;
 
+    abstract createProfile(data: ProfileCreateInput, userId: string): Profile | Promise<Profile>;
+
     abstract getUserFromAccessToken(token: string): User | Promise<User>;
 
     abstract login(data: LoginInput): Token | Promise<Token>;
@@ -904,22 +1056,35 @@ export class PageInfo {
 
 export class Profile {
     __typename?: 'Profile';
-    activiyFeed?: Nullable<JSONObject[]>;
-    bio?: Nullable<JSONObject[]>;
+    activiyFeed?: Nullable<JSON[]>;
+    bio?: Nullable<JSON[]>;
     city?: Nullable<string>;
     country?: Nullable<string>;
     coverPhoto?: Nullable<string>;
-    dob?: Nullable<Date>;
+    dob?: Nullable<string>;
     gender?: Nullable<Gender>;
     id: string;
     lastSeen?: Nullable<DateTime>;
     memberSince: DateTime;
     occupation?: Nullable<string>;
-    phoneNumber?: Nullable<PhoneNumber>;
+    phoneNumber?: Nullable<string>;
     pronouns?: Nullable<Pronouns>;
-    recentActivity?: Nullable<JSONObject>;
+    recentActivity?: Nullable<JSON[]>;
     user: User;
     userId: string;
+    userInProfile: User;
+}
+
+export class ProfileConnection {
+    __typename?: 'ProfileConnection';
+    edges: ProfileEdge[];
+    pageInfo: PageInfo;
+}
+
+export class ProfileEdge {
+    __typename?: 'ProfileEdge';
+    cursor: string;
+    node: Profile;
 }
 
 export abstract class IQuery {
@@ -928,6 +1093,8 @@ export abstract class IQuery {
     abstract entryById(id: string): Entry | Promise<Entry>;
 
     abstract entryCursorConnection(after?: Nullable<string>, before?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput>, query?: Nullable<string>, skip?: Nullable<number>): EntryConnection | Promise<EntryConnection>;
+
+    abstract getProfiles(after?: Nullable<string>, before?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput>, query?: Nullable<string>, skip?: Nullable<number>): ProfileConnection | Promise<ProfileConnection>;
 
     abstract getViewer(id: string): Viewer | Promise<Viewer>;
 
@@ -938,6 +1105,10 @@ export abstract class IQuery {
     abstract listUsers(after?: Nullable<string>, before?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>, query?: Nullable<string>, roles?: Nullable<EnumRoleNullableFilter>, skip?: Nullable<number>): UserConnection | Promise<UserConnection>;
 
     abstract me(): User | Promise<User>;
+
+    abstract profileByRelayId(): Profile | Promise<Profile>;
+
+    abstract profiles(profilesArgs: ProfilesInput): ProfileConnection | Promise<ProfileConnection>;
 
     abstract userById(id: string): User | Promise<User>;
 
@@ -967,6 +1138,8 @@ export abstract class ISubscription {
     __typename?: 'ISubscription';
 
     abstract entryCreated(): Entry | Promise<Entry>;
+
+    abstract profileCreated(): Profile | Promise<Profile>;
 }
 
 export class Token {
