@@ -54,9 +54,9 @@ const config = {
     dbUrl: process.env.DATABASE_URL ? process.env.DATABASE_URL : ""
   },
   redis: {
-    url: process.env.REDIS_URL ? process.env.REDIS_URL : `redis://${process.env.PWD}@${process.env.REDIS_HOST ?? '127.0.0.1'}:${process.env.REDIS_PORT ?? 6379}`.trim(),
+    url: process.env.REDIS_URL ? process.env.REDIS_URL : `redis://${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST ?? '127.0.0.1'}:${process.env.REDIS_PORT ?? 6379}`.trim(),
     host: process.env.REDIS_HOST ? process.env.REDIS_HOST : "localhost",
-    password: process.env.PWD ?? "",
+    password: process.env.REDIS_PASSWORD ? process.env.REDIS_PASSWORD : "",
     port: process.env.REDIS_PORT
       ? Number.parseInt(process.env.REDIS_PORT, 10)
       : 6379,

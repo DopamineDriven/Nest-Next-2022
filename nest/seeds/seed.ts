@@ -59,7 +59,7 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
     return Buffer.from(str).toString("base64");
   };
 
-  const hashedPassword = await hashPassword("Nest2022!");
+  const hashedPassword = await hashPassword(process.env.PWD ? process.env.PWD : "Nest2022!");
   const seedFirstName = faker.name.firstName();
   const seedSurname = faker.name.lastName();
   const accessToken = faker.datatype.hexaDecimal(166);

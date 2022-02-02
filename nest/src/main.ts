@@ -115,7 +115,7 @@ async function bootstrap() {
       max_attempts: 10,
       password: redisConfig?.password
         ? redisConfig.password
-        : process.env.PWD ?? "",
+        : process.env.REDIS_PASSWORD ?? "",
       url: redisConfig?.url ? redisConfig.url : process.env.REDIS_URL ?? "",
       host: redisConfig?.host ? redisConfig.host : "",
       port: redisConfig?.port ? redisConfig.port : 6379

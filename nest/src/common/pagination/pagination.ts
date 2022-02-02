@@ -12,7 +12,8 @@ import {
   ArgsType,
   InputType,
   PickType,
-  ID
+  ID,
+  EnumOptions
 } from "@nestjs/graphql";
 
 type Constructor = { new (...args: any[]): any };
@@ -36,7 +37,9 @@ enum Direction {
   ASC = "ASC",
   DESC = "DESC"
 }
-registerEnumType(Direction, { name: "Direction" });
+registerEnumType<typeof Direction>(Direction, {
+  name: "Direction"
+} as EnumOptions<typeof Direction>);
 
 export function ConnectionFilterArgsType<T extends Constructor>() {
   return (target: T): Constructor => {
@@ -54,7 +57,6 @@ export function ConnectionFilterArgsType<T extends Constructor>() {
       @Field(() => String, { nullable: true })
       before?: ConnectionCursor | null;
     }
-
     return ConnectionFilterArgsType;
   };
 }
@@ -66,7 +68,6 @@ export function ConnectionOrderingInputType<T extends Constructor>() {
       @Field(() => Direction, { defaultValue: Direction.ASC })
       direction: Direction;
     }
-
     return ConnectionOrderingInputType;
   };
 }
@@ -84,7 +85,6 @@ export function ConnectionEdgeObjectType<
       @Field()
       cursor: ConnectionCursor;
     }
-
     return ConnectionEdgeObjectType;
   };
 }
@@ -101,9 +101,6 @@ export function ConnectionObjectType<
 
       @Field(() => [edgeType])
       edges: V[];
-
-      // @Field(() => , { nullable: true })
-      // count: number = Number.parseInt(`${Array.from((target.name)).length}`)
     }
 
     return ConnectionObjectType;

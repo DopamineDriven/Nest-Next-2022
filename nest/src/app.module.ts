@@ -49,7 +49,6 @@ export type Context = {
       useFactory: async (configService: ConfigService) => {
         const redisConfig = configService.get<RedisConfig>("redis");
         const postgresConfig = configService.get<PostgresConfig>("postgres");
-        console.log({...redisConfig } ?? "no redis config...")
         return {
           isGlobal: true,
           retry_strategy: function (options) {
@@ -78,16 +77,16 @@ export type Context = {
           max_attempts: 10,
           password: redisConfig?.password
             ? redisConfig.password
-            : process.env.PWD ?? "",
+            : process.env.REDIS_PASSWORD ?? "",
           url: redisConfig?.url ? redisConfig.url : process.env.REDIS_URL ?? "",
           store: CacheManagerRedisStore.create({
             password: redisConfig?.password
               ? redisConfig.password
-              : process.env.PWD ?? "",
+              : process.env.REDIS_PASSWORD ?? "",
             url: redisConfig?.url
               ? redisConfig.url
               : process.env.REDIS_URL ?? "",
-            host: redisConfig?.host ? redisConfig.host : "",
+            host: redisConfig?.host ? redisConfig.host : "127.0.0.1",
             port: redisConfig?.port ? redisConfig.port : 6379,
             retry_unfulfilled_commands: true,
             connect_timeout: 10000,
@@ -135,9 +134,9 @@ export type Context = {
             join(process.cwd(), "/node_modules/.prisma/client/index.d.ts")
           ],
           introspection: true,
-          // apollo: {
-          //   key: apolloConfig?.key ? apolloConfig.key : ""
-          // },
+          apollo: {
+            key: apolloConfig?.key ? apolloConfig.key : ""
+          },
           schema: rootSchema,
           playground: {
             settings: {
