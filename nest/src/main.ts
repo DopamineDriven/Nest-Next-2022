@@ -32,7 +32,7 @@ const options: Options = {
   cors: {
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     maxAge: 0,
-    origin: true, // reflects dynamic origin -- vary
+    origin: true, // reflects dynamic origin -- Vary
     allowedHeaders: [
       "Access-Control-Allow-Methods",
       "Access-Control-Expose-Headers",
