@@ -1,16 +1,16 @@
 version: "3.2"
 services:
   postgres:
-      image: "postgres:13"
+      image: postgres:14.1-alpine
       restart: "always"
-      container_name: "pgredis-nest"
+      container_name: "pg-nest"
       ports:
         - 5432:5432
       env_file:
         - ".env"
       volumes:
         # keeps the Docker __dir out of the codebase
-        - "../../Docker/2022/pgredis:/var/lib/postgresql/data"
+        - "../../Docker/2022/pg-nest:/var/lib/postgresql/data"
       environment:
         - POSTGRES_USER=${POSTGRES_USER}
         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -20,22 +20,20 @@ services:
   redis:
     restart: "always"
     container_name: "redis-nest"
-    image: "redis:alpine"
+    image: "redis:6.2-alpine"
     env_file:
       - ".env"
-
-    depends_on:
-      - postgres
     privileged: true
-    command: redis-server --requirepass Dillard20!8! && redis-cli 127.0.0.1 -p 6379 -a Dillard20!8! && auth Dillard20!8!
+    command: redis-server --save 20 1 --loglevel warning --requirepass Dillard20!8!
     ports:
-     - ${REDIS_PORTS}
+      - ${REDIS_PORTS}
     volumes:
-     - ../../../Docker/2022/redis-data:/var/lib/redis
+      - ../../../Docker/2022/redis-nest:/var/lib/redis
       - ../../../Docker/2022/redis.conf:/usr/local/etc/redis/redis.conf
 
     environment:
-     - REDIS_REPLICATION_MODE=${REDIS_REPLICATION_ENV}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_REPLICATION_MODE=${REDIS_REPLICATION_ENV}
     networks:
       node_net:
         ipv4_address: ${REDIS_IPV4_ADDY}
@@ -50,4 +48,6 @@ networks:
 # Volumes for Postgres DB
 volumes:
   postgres:
-    name: pgredis-nest
+    name: pg-nest
+  redis:
+    name: redis-nest
