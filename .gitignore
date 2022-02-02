@@ -111,6 +111,7 @@ nest/src/.generated/prisma-nestjs-graphql
 nest/src/.generated/schema-ast.graphql
 nest/docs/prisma-docs-generated
 nest/.env.local
+nest/notes.md
 
 # Next
 next/notes.md

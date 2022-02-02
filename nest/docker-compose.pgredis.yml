@@ -18,25 +18,24 @@ services:
       privileged: true
 
   redis:
+    restart: "always"
+    container_name: "redis-nest"
     image: "redis:alpine"
     env_file:
       - ".env"
+
     depends_on:
       - postgres
     privileged: true
-
-    command: redis-server --requirepass Dillard20!8!
+    command: redis-server --requirepass Dillard20!8! && redis-cli 127.0.0.1 -p 6379 -a Dillard20!8! && auth Dillard20!8!
     ports:
      - ${REDIS_PORTS}
-    expose:
-      - ${REDIS_PORT}
     volumes:
-     - ../../Docker/2022/redis-data:/var/lib/redis
-      - ../../Docker/2022/redis.conf:/usr/local/etc/redis/redis.conf
+     - ../../../Docker/2022/redis-data:/var/lib/redis
+      - ../../../Docker/2022/redis.conf:/usr/local/etc/redis/redis.conf
 
     environment:
      - REDIS_REPLICATION_MODE=${REDIS_REPLICATION_ENV}
-
     networks:
       node_net:
         ipv4_address: ${REDIS_IPV4_ADDY}

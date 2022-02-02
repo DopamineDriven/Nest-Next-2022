@@ -165,6 +165,7 @@
     "chance": "^1.1.8",
     "class-validator-flat-formatter": "^2.0.0",
     "common-tags": "^1.8.2",
+    "cross-env": "^7.0.3",
     "dotenv-cli": "^4.1.1",
     "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
