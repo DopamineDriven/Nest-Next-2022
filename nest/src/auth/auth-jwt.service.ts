@@ -120,18 +120,22 @@ export class AuthService {
       { maxWait: 5000, timeout: 10000 }
     );
 
-    return {
+    const authDetailed = {
       auth: {
-        user: prismaTransaction.user,
         accessToken,
         refreshToken,
-        session: prismaTransaction.session
+        session: prismaTransaction.session,
+        user: prismaTransaction.user
       },
       jwt: id
     };
+
+    return {
+      ...authDetailed
+    };
   }
 
-  async signIn({email, password}: LoginInput): Promise<AuthDetailed> {
+  async signIn({ email, password }: LoginInput): Promise<AuthDetailed> {
     const user = await this.prismaService.user.findUnique({ where: { email } });
     if (!user) {
       throw new NotFoundException(`No user found for email: ${email}`);
@@ -189,7 +193,7 @@ export class AuthService {
       { maxWait: 5000, timeout: 10000 }
     );
 
-    return {
+    const authDetailed = {
       auth: {
         accessToken: auth.accessToken,
         refreshToken: auth.refreshToken,
@@ -197,6 +201,10 @@ export class AuthService {
         user: loginTransaction.user
       },
       jwt: jwt
+    };
+
+    return {
+      ...authDetailed
     };
   }
 
@@ -215,12 +223,6 @@ export class AuthService {
     if (!passwordValid) {
       throw new BadRequestException("Invalid password");
     }
-    // const signedToken = this.jwtService.sign(tokens, {
-    //   algorithm: "HS256",
-    //   noTimestamp: false,
-    //   header: { alg: "HS256", typ: "JWT" },
-    //   secret: jwtConstants.secret
-    // });
 
     return this.generateTokens({
       userId: user.id
@@ -238,17 +240,12 @@ export class AuthService {
     const id = this.jwtService.decode(token, {
       complete: true
     }) as JwtDecoded;
-    // new Storage().setItem("userId", id.payload.userId);
-    // // Use reflector class ja feel
-    // SetMetadata("USER_ID", id.payload.userId).KEY
-
-    console.log(id);
     return this.prismaService.user.findUnique({
       where: { id: id.payload.userId }
     });
   }
+
   generateTokens(payload: { userId: string }): Token {
-    const { userId } = payload;
     return {
       accessToken: this.generateAccessToken(payload),
       refreshToken: this.generateRefreshToken(payload)
@@ -262,15 +259,24 @@ export class AuthService {
   private generateRefreshToken(payload: { userId: string }): string {
     const securityConfig = this.configService.get<SecurityConfig>("security");
     return this.jwtService.sign(payload, {
-      secret: this.configService.get("JWT_REFRESH_SECRET")
+      secret: securityConfig?.secret
+        ? securityConfig.secret
+        : process.env.JWT_ACCESS_SECRET
+        ? process.env.JWT_ACCESS_SECRET
+        : ""
     });
   }
 
   async refreshToken(token: string) {
     try {
+      const securityConfig = this.configService.get<SecurityConfig>("security");
       const user = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get(
-          process.env.JWT_REFRESH_SECRET ?? "JWT_REFRESH_SECRET"
+          securityConfig?.refreshSecret
+            ? securityConfig.refreshSecret
+            : process.env.JWT_REFRESH_SECRET
+            ? process.env.JWT_REFRESH_SECRET
+            : "JWT_REFRESH_SECRET"
         )
       });
       console.log(user ?? "");

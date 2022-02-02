@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Header, Inject, Param, Post } from "@nestjs/common";
 import { AppService } from "./app.service";
 
 @Controller()
@@ -13,6 +13,12 @@ export class AppController {
   @Get("hello/:name")
   getHelloName(@Param("name") name: string): string {
     return this.appService.getHelloName(name);
+  }
+
+  @Get("redisPing")
+  @Header("auth", "Dillard20!8!")
+  getRedisPing() {
+    return this.appService.ping();
   }
   /**
  *   @Get("hello/:name")

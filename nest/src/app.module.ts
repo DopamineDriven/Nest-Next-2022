@@ -28,15 +28,14 @@ import { AuthModule } from "./auth/auth-jwt.module";
 import { UserModule } from "./user/user.module";
 import { PaginationModule } from "./pagination/pagination.module";
 import { EntryModule } from "./entry/entry.module";
-import * as CacheManagerRedisStore from "cache-manager-redis-store";
 import {
   ApolloServerPluginInlineTrace,
   ApolloServerPluginLandingPageLocalDefault
 } from "apollo-server-core";
-import { IResolvers } from "@graphql-tools/utils/Interfaces";
-import * as Redis from "redis";
 import { ProfileModule } from "./profile/profile.module";
-
+import { RedisModuleOptions, RedisModule, RedisService } from "@liaoliaots/nestjs-redis";
+import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 export type Context = {
   req: ExpressContext["req"];
   res: ExpressContext["res"];
@@ -44,58 +43,53 @@ export type Context = {
 };
 @Module({
   imports: [
-    CacheModule.registerAsync<Redis.ClientOpts>({
-      isGlobal: true,
-      useFactory: async (configService: ConfigService) => {
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (
+        configService: ConfigService
+      ): Promise<RedisModuleOptions> => {
         const redisConfig = configService.get<RedisConfig>("redis");
-        const postgresConfig = configService.get<PostgresConfig>("postgres");
         return {
-          isGlobal: true,
-          retry_strategy: function (options) {
-            if (options.error && options.error.code === "ECONNREFUSED") {
-              // End reconnecting on a specific error and flush all commands with
-              // a individual error
-              return new Error("The server refused the connection");
-            }
-            if (options.total_retry_time > 1000 * 60 * 60) {
-              // End reconnecting after a specific timeout and flush all commands
-              // with a individual error
-              return new Error("Retry time exhausted");
-            }
-            if (options.attempt > 10) {
-              // End reconnecting with built in error
-              return undefined;
-            }
-            console.log(options.error);
-            // reconnect after
-            return Math.min(options.attempt * 100, 3000);
-          },
+          commonOptions: {password: "Dillard20!8!",
+            retryStrategy: (times = 10) => { return times },
+            connectTimeout: 10000
+            // password: redisConfig?.password ? redisConfig.password : process.env.REDIS_PASSWORD ?? ""
+        },
+          closeClient: true,
+          readyLog: true,
+          config: {lazyConnect: true,
           host: redisConfig?.host ? redisConfig.host : "",
           port: redisConfig?.port ? redisConfig.port : 6379,
-          connect_timeout: 10000,
-          retry_unfulfilled_commands: true,
-          max_attempts: 10,
-          password: redisConfig?.password
+          connectTimeout: 10000,
+          password: "Dillard20!8!" ?? (redisConfig?.password
             ? redisConfig.password
-            : process.env.REDIS_PASSWORD ?? "",
+            : process.env.REDIS_PASSWORD) ?? "",
           url: redisConfig?.url ? redisConfig.url : process.env.REDIS_URL ?? "",
-          store: CacheManagerRedisStore.create({
-            password: redisConfig?.password
-              ? redisConfig.password
-              : process.env.REDIS_PASSWORD ?? "",
-            url: redisConfig?.url
-              ? redisConfig.url
-              : process.env.REDIS_URL ?? "",
-            host: redisConfig?.host ? redisConfig.host : "127.0.0.1",
-            port: redisConfig?.port ? redisConfig.port : 6379,
-            retry_unfulfilled_commands: true,
-            connect_timeout: 10000,
-            max_attempts: 10
-          })
-        };
+            namespace: "redis-nest",
+            maxRetriesPerRequest: 10,
+            autoResendUnfulfilledCommands: true,
+            disconnectTimeout: 10000,
+            username: undefined,
+            onClientCreated(client) {
+              console.log(
+                "[redis-ping-check]: " + client.ping().valueOf()
+              );
+              client.on("error", err => {
+                throw new Error(`${err} -- onClientCreated RedisModule error`)
+                  .message;
+              });
+            }
+          }
+        }
       },
       inject: [ConfigService]
-    }),
+    }),        ThrottlerModule.forRootAsync({
+      useFactory(redisService: RedisService) {
+          const redis = redisService.getClient('redis-nest');
+          return { ttl: 60, limit: 10, storage: new ThrottlerStorageRedisService(redis) };
+      },
+      inject: [RedisService]
+  }),
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,

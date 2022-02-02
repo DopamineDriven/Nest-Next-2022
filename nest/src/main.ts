@@ -107,21 +107,21 @@ async function bootstrap() {
   }
   const prismaService: PrismaService = app.get<PrismaService>(PrismaService);
 
-  const microServiceRedis = app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.REDIS,
-    options: {
-      retry_unfulfilled_commands: process.env.NODE_ENV !== "production" ? true : false,
-      connect_timeout: 10000,
-      max_attempts: 10,
-      password: redisConfig?.password
-        ? redisConfig.password
-        : process.env.REDIS_PASSWORD ?? "",
-      url: redisConfig?.url ? redisConfig.url : process.env.REDIS_URL ?? "",
-      host: redisConfig?.host ? redisConfig.host : "",
-      port: redisConfig?.port ? redisConfig.port : 6379
-    }
-  });
-  await app.startAllMicroservices();
+  // const microServiceRedis = app.connectMicroservice<MicroserviceOptions>({
+  //   transport: Transport.REDIS,
+  //   options: {
+  //     retry_unfulfilled_commands: process.env.NODE_ENV !== "production" ? true : false,
+  //     connect_timeout: 10000,
+  //     max_attempts: 10,
+  //     password: redisConfig?.password
+  //       ? redisConfig.password
+  //       : process.env.REDIS_PASSWORD ?? "",
+  //     url: redisConfig?.url ? redisConfig.url : process.env.REDIS_URL ?? "",
+  //     host: redisConfig?.host ? redisConfig.host : "",
+  //     port: redisConfig?.port ? redisConfig.port : 6379
+  //   }
+  // });
+  // await app.startAllMicroservices();
   prismaService.enableShutdownHooks(app);
   await app
     .listen(process.env.PORT ?? nestConfig?.port ?? 3000)
