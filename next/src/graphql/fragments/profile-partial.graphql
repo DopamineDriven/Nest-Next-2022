@@ -1,0 +1,28 @@
+fragment ProfileConnectionPartial on ProfileConnection {
+  totalCount
+  __typename
+}
+
+fragment ProfileEdgePartial on ProfileEdge {
+  cursor
+  __typename
+}
+
+fragment ProfilePartial on Profile {
+  activiyFeed
+  bio
+  city
+  country
+  coverPhoto
+  dob
+  gender
+  id
+  lastSeen
+  memberSince
+  occupation
+  phoneNumber
+  pronouns
+  recentActivity
+  userId
+  __typename
+}

@@ -1152,7 +1152,7 @@ export abstract class IMutation {
 
     abstract register(dataRegister: SignupInput): AuthSansSession | Promise<AuthSansSession>;
 
-    abstract signin(loginInput: LoginInput): AuthDetailed | Promise<AuthDetailed>;
+    abstract signin(): AuthDetailed | Promise<AuthDetailed>;
 
     abstract signup(data: SignupInput): Token | Promise<Token>;
 }

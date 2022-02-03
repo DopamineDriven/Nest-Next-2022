@@ -1,0 +1,6 @@
+fragment TokenPartial on Token {
+  accessToken
+  refreshToken
+  __typename
+}
+

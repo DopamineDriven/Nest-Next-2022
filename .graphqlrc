@@ -1,9 +1,9 @@
 {
   "name": "Nesting",
   "documents": [
-    "./nest/graphql/Queries/**/*.graphql",
-    "./nest/graphql/Mutations/**/*.graphql",
-    "./nest/graphql/Fragments/**/*.graphql"
+    "./next/src/graphql/queries/**/*.graphql",
+    "./next/src/graphql/mutations/**/*.graphql",
+    "./next/src/graphql/fragments/**/*.graphql"
   ],
   "extensions": {
     "languageService": {

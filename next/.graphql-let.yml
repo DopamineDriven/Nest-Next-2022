@@ -1,24 +1,28 @@
 
-schema: "./schema.gql"
+# schema:
+#   - "http://localhost:3000/graphql"
+#   - headers:
+#     - authorization: ${ACCESS_TOKEN}
+schema: schema.gql
 documents:
   - "./src/graphql/**/*.graphql"
   - "!./src/graphql/graphql.schema.graphql"
   - "!./src/swr/**/*.graphql"
   - "!./src/swr/**/*.ts"
-  - "./src/graphql/graphql.ts"
+  - "./src/graphql/**.graphql"
 respectGitIgnore: true
 config:
+
+  experimentalFragments: true
   reactApolloVersion: 3
   apolloReactComponentsImportFrom: "@apollo/client/react/components"
   useIndexSignature: true
   withHooks: true
   withRefetchFn: true
-  ContextType: "./src/apollo/resolver-context.ts#Context"
 plugins:
   - typescript-operations
   - typescript-react-apollo
 cacheDir: "./src/.cache"
 TSConfigFile: "./tsconfig.json"
-contextType: "./src/apollo/resolver-context.ts#Context"
 
 

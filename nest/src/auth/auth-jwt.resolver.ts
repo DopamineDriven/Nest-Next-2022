@@ -3,7 +3,7 @@ import { Auth, AuthSansSession } from "./model/auth.model";
 import { LoginInput } from "./inputs/login.input";
 import { SignupInput } from "./inputs/signup.input";
 import { TokenInput } from "./inputs/refresh-token.input";
-import { Resolver, Mutation, Args, Info, Query } from "@nestjs/graphql";
+import { Resolver, Mutation, Args, Info, Query, Context } from "@nestjs/graphql";
 import { AuthService } from "./auth-jwt.service";
 import { GraphQLResolveInfo } from "graphql";
 import { User } from "../user/model/user.model";
@@ -13,6 +13,8 @@ import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enu
 import { PasswordService } from "src/password";
 import { CacheScope } from "apollo-server-types";
 import { Viewer, PrismaViewer } from "./model/auth.model";
+import { UserMeta } from "src/common/decorators/user.decorator";
+import { ExecutionContext, UsePipes } from "@nestjs/common";
 
 @Resolver(() => Auth)
 export class AuthResolver {
@@ -68,10 +70,12 @@ export class AuthResolver {
   }
 
   @Mutation(() => AuthDetailed)
-  async signin(
-    @Args("loginInput") loginInput: LoginInput
+  async signin(    @Context("token") ctx: ExecutionContext,
+  @UserMeta<User>() user: User
   ): Promise<AuthDetailed> {
-    return await this.auth.signIn({ ...loginInput });
+    const getUserWithToken = await this.auth.getUserFromToken(ctx.getType());
+    console.log(getUserWithToken ?? "no context")
+    return await this.auth.getUserWithDecodedToken(ctx as unknown as string);
   }
 
   // @CacheKey("login")

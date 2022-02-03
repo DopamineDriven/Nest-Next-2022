@@ -1,0 +1,11 @@
+# import AuthSansSessionPartial from "../fragments/auth-sans-session-partial.graphql";
+# import UserPartial from "../fragments/user-partial.graphql";
+
+mutation register($dataRegister: SignupInput!) {
+  register(dataRegister: $dataRegister) {
+    ...AuthSansSessionPartial
+    user {
+      ...UserPartial
+    }
+  }
+}

@@ -1,0 +1,23 @@
+# import UserConnectionPartial from "../fragments/user-partial.graphql";
+# import PageInfoPartial from "../fragments/page-info-partial.graphql";
+# import UserEdgePartial from "../fragments/user-partial.graphql";
+# import EntryPartial from "../fragments/entry-partial.graphql";
+# import UserPartial from "../fragments/user-partial.graphql";
+
+query allUsers($manyUsersPaginatedArgs: ManyUsersPaginatedArgs) {
+  listUsers(ManyUsersPaginatedArgs: $manyUsersPaginatedArgs) {
+    ...UserConnectionPartial
+    pageInfo {
+      ...PageInfoPartial
+    }
+    edges {
+      ...UserEdgePartial
+      node {
+        entries {
+          ...EntryPartial
+        }
+        ...UserPartial
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+fragment JwtPayloadPartial on JwtPayload {
+  exp
+  iat
+  userId
+  __typename
+}

@@ -1,0 +1,14 @@
+fragment ViewerPartial on Viewer {
+  id
+  accessToken
+  createdAt
+  email
+  emailVerified
+  firstName
+  lastName
+  password
+  role
+  status
+  updatedAt
+  __typename
+}

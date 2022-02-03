@@ -1,0 +1,35 @@
+# import EntryConnectionPartial from "../fragments/entry-partial.graphql";
+# import PageInfoPartial from "../fragments/page-info-partial.graphql";
+# import EntryEdgePartial from "../fragments/entry-partial.graphql";
+# import EntryPartial from "../fragments/entry-partial.graphql";
+
+query allEntries(
+  $after: String
+  $before: String
+  $first: Int
+  $last: Int
+  $orderBy: EntryOrderByWithRelationAndSearchRelevanceInput
+  $queryEmail: String
+  $skip: Int
+) {
+  entryCursorConnection(
+    after: $after
+    first: $first
+    before: $before
+    last: $last
+    orderBy: $orderBy
+    query: $queryEmail
+    skip: $skip
+  ) {
+    ...EntryConnectionPartial
+    pageInfo {
+      ...PageInfoPartial
+    }
+    edges {
+      ...EntryEdgePartial
+      node {
+        ...EntryPartial
+      }
+    }
+  }
+}
