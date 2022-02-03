@@ -1,0 +1,35 @@
+# import ProfilePartial from "../fragments/profile-partial.graphql";
+# import ProfileConnectionPartial from "../fragments/profile-partial.graphql";
+# import ProfileEdgePartial from "../fragments/profile-partial.graphql";
+# import PageInfoPartial from "../fragments/page-info-partial.graphql";
+
+query getProfiles(
+  $after: String
+  $before: String
+  $first: Int
+  $last: Int
+  $orderBy: ProfileOrderByWithRelationAndSearchRelevanceInput
+  $query: String
+  $skip: Int
+) {
+  getProfiles(
+    after: $after
+    first: $first
+    before: $before
+    last: $last
+    orderBy: $orderBy
+    query: $query
+    skip: $skip
+  ) {
+    ...ProfileConnectionPartial
+    pageInfo {
+      ...PageInfoPartial
+    }
+    edges {
+      ...ProfileEdgePartial
+      node {
+        ...ProfilePartial
+      }
+    }
+  }
+}

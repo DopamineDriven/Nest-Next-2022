@@ -1,0 +1,15 @@
+fragment SessionPartial on Session {
+  accessToken
+  alg
+  exp
+  iat
+  id
+  lastVerified
+  provider
+  refreshToken
+  scopes
+  signature
+  tokenState
+  userId
+  __typename
+}

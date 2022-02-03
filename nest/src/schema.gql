@@ -667,7 +667,7 @@ type Mutation {
   login(data: LoginInput!): Token!
   refreshToken(token: String!): Token!
   register(dataRegister: SignupInput!): AuthSansSession!
-  signin(loginInput: LoginInput!): AuthDetailed!
+  signin: AuthDetailed!
   signup(data: SignupInput!): Token!
 }
 

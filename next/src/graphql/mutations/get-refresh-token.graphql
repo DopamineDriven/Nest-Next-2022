@@ -1,0 +1,7 @@
+# import TokenPartial from "../fragments/token-partial.graphql";
+
+mutation getRefreshToken($token: String!) {
+  refreshToken(token: $token) {
+    ...TokenPartial
+  }
+}

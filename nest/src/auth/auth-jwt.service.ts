@@ -136,13 +136,15 @@ export class AuthService {
   }
 
   async signIn({ email, password }: LoginInput): Promise<AuthDetailed> {
-    const user = await this.prismaService.user.findUnique({ where: { email } });
-    if (!user) {
+
+    if (!email || email === new NotFoundException(`email`).message) {
       throw new NotFoundException(`No user found for email: ${email}`);
     }
+
+    const hash = await this.passwordService.hashPassword(password);
     const passwordValid = await this.passwordService.validatePassword(
       password,
-      user.password
+      hash
     );
 
     if (!passwordValid) {
@@ -150,62 +152,55 @@ export class AuthService {
     }
 
     const { accessToken, refreshToken } = this.generateTokens({
-      userId: user.id
+      userId: (await this.prismaService.user.findFirst({
+        where: {
+          email: email
+        },
+        select: {id: true}
+      }).then(id => id))?.id as unknown as string
     });
     const { jwt, auth } = await this.getUserWithDecodedToken(
       accessToken ? accessToken : ""
     );
 
-    const loginTransaction = await this.prismaService.$transaction(
-      async prisma => {
-        const userInfo = await prisma.user.update({
-          where: { id: user.id },
-          data: {
-            updatedAt: new Date(Date.now()),
-            status: "ONLINE",
-            sessions: {
-              connectOrCreate: [
-                {
-                  where: { userId: jwt.payload.userId },
-                  create: {
-                    accessToken: accessToken,
-                    alg: jwt.header.alg,
-                    exp: jwt.payload.exp,
-                    iat: jwt.payload.iat,
-                    refreshToken: refreshToken,
-                    signature: jwt.signature,
-                    provider: jwt.header.typ,
-                    lastVerified: new Date(Date.now()),
-                    scopes: ["read", "write"],
-                    tokenState: "VALID"
-                  }
-                }
-              ]
+    const userInfo = await this.prismaService.user.update({
+      where: { id: auth.user?.id ? auth.user.id : "" },
+      data: {
+        updatedAt: new Date(Date.now()),
+        status: "ONLINE",
+        sessions: {
+          connectOrCreate: [
+            {
+              where: { userId: jwt.payload.userId },
+              create: {
+                accessToken: accessToken,
+                alg: jwt.header.alg,
+                exp: jwt.payload.exp,
+                iat: jwt.payload.iat,
+                refreshToken: refreshToken,
+                signature: jwt.signature,
+                provider: jwt.header.typ,
+                lastVerified: new Date(Date.now()),
+                scopes: ["read", "write"],
+                tokenState: "VALID"
+              }
             }
-          }
-        });
-        const session = await prisma.session.findFirst({
-          where: { userId: jwt.payload.userId },
-          orderBy: { lastVerified: "asc" }
-        });
-        return { user: userInfo, sesh: session };
-      },
-      { maxWait: 5000, timeout: 10000 }
-    );
+          ]
+        }
+      }
+    });
+    const session = await this.prismaService.session.findFirst({
+      where: { userId: jwt.payload.userId }
+    });
 
-    const authDetailed = {
+    return {
       auth: {
         accessToken: auth.accessToken,
         refreshToken: auth.refreshToken,
-        session: loginTransaction.sesh,
-        user: loginTransaction.user
+        session: session,
+        user: userInfo
       },
-      jwt: jwt
-    };
-
-    return {
-      ...authDetailed
-    };
+      jwt: jwt    };
   }
 
   async login(email: string, password: string): Promise<Token> {
@@ -269,11 +264,11 @@ export class AuthService {
 
   async refreshToken(token: string) {
     try {
-      const securityConfig = this.configService.get<SecurityConfig>("security");
+      const secuityConfig = this.configService.get<SecurityConfig>("security");
       const user = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get(
-          securityConfig?.refreshSecret
-            ? securityConfig.refreshSecret
+          secuityConfig?.refreshSecret
+            ? secuityConfig.refreshSecret
             : process.env.JWT_REFRESH_SECRET
             ? process.env.JWT_REFRESH_SECRET
             : "JWT_REFRESH_SECRET"

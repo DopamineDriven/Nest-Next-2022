@@ -73,7 +73,6 @@ typings/
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
-.cache
 
 # Next.js build output
 .next
@@ -82,8 +81,7 @@ typings/
 .nuxt
 dist
 
-# Gatsby files
-.cache/
+
 # Comment in the public line in if your project uses Gatsby and *not* Next.js
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
@@ -116,3 +114,5 @@ nest/notes.md
 # Next
 next/notes.md
 next/.env.local
+next/src/graphql/**/*.d.ts
+next/src/.cache/src

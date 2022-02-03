@@ -3,6 +3,86 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "graphql:let": "graphql-let --config .graphql-let.yml -r dotenv/config",
+    "graphql:codegen": "graphql-codegen --config codegen.yml -r dotenv/config",
+    "generate:secret": "openssl rand -hex 32",
+    "dev": "next dev -p ${PORT:=3040}",
+    "dev:debug": "NODE_OPTIONS='--inspect' next -p ${PORT:=3040}",
+    "build": "yarn graphql:let && next build",
+    "start": "next start -p ${PORT:=3040}",
+    "prod:build": "yarn graphql:let && yarn build",
+    "docker:build:webapp": "docker build -t nextjs-docker .",
+    "docker:run:webapp": "docker run -p 3040:3040 nextjs-docker",
+    "analyze": "cross-env ANALYZE=true next build",
+    "analyze:size": "cross-env ANALYZE=1 next build && cat .next/stats.txt",
+    "find:unused": "next-unused",
+    "tsconfig:effective": "tsc --showConfig",
+    "pretty:quick": "yarn pretty-quick --staged",
+    "prepare": "husky install",
+    "lint": "eslint . --ext ts --ext tsx --ext js",
+    "format": "prettier --write .",
+    "type-check": "tsc --pretty --noEmit"
+  },
+  "lint-staged": {
+    "*.@(ts|tsx)": [
+      "yarn lint",
+      "yarn format"
+    ]
+  },
+  "eslintIgnore": [
+    "/pgdata/*"
+  ],
+  "next-unused": {
+    "alias": {
+      "@/apollo/*": [
+        "src/apollo/*"
+      ],
+      "@/cache/*": [
+        "src/.cache/*"
+      ],
+      "@/components/*": [
+        "src/components/*"
+      ],
+      "@/graphql/*": [
+        "src/graphql/*"
+      ],
+      "@/lib/*": [
+        "src/lib/*"
+      ],
+      "@/pages/*": [
+        "src/pages/*"
+      ],
+      "@/styles/*": [
+        "src/styles/*"
+      ],
+      "@/types/*": [
+        "src/types/*"
+      ],
+      "@/utils/*": [
+        "src/utils/*"
+      ]
+    },
+    "debug": true,
+    "include": [
+      "src/apollo",
+      "src/components",
+      "src/gql",
+      "src/graphql",
+      "src/lib",
+      "src/pages",
+      "src/server",
+      "src/styles",
+      "src/types",
+      "src/utils"
+    ],
+    "exclude": [
+      "node_modules"
+    ],
+    "entrypoints": [
+      "src/pages"
+    ]
+  },
   "dependencies": {
     "@apollo/client": "^3.5.8",
     "@graphql-tools/graphql-file-loader": "^7.3.3",
@@ -11,6 +91,7 @@
     "@graphql-tools/url-loader": "^7.7.1",
     "@headlessui/react": "^1.4.3",
     "@react-spring/web": "^9.4.2",
+    "apollo-server-micro": "^3.6.2",
     "apollo-upload-client": "^17.0.0",
     "autoprefixer": "^10.4.2",
     "body-scroll-lock": "^4.0.0-beta.0",

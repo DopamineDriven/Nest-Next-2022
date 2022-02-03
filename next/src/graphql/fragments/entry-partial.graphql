@@ -1,0 +1,21 @@
+fragment EntryPartial on Entry {
+  authorId
+  content
+  createdAt
+  featuredImage
+  title
+  published
+  id
+  __typename
+}
+
+
+fragment EntryConnectionPartial on EntryConnection {
+  totalCount
+  __typename
+}
+
+fragment EntryEdgePartial on EntryEdge {
+  cursor
+  __typename
+}

@@ -1,0 +1,24 @@
+fragment UserPartial on User {
+  createdAt
+  email
+  emailVerified
+  id
+  image
+  firstName
+  lastName
+  password
+  role
+  status
+  updatedAt
+  __typename
+}
+
+fragment UserConnectionPartial on UserConnection {
+  totalCount
+  __typename
+}
+
+fragment UserEdgePartial on UserEdge {
+  cursor
+  __typename
+}

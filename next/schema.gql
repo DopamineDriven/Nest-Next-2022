@@ -410,6 +410,7 @@ type Entry {
 type EntryConnection {
   edges: [EntryEdge!]!
   pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type EntryCount {
@@ -586,6 +587,13 @@ input EnumRoleNullableFilter {
   notIn: [Role!]
 }
 
+input EnumUserStatusNullableFilter {
+  equals: UserStatus
+  in: [UserStatus!]
+  not: NestedEnumUserStatusNullableFilter
+  notIn: [UserStatus!]
+}
+
 enum Gender {
   FEMALE
   MALE
@@ -641,6 +649,16 @@ input LoginInput {
   password: String
 }
 
+input ManyUsersPaginatedArgs {
+  emailFilter: StringFilter!
+  firstNameFilter: StringNullableFilter!
+  lastNameFilter: StringNullableFilter!
+  orderByRelevance: [UserOrderByWithRelationAndSearchRelevanceInput!]!
+  paginationArgs: PaginationArgsInput!
+  roles: EnumRoleNullableFilter!
+  userStatus: EnumUserStatusNullableFilter!
+}
+
 type Mutation {
   changePassword(accessToken: String!, data: ChangePasswordInput!): User!
   createEntry(data: EntryCreateInput!): Entry!
@@ -649,7 +667,7 @@ type Mutation {
   login(data: LoginInput!): Token!
   refreshToken(token: String!): Token!
   register(dataRegister: SignupInput!): AuthSansSession!
-  signin(loginInput: LoginInput!): AuthDetailed!
+  signin: AuthDetailed!
   signup(data: SignupInput!): Token!
 }
 
@@ -672,6 +690,28 @@ input NestedEnumRoleNullableFilter {
   in: [Role!]
   not: NestedEnumRoleNullableFilter
   notIn: [Role!]
+}
+
+input NestedEnumUserStatusNullableFilter {
+  equals: UserStatus
+  in: [UserStatus!]
+  not: NestedEnumUserStatusNullableFilter
+  notIn: [UserStatus!]
+}
+
+input NestedStringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
 }
 
 input NestedStringNullableFilter {
@@ -732,6 +772,7 @@ type Profile {
 type ProfileConnection {
   edges: [ProfileEdge!]!
   pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 input ProfileCreateInput {
@@ -863,8 +904,8 @@ type Query {
   getViewer(id: String!): Viewer!
   hello(name: String!): String!
   helloWorld: String!
-  listUsers(after: String, before: String, first: Int = 10, last: Int, orderBy: UserOrderByWithRelationAndSearchRelevanceInput, query: String, roles: EnumRoleNullableFilter, skip: Int): UserConnection!
-  me: User!
+  listUsers(ManyUsersPaginatedArgs: ManyUsersPaginatedArgs): UserConnection!
+  me: AuthDetailed!
   profileByRelayId: Profile!
   profiles(profilesArgs: ProfilesInput!): ProfileConnection!
   userById(id: String!): User!
@@ -974,7 +1015,7 @@ enum SortOrder {
   desc
 }
 
-input StringNullableFilter {
+input StringFilter {
   contains: String
   endsWith: String
   equals: String
@@ -984,6 +1025,22 @@ input StringNullableFilter {
   lt: String
   lte: String
   mode: QueryMode
+  not: NestedStringFilter
+  notIn: [String!]
+  search: String
+  startsWith: String
+}
+
+input StringNullableFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode = default
   not: NestedStringNullableFilter
   notIn: [String!]
   search: String
@@ -1031,6 +1088,7 @@ type User {
 type UserConnection {
   edges: [UserEdge!]!
   pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 input UserCreateNestedOneWithoutCategoriesInput {
