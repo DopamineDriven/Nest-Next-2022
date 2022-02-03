@@ -1,5 +1,5 @@
 import { User } from "../../user/model/user.model";
-import { ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { UnauthorizedException } from "@nestjs/common";
@@ -11,10 +11,10 @@ import { GraphQLError, GraphQLResolveInfo } from "graphql";
  * https://github.com/nestjs/graphql/issues/48
  */
 @Injectable()
-export class GraphqlAuthGuard extends AuthGuard("jwt") {
+export class GraphqlAuthGuard extends AuthGuard("jwt") implements CanActivate {
   getRequest(context: ExecutionContext) {
     const graphqlContext = GqlExecutionContext.create(context);
-    return graphqlContext.getContext().req;
+    return graphqlContext.getContext();
   }
 
   handleRequest<T extends User>(

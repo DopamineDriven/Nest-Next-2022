@@ -4,29 +4,17 @@ import {
   ConnectionObjectType,
   ConnectionOrderingInputType
 } from "../../common/pagination/pagination";
-import { Field, Int } from "@nestjs/graphql";
 import { Entry } from "./entry.model";
 import { EntryOrderByWithRelationAndSearchRelevanceInput } from "../../.generated/prisma-nestjs-graphql/entry/inputs/entry-order-by-with-relation-and-search-relevance.input";
+import { EntryRelationFilter } from "../../.generated/prisma-nestjs-graphql/entry/inputs/entry-relation-filter.input";
+@ConnectionFilterArgsType(EntryRelationFilter)
+export class EntryFilter {}
 
-@ConnectionFilterArgsType()
-export class EntryFilter {
-  @Field(_type => String, { nullable: true })
-  type!: string;
-}
-
-@ConnectionOrderingInputType()
-export class EntryOrderBy {
-  @Field(_type => EntryOrderByWithRelationAndSearchRelevanceInput, {
-    nullable: true
-  })
-  sort: EntryOrderByWithRelationAndSearchRelevanceInput;
-}
+@ConnectionOrderingInputType(EntryOrderByWithRelationAndSearchRelevanceInput)
+export class EntryOrderBy {}
 
 @ConnectionEdgeObjectType(Entry)
 export class EntryEdge {}
 
 @ConnectionObjectType(EntryEdge)
-export class EntryConnection {
-  @Field(() => Int, { defaultValue: 0 })
-  entryCount!: number;
-}
+export class EntryConnection {}

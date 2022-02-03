@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-dotenv.config({path: ".env"})
+dotenv.config({ path: ".env" });
 import { Config } from "./config-interfaces.config";
 
 export const toBase64 = (str: string) => {
@@ -54,7 +54,17 @@ const config = {
     dbUrl: process.env.DATABASE_URL ? process.env.DATABASE_URL : ""
   },
   redis: {
-    url: process.env.REDIS_URL ? process.env.REDIS_URL : `redis://${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST ?? '127.0.0.1'}:${process.env.REDIS_PORT ?? 6379}`.trim(),
+    namespace: process.env.REDIS_NAMESPACE ? process.env.REDIS_NAMESPACE : "",
+    url: process.env.REDIS_URL
+      ? process.env.REDIS_URL
+      : `redis://:${(process.env.REDIS_PASSWORD ?? "").trim()}@${(
+          process.env.REDIS_HOST ?? "127.0.0.1"
+        ).trim()}:${(process.env.REDIS_PORT
+          ? Number.parseInt(process.env.REDIS_PORT, 10)
+          : 6379
+        )
+          .toString()
+          .trim()}`.trim(),
     host: process.env.REDIS_HOST ? process.env.REDIS_HOST : "localhost",
     password: process.env.REDIS_PASSWORD ? process.env.REDIS_PASSWORD : "",
     port: process.env.REDIS_PORT
@@ -67,7 +77,16 @@ const config = {
     ipv4Addy: process.env.REDIS_IPV4_ADDY ? process.env.REDIS_IPV4_ADDY : "",
     ipamConfigSubnet: process.env.REDIS_IPAM_CONFIG_SUBNET
       ? process.env.REDIS_IPAM_CONFIG_SUBNET
-      : ""
+      : "",
+    maxRetriesPerRequest: process.env.REDIS_MAX_RETRIES
+      ? Number.parseInt(process.env.REDIS_MAX_RETRIES, 10)
+      : 10,
+    connectTimeout: process.env.REDIS_CONNECT_TIMEOUT
+      ? Number.parseInt(process.env.REDIS_CONNECT_TIMEOUT, 10)
+      : 10000,
+    disconnectTimeout: process.env.REDIS_DISCONNECT_TIMEOUT
+      ? Number.parseInt(process.env.REDIS_DISCONNECT_TIMEOUT, 10)
+      : 2000
   }
 };
 

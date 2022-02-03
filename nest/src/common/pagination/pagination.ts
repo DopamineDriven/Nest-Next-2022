@@ -31,6 +31,7 @@ export class PageInfo implements PageInfoRelay {
 
   @Field(_type => Boolean, { defaultValue: false })
   hasNextPage: boolean;
+
 }
 
 enum Direction {
@@ -41,7 +42,7 @@ registerEnumType<typeof Direction>(Direction, {
   name: "Direction"
 } as EnumOptions<typeof Direction>);
 
-export function ConnectionFilterArgsType<T extends Constructor>() {
+export function ConnectionFilterArgsType<T extends Constructor, V extends ReturnTypeFuncValue>(filterType: V): (target: T) => Constructor {
   return (target: T): Constructor => {
     @ArgsType()
     class ConnectionFilterArgsType extends target {
@@ -56,17 +57,24 @@ export function ConnectionFilterArgsType<T extends Constructor>() {
 
       @Field(() => String, { nullable: true })
       before?: ConnectionCursor | null;
+
+
+      @Field(() => filterType)
+      filter?: V;
     }
     return ConnectionFilterArgsType;
   };
 }
 
-export function ConnectionOrderingInputType<T extends Constructor>() {
+export function ConnectionOrderingInputType<T extends Constructor, V extends ReturnTypeFuncValue>(orderType: V): (target: T) => Constructor {
   return (target: T): Constructor => {
     @InputType(target.name)
     class ConnectionOrderingInputType extends target {
       @Field(() => Direction, { defaultValue: Direction.ASC })
-      direction: Direction;
+      direction: keyof typeof Direction;
+
+      @Field(() => orderType)
+      orderBy: V;
     }
     return ConnectionOrderingInputType;
   };
@@ -98,6 +106,9 @@ export function ConnectionObjectType<
     class ConnectionObjectType extends target {
       @Field(() => PageInfo)
       pageInfo: PageInfo;
+
+      @Field(() => Int, { defaultValue: 0 })
+      totalCount: number;
 
       @Field(() => [edgeType])
       edges: V[];

@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Header, Inject, Param, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Header,
+  Inject,
+  Param,
+  Post
+} from "@nestjs/common";
 import { AppService } from "./app.service";
 
 @Controller()
@@ -16,23 +24,8 @@ export class AppController {
   }
 
   @Get("redisPing")
-  @Header("auth", "Dillard20!8!")
-  getRedisPing() {
-    return this.appService.ping();
-  }
-  /**
- *   @Get("hello/:name")
-  getHelloName(@Req() req: Request, @Param("name") name: string): string {
-
-    return this.appService.getHelloName(name);
+  @Header("auth", process.env.REDIS_PASSWORD ? process.env.REDIS_PASSWORD : "")
+  async getRedisPing() {
+    return await this.appService.ping();
   }
 }
-
- */
-}
-
-//   @Post("register")
-//   async getRegisterEvent(@Body() registerDto: RegisterDto) {
-//     // return await this.prismaService.user.create({data: {registerDto}})
-// }
-// }

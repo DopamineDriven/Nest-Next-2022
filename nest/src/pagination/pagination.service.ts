@@ -13,6 +13,9 @@ export class PaginationArgs implements Relay.ConnectionArguments {
   last?: number | null | undefined;
   @Field(_type => String, { nullable: true })
   before?: ConnectionCursor | null | undefined;
+  @Field(_type => Int, { defaultValue: 0 })
+  totalCount: number;
+
 }
 
 @Global()

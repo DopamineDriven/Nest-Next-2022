@@ -27,19 +27,19 @@ export const UserEntity = createParamDecorator(
 
 export const UserMeta = createParamDecorator(
   <
-    T extends { user: User } extends infer U
+    T extends User extends infer U
       ? U
-      : T extends { user: User }
-      ? { user: User }
+      : T extends User
+      ? User
       : unknown
   >(
     data: T,
     ctx: ExecutionContext
   ) => {
-    GqlExecutionContext.create(ctx).getContext<T>().user;
+    GqlExecutionContext.create(ctx).getRoot<T>();
   }
 );
 // user.decorator.ts
-export const CURRENT_USER_KEY = "currentUser";
+export const CURRENT_USER_KEY = ("currentUser");
 export const CurrentUser = (...user: User[]) =>
   SetMetadata<string, User[]>(CURRENT_USER_KEY, user);
