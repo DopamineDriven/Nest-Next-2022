@@ -533,6 +533,13 @@ export class EnumRoleNullableFilter {
     notIn?: Nullable<Role[]>;
 }
 
+export class EnumUserStatusNullableFilter {
+    equals?: Nullable<UserStatus>;
+    in?: Nullable<UserStatus[]>;
+    not?: Nullable<NestedEnumUserStatusNullableFilter>;
+    notIn?: Nullable<UserStatus[]>;
+}
+
 export class JsonNullableFilter {
     array_contains?: Nullable<JSON>;
     array_ends_with?: Nullable<JSON>;
@@ -554,6 +561,16 @@ export class LoginInput {
     password?: Nullable<string>;
 }
 
+export class ManyUsersPaginatedArgs {
+    emailFilter: StringFilter;
+    firstNameFilter: StringNullableFilter;
+    lastNameFilter: StringNullableFilter;
+    orderByRelevance: UserOrderByWithRelationAndSearchRelevanceInput[];
+    paginationArgs: PaginationArgsInput;
+    roles: EnumRoleNullableFilter;
+    userStatus: EnumUserStatusNullableFilter;
+}
+
 export class NestedEnumGenderNullableFilter {
     equals?: Nullable<Gender>;
     in?: Nullable<Gender[]>;
@@ -573,6 +590,28 @@ export class NestedEnumRoleNullableFilter {
     in?: Nullable<Role[]>;
     not?: Nullable<NestedEnumRoleNullableFilter>;
     notIn?: Nullable<Role[]>;
+}
+
+export class NestedEnumUserStatusNullableFilter {
+    equals?: Nullable<UserStatus>;
+    in?: Nullable<UserStatus[]>;
+    not?: Nullable<NestedEnumUserStatusNullableFilter>;
+    notIn?: Nullable<UserStatus[]>;
+}
+
+export class NestedStringFilter {
+    contains?: Nullable<string>;
+    endsWith?: Nullable<string>;
+    equals?: Nullable<string>;
+    gt?: Nullable<string>;
+    gte?: Nullable<string>;
+    in?: Nullable<string[]>;
+    lt?: Nullable<string>;
+    lte?: Nullable<string>;
+    not?: Nullable<NestedStringFilter>;
+    notIn?: Nullable<string[]>;
+    search?: Nullable<string>;
+    startsWith?: Nullable<string>;
 }
 
 export class NestedStringNullableFilter {
@@ -763,6 +802,22 @@ export class SignupInput {
     image?: Nullable<string>;
     lastName?: Nullable<string>;
     password: string;
+}
+
+export class StringFilter {
+    contains?: Nullable<string>;
+    endsWith?: Nullable<string>;
+    equals?: Nullable<string>;
+    gt?: Nullable<string>;
+    gte?: Nullable<string>;
+    in?: Nullable<string[]>;
+    lt?: Nullable<string>;
+    lte?: Nullable<string>;
+    mode?: Nullable<QueryMode>;
+    not?: Nullable<NestedStringFilter>;
+    notIn?: Nullable<string[]>;
+    search?: Nullable<string>;
+    startsWith?: Nullable<string>;
 }
 
 export class StringNullableFilter {
@@ -1045,6 +1100,7 @@ export class EntryConnection {
     __typename?: 'EntryConnection';
     edges: EntryEdge[];
     pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class EntryCount {
@@ -1134,6 +1190,7 @@ export class ProfileConnection {
     __typename?: 'ProfileConnection';
     edges: ProfileEdge[];
     pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class ProfileEdge {
@@ -1157,7 +1214,7 @@ export abstract class IQuery {
 
     abstract helloWorld(): string | Promise<string>;
 
-    abstract listUsers(after?: Nullable<string>, before?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>, query?: Nullable<string>, roles?: Nullable<EnumRoleNullableFilter>, skip?: Nullable<number>): UserConnection | Promise<UserConnection>;
+    abstract listUsers(ManyUsersPaginatedArgs?: Nullable<ManyUsersPaginatedArgs>): UserConnection | Promise<UserConnection>;
 
     abstract me(): AuthDetailed | Promise<AuthDetailed>;
 
@@ -1229,6 +1286,7 @@ export class UserConnection {
     __typename?: 'UserConnection';
     edges: UserEdge[];
     pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class UserEdge {

@@ -19,4 +19,14 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       await app.close();
     });
   }
+
+  excludeStringNullableField<StringNullableFilter, Key extends keyof StringNullableFilter>(
+    stringNullableFilter: StringNullableFilter,
+    ...keys: Key[]
+  ): Omit<StringNullableFilter, Key> {
+    for (const key of keys) {
+      delete stringNullableFilter[key];
+    }
+    return stringNullableFilter;
+  }
 }

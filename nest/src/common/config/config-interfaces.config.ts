@@ -33,11 +33,15 @@ export interface RedisConfig {
   password: string;
   port: number | null;
   url: string;
+  namespace: string;
   ports?: string;
   host: string;
   replicationEnv?: string;
   ipv4Addy?: string;
   ipamConfigSubnet?: string;
+  maxRetriesPerRequest?: number;
+  connectTimeout?: number;
+  disconnectTimeout?: number;
 }
 
 export interface CorsConfig {

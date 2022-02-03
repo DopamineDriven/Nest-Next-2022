@@ -44,7 +44,7 @@ export class EntryResolver {
 
   @Query(() => EntryConnection)
   async entryCursorConnection(
-    @Args() { after, before, first, last }: PaginationArgs,
+    @Args() { after, before, first, last, skip }: PaginationArgs,
     @Args({ name: "query", type: () => String, nullable: true })
     query: string,
     @Args({
@@ -61,7 +61,7 @@ export class EntryResolver {
           where: {
             title: { contains: query || "" }
           },
-
+          cursor: args.cursor,
           orderBy: orderBy?._relevance?.fields ? { ...orderBy } : undefined,
           ...args
         }),

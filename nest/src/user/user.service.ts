@@ -16,6 +16,16 @@ import { UserWhereInput } from "src/.generated/prisma-nestjs-graphql/user/inputs
 import { UserWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where-unique.input";
 import { UserUncheckedUpdateInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-unchecked-update.input";
 import { AuthService } from "../auth/auth-jwt.service";
+import { Omit } from "@nestjs/graphql/dist/interfaces/gql-module-options.interface";
+import { ManyUsersPaginatedArgs } from "./args/find-many-paginated.args";
+import { EnumRoleNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-role-nullable-filter.input";
+import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
+import { StringNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/string-nullable-filter.input";
+import { EnumUserStatusNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-user-status-nullable-filter.input";
+import { UserOrderByWithRelationAndSearchRelevanceInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-order-by-with-relation-and-search-relevance.input";
+import { StringFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/string-filter.input";
+
+type Enumerable<T> = T | Array<T>;
 @Injectable()
 export class UserService {
   constructor(
@@ -44,6 +54,72 @@ export class UserService {
       .profile()
       .user()
       .then();
+  }
+
+
+  async usersPaginated(params: ManyUsersPaginatedArgs) {
+    const { paginationArgs
+    } = params;
+
+    const firstNameFilter = params as StringNullableFilter;
+    const lastNameFilter = params.lastNameFilter as StringNullableFilter;
+    const userStatus = params.userStatus as unknown as EnumUserStatusNullableFilter;
+    const { first, last, before, after } = paginationArgs as unknown as PaginationArgs;
+    const roles = params.roles as unknown as EnumRoleNullableFilter;
+    const emailFilter = this.prisma.excludeStringNullableField(params.emailFilter);
+    const orderByRelevance = params.orderByRelevance as Enumerable<UserOrderByWithRelationAndSearchRelevanceInput>;
+
+    return await findManyCursorConnection(
+      args =>
+        this.prisma.user.findMany({
+          include: { _count: true, entries: true, profile: true, sessions: true },
+          where: {
+            role: roles,
+            email: emailFilter,
+            firstName: firstNameFilter,
+            lastName: lastNameFilter,
+            status: userStatus
+          },
+          orderBy: orderByRelevance,
+          ...args
+        }),
+      () =>
+        this.prisma.user.count({
+          orderBy: orderByRelevance,
+          where: {
+            role: roles,
+            email: emailFilter,
+            firstName: firstNameFilter,
+            lastName: lastNameFilter,
+            status: userStatus
+          }
+        }),
+      { first, last, before, after }
+    );
+  }
+
+  async usersForPaginationCount() {
+    return await this.prisma.user.findMany();
+  }
+
+  excludeUserField<User, Key extends keyof User>(
+    user: User,
+    ...keys: Key[]
+  ): Omit<User, Key> {
+    for (const key of keys) {
+      delete user[key];
+    }
+    return user;
+  }
+
+  excludeUserConnectionField<UserConnection, Key extends keyof UserConnection>(
+    userConnection: UserConnection,
+    ...keys: Key[]
+  ): Omit<UserConnection, Key> {
+    for (const key of keys) {
+      delete userConnection[key];
+    }
+    return userConnection;
   }
 
   async users(params: Omit<Prisma.UserFindManyArgs, "select">) {
@@ -153,8 +229,8 @@ export class UserService {
     return await this.prisma.user
       .findMany({
         ...(await this.paginationService.relayToPrismaPagination(params))
-      }).then()
-
+      })
+      .then();
   }
 
   updateUser(data: Prisma.UserUncheckedUpdateInput, email: string) {
