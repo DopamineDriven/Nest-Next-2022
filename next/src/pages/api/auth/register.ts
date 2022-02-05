@@ -7,6 +7,11 @@ import {
 } from "@/graphql/mutations/login-user.graphql";
 import { getCookiesFromContext } from "@/lib/url";
 import { setCookies } from "cookies-next";
+import {
+  ViewerDocument,
+  ViewerQuery,
+  ViewerQueryVariables
+} from "@/graphql/queries/viewer.graphql";
 
 export default async function login(
   req: NextApiRequest,
@@ -31,7 +36,7 @@ export default async function login(
       >({
         mutation: LoginUserDocument,
         variables: {
-          loginData: {
+          data: {
             email: email as string,
             password: password as string
           }
@@ -39,6 +44,18 @@ export default async function login(
         fetchPolicy: "network-only"
       });
     const cookies = getCookiesFromContext(req.cookies);
+    const didReturnAccessToken = async (): Promise<ViewerQuery | null> =>
+      data?.login.accessToken != null
+        ? res.setHeader("authorization", data.login.accessToken) &&
+          (await apolloClient
+            .query<ViewerQuery, ViewerQueryVariables>({
+              query: ViewerDocument,
+              context: { req, res },
+              notifyOnNetworkStatusChange: true,
+              returnPartialData: true
+            })
+            .then(data => data.data))
+        : null;
     setCookies("nest-next-2022", data?.login.accessToken, {
       req,
       res,
@@ -60,7 +77,5 @@ export default async function login(
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
-  } finally {
-    res.end(res.getHeader("authorization"));
   }
 }

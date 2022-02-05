@@ -1,13 +1,13 @@
 import type { NextApiRequest, GetServerSidePropsContext } from "next";
-import { fractionateCommaDelimitedData } from "@/utils/helpers";
-import type { UnwrapPromise, NetworkDataProps } from "@/types/index";
+import type { HarvestNetworkDataProps } from "@/types/network";
+import type { UnwrapPromise } from "@/types/mapped";
 
 export const HarvestNetworkInfo = async (
   req: GetServerSidePropsContext["req"] | NextApiRequest
-): Promise<NetworkDataProps> => {
+): Promise<HarvestNetworkDataProps> => {
   const nonProxiedIp = req.headers["x-forwarded-for"] as string;
   const returnFirstRealIp = nonProxiedIp
-    ? fractionateCommaDelimitedData(nonProxiedIp)[0]
+    ? (nonProxiedIp.split(/([,])/))[0]
     : req.socket.remoteAddress;
   const addressInfo = req.socket.address();
 

@@ -3,7 +3,7 @@ import cn from "classnames";
 import css from "./search.module.css";
 import { useRouter } from "next/router";
 import type { UnwrapInputProps, UnwrapDivProps } from "@/types/mapped";
-import { filterQuery } from "@/lib/converter/filter-query";
+import { filterQuery } from "@/lib/filter-query";
 
 const InjectInput = ({
   ...props

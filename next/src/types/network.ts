@@ -6,7 +6,7 @@ import type {
 } from "next";
 import type { AddressInfo } from "net";
 import { IncomingHttpHeaders } from "http";
-
+export type Enumerable<T> = T | Array<T>;
 export type HarvestNetworkDataProps = {
   ClientIp: string;
   BoundAFP: AddressInfo | Record<string, never>;

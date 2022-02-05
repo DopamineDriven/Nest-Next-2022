@@ -1,5 +1,6 @@
 {
-  "extends": ["next/babel", "next/core-web-vitals"],
+  "root":true,
+  "extends": ["next/core-web-vitals"],
   "rules": {
     "import/no-anonymous-default-export": 0,
     "react/display-name": 0

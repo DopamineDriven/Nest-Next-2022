@@ -1,4 +1,5 @@
-type StaticOrigin = boolean | string | RegExp | (boolean | string | RegExp)[];
+type Enumerable<T> = T | Array<T>;
+type StaticOrigin = Enumerable<boolean | string | RegExp>;
 
 type OriginFn = (
   origin: string | undefined,
@@ -20,12 +21,12 @@ const defaultOptions: CorsOptions = {
   origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   preflightContinue: false,
-  optionsSuccessStatus: 204,
+  optionsSuccessStatus: 204
 };
 
 function isOriginAllowed(origin: string, allowed: StaticOrigin): boolean {
   return Array.isArray(allowed)
-    ? allowed.some((o) => isOriginAllowed(origin, o))
+    ? allowed.some(o => isOriginAllowed(origin, o))
     : typeof allowed === "string"
     ? origin === allowed
     : allowed instanceof RegExp
@@ -33,7 +34,10 @@ function isOriginAllowed(origin: string, allowed: StaticOrigin): boolean {
     : !!allowed;
 }
 
-function getOriginHeaders(reqOrigin: string | undefined, origin: StaticOrigin) {
+function getOriginHeaders(
+  reqOrigin: string | undefined,
+  origin: StaticOrigin
+) {
   const headers = new Headers();
 
   if (origin === "*") {
@@ -93,7 +97,10 @@ export default async function cors(
 ) {
   const opts = { ...defaultOptions, ...options };
   const { headers } = res;
-  const originHeaders = await originHeadersFromReq(req, opts.origin ?? false);
+  const originHeaders = await originHeadersFromReq(
+    req,
+    opts.origin ?? false
+  );
   const mergeHeaders = (v: string, k: string) => {
     if (k === "Vary") headers.append(k, v);
     else headers.set(k, v);
@@ -135,7 +142,10 @@ export default async function cors(
     if (opts.preflightContinue) return res;
 
     headers.set("Content-Length", "0");
-    return new Response(null, { status: opts.optionsSuccessStatus, headers });
+    return new Response(null, {
+      status: opts.optionsSuccessStatus,
+      headers
+    });
   }
 
   // If we got here, it's a normal request

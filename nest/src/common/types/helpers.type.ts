@@ -2,7 +2,6 @@ import { Type } from "@nestjs/common";
 import { ClassDecoratorFactory } from "@nestjs/graphql/dist/interfaces/class-decorator-factory.interface";
 import { Prisma } from "@prisma/client";
 import { Upload } from "graphql-upload";
-
 /**
  * Applies Partial utility type to all nested objects.
  */
@@ -37,11 +36,13 @@ export type RequireOnlyOne<T, Keys extends keyof T = keyof T> = Pick<
     [K in Keys]-?: Required<Pick<T, K>> &
       Partial<Record<Exclude<Keys, K>, undefined>>;
   }[Keys];
-  type Constructor = { new (...args: any[]): any };
 
+export type Constructor = { new (...args: any[]): any };
 
-  export declare function PickOnlyOneType<T>(classRef: Type<T>, decorator?: ClassDecoratorFactory | undefined): Type<RequireOnlyOne<T>>
-
+export declare function PickOnlyOneType<T>(
+  classRef: Type<T>,
+  decorator?: ClassDecoratorFactory | undefined
+): Type<RequireOnlyOne<T>>;
 
 export type MaybeEnumerable<T> = (T | Array<T>) | null;
 
