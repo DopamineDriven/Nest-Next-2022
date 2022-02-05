@@ -9,7 +9,9 @@ import {
   SelectHTMLAttributes,
   AnchorHTMLAttributes
 } from "react";
+import { NextApiHandler } from "next";
 import { ImageProps } from "next/image";
+import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 
 export type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
@@ -19,6 +21,29 @@ export type RecursiveRequired<T> = {
   [P in keyof T]-?: RecursiveRequired<T[P]>;
 };
 
+export type RecursiveAmbivalent<T> = {
+  [P in keyof T]: RecursiveAmbivalent<T[P]>;
+};
+
+export type ApolloRecursive<
+  T extends keyof ApolloClient<
+    NormalizedCacheObject extends Record<keyof T, infer U>
+      ? Record<keyof T, U>
+      : Record<keyof T, unknown>
+  >
+> = RecursiveAmbivalent<ApolloClient<NormalizedCacheObject>>;
+const ApolloClientExample = async ({
+  ...props
+}: {
+  props: ApolloRecursive<
+    | "extract"
+    | "__actionHookForDevTools"
+    | "addResolvers"
+    | "getResolvers"
+    | "setResolvers"
+    | "defaultOptions"
+  >;
+}) => ({ ...props.props });
 // infer a Promise Wrapped Type
 export type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 
@@ -28,9 +53,10 @@ export type SVGAttribs<T extends keyof SVGAttributes<SVGSVGElement>> = {
 };
 
 // <path/> props
-export type SVGPathAttribs<T extends keyof SVGAttributes<SVGPathElement>> = {
-  [P in T]?: SVGAttributes<SVGPathElement>[P];
-};
+export type SVGPathAttribs<T extends keyof SVGAttributes<SVGPathElement>> =
+  {
+    [P in T]?: SVGAttributes<SVGPathElement>[P];
+  };
 
 // <a/> props
 export type UnwrapAnchorProps<
@@ -89,9 +115,15 @@ export type UnwrapDivProps<
 
 // <code/> props
 export type CodeProps<
-  T extends keyof DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+  T extends keyof DetailedHTMLProps<
+    HTMLAttributes<HTMLElement>,
+    HTMLElement
+  >
 > = {
-  [P in T]?: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>[P];
+  [P in T]?: DetailedHTMLProps<
+    HTMLAttributes<HTMLElement>,
+    HTMLElement
+  >[P];
 };
 
 // <Image/> props

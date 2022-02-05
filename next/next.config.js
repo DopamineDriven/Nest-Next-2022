@@ -1,10 +1,11 @@
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-  enabled: !!process.env.ANALYZE
-});
-
 const {
-  WebpackBundleSizeAnalyzerPlugin
-} = require("webpack-bundle-size-analyzer");
+  PHASE_DEVELOPMENT_SERVER,
+  PHASE_PRODUCTION_BUILD,
+} = require('next/constants');
+
+
+const withRpc = require('next-rpc')({});
+require("eslint-config-next/parser")
 
 const {
   env: { ANALYZE }
@@ -15,11 +16,11 @@ const {
  * @type {import('next').NextConfig}
  **/
 
-module.exports = withBundleAnalyzer({
+module.exports = withRpc({
   webpack(config, options) {
     if (ANALYZE) {
       config.plugins.push(
-        new WebpackBundleSizeAnalyzerPlugin("stats.txt")
+        new withRpc("stats.txt")
       );
     }
     // config.context = join(process.cwd(), "./");
@@ -44,6 +45,15 @@ module.exports = withBundleAnalyzer({
   },
   async headers() {
     return [
+      {
+        source: "/hco_fonts/hco_fonts.css",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable"
+          }
+        ]
+      },
       {
         source: "/fonts/inter-var-latin.woff2",
         headers: [
@@ -72,6 +82,7 @@ module.exports = withBundleAnalyzer({
       "unsplash.com",
       "images.unsplash.com",
       "tailwindui.com",
+      "avatars.githubusercontent.com",
       "gravatar.com",
       "images.unsplash.com",
       "lh3.googleusercontent.com",

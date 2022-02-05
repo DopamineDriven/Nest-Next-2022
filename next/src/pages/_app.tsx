@@ -1,55 +1,56 @@
 import "../styles/index.css";
 
-import { useEffect, FC } from "react";
-import { NextWebVitalsMetric, AppProps } from "next/app";
-import { useApollo } from "@/apollo/apollo";
+import React, { useEffect, FC } from "react";
+import App, {
+  NextWebVitalsMetric,
+  AppProps,
+  AppInitialProps,
+  AppContext
+} from "next/app";
+import { initializeApollo, useApollo } from "@/apollo/apollo";
 import { ApolloProvider } from "@apollo/client";
+import { useRouter } from "next/router";
+import Router from "next/dist/server/router";
+import { NextPageContext } from "next";
+import { request } from "http";
+import { getCookie } from "cookies-next";
+import { getCookieParser } from "next/dist/server/api-utils";
 
 const Noop: FC = ({ children }) => <>{children}</>;
 const envVars = {
-  facebookId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID ?? "",
+  facebookId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID ?? ""
 };
 
-export default function CrmApp({ pageProps, Component }: AppProps) {
+export default function CrmApp(appProps: AppProps) {
+  const { Component, pageProps } = appProps;
   const LayoutNoop = (Component as any).LayoutNoop || Noop;
+  const cookieAuth = (document.cookie  && document.cookie.includes("nest-next-2022") ? decodeURIComponent(document.cookie) : getCookie("nest-next-2022")?.toString());
 
-  const apolloClient = useApollo(pageProps.initialApolloState);
+  const apolloClient = useApollo(
+    pageProps.initialApolloState,
+    pageProps.resolverContext ?? {}
+  );
 
+  const router = useRouter();
   useEffect(() => {
+    getCookie("nest-next-2022") ? router.replace(window.location.href, { auth: cookieAuth }) : document.cookie;
     document.body.classList?.remove("loading");
-  }, []);
+  }, [router, cookieAuth]);
 
   return (
-    <>
-      {/* <Script strategy="afterInteractive" id={`${envVars.facebookId}`}>
-        {`window.fbAsyncInit = function() {
-            FB.init({
-              appId            : '${envVars.facebookId}',
-              autoLogAppEvents : true,
-              xfbml            : true,
-              version          : 'v12.0'
-            });
-          };`}
-      </Script>
-      <Script
-        strategy="lazyOnload"
-        async
-        defer
-        id={`connect-${envVars.facebookId}`}
-        crossOrigin="anonymous"
-        src="https://connect.facebook.net/en_US/sdk.js"
-      /> */}
-      <ApolloProvider client={apolloClient}>
-        <LayoutNoop pageProps={pageProps}>
-          <Component {...pageProps} />
-        </LayoutNoop>
-      </ApolloProvider>
-    </>
+    <ApolloProvider client={apolloClient}>
+      <LayoutNoop pageProps={pageProps}>
+        <Component {...pageProps} />
+      </LayoutNoop>
+    </ApolloProvider>
   );
 }
 
 export function reportWebVitals(metric: NextWebVitalsMetric): void {
-  if (typeof window !== "undefined" && process.env.NODE_ENV === "development")
+  if (
+    typeof window !== "undefined" &&
+    process.env.NODE_ENV === "development"
+  )
     switch (metric.name) {
       case "FCP":
         console.log(JSON.stringify(`[FCP]: ${metric}`, null, 2));
@@ -67,15 +68,23 @@ export function reportWebVitals(metric: NextWebVitalsMetric): void {
         console.log(JSON.stringify(`[TTFB]: ${metric}`, null, 2));
         break;
       case "Next.js-hydration":
-        console.log(JSON.stringify(`[Next.js-hydration]: ${metric}`, null, 2));
+        console.log(
+          JSON.stringify(`[Next.js-hydration]: ${metric}`, null, 2)
+        );
         break;
       case "Next.js-route-change-to-render":
         console.log(
-          JSON.stringify(`[Next.js-route-change-to-render]: ${metric}`, null, 2)
+          JSON.stringify(
+            `[Next.js-route-change-to-render]: ${metric}`,
+            null,
+            2
+          )
         );
         break;
       case "Next.js-render":
-        console.log(JSON.stringify(`[Next.js-render]: ${metric}`, null, 2));
+        console.log(
+          JSON.stringify(`[Next.js-render]: ${metric}`, null, 2)
+        );
         break;
       default:
         break;

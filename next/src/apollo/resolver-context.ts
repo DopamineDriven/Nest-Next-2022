@@ -5,6 +5,7 @@ import {
 } from "http";
 import { BatchHttpLink } from "@apollo/client/link/batch-http";
 import { onError } from "@apollo/client/link/error";
+import { Resolvers } from "@/cache/__types__";
 export interface ResolverContext {
   req?: IncomingMessage;
   res?: ServerResponse;
@@ -15,9 +16,8 @@ import { ApolloLink } from "@apollo/client";
 const browser = typeof window !== "undefined";
 const envEndpoint =
   process.env.NODE_ENV === "development"
-    ? `https://studio.apollographql.com/graph/Nestjs-gkt9rn/` ||
-      "http://[::1]:3000/graphql"
-    : "http://wsl:3000/graphql";
+    ? "http://localhost:3000/graphql"
+    : "http://[::1]:3000/graphql";
 const uri = typeof window === "undefined" ? envEndpoint : "/";
 
 export const enhancedFetch = async (
@@ -54,7 +54,7 @@ export function createBatch<T extends ResolverContext>(context?: T) {
       "Access-Control-Allow-Headers": ["access-control-allow-headers"],
       "Access-Control-Expose-Headers": "*, authorization",
       Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0ODBhZmViMS04OGMyLTRlZTMtYjAzZC1mYjYxZjQ4MmE4NjQiLCJpYXQiOjE2NDAwNzEzMDUsImV4cCI6MTY0MDA3MTkwNX0.j3h-1TpxIN6P4wPJgwOjpds4osB-epEN9k-mNsBnWtE"
+        "Bearer " + context?.req?.headers.authorization?.split(/([ ])/)[0]
     },
     fetchOptions: {
       context: () => ({ ...context })

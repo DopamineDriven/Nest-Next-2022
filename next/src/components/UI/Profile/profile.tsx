@@ -2,7 +2,7 @@ import { FC } from "react";
 import cn from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { MeQuery } from "@/graphql/Queries/me.graphql";
+import { ViewerQuery } from "@/graphql/queries/viewer.graphql";
 // import { Mail, Phone } from "../../Icons";
 // import {
 //   EntryByIdDocument,
@@ -15,12 +15,13 @@ import { Mail, Phone } from "@/components/Icons";
 
 export type ProfileHeadingProps = {
   // viewer: UserByEmailQuery["viewer"];
-  viewer?: MeQuery | null;
+  viewer?: ViewerQuery | null;
   className?: string;
 };
 
 const ProfileHeading: FC<ProfileHeadingProps> = ({ children, viewer }) => {
   return (
+
     <div className='font-sans'>
       <div className='relative'>
         <Image
@@ -31,17 +32,18 @@ const ProfileHeading: FC<ProfileHeadingProps> = ({ children, viewer }) => {
           height={256}
           className='h-32 w-full min-w-fit object-cover lg:h-48'
           blurDataURL={blurDataURLShimmer({ w: 1200, h: 256 })}
-          alt={`${viewer?.me.name}'s cover image`}
+          alt={`${viewer?.me.auth?.user?.firstName}'s cover image`}
           src='https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80'
         />
       </div>
       <div className='max-w-5xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5'>
           <div className='z-100 sm:h-32 rounded-full sm:w-32'>
-            {viewer?.me?.image ? (
+            {viewer?.me?.auth?.user?.image ? (
               <Image
+                priority={true}
                 className=' z-100 rounded-full  ring-white'
-                src={viewer.me.image}
+                src={viewer.me.auth.user.image}
                 layout='responsive'
                 objectFit={"cover"}
                 width={128}
@@ -57,7 +59,7 @@ const ProfileHeading: FC<ProfileHeadingProps> = ({ children, viewer }) => {
                 layout='responsive'
                 objectFit={"cover"}
                 width={96}
-                blurDataURL={blurDataURLShimmer({ w: 1200, h: 256 })}
+                blurDataURL={blurDataURLShimmer({ w: 96, h: 96 })}
                 placeholder='blur'
                 height={96}
                 alt='Session Provider Account Photo'
@@ -67,7 +69,7 @@ const ProfileHeading: FC<ProfileHeadingProps> = ({ children, viewer }) => {
           <div className='mt-6 sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1'>
             <div className='sm:hidden md:block mt-6 min-w-0 flex-1'>
               <h1 className='text-2xl font-bold text-gray-900 truncate'>
-                {viewer?.me?.name ? viewer.me.name : "Name Null"}
+                {viewer?.me.auth?.user?.firstName ? viewer?.me.auth.user.firstName : "Name Null"}
               </h1>
             </div>
             <div className='mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4'>
@@ -88,13 +90,14 @@ const ProfileHeading: FC<ProfileHeadingProps> = ({ children, viewer }) => {
         </div>
         <div className='hidden sm:block md:hidden mt-6 min-w-0 flex-1'>
           <h1 className='text-2xl font-bold text-white truncate'>
-            {viewer?.me?.name ? viewer.me.name : "Name Null"}
-            <h2 className='lowercase text-2xl font-bold text-white'>
-              {viewer?.me.role}
-            </h2>
+            {viewer?.me.auth?.user?.firstName ? viewer.me.auth.user.firstName : "Name Null"}
+            <span className='lowercase text-2xl font-bold text-white'>
+              {viewer?.me.auth?.user?.role}
+            </span>
           </h1>
         </div>
       </div>
+      {children ?? <></>}
     </div>
   );
 };

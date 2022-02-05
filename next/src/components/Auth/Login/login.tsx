@@ -1,8 +1,8 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Anchor } from "@/components/UI";
 import Link from "next/link";
-import { TypeScript,  } from "@/components/Icons";
+import { TypeScript } from "@/components/Icons";
 import css from "./login.module.css";
 import {
   GitHub,
@@ -10,10 +10,15 @@ import {
   Mail as MailIcon,
   LockClosedIcon
 } from "@/components/Icons";
+import { LoginUserMutationOptions } from "@/graphql/mutations/login-user.graphql";
 import {
-  LoginUserMutationOptions
+  useLoginUserMutation,
+  LoginUserMutationVariables,
+  LoginUserDocument,
+  LoginUserMutation,
+  TokenPartialFragment,
+  LoginUserMutationResult
 } from "@/graphql/mutations/login-user.graphql";
-import { useLoginUserMutation, LoginUserMutationVariables, LoginUserDocument, LoginUserMutation, TokenPartialFragment, LoginUserMutationResult } from "@/graphql/mutations/login-user.graphql";
 import { useRouter } from "next/router";
 import { blurDataURLShimmer } from "@/lib/shimmer";
 import auth from "../../../../public/Cortina_Blue.jpg";
@@ -24,25 +29,34 @@ import {
   ViewerDocument,
   useViewerLazyQuery
 } from "@/graphql/queries/viewer.graphql";
-import {ViewerPartialFragment} from "@/graphql/fragments/viewer-partial.graphql"
+import { ViewerPartialFragment } from "@/graphql/fragments/viewer-partial.graphql";
 import useSWR from "swr";
 import { authFetcher } from "@/lib/network/fetchers";
 export type LoginProps = {
-  viewer?: NonNullable<ViewerQuery> | null;
+  accessToken?: string;
   className?: string;
+  email: string | null;
+  password: string | null;
 };
 
-export default function Login({ viewer, className }: LoginProps) {
+export default function Login({
+  accessToken,
+  className,
+  email: emailState,
+  password: passwordState
+}: LoginProps) {
   const [login, { data, error, loading }] = useLoginUserMutation({
     mutation: LoginUserDocument
   });
 
-
   const errorMessage = error?.message ?? "";
 
   const [status, setStatus] = useState(data?.login);
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState(passwordState);
+  const [accessTokenVal, setAccessTokenVal] = useState<string | undefined>(
+    accessToken
+  );
+  const [email, setEmail] = useState(emailState);
   const res = useSWR<LoginUserMutationResult>(
     `/api/auth/login?email=${email}&password=${password}`,
     authFetcher
@@ -51,30 +65,52 @@ export default function Login({ viewer, className }: LoginProps) {
 
   const router = useRouter();
 
-  // useEffect(() => {
-  //   (function isLoggedIn() {
-  //     status != null
-  //       ? setStatus(status)
-  //       : console.log(
-  //           `Your session has ended or expired. Please Sign In.`
-  //         );
-  //   })();
-  //   router.push("/profile");
-  // }, [status, router]);
+  useEffect(() => {
+    setAccessTokenVal(res.data?.data?.login.accessToken ? res.data.data.login.accessToken : undefined)
+    if (accessToken != null && accessTokenVal != null && accessToken.length > 0) {
+      return setAccessTokenVal(accessToken)
+    }
+    (function isLoggedIn() {
+      return res.data?.data?.login.accessToken != null
+        ? res.data.data.login.accessToken && setAccessTokenVal(res.data.data.login.accessToken) && router.replace("/profile", {
+          auth: `Bearer ${accessToken}`
+        }): console.log(
+            `Your session has ended or expired. Please Sign In.`
+          )
+    })();
+  }, [status, router, setAccessTokenVal, accessToken, accessTokenVal, res.data?.data?.login.accessToken]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const variables = new FormData(event.currentTarget);
     const { email, password } = Object.fromEntries(variables);
+    setStatus(res.data?.data?.login ? res.data.data.login : undefined);
     setEmail(email as string);
     setPassword(password as string);
     login({
       variables: {
-        loginData: { email: `${email}`, password: `${password}` }
+        data: { email: `${email}`, password: `${password}` }
       }
-    }).catch(error => {
-      console.error(error);
-    });
+    })
+      .then(dataa => {
+        setStatus(dataa.data?.login);
+        return dataa;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    // }).then(data => {
+    //   if (data.data = (res.data?.data)) {
+    //     return ((res.data?.data?.login.accessToken != null && accessToken != null) ? setStatus(() => res.data?.data?.login) : null)
+    //   }
+    //   if (status != null) {
+    //     return accessToken === status.accessToken ? (status.accessToken = accessToken) : undefined;
+    //   }
+    //   return data.data
+    // }).then((val => {
+    //   console.log(val);
+    //   return val
+    // }))
   }
 
   const isActive: (pathname: string) => boolean = pathname =>
@@ -96,7 +132,10 @@ export default function Login({ viewer, className }: LoginProps) {
           <div className=''>
             <form
               method='POST'
-              onSubmit={handleSubmit}
+              onClick={e => {
+                e.preventDefault();
+                () => handleSubmit;
+              }}
               className='space-y-6'>
               <fieldset disabled={loading} aria-busy={loading}>
                 <div>

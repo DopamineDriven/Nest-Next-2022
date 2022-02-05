@@ -1,16 +1,30 @@
 import {
   ApolloClient,
   InMemoryCache,
-  NormalizedCacheObject,
+  FieldMergeFunction,
+  NormalizedCacheObject
 } from "@apollo/client";
 import {
   createBatch,
   errorLink,
   ResolverContext,
-  crmSesh,
+  crmSesh
 } from "./resolver-context";
 import { useMemo } from "react";
 import { relayStylePagination } from "@apollo/client/utilities";
+import {
+  TypedTypePolicies,
+  AuthDetailedFieldPolicy,
+  AuthDetailedKeySpecifier,
+  AuthFieldPolicy,
+  ViewerKeySpecifier,
+  ViewerFieldPolicy,
+  JwtDecodedFieldPolicy
+} from "@/graphql/mutations/login-user.graphql";
+import {
+  ViewerPartialFragment,
+  ViewerPartialFragmentDoc
+} from "@/graphql/fragments/viewer-partial.graphql";
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
@@ -24,13 +38,62 @@ function createApolloClient(
     connectToDevTools: true,
     cache: new InMemoryCache({
       typePolicies: {
+        Viewer: {
+          keyFields: [
+            "accessToken",
+            "email",
+            "firstName",
+            "id",
+            "role",
+            "lastName",
+            "status"
+          ] as ViewerKeySpecifier,
+          queryType: true,
+          merge(
+            existing: ViewerFieldPolicy,
+            incoming: ViewerFieldPolicy,
+            { mergeObjects }
+          ) {
+            return mergeObjects<ViewerFieldPolicy>(existing, incoming);
+          }
+        },
+        AuthDetailed: {
+          mutationType: true,
+          keyFields: ["auth", "jwt"] as AuthDetailedKeySpecifier,
+          fields: {
+            auth: {
+              merge(
+                existing: AuthDetailedFieldPolicy,
+                incoming: AuthDetailedFieldPolicy,
+                { mergeObjects }
+              ) {
+                return mergeObjects<AuthDetailedFieldPolicy>(
+                  existing,
+                  incoming
+                );
+              }
+            },
+            jwt: {
+              merge(
+                existing: JwtDecodedFieldPolicy,
+                incoming: JwtDecodedFieldPolicy,
+                { mergeObjects }
+              ) {
+                return mergeObjects<JwtDecodedFieldPolicy>(
+                  existing,
+                  incoming
+                );
+              }
+            }
+          }
+        },
         Query: {
           fields: {
-            allEntries: relayStylePagination(),
-          },
-        },
-      },
-    }),
+            allEntries: relayStylePagination()
+          }
+        }
+      } as TypedTypePolicies
+    })
   });
 }
 

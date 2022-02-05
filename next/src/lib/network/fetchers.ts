@@ -3,6 +3,8 @@ import type { HarvestNetworkDataProps } from "@/types/network";
 import type { UnwrapPromise } from "@/types/helpers";
 import { fractionateCommaDelimitedData } from "@/utils/helpers";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
+import { AuthDetailed } from "@/cache/__types__";
+import { ViewerQuery } from "@/graphql/queries/viewer.graphql";
 
 export type NetworkConstructProps = {
   HarvestNetworkInfo: (
@@ -73,6 +75,22 @@ export async function authFetcher<T>(path: string): Promise<T> {
     }
   });
   return await res.json();
+}
+type Maybe<T> = T | null | undefined;
+export async function viewerFetcher(
+  path: string = "/api/me"
+): Promise<Maybe<ViewerQuery>> {
+  const res: Response = await fetch(path, {
+    headers: {
+      "Cache-Control": "s-maxage=86400, stale-while-revalidate=43200",
+      "Accept-Encoding": "gzip, deflate, br",
+      "Transfer-Encoding": "chunked",
+      "Content-Type": "application/json; charset=utf-8",
+      Connection: "keep-alive",
+      Accept: "*/*"
+    }
+  });
+  return res.json() as Promise<Maybe<ViewerQuery>>;
 }
 
 export type IpFetcherReturns = UnwrapPromise<ReturnType<typeof ipFetcher>>;

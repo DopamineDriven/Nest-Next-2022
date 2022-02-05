@@ -12,7 +12,6 @@ documents:
   - "./src/graphql/**.graphql"
 respectGitIgnore: true
 config:
-
   experimentalFragments: true
   reactApolloVersion: 3
   apolloReactComponentsImportFrom: "@apollo/client/react/components"
@@ -22,6 +21,11 @@ config:
 plugins:
   - typescript-operations
   - typescript-react-apollo
+  - typescript-apollo-client-helpers
+  - fragment-matcher:
+    - config:
+        useExplicitTyping: true
+        apolloClientVersion: 3
 cacheDir: "./src/.cache"
 TSConfigFile: "./tsconfig.json"
 
