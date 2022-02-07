@@ -6,7 +6,10 @@ import {
   PaginationService,
   PaginationArgs
 } from "../pagination/pagination.service";
+import { EntryCreateOneInput } from "./inputs/entry-create.input";
 import * as Relay from "graphql-relay";
+import { EntryNodes } from "./model/entry-connection.model";
+import { EntryUpsertInput } from "./inputs/entry-upsert.input";
 
 @Injectable()
 export class EntryService {
@@ -18,9 +21,9 @@ export class EntryService {
   async entry(
     entryWhereUniqueInput: Prisma.EntryWhereUniqueInput
   ): Promise<Entry | null> {
-    const { id, title } = entryWhereUniqueInput;
+    const { id, authorId } = entryWhereUniqueInput;
     return await this.prisma.entry.findUnique({
-      where: id ? { id: id } : { title: title }
+      where: id ? { id } : { authorId }
     });
   }
 
@@ -30,7 +33,7 @@ export class EntryService {
       limit?: number;
       offset?: number;
     }
-  ): Promise<Connection<Entry>> {
+  ): Promise<EntryNodes> {
     const { skip, take, cursor, where, orderBy } = params;
     const { first, after, before, last, limit, offset } = args;
     // const result = await findManyCursorConnection(
@@ -76,15 +79,23 @@ export class EntryService {
       .entries(this.entries);
     return findFirst as Array<Entry>;
   }
-  async createEntry(
-    data: Prisma.Without<
+  async upsertEntry(upsertInput: {
+    where: Prisma.EntryWhereUniqueInput;
+    create: Prisma.XOR<
       Prisma.EntryCreateInput,
       Prisma.EntryUncheckedCreateInput
-    > &
-      Prisma.EntryUncheckedCreateInput
-  ): Promise<Entry> {
-    return await this.prisma.entry.create({
-      data
+    >;
+    /**
+     * In case the Entry was found with the provided `where` argument, update it with this data.
+     *
+     **/ update: Prisma.XOR<
+      Prisma.EntryUpdateInput,
+      Prisma.EntryUncheckedUpdateInput
+    >;
+    include?: Prisma.EntryInclude;
+  }): Promise<Entry> {
+    return await this.prisma.entry.upsert({
+      ...upsertInput
     });
   }
 

@@ -25,6 +25,30 @@ generator nestgraphql {
   outputFilePattern = "{model}/{plural.type}/{name}.{type}.ts"
 }
 
+generator nestjsDto {
+  provider                        = "prisma-generator-nestjs-dto"
+  output                          = "../src/.generated/nestjs-dto"
+  outputToNestJsResourceStructure = "false"
+  exportRelationModifierClasses   = "true"
+  reExport                        = "false"
+  createDtoPrefix                 = "Create"
+  updateDtoPrefix                 = "Update"
+  dtoSuffix                       = "Dto"
+  entityPrefix                    = ""
+  entitySuffix                    = ""
+  fileNamingStyle                 = "camel"
+}
+
+generator prismaClassGenerator {
+  provider               = "prisma-class-generator"
+  dryRun                 = "false"
+  output                 = "../src/.generated/prisma-class-generator"
+  useSwagger             = "true"
+  separateRelationFields = "true"
+  makeIndexFile          = "true"
+
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -32,8 +56,8 @@ datasource db {
 
 model User {
   id            String       @id @default(uuid())
-  firstName          String?
-  lastName String?
+  firstName     String?
+  lastName      String?
   email         String       @unique
   image         String?
   role          Role?        @default(USER)
@@ -48,45 +72,43 @@ model User {
   connections   Connection[] @relation("UserConnections")
   categories    Category[]   @relation("CategoryCreator")
   comments      Comment[]    @relation("CommentAuthor")
-  sessions      Session[]  @relation("UserSessions")
+  sessions      Session[]    @relation("UserSessions")
 }
 
-
 model Profile {
-  id          String   @id @default(uuid())
-  userId      String   @unique
-  memberSince DateTime @default(now())
-  gender      Gender?  @default(OTHER)
-  pronouns    Pronouns?   @default(NOT_LISTED)
-  coverPhoto  String?
-  lastSeen    DateTime? @updatedAt
-  dob         String?
-  phoneNumber String?
-  occupation  String?
-  city        String?
-  country     String?
-  bio         Json[]
-  activiyFeed Json[]
-  user        User     @relation("UserProfile", fields: [userId], references: [id], onDelete: Cascade)
+  id             String    @id @default(uuid())
+  userId         String    @unique
+  memberSince    DateTime  @default(now())
+  gender         Gender?   @default(OTHER)
+  pronouns       Pronouns? @default(NOT_LISTED)
+  coverPhoto     String?
+  lastSeen       DateTime? @updatedAt
+  dob            String?
+  phoneNumber    String?
+  occupation     String?
+  city           String?
+  country        String?
+  bio            Json[]
+  activiyFeed    Json[]
+  user           User      @relation("UserProfile", fields: [userId], references: [id], onDelete: Cascade)
   recentActivity Json[]
 }
 
 model Session {
-  id            String @default(uuid())
-  userId        String @unique
-  accessToken   String?
-  alg           String?
-  refreshToken  String?
-  signature     String?
-  scopes        String[]
-  provider      String?
-  tokenState    String?
-  lastVerified  DateTime? @updatedAt
-  iat           Int?
-  exp           Int?
+  id           String    @default(uuid())
+  userId       String    @unique
+  accessToken  String?
+  alg          String?
+  refreshToken String?
+  signature    String?
+  scopes       String[]
+  provider     String?
+  tokenState   String?
+  lastVerified DateTime? @updatedAt
+  iat          Int?
+  exp          Int?
   user         User      @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
 }
-
 
 model Comment {
   id        String             @id @default(uuid())
@@ -100,7 +122,6 @@ model Comment {
   entry     Entry              @relation("EntryComments", fields: [entryId], references: [id], onDelete: Cascade)
   author    User               @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
 }
-
 
 model Connection {
   id           String    @id @default(uuid())
@@ -116,10 +137,10 @@ model Connection {
 
 model Entry {
   id            String     @id @default(uuid())
-  title         String     @unique
+  title         String
   published     Boolean    @default(false)
-  authorId      String
-  content       String?
+  authorId      String     @unique
+  content       Json[]
   createdAt     DateTime   @default(now())
   updatedAt     DateTime?  @updatedAt
   featuredImage String?
@@ -135,7 +156,7 @@ model Account {
   type               String
   provider           String
   providerAccountId  String
-  scope             String?
+  scope              String?
   access_token       String?
   expires_at         Int?
   id_token           String?
@@ -177,6 +198,7 @@ enum Role {
   MAINTAINER
   USER
 }
+
 enum CommentReactions {
   LIKE
   LOVE

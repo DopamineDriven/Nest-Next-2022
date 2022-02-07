@@ -17,7 +17,7 @@ const config = {
     enabled: true,
     title: "2022 Swagger",
     description: "Swagger Api for Nesting",
-    version: "1.5",
+    version: "3.0",
     path: "api"
   },
   graphql: {

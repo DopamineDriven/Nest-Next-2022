@@ -1,27 +1,29 @@
 import { ConnectionCursor } from "graphql-relay";
-import { InterfaceType, Field, Int } from "@nestjs/graphql";
+import { InterfaceType, Field, Int, InputType } from "@nestjs/graphql";
 import { Global, Injectable } from "@nestjs/common";
 import * as Relay from "graphql-relay";
 
-@InterfaceType()
+@InputType()
 export class PaginationArgs implements Relay.ConnectionArguments {
-  @Field(_type => Int)
+  @Field(_type => Int, { defaultValue: 10 })
   first?: number | null | undefined;
-  @Field(_type => String, { nullable: true })
+
+  @Field(_type => String, { nullable: true, defaultValue: null })
   after?: ConnectionCursor | null | undefined;
+
   @Field(_type => Int, { description: "" })
   last?: number | null | undefined;
-  @Field(_type => String, { nullable: true })
-  before?: ConnectionCursor | null | undefined;
-  @Field(_type => Int, { defaultValue: 0 })
-  totalCount: number;
 
+  @Field(_type => String, { nullable: true, defaultValue: null })
+  before?: ConnectionCursor | null | undefined;
 }
 
-@Global()
 @Injectable()
 export class PaginationService extends PaginationArgs {
-  async relayToPrismaPagination(args: PaginationArgs): Promise<{
+  constructor() {
+    super();
+  }
+  async relayToPrismaPagination<T extends PaginationArgs>(args: T): Promise<{
     cursor?: { id: string };
     take?: number;
     skip?: number;

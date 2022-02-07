@@ -33,8 +33,6 @@ export class AuthSansSession {
 
 @ObjectType("Viewer")
 export class Viewer extends User {
-  @Field(_type => String)
-  declare id: string;
   @Field(_type => String, { nullable: true })
   accessToken: string | null;
 }
@@ -70,6 +68,7 @@ export async function PrismaViewer<
         data.accessToken ? data.accessToken : ""
       );
       const findPrismaViewer = await prisma.findFirst({
+        include: {_count: true},
         where: {
           OR: [
             { id: viewer?.id ? viewer.id : "" },

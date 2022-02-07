@@ -31,11 +31,18 @@ import {
 import { ThrottlerModule, ThrottlerModuleOptions } from "@nestjs/throttler";
 import { ThrottlerStorageRedisService } from "nestjs-throttler-storage-redis";
 import { RedisError } from "redis";
+import { PrismaService } from "./prisma";
+import { UserService } from "./user/user.service";
+import { AuthService } from "./auth/auth-jwt.service";
+export type RecordContiional<T> = Record<keyof T, T> | Array<T> | PromiseLike<T> | T;
 
-export type Context = {
+export type Context<
+  T = unknown extends infer P ? P : unknown
+> = {
   req: ExpressContext["req"];
   res: ExpressContext["res"];
-  token: string | null;
+    token: string | null;
+    extras?: T extends infer U ? U : T
 };
 
 @Module({
@@ -180,7 +187,7 @@ export type Context = {
             : process.env.NODE_ENV !== "production"
             ? true
             : false,
-          context: ({ req, res }: ExpressContext): any => {
+          context: <T extends AuthService>({ req, res }: Context<T>): any => {
             const token = req.header("authorization")?.split(" ")[1] ?? null;
 
             const ctx = {
@@ -189,7 +196,30 @@ export type Context = {
               token: token
             };
 
+            token != null && token.length > 0
+              ? res.setHeader("authorization", `Bearer ${token}`)
+              : console.log("no auth token to parse");
+
+            // const getUserFromToken = (token: string) => {
+            //   return Promise.resolve(
+            //     authService
+            //       .getUserFromToken(
+            //         token
+            //           ? token
+            //           : req.headers?.authorization?.split(/([ ])/)[1]
+            //           ? req.headers.authorization?.split(/([[ ]])/)[1]
+            //           : ""
+            //       )
+            //       .then(data => {
+            //         console.log(JSON.stringify(data ?? "no user", null, 2));
+            //         return { ...data };
+            //       })
+            //   );
+            // };
+            // console.log(token ? getUserFromToken(token) ?? "emptystring" : "no token")
             if (ctx.token != null && ctx.token.length > 0) {
+              res.setHeader("authorization", `Bearer ${token}`)
+              
               return { ...ctx };
             } else {
               return { ...ctx };

@@ -64,26 +64,22 @@ function Index() {
     nextFetchPolicy: "cache-first",
     notifyOnNetworkStatusChange: true,
     variables: {
-      manyUsersPaginatedArgs: {
-        emailFilter: { contains: "" },
-        roles: {
-          in: [Role.Admin, Role.Maintainer, Role.Superadmin, Role.User]
+      findManyUsersPaginatedInput: {
+        pagination: { first: 10 },
+        // distinct: [UserScalarFieldEnum.Email, UserScalarFieldEnum.],
+        where: {
+          role: {
+            in: [Role.Admin, Role.Maintainer, Role.Superadmin, Role.User]
+          },
+          status: {
+            in: [
+              UserStatus.Online,
+              UserStatus.Offline,
+              UserStatus.Deactivated
+            ]
+          }
         },
-        firstNameFilter: {
-          contains: ""
-        },
-        lastNameFilter: {
-          contains: ""
-        },
-        paginationArgs: { first: 10 },
-        userStatus: {
-          in: [
-            UserStatus.Online,
-            UserStatus.Offline,
-            UserStatus.Deactivated
-          ]
-        },
-        orderByRelevance: [
+        orderBy: [
           { firstName: SortOrder.Asc },
           {
             _relevance: {
@@ -94,7 +90,7 @@ function Index() {
           }
         ]
       }
-    } as AllUsersQueryVariables
+    }
   });
   //bg-[#133350]
   const crm = getCookie("nest-next-2022");
@@ -115,8 +111,7 @@ function Index() {
       <Inspector>{JSON.stringify(crm ?? "no cookies")}</Inspector>
       <Inspector>
         {JSON.stringify(
-          data?.listUsers.edges.find(id => id.node.lastName === "Ross")
-            ?.node.lastName ?? "",
+          data,
           null,
           2
         )}

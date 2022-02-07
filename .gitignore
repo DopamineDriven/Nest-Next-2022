@@ -107,6 +107,8 @@ nest/src/.generated/nest
 nest/src/.generated/ast
 nest/src/.generated/prisma-nestjs-graphql
 nest/src/.generated/schema-ast.graphql
+nest/src/.generated/nestjs-dto
+nest/src/.generated/prisma-class-generator
 nest/docs/prisma-docs-generated
 nest/.env.local
 nest/notes.md

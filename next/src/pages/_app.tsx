@@ -1,6 +1,6 @@
 import "../styles/index.css";
 
-import React, { useEffect, FC } from "react";
+import React, { useEffect, FC, ReactElement } from "react";
 import App, {
   NextWebVitalsMetric,
   AppProps,
@@ -16,33 +16,40 @@ import { request } from "http";
 import { getCookie } from "cookies-next";
 import { getCookieParser } from "next/dist/server/api-utils";
 
-const Noop: FC = ({ children }) => <>{children}</>;
+const Noop: FC<{}> = ({ children }) => <>{children}</>;
 const envVars = {
   facebookId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID ?? ""
 };
 
-export default function CrmApp(appProps: AppProps) {
-  const { Component, pageProps } = appProps;
+export default function NestNextApp<T extends AppProps>({
+  pageProps,
+  Component
+}: T): ReactElement {
   const LayoutNoop = (Component as any).LayoutNoop || Noop;
-  const cookieAuth = (document.cookie  && document.cookie.includes("nest-next-2022") ? decodeURIComponent(document.cookie) : getCookie("nest-next-2022")?.toString());
+  // const cookieAuth =
+  //   document.cookie && document.cookie.includes("nest-next-2022")
+  //     ? decodeURIComponent(document.cookie)
+  //     : getCookie("nest-next-2022")?.toString();
 
   const apolloClient = useApollo(
-    pageProps.initialApolloState,
+    pageProps.initialApolloState ?? null,
     pageProps.resolverContext ?? {}
   );
 
   const router = useRouter();
   useEffect(() => {
-    getCookie("nest-next-2022") ? router.replace(window.location.href, { auth: cookieAuth }) : document.cookie;
-    document.body.classList?.remove("loading");
-  }, [router, cookieAuth]);
+    // getCookie("nest-next-2022") ? router.replace(window.location.href, { auth: cookieAuth }) : document.cookie;
+    document?.body?.classList?.remove("loading");
+  }, [router]);
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <LayoutNoop pageProps={pageProps}>
-        <Component {...pageProps} />
-      </LayoutNoop>
-    </ApolloProvider>
+    <>
+      <ApolloProvider client={apolloClient}>
+        <LayoutNoop {...(pageProps as any)}>
+          <Component {...pageProps} />
+        </LayoutNoop>
+      </ApolloProvider>
+    </>
   );
 }
 

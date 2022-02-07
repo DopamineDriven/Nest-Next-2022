@@ -2,17 +2,21 @@ import {
   ConnectionEdgeObjectType,
   ConnectionFilterArgsType,
   ConnectionObjectType,
-  ConnectionOrderingInputType
+  ConnectionOrderingInputType,
+  ConnectionNodesObjectType
 } from "../../common/pagination/pagination";
 import { Profile } from "./profile.model";
-import { ProfileOrderByWithRelationAndSearchRelevanceInput } from "../../.generated/prisma-nestjs-graphql/profile/inputs/profile-order-by-with-relation-and-search-relevance.input";
 import { ProfileRelationFilter } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-relation-filter.input";
-import { ProfileCountAggregateInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-count-aggregate.input";
+import { ProfileOrderByRelevanceInput } from "src/graphql.schema";
+
 @ConnectionFilterArgsType(ProfileRelationFilter)
 export class ProfileFilter {}
 
-@ConnectionOrderingInputType(ProfileCountAggregateInput)
+@ConnectionOrderingInputType(ProfileOrderByRelevanceInput)
 export class ProfileOrderBy {}
+
+@ConnectionNodesObjectType(Profile)
+export class ProfileNodes {}
 
 @ConnectionEdgeObjectType(Profile)
 export class ProfileEdge {}

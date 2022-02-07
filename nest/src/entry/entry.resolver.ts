@@ -11,20 +11,23 @@ import { Entry } from "./model/entry.model";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { PrismaService } from "../prisma/prisma.service";
 import { PubSub } from "graphql-subscriptions";
-import { PaginationArgs } from "../common/pagination/pagination.args";
 import { UserIdArgs } from "../user/args/user-id.args";
 import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
 import { EntryService } from "./entry.service";
 import { EntryConnection } from "./model/entry-connection.model";
-import { EntryCreateInput } from "../.generated/prisma-nestjs-graphql/entry/inputs/entry-create.input";
-import { EntryOrderByWithRelationAndSearchRelevanceInput } from "../.generated/prisma-nestjs-graphql/entry/inputs/entry-order-by-with-relation-and-search-relevance.input";
-
+import { FindManyEntriesPaginatedInput } from "./inputs/entry-paginated.input";
+import { EntryCreateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create.input";
+import { EntryCreateOneInput } from "./inputs/entry-create.input";
+import { EntryUpsertInput } from "./inputs/entry-upsert.input";
+import { XOR } from "src/common/types/helpers.type";
+import { UpsertOneEntryArgs } from "src/.generated/prisma-nestjs-graphql/entry/args/upsert-one-entry.args";
+import { EntryUpsertWithWhereUniqueWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-upsert-with-where-unique-without-author.input";
 const pubSub = new PubSub();
 @Resolver(() => Entry)
 export class EntryResolver {
   constructor(
-    @Inject(PrismaService) private prisma: PrismaService,
-    private entryService: EntryService
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(EntryService) private readonly entryService: EntryService
   ) {}
 
   @Subscription(() => Entry)
@@ -34,44 +37,43 @@ export class EntryResolver {
 
   @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Entry)
-  async createEntry(@Args("data") data: EntryCreateInput) {
-    const newEntry = this.prisma.entry.create({
-      data
-    });
+  async createEntry(
+    @Args("createInput", { type: () => EntryCreateInput })
+    data: EntryCreateInput
+  ) {
+    const newEntry = await this.prisma.entry.create({data});
     pubSub.publish("entryCreated", { entryCreated: newEntry });
     return newEntry;
   }
 
   @Query(() => EntryConnection)
-  async entryCursorConnection(
-    @Args() { after, before, first, last, skip }: PaginationArgs,
-    @Args({ name: "query", type: () => String, nullable: true })
-    query: string,
-    @Args({
-      name: "orderBy",
-      type: () => EntryOrderByWithRelationAndSearchRelevanceInput,
-      nullable: true
-    })
-    orderBy: EntryOrderByWithRelationAndSearchRelevanceInput
+  async listEntries(
+    @Args("findManyEntriesPaginatedInput") params: FindManyEntriesPaginatedInput
   ) {
     const edgingThoseNodes = await findManyCursorConnection(
       args =>
         this.prisma.entry.findMany({
-          include: { author: true },
-          where: {
-            title: { contains: query || "" }
-          },
+          distinct: params.distinct,
+          take: params.take,
+          skip: params.skip,
+          where: params.where,
           cursor: args.cursor,
-          orderBy: orderBy?._relevance?.fields ? { ...orderBy } : undefined,
+          orderBy: params.orderBy,
           ...args
         }),
       () =>
         this.prisma.entry.count({
-          where: {
-            title: { contains: query || "" }
-          }
+          distinct: params.distinct,
+          skip: params.skip,
+          where: params.where,
+          cursor: params.cursor
         }),
-      { first, last, before, after }
+      {
+        first: params.pagination.first ?? 10,
+        last: params.pagination.last,
+        before: params.pagination.before,
+        after: params.pagination.after
+      }
     );
     return edgingThoseNodes;
   }

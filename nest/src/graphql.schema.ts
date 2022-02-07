@@ -43,10 +43,21 @@ export enum CommentReactions {
 export enum EntryOrderByRelevanceFieldEnum {
     authorId = "authorId",
     categoryId = "categoryId",
-    content = "content",
     featuredImage = "featuredImage",
     id = "id",
     title = "title"
+}
+
+export enum EntryScalarFieldEnum {
+    authorId = "authorId",
+    categoryId = "categoryId",
+    content = "content",
+    createdAt = "createdAt",
+    featuredImage = "featuredImage",
+    id = "id",
+    published = "published",
+    title = "title",
+    updatedAt = "updatedAt"
 }
 
 export enum Gender {
@@ -64,6 +75,24 @@ export enum ProfileOrderByRelevanceFieldEnum {
     id = "id",
     occupation = "occupation",
     phoneNumber = "phoneNumber",
+    userId = "userId"
+}
+
+export enum ProfileScalarFieldEnum {
+    activiyFeed = "activiyFeed",
+    bio = "bio",
+    city = "city",
+    country = "country",
+    coverPhoto = "coverPhoto",
+    dob = "dob",
+    gender = "gender",
+    id = "id",
+    lastSeen = "lastSeen",
+    memberSince = "memberSince",
+    occupation = "occupation",
+    phoneNumber = "phoneNumber",
+    pronouns = "pronouns",
+    recentActivity = "recentActivity",
     userId = "userId"
 }
 
@@ -99,6 +128,20 @@ export enum UserOrderByRelevanceFieldEnum {
     image = "image",
     lastName = "lastName",
     password = "password"
+}
+
+export enum UserScalarFieldEnum {
+    createdAt = "createdAt",
+    email = "email",
+    emailVerified = "emailVerified",
+    firstName = "firstName",
+    id = "id",
+    image = "image",
+    lastName = "lastName",
+    password = "password",
+    role = "role",
+    status = "status",
+    updatedAt = "updatedAt"
 }
 
 export enum UserStatus {
@@ -161,6 +204,12 @@ export class AccountCreateWithoutUserInput {
     type: string;
 }
 
+export class AccountListRelationFilter {
+    every?: Nullable<AccountWhereInput>;
+    none?: Nullable<AccountWhereInput>;
+    some?: Nullable<AccountWhereInput>;
+}
+
 export class AccountOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
 }
@@ -170,9 +219,36 @@ export class AccountProviderProviderAccountIdCompoundUniqueInput {
     providerAccountId: string;
 }
 
+export class AccountWhereInput {
+    AND?: Nullable<AccountWhereInput[]>;
+    NOT?: Nullable<AccountWhereInput[]>;
+    OR?: Nullable<AccountWhereInput[]>;
+    access_token?: Nullable<StringNullableFilter>;
+    expires_at?: Nullable<IntNullableFilter>;
+    id?: Nullable<StringFilter>;
+    id_token?: Nullable<StringNullableFilter>;
+    oauth_token?: Nullable<StringNullableFilter>;
+    oauth_token_secret?: Nullable<StringNullableFilter>;
+    provider?: Nullable<StringFilter>;
+    providerAccountId?: Nullable<StringFilter>;
+    refresh_secret?: Nullable<StringNullableFilter>;
+    refresh_token?: Nullable<StringNullableFilter>;
+    scope?: Nullable<StringNullableFilter>;
+    session_state?: Nullable<StringNullableFilter>;
+    token_type?: Nullable<StringNullableFilter>;
+    type?: Nullable<StringFilter>;
+    user?: Nullable<UserRelationFilter>;
+    userId?: Nullable<StringFilter>;
+}
+
 export class AccountWhereUniqueInput {
     id?: Nullable<string>;
     provider_providerAccountId?: Nullable<AccountProviderProviderAccountIdCompoundUniqueInput>;
+}
+
+export class BoolFilter {
+    equals?: Nullable<boolean>;
+    not?: Nullable<NestedBoolFilter>;
 }
 
 export class CategoryCreateManyCreatorInput {
@@ -229,8 +305,28 @@ export class CategoryCreateWithoutEntriesInput {
     updatedAt?: Nullable<DateTime>;
 }
 
+export class CategoryListRelationFilter {
+    every?: Nullable<CategoryWhereInput>;
+    none?: Nullable<CategoryWhereInput>;
+    some?: Nullable<CategoryWhereInput>;
+}
+
 export class CategoryOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
+}
+
+export class CategoryWhereInput {
+    AND?: Nullable<CategoryWhereInput[]>;
+    NOT?: Nullable<CategoryWhereInput[]>;
+    OR?: Nullable<CategoryWhereInput[]>;
+    createdAt?: Nullable<DateTimeNullableFilter>;
+    creator?: Nullable<UserRelationFilter>;
+    creatorId?: Nullable<StringFilter>;
+    entries?: Nullable<EntryListRelationFilter>;
+    entryId?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    name?: Nullable<StringFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
 }
 
 export class CategoryWhereUniqueInput {
@@ -325,8 +421,30 @@ export class CommentCreatereactionsInput {
     set: CommentReactions[];
 }
 
+export class CommentListRelationFilter {
+    every?: Nullable<CommentWhereInput>;
+    none?: Nullable<CommentWhereInput>;
+    some?: Nullable<CommentWhereInput>;
+}
+
 export class CommentOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
+}
+
+export class CommentWhereInput {
+    AND?: Nullable<CommentWhereInput[]>;
+    NOT?: Nullable<CommentWhereInput[]>;
+    OR?: Nullable<CommentWhereInput[]>;
+    author?: Nullable<UserRelationFilter>;
+    authorId?: Nullable<StringFilter>;
+    body?: Nullable<JsonNullableFilter>;
+    createdAt?: Nullable<DateTimeFilter>;
+    entry?: Nullable<EntryRelationFilter>;
+    entryId?: Nullable<StringFilter>;
+    id?: Nullable<StringFilter>;
+    position?: Nullable<StringNullableFilter>;
+    reactions?: Nullable<EnumCommentReactionsNullableListFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
 }
 
 export class CommentWhereUniqueInput {
@@ -370,12 +488,55 @@ export class ConnectionCreateWithoutOwnerInput {
     phoneNumber?: Nullable<string>;
 }
 
+export class ConnectionListRelationFilter {
+    every?: Nullable<ConnectionWhereInput>;
+    none?: Nullable<ConnectionWhereInput>;
+    some?: Nullable<ConnectionWhereInput>;
+}
+
 export class ConnectionOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
 }
 
+export class ConnectionWhereInput {
+    AND?: Nullable<ConnectionWhereInput[]>;
+    NOT?: Nullable<ConnectionWhereInput[]>;
+    OR?: Nullable<ConnectionWhereInput[]>;
+    email?: Nullable<StringFilter>;
+    firstName?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    ip?: Nullable<StringNullableFilter>;
+    lastModified?: Nullable<DateTimeNullableFilter>;
+    lastName?: Nullable<StringNullableFilter>;
+    owner?: Nullable<UserRelationFilter>;
+    ownerId?: Nullable<StringFilter>;
+    phoneNumber?: Nullable<StringNullableFilter>;
+}
+
 export class ConnectionWhereUniqueInput {
     id?: Nullable<string>;
+}
+
+export class DateTimeFilter {
+    equals?: Nullable<DateTime>;
+    gt?: Nullable<DateTime>;
+    gte?: Nullable<DateTime>;
+    in?: Nullable<DateTime[]>;
+    lt?: Nullable<DateTime>;
+    lte?: Nullable<DateTime>;
+    not?: Nullable<NestedDateTimeFilter>;
+    notIn?: Nullable<DateTime[]>;
+}
+
+export class DateTimeNullableFilter {
+    equals?: Nullable<DateTime>;
+    gt?: Nullable<DateTime>;
+    gte?: Nullable<DateTime>;
+    in?: Nullable<DateTime[]>;
+    lt?: Nullable<DateTime>;
+    lte?: Nullable<DateTime>;
+    not?: Nullable<NestedDateTimeNullableFilter>;
+    notIn?: Nullable<DateTime[]>;
 }
 
 export class EntryCreateInput {
@@ -383,7 +544,7 @@ export class EntryCreateInput {
     categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
     categoryId?: Nullable<string>;
     comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
-    content?: Nullable<string>;
+    content?: Nullable<EntryCreatecontentInput>;
     createdAt?: Nullable<DateTime>;
     featuredImage?: Nullable<string>;
     id?: Nullable<string>;
@@ -394,7 +555,7 @@ export class EntryCreateInput {
 
 export class EntryCreateManyAuthorInput {
     categoryId?: Nullable<string>;
-    content?: Nullable<string>;
+    content?: Nullable<EntryCreateManycontentInput>;
     createdAt?: Nullable<DateTime>;
     featuredImage?: Nullable<string>;
     id?: Nullable<string>;
@@ -406,6 +567,10 @@ export class EntryCreateManyAuthorInput {
 export class EntryCreateManyAuthorInputEnvelope {
     data: EntryCreateManyAuthorInput[];
     skipDuplicates?: Nullable<boolean>;
+}
+
+export class EntryCreateManycontentInput {
+    set: JSON[];
 }
 
 export class EntryCreateNestedManyWithoutAuthorInput {
@@ -446,7 +611,7 @@ export class EntryCreateWithoutAuthorInput {
     categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
     categoryId?: Nullable<string>;
     comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
-    content?: Nullable<string>;
+    content?: Nullable<EntryCreatecontentInput>;
     createdAt?: Nullable<DateTime>;
     featuredImage?: Nullable<string>;
     id?: Nullable<string>;
@@ -459,7 +624,7 @@ export class EntryCreateWithoutCategoriesInput {
     author: UserCreateNestedOneWithoutEntriesInput;
     categoryId?: Nullable<string>;
     comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
-    content?: Nullable<string>;
+    content?: Nullable<EntryCreatecontentInput>;
     createdAt?: Nullable<DateTime>;
     featuredImage?: Nullable<string>;
     id?: Nullable<string>;
@@ -472,13 +637,23 @@ export class EntryCreateWithoutCommentsInput {
     author: UserCreateNestedOneWithoutEntriesInput;
     categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
     categoryId?: Nullable<string>;
-    content?: Nullable<string>;
+    content?: Nullable<EntryCreatecontentInput>;
     createdAt?: Nullable<DateTime>;
     featuredImage?: Nullable<string>;
     id?: Nullable<string>;
     published?: Nullable<boolean>;
     title: string;
     updatedAt?: Nullable<DateTime>;
+}
+
+export class EntryCreatecontentInput {
+    set: JSON[];
+}
+
+export class EntryListRelationFilter {
+    every?: Nullable<EntryWhereInput>;
+    none?: Nullable<EntryWhereInput>;
+    some?: Nullable<EntryWhereInput>;
 }
 
 export class EntryOrderByRelationAggregateInput {
@@ -507,9 +682,40 @@ export class EntryOrderByWithRelationAndSearchRelevanceInput {
     updatedAt?: Nullable<SortOrder>;
 }
 
+export class EntryRelationFilter {
+    is?: Nullable<EntryWhereInput>;
+    isNot?: Nullable<EntryWhereInput>;
+}
+
+export class EntryWhereInput {
+    AND?: Nullable<EntryWhereInput[]>;
+    NOT?: Nullable<EntryWhereInput[]>;
+    OR?: Nullable<EntryWhereInput[]>;
+    author?: Nullable<UserRelationFilter>;
+    authorId?: Nullable<StringFilter>;
+    categories?: Nullable<CategoryListRelationFilter>;
+    categoryId?: Nullable<StringNullableFilter>;
+    comments?: Nullable<CommentListRelationFilter>;
+    content?: Nullable<JsonNullableListFilter>;
+    createdAt?: Nullable<DateTimeFilter>;
+    featuredImage?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    published?: Nullable<BoolFilter>;
+    title?: Nullable<StringFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
+}
+
 export class EntryWhereUniqueInput {
+    authorId?: Nullable<string>;
     id?: Nullable<string>;
-    title?: Nullable<string>;
+}
+
+export class EnumCommentReactionsNullableListFilter {
+    equals?: Nullable<CommentReactions[]>;
+    has?: Nullable<CommentReactions>;
+    hasEvery?: Nullable<CommentReactions[]>;
+    hasSome?: Nullable<CommentReactions[]>;
+    isEmpty?: Nullable<boolean>;
 }
 
 export class EnumGenderNullableFilter {
@@ -540,6 +746,47 @@ export class EnumUserStatusNullableFilter {
     notIn?: Nullable<UserStatus[]>;
 }
 
+export class FindManyEntriessPaginatedInput {
+    cursor?: Nullable<EntryWhereUniqueInput>;
+    distinct?: Nullable<EntryScalarFieldEnum[]>;
+    orderBy?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<EntryWhereInput>;
+}
+
+export class FindManyProfilesPaginatedInput {
+    cursor?: Nullable<ProfileWhereUniqueInput>;
+    distinct?: Nullable<ProfileScalarFieldEnum[]>;
+    orderBy?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<ProfileWhereInput>;
+}
+
+export class FindManyUsersPaginatedInput {
+    cursor?: Nullable<UserWhereUniqueInput>;
+    distinct?: Nullable<UserScalarFieldEnum[]>;
+    orderBy?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination?: Nullable<PaginationArgsInput>;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<UserWhereInput>;
+}
+
+export class IntNullableFilter {
+    equals?: Nullable<number>;
+    gt?: Nullable<number>;
+    gte?: Nullable<number>;
+    in?: Nullable<number[]>;
+    lt?: Nullable<number>;
+    lte?: Nullable<number>;
+    not?: Nullable<NestedIntNullableFilter>;
+    notIn?: Nullable<number[]>;
+}
+
 export class JsonNullableFilter {
     array_contains?: Nullable<JSON>;
     array_ends_with?: Nullable<JSON>;
@@ -556,19 +803,44 @@ export class JsonNullableFilter {
     string_starts_with?: Nullable<string>;
 }
 
+export class JsonNullableListFilter {
+    equals?: Nullable<JSON[]>;
+    has?: Nullable<JSON>;
+    hasEvery?: Nullable<JSON[]>;
+    hasSome?: Nullable<JSON[]>;
+    isEmpty?: Nullable<boolean>;
+}
+
 export class LoginInput {
     email?: Nullable<string>;
     password?: Nullable<string>;
 }
 
-export class ManyUsersPaginatedArgs {
-    emailFilter: StringFilter;
-    firstNameFilter: StringNullableFilter;
-    lastNameFilter: StringNullableFilter;
-    orderByRelevance: UserOrderByWithRelationAndSearchRelevanceInput[];
-    paginationArgs: PaginationArgsInput;
-    roles: EnumRoleNullableFilter;
-    userStatus: EnumUserStatusNullableFilter;
+export class NestedBoolFilter {
+    equals?: Nullable<boolean>;
+    not?: Nullable<NestedBoolFilter>;
+}
+
+export class NestedDateTimeFilter {
+    equals?: Nullable<DateTime>;
+    gt?: Nullable<DateTime>;
+    gte?: Nullable<DateTime>;
+    in?: Nullable<DateTime[]>;
+    lt?: Nullable<DateTime>;
+    lte?: Nullable<DateTime>;
+    not?: Nullable<NestedDateTimeFilter>;
+    notIn?: Nullable<DateTime[]>;
+}
+
+export class NestedDateTimeNullableFilter {
+    equals?: Nullable<DateTime>;
+    gt?: Nullable<DateTime>;
+    gte?: Nullable<DateTime>;
+    in?: Nullable<DateTime[]>;
+    lt?: Nullable<DateTime>;
+    lte?: Nullable<DateTime>;
+    not?: Nullable<NestedDateTimeNullableFilter>;
+    notIn?: Nullable<DateTime[]>;
 }
 
 export class NestedEnumGenderNullableFilter {
@@ -597,6 +869,17 @@ export class NestedEnumUserStatusNullableFilter {
     in?: Nullable<UserStatus[]>;
     not?: Nullable<NestedEnumUserStatusNullableFilter>;
     notIn?: Nullable<UserStatus[]>;
+}
+
+export class NestedIntNullableFilter {
+    equals?: Nullable<number>;
+    gt?: Nullable<number>;
+    gte?: Nullable<number>;
+    in?: Nullable<number[]>;
+    lt?: Nullable<number>;
+    lte?: Nullable<number>;
+    not?: Nullable<NestedIntNullableFilter>;
+    notIn?: Nullable<number[]>;
 }
 
 export class NestedStringFilter {
@@ -721,6 +1004,33 @@ export class ProfileOrderByWithRelationAndSearchRelevanceInput {
     userId?: Nullable<SortOrder>;
 }
 
+export class ProfileRelationFilter {
+    is?: Nullable<ProfileWhereInput>;
+    isNot?: Nullable<ProfileWhereInput>;
+}
+
+export class ProfileWhereInput {
+    AND?: Nullable<ProfileWhereInput[]>;
+    NOT?: Nullable<ProfileWhereInput[]>;
+    OR?: Nullable<ProfileWhereInput[]>;
+    activiyFeed?: Nullable<JsonNullableListFilter>;
+    bio?: Nullable<JsonNullableListFilter>;
+    city?: Nullable<StringNullableFilter>;
+    country?: Nullable<StringNullableFilter>;
+    coverPhoto?: Nullable<StringNullableFilter>;
+    dob?: Nullable<StringNullableFilter>;
+    gender?: Nullable<EnumGenderNullableFilter>;
+    id?: Nullable<StringFilter>;
+    lastSeen?: Nullable<DateTimeNullableFilter>;
+    memberSince?: Nullable<DateTimeFilter>;
+    occupation?: Nullable<StringNullableFilter>;
+    phoneNumber?: Nullable<StringNullableFilter>;
+    pronouns?: Nullable<EnumPronounsNullableFilter>;
+    recentActivity?: Nullable<JsonNullableListFilter>;
+    user?: Nullable<UserRelationFilter>;
+    userId?: Nullable<StringFilter>;
+}
+
 export class ProfileWhereUniqueInput {
     id?: Nullable<string>;
     userId?: Nullable<string>;
@@ -788,8 +1098,33 @@ export class SessionCreatescopesInput {
     set: string[];
 }
 
+export class SessionListRelationFilter {
+    every?: Nullable<SessionWhereInput>;
+    none?: Nullable<SessionWhereInput>;
+    some?: Nullable<SessionWhereInput>;
+}
+
 export class SessionOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
+}
+
+export class SessionWhereInput {
+    AND?: Nullable<SessionWhereInput[]>;
+    NOT?: Nullable<SessionWhereInput[]>;
+    OR?: Nullable<SessionWhereInput[]>;
+    accessToken?: Nullable<StringNullableFilter>;
+    alg?: Nullable<StringNullableFilter>;
+    exp?: Nullable<IntNullableFilter>;
+    iat?: Nullable<IntNullableFilter>;
+    id?: Nullable<StringFilter>;
+    lastVerified?: Nullable<DateTimeNullableFilter>;
+    provider?: Nullable<StringNullableFilter>;
+    refreshToken?: Nullable<StringNullableFilter>;
+    scopes?: Nullable<StringNullableListFilter>;
+    signature?: Nullable<StringNullableFilter>;
+    tokenState?: Nullable<StringNullableFilter>;
+    user?: Nullable<UserRelationFilter>;
+    userId?: Nullable<StringFilter>;
 }
 
 export class SessionWhereUniqueInput {
@@ -834,6 +1169,14 @@ export class StringNullableFilter {
     notIn?: Nullable<string[]>;
     search?: Nullable<string>;
     startsWith?: Nullable<string>;
+}
+
+export class StringNullableListFilter {
+    equals?: Nullable<string[]>;
+    has?: Nullable<string>;
+    hasEvery?: Nullable<string[]>;
+    hasSome?: Nullable<string[]>;
+    isEmpty?: Nullable<boolean>;
 }
 
 export class UserCreateNestedOneWithoutCategoriesInput {
@@ -988,6 +1331,35 @@ export class UserOrderByWithRelationAndSearchRelevanceInput {
     updatedAt?: Nullable<SortOrder>;
 }
 
+export class UserRelationFilter {
+    is?: Nullable<UserWhereInput>;
+    isNot?: Nullable<UserWhereInput>;
+}
+
+export class UserWhereInput {
+    AND?: Nullable<UserWhereInput[]>;
+    NOT?: Nullable<UserWhereInput[]>;
+    OR?: Nullable<UserWhereInput[]>;
+    accounts?: Nullable<AccountListRelationFilter>;
+    categories?: Nullable<CategoryListRelationFilter>;
+    comments?: Nullable<CommentListRelationFilter>;
+    connections?: Nullable<ConnectionListRelationFilter>;
+    createdAt?: Nullable<DateTimeFilter>;
+    email?: Nullable<StringFilter>;
+    emailVerified?: Nullable<DateTimeNullableFilter>;
+    entries?: Nullable<EntryListRelationFilter>;
+    firstName?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    image?: Nullable<StringNullableFilter>;
+    lastName?: Nullable<StringNullableFilter>;
+    password?: Nullable<StringFilter>;
+    profile?: Nullable<ProfileRelationFilter>;
+    role?: Nullable<EnumRoleNullableFilter>;
+    sessions?: Nullable<SessionListRelationFilter>;
+    status?: Nullable<EnumUserStatusNullableFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
+}
+
 export class UserWhereUniqueInput {
     email?: Nullable<string>;
     id?: Nullable<string>;
@@ -1032,6 +1404,19 @@ export class AuthSansSession {
     accessToken?: Nullable<string>;
     refreshToken?: Nullable<string>;
     user?: Nullable<User>;
+}
+
+export class BaseTypesConnection {
+    __typename?: 'BaseTypesConnection';
+    edges: BaseTypesEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
+}
+
+export class BaseTypesEdge {
+    __typename?: 'BaseTypesEdge';
+    cursor: string;
+    node: TypesUnion;
 }
 
 export class Category {
@@ -1087,7 +1472,7 @@ export class Entry {
     categories?: Nullable<Category[]>;
     categoryId?: Nullable<string>;
     comments?: Nullable<Comment[]>;
-    content?: Nullable<string>;
+    content?: Nullable<JSON[]>;
     createdAt: DateTime;
     featuredImage?: Nullable<string>;
     id: string;
@@ -1140,7 +1525,7 @@ export abstract class IMutation {
 
     abstract changePassword(accessToken: string, data: ChangePasswordInput): User | Promise<User>;
 
-    abstract createEntry(data: EntryCreateInput): Entry | Promise<Entry>;
+    abstract createEntry(createInput: EntryCreateInput): Entry | Promise<Entry>;
 
     abstract createProfile(data: ProfileCreateInput, userId: string): Profile | Promise<Profile>;
 
@@ -1204,23 +1589,25 @@ export abstract class IQuery {
 
     abstract entryById(id: string): Entry | Promise<Entry>;
 
-    abstract entryCursorConnection(after?: Nullable<string>, before?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput>, query?: Nullable<string>, skip?: Nullable<number>): EntryConnection | Promise<EntryConnection>;
-
-    abstract getProfiles(after?: Nullable<string>, before?: Nullable<string>, first?: Nullable<number>, last?: Nullable<number>, orderBy?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput>, query?: Nullable<string>, skip?: Nullable<number>): ProfileConnection | Promise<ProfileConnection>;
-
     abstract getViewer(id: string): Viewer | Promise<Viewer>;
 
     abstract hello(name: string): string | Promise<string>;
 
     abstract helloWorld(): string | Promise<string>;
 
-    abstract listUsers(ManyUsersPaginatedArgs?: Nullable<ManyUsersPaginatedArgs>): UserConnection | Promise<UserConnection>;
+    abstract listEntries(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput): EntryConnection | Promise<EntryConnection>;
+
+    abstract listProfiles(findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput): ProfileConnection | Promise<ProfileConnection>;
+
+    abstract listUsers(findManyUsersPaginatedInput?: Nullable<FindManyUsersPaginatedInput>): UserConnection | Promise<UserConnection>;
 
     abstract me(): AuthDetailed | Promise<AuthDetailed>;
 
     abstract profileByRelayId(): Profile | Promise<Profile>;
 
     abstract profiles(profilesArgs: ProfilesInput): ProfileConnection | Promise<ProfileConnection>;
+
+    abstract typeConnectionUnionFuncton(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput, findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput, findManyUsersPaginatedInput?: Nullable<FindManyUsersPaginatedInput>): BaseTypesConnection | Promise<BaseTypesConnection>;
 
     abstract userById(id: string): User | Promise<User>;
 
@@ -1262,6 +1649,7 @@ export class Token {
 
 export class User {
     __typename?: 'User';
+    _count?: Nullable<UserCount>;
     accounts?: Nullable<Account[]>;
     categories?: Nullable<Category[]>;
     comments?: Nullable<Comment[]>;
@@ -1289,6 +1677,16 @@ export class UserConnection {
     totalCount: number;
 }
 
+export class UserCount {
+    __typename?: 'UserCount';
+    accounts: number;
+    categories: number;
+    comments: number;
+    connections: number;
+    entries: number;
+    sessions: number;
+}
+
 export class UserEdge {
     __typename?: 'UserEdge';
     cursor: string;
@@ -1297,6 +1695,7 @@ export class UserEdge {
 
 export class Viewer {
     __typename?: 'Viewer';
+    _count?: Nullable<UserCount>;
     accessToken?: Nullable<string>;
     accounts?: Nullable<Account[]>;
     categories?: Nullable<Category[]>;
@@ -1323,4 +1722,5 @@ export type DateTime = any;
 export type JSON = any;
 export type JSONObject = any;
 export type PhoneNumber = any;
+export type TypesUnion = Entry | Profile | User;
 type Nullable<T> = T | null;
