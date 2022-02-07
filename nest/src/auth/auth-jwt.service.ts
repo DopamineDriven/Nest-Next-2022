@@ -20,6 +20,7 @@ import { SecurityConfig } from "../common/config/config-interfaces.config";
 // import { Session } from "../session/model/session.model";
 // import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
 import { LoginInput } from "./inputs";
+import { Serializer } from "src/common/types/json.type";
 
 @Injectable()
 export class AuthService {
@@ -80,6 +81,7 @@ export class AuthService {
       async prisma => {
         const userUpdate = await prisma.user.update({
           where: { id: id.payload.userId },
+          include: {_count: true},
           data: {
             status: "ONLINE",
             updatedAt: new Date(Date.now()),
@@ -136,7 +138,6 @@ export class AuthService {
   }
 
   async signIn({ email, password }: LoginInput): Promise<AuthDetailed> {
-
     if (!email || email === new NotFoundException(`email`).message) {
       throw new NotFoundException(`No user found for email: ${email}`);
     }
@@ -152,19 +153,23 @@ export class AuthService {
     }
 
     const { accessToken, refreshToken } = this.generateTokens({
-      userId: (await this.prismaService.user.findFirst({
-        where: {
-          email: email
-        },
-        select: {id: true}
-      }).then(id => id))?.id as unknown as string
+      userId: (
+        await this.prismaService.user
+          .findFirst({
+            where: {
+              email: email
+            },
+            select: { id: true }
+          })
+          .then(id => id)
+      )?.id as unknown as string
     });
     const { jwt, auth } = await this.getUserWithDecodedToken(
       accessToken ? accessToken : ""
     );
 
     const userInfo = await this.prismaService.user.update({
-      where: { id: auth.user?.id ? auth.user.id : "" },
+      where: { id: auth.user?.id ? auth.user.id : "" }, include: {_count: true},
       data: {
         updatedAt: new Date(Date.now()),
         status: "ONLINE",
@@ -200,7 +205,8 @@ export class AuthService {
         session: session,
         user: userInfo
       },
-      jwt: jwt    };
+      jwt: jwt
+    };
   }
 
   async login(email: string, password: string): Promise<Token> {
@@ -226,16 +232,37 @@ export class AuthService {
 
   async validateUser(userId: string | null): Promise<User | null> {
     return await this.prismaService.user.findUnique({
+      include: {_count: true},
       where: { id: userId ? userId : "" }
     });
   }
 
+  toBase64Url(data: AuthDetailed) {
+    return Buffer.from(
+      new Serializer<AuthDetailed>().serialize(
+        JSON.parse("authDetailed", () => ({
+          reviver: (key: RegExp, value: AuthDetailed) => ({
+            this: this,
+            key: /([test ])/ === key,
+            value: data === value
+          })
+        }))
+      )
+    );
+  }
+
+  fromBase64Url(value: string, data: AuthDetailed) {
+    return Buffer.from("base64").toString("utf-8");
+  }
+
   getUserFromToken(token: string): Promise<User | null> {
     console.log(token ?? "");
+    
     const id = this.jwtService.decode(token, {
       complete: true
     }) as JwtDecoded;
     return this.prismaService.user.findUnique({
+      include: {_count: true},
       where: { id: id.payload.userId }
     });
   }

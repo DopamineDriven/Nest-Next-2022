@@ -90,10 +90,10 @@ Table Connection {
 
 Table Entry {
   id String [pk]
-  title String [unique, not null]
+  title String [not null]
   published Boolean [not null, default: false]
-  authorId String [not null]
-  content String
+  authorId String [unique, not null]
+  content Json [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime
   featuredImage String

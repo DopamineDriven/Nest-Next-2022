@@ -6,11 +6,9 @@ import { Comment } from "../../comment/model/comment.model";
 import { Account } from "../../account/model/account.model";
 import { Entry } from "../../entry/model/entry.model";
 import { Session } from "../../session/model/session.model";
-import { UserCount } from "../../.generated/prisma-nestjs-graphql/user/outputs/user-count.output";
+import { UserCount } from "../outputs/user-count.output";
 import { Profile } from "../../profile/model/profile.model";
 import { Category } from "../../category/model/category.model";
-import { EntryConnection } from "../../entry/model/entry-connection.model";
-import { isNullableType } from "graphql";
 import { NullLiteral } from "ts-morph";
 type Nullable<T> = T | null;
 
@@ -68,7 +66,7 @@ export class User {
   accounts?: Array<Account> | null;
 
   @Field(() => [Entry] || [NullLiteral], { nullable: true })
-  entries?: Entry[] | null;
+  entries?: Array<Entry> | null;
 
   @Field(() => [Session] || [NullLiteral], { nullable: true })
   sessions?: Array<Session> | null;
@@ -81,4 +79,17 @@ export class User {
 
   @Field(() => [Category] || [NullLiteral], { nullable: true })
   categories?: Array<Category>;
+
+  @Field(() => UserCount, {
+    defaultValue: {
+      accounts: 0,
+      entries: 0,
+      connections: 0,
+      categories: 0,
+      comments: 0,
+      sessions: 0
+    },
+    nullable: true
+  })
+  _count?: UserCount | null;
 }

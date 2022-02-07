@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int, InputType } from "@nestjs/graphql";
 
-@InputType("UserCount")
+@ObjectType("UserCount")
 export class UserCount {
   @Field(() => Int, { nullable: false, defaultValue: 0 })
   accounts!: number;

@@ -16,7 +16,6 @@ services:
         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
         - POSTGRES_DB=${POSTGRES_DB}
       privileged: true
-
   redis:
     restart: "always"
     container_name: "redis-nest"
@@ -30,14 +29,12 @@ services:
     volumes:
       - ../../../Docker/2022/redis-nest:/var/lib/redis
       - ../../../Docker/2022/redis.conf:/usr/local/etc/redis/redis.conf
-
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - REDIS_REPLICATION_MODE=${REDIS_REPLICATION_ENV}
     networks:
       node_net:
         ipv4_address: ${REDIS_IPV4_ADDY}
-
 # networking for the Redis container
 networks:
   node_net:
@@ -45,7 +42,7 @@ networks:
       driver: ${REDIS_IPAM_DRIVER}
       config:
         - subnet: ${REDIS_IPAM_CONFIG_SUBNET}
-# Volumes for Postgres DB
+# Volumes for Postgres and Redis
 volumes:
   postgres:
     name: pg-nest

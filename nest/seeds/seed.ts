@@ -59,7 +59,9 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
     return Buffer.from(str).toString("base64");
   };
 
-  const hashedPassword = await hashPassword(process.env.PWD ? process.env.PWD : "Nest2022!");
+  const hashedPassword = await hashPassword(
+    process.env.PWD ? process.env.PWD : "Nest2022!"
+  );
   const seedFirstName = faker.name.firstName();
   const seedSurname = faker.name.lastName();
   const accessToken = faker.datatype.hexaDecimal(166);
@@ -352,7 +354,10 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
           create: [
             {
               title: faker.lorem.words(8),
-              content: faker.lorem.paragraphs(4, "\n"),
+              content: [
+                { subtitle: faker.lorem.sentences(2) },
+                { body: faker.lorem.paragraphs(4, "\n") }
+              ],
               featuredImage: faker.image.imageUrl(
                 1800,
                 1800,
@@ -387,7 +392,6 @@ type SeedPropsInferred<U> = UnwrapPromise<
     : UnwrapPromise<typeof seed>
 >;
 
-
 async function main() {
   const PrismaClient = (await import("@prisma/client")).PrismaClient;
   const prisma = new PrismaClient({ log: ["error", "info", "query", "warn"] });
@@ -395,7 +399,9 @@ async function main() {
     await prisma
       .$connect()
       .then(() => console.log("[seeding]: db connection opened"));
-    const s: SeedPropsInferred<{props: typeof prisma}> = async (): Promise<SeedInferred> =>
+    const s: SeedPropsInferred<{
+      props: typeof prisma;
+    }> = async (): Promise<SeedInferred> =>
       await seed(prisma).then(data => {
         console.log(
           `[seeding]: success 🎉 created ${data.role} with id ${data.id} and email ${data.email} -- in country ${data.profile?.country} having phone number ${data.profile?.phoneNumber} -- gender: ${data.profile?.gender}; pronouns: ${data.profile?.pronouns} -- authored ${data.entries[0].title} having id ${data.entries[0].id}`

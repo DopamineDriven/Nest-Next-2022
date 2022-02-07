@@ -1,12 +1,26 @@
-import { HttpAdapterHost, NestFactory } from "@nestjs/core";
+import { HttpAdapterHost, NestContainer, NestFactory } from "@nestjs/core";
 import { AppModule, Context } from "./app.module";
-import { NestApplicationOptions, ValidationPipe } from "@nestjs/common";
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  NestApplicationOptions,
+  UseGuards,
+  ValidationPipe
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  DocumentBuilder,
+  SwaggerCustomOptions,
+  SwaggerDocumentOptions,
+  SwaggerModule
+} from "@nestjs/swagger";
 import {
   NestConfig,
   RedisConfig,
   PostgresConfig,
+  SecurityConfig,
   SwaggerConfig
 } from "./common/config/config-interfaces.config";
 import * as cookieParser from "cookie-parser";
@@ -18,6 +32,13 @@ import {
   MicroserviceOptions,
   CustomStrategy
 } from "@nestjs/microservices";
+import { PrismaModel } from "./.generated/prisma-class-generator";
+import { AuthGuard } from "./common/guards/gql-context.guard";
+// import { GqlExecutionContext } from "@nestjs/graphql";
+// import { ExecutionContextHost } from "@nestjs/core/helpers/execution-context-host";
+// import { PipesContextCreator } from "@nestjs/core/pipes/pipes-context-creator";
+// import { PrismaModule } from "./prisma";
+// import { UserModule } from "./user/user.module";
 
 // .gitignored logs output in root as api.log and error.log
 const logStream = fs.createWriteStream("api.log", {
@@ -93,17 +114,47 @@ async function bootstrap() {
   const nestConfig = configService.get<NestConfig>("nest");
   const redisConfig = configService.get<RedisConfig>("redis");
   const postgresConfig = configService.get<PostgresConfig>("postgres");
+  const securityConfig = configService.get<SecurityConfig>("security");
   const swaggerConfig = configService.get<SwaggerConfig>("swagger");
   const redisStrategy = configService.get<CustomStrategy>("customStrategy");
   if (swaggerConfig?.enabled) {
     const options = new DocumentBuilder()
       .setTitle(swaggerConfig.title || "Nestjs")
+      .addBearerAuth()
       .setDescription(swaggerConfig.description || "The nestjs API description")
       .setVersion(swaggerConfig.version || "1.0")
+      // .addServer(
+      //   "http://localhost:3000/graphql" ||
+      //     "http://[::1]/graphql" ||
+      //     "http://localhost:3040"
+      // )
       .build();
-    const document = SwaggerModule.createDocument(app, options);
 
-    SwaggerModule.setup(swaggerConfig.path || "api", app, document);
+    const docOptions: SwaggerDocumentOptions = {
+      operationIdFactory: (controllerKey: string, methodKey: string) =>
+        methodKey,
+      extraModels: [
+        PrismaModel.Account,
+        PrismaModel.Category,
+        PrismaModel.Comment,
+        PrismaModel.Connection,
+        PrismaModel.Entry,
+        PrismaModel.Profile,
+        PrismaModel.Session,
+        PrismaModel.User,
+        PrismaModel.VerificationToken
+      ]
+    };
+    const document = SwaggerModule.createDocument(app, options, {
+      ...docOptions
+    });
+    const customOptions: SwaggerCustomOptions = {
+      swaggerOptions: {
+        persistAuthorization: true
+      },
+      customSiteTitle: "Nest Next 2022"
+    };
+    SwaggerModule.setup("api", app, document, customOptions);
   }
   const prismaService: PrismaService = app.get<PrismaService>(PrismaService);
 
@@ -123,6 +174,8 @@ async function bootstrap() {
   // });
   // await app.startAllMicroservices();
   prismaService.enableShutdownHooks(app);
+  //  await app.create().useGlobalGuards(new AuthGuard())
+  // useGlobalPipes({ transform: new PipesContextCreator(new NestContainer().addModule({ PrismaModule }, { UserModule }, { AuthModule }).addInjectable(PrismaService)})
   await app
     .listen(process.env.PORT ?? nestConfig?.port ?? 3000)
     .then(async () => {

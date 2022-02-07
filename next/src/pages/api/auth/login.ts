@@ -8,8 +8,8 @@ import {
 import { getCookiesFromContext } from "@/lib/url";
 import { setCookies } from "cookies-next";
 const toBase64 = (string: string) => {
-  return Buffer.from(string).toString("base64url")
-}
+  return Buffer.from(string).toString("base64url");
+};
 export default async function login(
   req: NextApiRequest,
   res: NextApiResponse<{
@@ -20,8 +20,9 @@ export default async function login(
   const {
     query: { email, password }
   } = req;
-  const authHeader = req.headers.authorization?.split(/([ ])/)[1];
+  const authHeader = res.req.headers.authorization?.split(/([ ])/)[1];
   console.log(authHeader ?? "no auth header");
+  const header = res.getHeader("nest-next-2022") ?? "";
   try {
     const apolloClient = initializeApollo({}, req.query);
 
@@ -40,31 +41,31 @@ export default async function login(
         fetchPolicy: "network-only"
       });
     const cookies = getCookiesFromContext(req.cookies);
-    setCookies("nest-next-2022", data, {
+    setCookies("nest-next-2022", data?.login.accessToken, {
       req,
-      httpOnly: false,
-      encode: () => toBase64("nest-next-2022"),
+      // encode: () => toBase64("nest-next-2022"),
       res,
       maxAge: new Date(
-        new Date(Date.now()).getMilliseconds() + (1000 * 60 * 60 * 24 * 30)
+        new Date(Date.now()).getMilliseconds() + 1000 * 60 * 60 * 24 * 30
       ).getSeconds(),
       secure: process.env.NODE_ENV === "production" ? true : false,
       sameSite: "none",
       path: "/"
     });
+
     if (errors) throw errors.map(graphqlError => ({ ...graphqlError }));
-    return res
-      .setHeader(
-        "authorization",
-        `Bearer ${
-          data?.login.accessToken
-            ? data.login.accessToken.trim()
-            : authHeader
-        }`
-      )
-      .json({ data: data, cookies: cookies });
+    res.setHeader(
+      "nest-next-2022",
+      `Bearer ${data?.login.accessToken
+        ? data.login.accessToken.trim()
+        : authHeader
+      }`
+    );
+    res.send({ data: data, cookies: cookies });
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
+  } finally {
+    return res.end(header);
   }
 }

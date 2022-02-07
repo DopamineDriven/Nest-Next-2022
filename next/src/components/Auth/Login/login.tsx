@@ -72,7 +72,7 @@ export default function Login({
     }
     (function isLoggedIn() {
       return res.data?.data?.login.accessToken != null
-        ? res.data.data.login.accessToken && setAccessTokenVal(res.data.data.login.accessToken) && router.replace("/profile", {
+        ? res.data.data.login.accessToken && router.replace("/profile", {
           auth: `Bearer ${accessToken}`
         }): console.log(
             `Your session has ended or expired. Please Sign In.`

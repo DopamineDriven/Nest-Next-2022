@@ -1,6 +1,6 @@
-import Document, { Head, Html, Main, NextScript } from "next/document";
+import Document, { DocumentContext, DocumentInitialProps, Head, Html, Main, NextScript } from "next/document";
 
-class NestNext extends Document {
+class NestNext extends Document<DocumentContext & DocumentInitialProps> {
   render() {
     return (
       <Html lang='en'>

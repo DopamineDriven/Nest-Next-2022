@@ -4,8 +4,8 @@
 # import EntryPartial from "../fragments/entry-partial.graphql";
 # import UserPartial from "../fragments/user-partial.graphql";
 
-query allUsers($manyUsersPaginatedArgs: ManyUsersPaginatedArgs) {
-  listUsers(ManyUsersPaginatedArgs: $manyUsersPaginatedArgs) {
+query allUsers($findManyUsersPaginatedInput: FindManyUsersPaginatedInput) {
+  listUsers(findManyUsersPaginatedInput: $findManyUsersPaginatedInput) {
     ...UserConnectionPartial
     pageInfo {
       ...PageInfoPartial

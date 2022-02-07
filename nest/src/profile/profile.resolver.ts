@@ -18,6 +18,7 @@ import { ProfileOrderByWithRelationAndSearchRelevanceInput } from "../.generated
 import { ProfileConnection } from "./model/profile-connection.model";
 import { PaginationArgs } from "../common/pagination/pagination.args";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
+import {} from "@devoxa/prisma-relay-cursor-connection";
 import { User } from "../user/model/user.model";
 import { ProfileCreateWithoutUserInput } from "../.generated/prisma-nestjs-graphql/profile/inputs/profile-create-without-user.input";
 import { EnumGenderNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-gender-nullable-filter.input";
@@ -26,6 +27,7 @@ import { JsonNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/
 import { StringNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/string-nullable-filter.input";
 import { ProfilesInput } from "./inputs/profiles.input";
 import { ProfileCreateInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-create.input";
+import { FindManyProfilesPaginatedInput } from "./inputs/profile-paginated.input";
 const pubSub = new PubSub();
 @Resolver(() => Profile)
 export class ProfileResolver {
@@ -56,47 +58,41 @@ export class ProfileResolver {
   @UseGuards(GraphqlAuthGuard)
   @Mutation(() => Profile)
   async createProfile(
-    @Args("data", {type: () => ProfileCreateInput}) data: ProfileCreateInput,
-    @Args("userId", {type: () => String}) userId: string
-  ): Promise<Profile & {user: User}> {
+    @Args("data", { type: () => ProfileCreateInput }) data: ProfileCreateInput,
+    @Args("userId", { type: () => String }) userId: string
+  ): Promise<Profile & { user: User }> {
     const newProfile = await this.profileService.createProfile(data, userId);
     pubSub.publish("profileCreated", { profileCreated: newProfile });
     return newProfile;
   }
 
-  @Query(() => ProfileConnection)
-  async getProfiles(
-    @Args() { after, before, first, last }: PaginationArgs,
-    @Args({
-      name: "query",
-      type: () => String,
-      nullable: true
-    })
-    query: string,
-    @Args({
-      name: "orderBy",
-      type: () => ProfileOrderByWithRelationAndSearchRelevanceInput,
-      nullable: true
-    })
-    orderBy: ProfileOrderByWithRelationAndSearchRelevanceInput
+  @Query(() => ProfileConnection, { name: "listProfiles" })
+  async listProfiles(
+    @Args("findManyProfilesPaginatedInput", { type: () => FindManyProfilesPaginatedInput })
+    findManyProfiles: FindManyProfilesPaginatedInput
   ) {
+
     const edgingThoseProfiles = await findManyCursorConnection(
       args =>
         this.prisma.profile.findMany({
           include: { user: true },
-          where: {
-            dob: { contains: query || "" }
-          },
-          orderBy: orderBy?._relevance?.fields ? { ...orderBy } : undefined,
+          skip: findManyProfiles.skip,
+          take: findManyProfiles.take,
+          distinct: findManyProfiles.distinct,
+          where: findManyProfiles.where,
+          orderBy: findManyProfiles.orderBy,
           ...args
         }),
       () =>
         this.prisma.profile.count({
-          where: {
-            dob: { contains: query || "" }
-          }
+          where: findManyProfiles.where
         }),
-      { first, last, before, after }
+      {
+        first: findManyProfiles.pagination.first ?? 10,
+        last: findManyProfiles.pagination.last,
+        before: findManyProfiles.pagination.before,
+        after: findManyProfiles.pagination.after
+      }
     );
     return edgingThoseProfiles;
   }
@@ -106,9 +102,9 @@ export class ProfileResolver {
     @Args("profilesArgs", { type: () => ProfilesInput })
     profilesArgs: ProfilesInput
   ): Promise<ProfileConnection> {
-    const getProfiles = await this.profileService.prismaProfiles(
-      this.prisma["profile"]
-    ).then(async (val) => await (val.Profiles({...profilesArgs})));
+    const getProfiles = await this.profileService
+      .prismaProfiles(this.prisma["profile"])
+      .then(async val => await val.Profiles({ ...profilesArgs }));
     return getProfiles;
   }
 

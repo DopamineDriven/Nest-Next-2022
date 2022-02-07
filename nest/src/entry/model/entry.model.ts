@@ -3,6 +3,8 @@ import { Comment } from "../../comment/model/comment.model";
 import { User } from "../../user/model/user.model";
 import { EntryCount } from "../../.generated/prisma-nestjs-graphql/entry/outputs/entry-count.output";
 import { Category } from "../../category/model/category.model";
+import { JSONResolver } from "graphql-scalars";
+import GraphQLJSON from "graphql-type-json";
 
 @ObjectType("Entry")
 export class Entry {
@@ -18,8 +20,8 @@ export class Entry {
   @Field(() => String, { nullable: false })
   authorId!: string;
 
-  @Field(() => String, { nullable: true })
-  content?: string | null;
+  @Field(() => [GraphQLJSON], { nullable: true })
+  content!: Array<typeof GraphQLJSON>;
 
   @Field(() => Date, { nullable: false })
   createdAt!: Date;
@@ -42,6 +44,9 @@ export class Entry {
   @Field(() => String, { nullable: true })
   categoryId?: string | null;
 
-  @Field(() => EntryCount, { nullable: false })
+  @Field(() => EntryCount, {
+    nullable: false,
+    defaultValue: { categories: 0, comments: 0 }
+  })
   _count!: EntryCount;
 }

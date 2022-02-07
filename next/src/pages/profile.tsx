@@ -44,6 +44,7 @@ import {
   Role,
   SortOrder,
   UserOrderByRelevanceFieldEnum,
+  UserScalarFieldEnum,
   UserStatus,
   Viewer
 } from "../.cache/__types__";
@@ -69,7 +70,6 @@ import {
   ApolloErrorComponent
 } from "@/components/UI";
 import { storeKeyNameFromField } from "@apollo/client/utilities";
-
 
 type ProfileProps = {
   apolloCache: NormalizedCacheObject;
@@ -169,7 +169,7 @@ export default function Profile<T extends typeof getServerSideProps>({
   //   );
   // };
   const crm = getCookie("nest-next-2022");
-  console.log(crm ?? "no cookie")
+  console.log(crm ?? "no cookie");
   const router = useRouter();
   return (
     // <SWRConfig value={fallback}>
@@ -209,22 +209,23 @@ export const getServerSideProps = async (
   ctx: GetServerSidePropsContext<ParsedUrlQuery>
 ): Promise<GetServerSidePropsResult<ProfileProps>> => {
   const allUsersQueryVars: AllUsersQueryVariables = {
-    manyUsersPaginatedArgs: {
-      emailFilter: { contains: "" },
-      roles: {
-        in: [Role.Admin, Role.Maintainer, Role.Superadmin, Role.User]
+    findManyUsersPaginatedInput: {
+      pagination: { first: 10 },
+      // distinct: [UserScalarFieldEnum.Email, UserScalarFieldEnum.],
+      where: {
+        email: { contains: "" },
+        role: {
+          in: [Role.Admin, Role.Maintainer, Role.Superadmin, Role.User]
+        },
+        status: {
+          in: [
+            UserStatus.Online,
+            UserStatus.Offline,
+            UserStatus.Deactivated
+          ]
+        }
       },
-      firstNameFilter: {
-        contains: ""
-      },
-      lastNameFilter: {
-        contains: ""
-      },
-      paginationArgs: { first: 10 },
-      userStatus: {
-        in: [UserStatus.Online, UserStatus.Offline, UserStatus.Deactivated]
-      },
-      orderByRelevance: [
+      orderBy: [
         { firstName: SortOrder.Asc },
         {
           _relevance: {
@@ -242,7 +243,10 @@ export const getServerSideProps = async (
     ctx.req,
     ctx.res
   );
- const allUsers = await apolloClient.query<AllUsersQuery, AllUsersQueryVariables>({
+  const allUsers = await apolloClient.query<
+    AllUsersQuery,
+    AllUsersQueryVariables
+  >({
     query: AllUsersDocument,
     fetchPolicy: "cache-first",
     variables: allUsersQueryVars,
