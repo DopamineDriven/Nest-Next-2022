@@ -79,7 +79,7 @@ export default function Login({
   //         )
   //   })();
   // }, [status, router, setAccessTokenVal, accessToken, accessTokenVal, res.data?.data?.login.accessToken]);
-console.log(        document.cookie.valueOf())
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const variables = new FormData(event.currentTarget);

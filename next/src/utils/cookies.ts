@@ -6,8 +6,8 @@ import { NextApiRequestCookies } from "next/dist/server/api-utils";
  * This sets `cookie` on `res` object
  */
 
-export const setCookie = (
-  res: NextApiResponse,
+export const setCookie = <T = unknown extends infer U ? U : unknown>(
+  res: NextApiResponse<T>,
   name: string,
   value: unknown,
   options: CookieSerializeOptions = {}

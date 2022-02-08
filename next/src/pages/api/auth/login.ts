@@ -56,16 +56,17 @@ export default async function login(
     if (errors) throw errors.map(graphqlError => ({ ...graphqlError }));
     res.setHeader(
       "nest-next-2022",
-      `Bearer ${data?.login.accessToken
-        ? data.login.accessToken.trim()
-        : authHeader
+      `Bearer ${
+        data?.login.accessToken
+          ? data.login.accessToken.trim()
+          : authHeader
       }`
     );
-    res.send({ data: data, cookies: cookies });
+    res.status(201).send({ data: data, cookies: cookies });
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
   } finally {
-    return res.end(header);
+    return res.end(header, () => {});
   }
 }

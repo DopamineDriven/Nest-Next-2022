@@ -1,6 +1,11 @@
 import Document, { DocumentContext, DocumentInitialProps, Head, Html, Main, NextScript } from "next/document";
 
-class NestNext extends Document<DocumentContext & DocumentInitialProps> {
+export default class NestNext extends Document {
+  static async getInitialProps(ctx: DocumentContext) {
+    const initialProps = await Document.getInitialProps(ctx);
+
+    return { ...initialProps };
+  }
   render() {
     return (
       <Html lang='en'>
@@ -15,9 +20,9 @@ class NestNext extends Document<DocumentContext & DocumentInitialProps> {
           <link href='/_meta/favicon.ico' rel='shortcut icon' />
           <link href='/_meta/site.webmanifest' rel='manifest' />
           <link
-            rel='apple-touch-icon'
+            rel='apple-icon-precomposed'
             sizes='180x180'
-            href='/_meta/apple-touch-icon.png'
+            href='/_meta/apple-icon-precomposed.png'
           />
           <link
             rel='icon'
@@ -40,7 +45,7 @@ class NestNext extends Document<DocumentContext & DocumentInitialProps> {
           <meta name='theme-color' content='#ffffff' />
           <meta name='msapplication-config' content='/_meta/browserconfig.xml' />
         </Head>
-        <body className='loading'>
+        <body>
           <Main />
           <NextScript />
         </body>
@@ -49,4 +54,4 @@ class NestNext extends Document<DocumentContext & DocumentInitialProps> {
   }
 }
 
-export default NestNext;
+
