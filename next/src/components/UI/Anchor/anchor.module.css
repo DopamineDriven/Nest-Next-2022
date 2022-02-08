@@ -11,11 +11,11 @@
 }
 
 .root *:matches([type='active'], [type='data-active']) {
-  @apply hover:bg-cortinaBG;
+  @apply hover:bg-basicallyBlack;
 }
 
 .loading {
-  @apply bg-current text-blue-600 border-cortinaBG cursor-not-allowed;
+  @apply bg-current text-blue-600 border-basicallyBlack cursor-not-allowed;
 }
 
 .slim {
@@ -24,7 +24,7 @@
 
 .disabled,
 .disabled:hover {
-  @apply text-blue-800 border-cortinaBG bg-current bg-opacity-90 cursor-not-allowed;
+  @apply text-blue-800 border-basicallyBlack bg-current bg-opacity-90 cursor-not-allowed;
   filter: grayscale(1);
   -webkit-transform: translateZ(0);
   -webkit-perspective: 1000;

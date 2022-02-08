@@ -1,5 +1,5 @@
 .root {
-  @apply relative font-sans px-3 pl-7 py-2 appearance-none w-full transform-gpu
+  @apply relative font-interVar px-3 pl-7 py-2 appearance-none w-full transform-gpu
   duration-150 ease-linear pr-10 bg-opacity-50 text-[#424242]
   bg-stone-50 text-[0.5rem] 5xs:text-[0.575rem] 4xs:text-[0.65rem]
   3xs:text-[0.7rem] 2xs:text-[0.8rem] sm:text-[1.5rem] leading-[2.15rem] tracking-[0.18rem] font-normal;

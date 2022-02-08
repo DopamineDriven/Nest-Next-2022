@@ -1540,6 +1540,8 @@ export abstract class IMutation {
     abstract signin(): AuthDetailed | Promise<AuthDetailed>;
 
     abstract signup(data: SignupInput): Token | Promise<Token>;
+
+    abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
 }
 
 export class PageInfo {

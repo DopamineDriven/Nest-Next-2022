@@ -21,6 +21,7 @@ import { SecurityConfig } from "../common/config/config-interfaces.config";
 // import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
 import { LoginInput } from "./inputs";
 import { Serializer } from "src/common/types/json.type";
+import crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -69,7 +70,6 @@ export class AuthService {
   }
 
   async getUserWithDecodedToken(token: string): Promise<AuthDetailed> {
-    console.log(token ?? "");
     const id = this.jwtService.decode(token, {
       complete: true
     }) as JwtDecoded;
@@ -78,16 +78,49 @@ export class AuthService {
       userId: id.payload.userId
     });
     const prismaTransaction = await this.prismaService.$transaction(
-      async prisma => {
+      async (prisma = this.prismaService) => {
         const userUpdate = await prisma.user.update({
           where: { id: id.payload.userId },
-          include: {_count: true},
+          include: { _count: true },
           data: {
-            status: "ONLINE",
-            updatedAt: new Date(Date.now()),
+            status: { set: "ONLINE" },
+            updatedAt: { set: new Date(Date.now()) },
             sessions: {
-              connectOrCreate: [
+              upsert: [
                 {
+                  update: {
+                    accessToken: accessToken,
+                    alg: { set: id.header.alg },
+                    exp: {
+                      set: id.payload.exp
+                    },
+                    iat: {
+                      set: id.payload.iat
+                    },
+                    refreshToken: { set: refreshToken },
+                    signature: { set: id.signature },
+                    provider: {
+                      set: id.header.typ
+                    },
+                    lastVerified: { set: new Date(Date.now()) },
+                    scopes: {
+                      set:
+                        user?.role === "SUPERADMIN"
+                          ? [
+                              "read",
+                              "write",
+                              "edit",
+                              "administer",
+                              "impersonate"
+                            ]
+                          : user?.role === "ADMIN"
+                          ? ["read", "write", "edit", "administer"]
+                          : user?.role === "MAINTAINER"
+                          ? ["read", "write", "edit"]
+                          : ["read", "write"]
+                    },
+                    tokenState: { set: "valid" }
+                  },
                   where: { userId: id.payload.userId },
                   create: {
                     accessToken: accessToken,
@@ -109,12 +142,37 @@ export class AuthService {
                     tokenState: "valid"
                   }
                 }
-              ]
+              ],
+              // connectOrCreate: [
+              //   {
+              //     where: { userId: id.payload.userId },
+              //     create: {
+              //       accessToken: accessToken,
+              //       alg: id.header.alg,
+              //       exp: id.payload.exp,
+              //       iat: id.payload.iat,
+              //       refreshToken: refreshToken,
+              //       signature: id.signature,
+              //       provider: id.header.typ,
+              //       lastVerified: new Date(Date.now()),
+              //       scopes:
+              //         user?.role === "SUPERADMIN"
+              //           ? ["read", "write", "edit", "administer", "impersonate"]
+              //           : user?.role === "ADMIN"
+              //           ? ["read", "write", "edit", "administer"]
+              //           : user?.role === "MAINTAINER"
+              //           ? ["read", "write", "edit"]
+              //           : ["read", "write"],
+              //       tokenState: "valid"
+              //     }
+              //   }
+              // ]
             }
           }
         });
         const findSesh = await prisma.session.findFirst({
           where: { userId: id.payload.userId },
+
           orderBy: { lastVerified: "asc" }
         });
         return { user: userUpdate, session: findSesh };
@@ -169,7 +227,8 @@ export class AuthService {
     );
 
     const userInfo = await this.prismaService.user.update({
-      where: { id: auth.user?.id ? auth.user.id : "" }, include: {_count: true},
+      where: { id: auth.user?.id ? auth.user.id : "" },
+      include: { _count: true },
       data: {
         updatedAt: new Date(Date.now()),
         status: "ONLINE",
@@ -232,7 +291,7 @@ export class AuthService {
 
   async validateUser(userId: string | null): Promise<User | null> {
     return await this.prismaService.user.findUnique({
-      include: {_count: true},
+      include: { _count: true },
       where: { id: userId ? userId : "" }
     });
   }
@@ -257,12 +316,12 @@ export class AuthService {
 
   getUserFromToken(token: string): Promise<User | null> {
     console.log(token ?? "");
-    
+
     const id = this.jwtService.decode(token, {
       complete: true
     }) as JwtDecoded;
     return this.prismaService.user.findUnique({
-      include: {_count: true},
+      include: { _count: true },
       where: { id: id.payload.userId }
     });
   }

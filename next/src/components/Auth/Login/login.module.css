@@ -1,5 +1,5 @@
 .root {
-  @apply bg-white transition-transform transform-gpu font-sans bg-opacity-100 max-w-10xl mx-auto;
+  @apply bg-white transition-transform transform-gpu font-interVar bg-opacity-100 max-w-10xl mx-auto;
 }
 
 .stickyNav {

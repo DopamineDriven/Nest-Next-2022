@@ -6,7 +6,6 @@ import {
   Param,
   Request,
   Body,
-  Response,
   Inject,
   SetMetadata,
   ExecutionContext
@@ -15,7 +14,8 @@ import { AuthService } from "./auth-jwt.service";
 import { JwtService } from "@nestjs/jwt";
 import {
   Response as ExpressResponse,
-  Request as ExpressRequest
+  Request as ExpressRequest,
+  Response
 } from "express";
 import { JwtDecoded } from "./dto/jwt-decoded.dto";
 import { LoginInput } from "./inputs/login.input";
@@ -60,7 +60,7 @@ export default class AuthJwtController {
   @Post("/login")
   async login(
     @Req() request: ExpressRequest,
-    @Res() response: ExpressResponse
+    @Res({ passthrough: true }) response: ExpressResponse
   ) {
     const payload = this.jwtService.decode(
       request.headers.authorization ? request.headers.authorization : ""
@@ -89,22 +89,13 @@ export default class AuthJwtController {
   // }
 
   @ApiBearerAuth("authorization")
-  @ApiHeader({ name: "authorization", allowEmptyValue: true, allowReserved: true })
-  @Post("signin")
+  @Post("signin/:credentials")
   async signin(
     @Request() req: ExpressRequest,
     @Body() credentials: SignInSwaggerDto,
-    @Res({passthrough: true}) res: ExpressResponse
+    @Res({ passthrough: true }) res: ExpressResponse
     // @Ctx() ctx: GqlExecutionContext | ExecutionContext
   ) {
-    const xForwardedFor = req.header("X-Forwarded-For")?.split(/([,])/)[0]; // returns non-proxied client IP
-    console.log("client IP: " + xForwardedFor ?? "no ip");
-    const getAccessToken = req.headers.authorization;
-    console.log(
-      getAccessToken
-        ? getAccessToken + "from the auth swagger controller"
-        : "no access token in signIn, auth swagger controller"
-    );
     try {
       const { auth, jwt } = await this.authService.signIn({
         email: credentials.email,
@@ -127,5 +118,27 @@ export default class AuthJwtController {
     } catch (error) {
       throw error;
     }
+  }
+
+  @Post("token/:token")
+  async getUserFromDecodedAccessToken(
+    @Param("token") token: string,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    const userFromToken = await this.authService.getUserWithDecodedToken(token);
+    if (userFromToken != null)
+      res.setHeader(
+        "authorization",
+        `Bearer ${userFromToken.auth.accessToken}`
+      );
+    res.cookie("nest-2022", userFromToken, {
+      sameSite: "none",
+      path: "/",
+      maxAge: new Date(Date.now()).getMilliseconds() + 30 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      httpOnly: false,
+      encode: ((val: string) => encodeURIComponent(val))
+    });
+    return userFromToken;
   }
 }

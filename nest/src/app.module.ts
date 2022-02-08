@@ -219,7 +219,7 @@ export type Context<
             // console.log(token ? getUserFromToken(token) ?? "emptystring" : "no token")
             if (ctx.token != null && ctx.token.length > 0) {
               res.setHeader("authorization", `Bearer ${token}`)
-              
+
               return { ...ctx };
             } else {
               return { ...ctx };

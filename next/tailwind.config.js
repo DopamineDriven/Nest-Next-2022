@@ -1,5 +1,3 @@
-const defaultTheme = require("tailwindcss/defaultTheme");
-
 module.exports = {
   content: {
     files: [
@@ -34,14 +32,11 @@ module.exports = {
         "6xl": "2780px"
       },
       fontFamily: {
-        sans: ["Inter", ...defaultTheme.fontFamily.sans]
+        interVar: ["Inter"]
       },
       colors: {
-        cortinaLogo: "#2063D8",
-        cortinaRed: "#FF4500",
-        cortinaNav: "#1A1A1B",
-        cortinaSearch: "#272729",
-        cortinaBG: "#141415",
+        iconGray: "#272729",
+        basicallyBlack: "#141415",
         pencilPurple: "#3B2DB0"
       },
       keyframes: {

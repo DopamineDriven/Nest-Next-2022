@@ -94,7 +94,7 @@ type ProfileProps = {
 // }> = ({ viewer, allUsers, fallback, err, children }) => {
 //   const { data, error } = useSWR("/api/viewer/me", viewerFetcher);
 //   return (
-//     <div className='font-sans text-3xl bg-gradient-to-tl from-[#133050] via-[#133350] to-black text-black font-bold min-w-full text-center  tracking-wide fit'>
+//     <div className='font-interVar text-3xl bg-gradient-to-tl from-[#133050] via-[#133350] to-black text-black font-bold min-w-full text-center  tracking-wide fit'>
 //       {error ? (
 //         <ApolloErrorComponent {...err}>{children}</ApolloErrorComponent>
 //       ) : (

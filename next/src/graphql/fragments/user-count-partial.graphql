@@ -1,0 +1,9 @@
+fragment UserCountPartial on UserCount {
+  accounts
+  categories
+  comments
+  connections
+  entries
+  sessions
+  __typename
+}

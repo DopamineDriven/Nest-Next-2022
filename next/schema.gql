@@ -893,6 +893,7 @@ type Mutation {
   register(dataRegister: SignupInput!): AuthSansSession!
   signin: AuthDetailed!
   signup(data: SignupInput!): Token!
+  userFromAccessTokenDecoded(token: String!): AuthDetailed!
 }
 
 input NestedBoolFilter {
