@@ -1,19 +1,5 @@
-
-
 fragment JwtHeadersPartial on JwtHeaders {
   alg
   typ
-  __typename
-}
-
-fragment JwtPayloadPartial on JwtPayload {
-  exp
-  iat
-  userId
-  __typename
-}
-
-fragment JwtDecodedPartial on JwtDecoded {
-  signature
   __typename
 }

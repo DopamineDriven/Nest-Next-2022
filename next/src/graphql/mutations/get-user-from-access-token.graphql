@@ -1,0 +1,34 @@
+# import UserCountPartial from "../fragments/user-count-partial.graphql";
+# import SessionPartial from "../fragments/session-partial.graphql";
+# import AuthPartial from "../fragments/auth-partial.graphql";
+# import UserPartial from "../fragments/user-partial.graphql";
+# import JwtHeadersPartial from "../fragments/jwt-header-partial.graphql";
+# import JwtPayloadPartial from "../fragments/jwt-payload-partial.graphql";
+# import JwtDecodedPartial from "../fragments/jwt-decoded-partial.graphql";
+
+mutation deriveUserDetailsFromToken($token: String!) {
+  userFromAccessTokenDecoded(token: $token) {
+    __typename
+    auth {
+      session {
+        ...SessionPartial
+      }
+      user {
+        _count {
+          ...UserCountPartial
+        }
+        ...UserPartial
+      }
+      ...AuthPartial
+    }
+    jwt {
+      header {
+        ...JwtHeadersPartial
+      }
+      payload {
+        ...JwtPayloadPartial
+      }
+      ...JwtDecodedPartial
+    }
+  }
+}

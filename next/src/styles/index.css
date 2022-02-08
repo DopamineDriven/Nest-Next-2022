@@ -199,7 +199,7 @@
     }
   }
   .landing-page-pagination-btn {
-    @apply sm:m-3 m-4 relative inline-flex items-center px-4 py-2 border-blue-800 text-sm font-medium rounded-md text-gray-50 bg-cortinaBG hover:bg-cortinaSearch;
+    @apply sm:m-3 m-4 relative inline-flex items-center px-4 py-2 border-blue-800 text-sm font-medium rounded-md text-gray-50 bg-basicallyBlack hover:bg-iconGray;
   }
 
   .tooltip {
@@ -350,7 +350,7 @@
 }
 
 .wp-block-verse {
-  @apply font-sans;
+  @apply font-interVar;
 }
 
 .wp-block-media-text {

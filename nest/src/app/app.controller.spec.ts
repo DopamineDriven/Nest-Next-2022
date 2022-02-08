@@ -17,14 +17,8 @@ describe("AppController", () => {
   });
 
   describe("root", () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe("Hello World!");
-    });
-  });
-  describe("hello/:name", () => {
-    it('should return "Hello ${name}!"', () => {
-      const name = chance.name();
-      expect(appController.getHelloName(name)).toBe(`Hello ${name}!`);
+    it('should return '+`${new Date(Date.now()).toISOString().split(/([T])/)[0]}`, () => {
+      expect(appController.getRedisPing()).toBe( `${new Date(Date.now()).toISOString().split(/([T])/)[0]}`);
     });
   });
 });

@@ -37,6 +37,6 @@ import AuthJwtController from "./auth-jwt.controller";
     GraphqlAuthGuard
   ],
   controllers: [AuthJwtController],
-  exports: [GraphqlAuthGuard, AuthService]
+  exports: [GraphqlAuthGuard, AuthService, JwtModule]
 })
 export class AuthModule {}

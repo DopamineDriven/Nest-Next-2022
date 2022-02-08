@@ -13,6 +13,7 @@ import { GitHub, Google } from "@/components/Icons";
 // } from "@/graphql/Mutations/user-create.graphql";
 import { useRouter } from "next/router";
 import { blurDataURLShimmer } from "@/lib/shimmer";
+import { RegisterMutation, RegisterMutationOptions } from "@/graphql/mutations/register.graphql";
 
 export default function Register() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export default function Register() {
                 <TypeScript className={`${css.logo}`} />
               </Anchor>
             </Link>
-            <h2 className='mt-6 text-3xl font-extrabold font-sans text-gray-900'>
+            <h2 className='mt-6 text-3xl font-extrabold font-interVar text-gray-900'>
               Sign in to your account
             </h2>
           </div>

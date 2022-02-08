@@ -1,6 +1,12 @@
 import "../styles/index.css";
 
-import React, { useEffect, FC, ReactElement } from "react";
+import React, {
+  useEffect,
+  FC,
+  ReactElement,
+  useCallback,
+  useState
+} from "react";
 import App, {
   NextWebVitalsMetric,
   AppProps,
@@ -8,17 +14,33 @@ import App, {
   AppContext
 } from "next/app";
 import { initializeApollo, useApollo } from "@/apollo/apollo";
-import { ApolloProvider } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloProvider,
+  NormalizedCacheObject
+} from "@apollo/client";
 import { useRouter } from "next/router";
 import Router from "next/dist/server/router";
 import { NextPageContext } from "next";
 import { request } from "http";
 import { getCookie } from "cookies-next";
 import { getCookieParser } from "next/dist/server/api-utils";
+import Link, { LinkProps } from "next/link";
+import NextNodeServer from "next/dist/server/next-server";
+import { BaseRouter } from "next/dist/shared/lib/router/router";
+import { error } from "console";
 
 const Noop: FC<{}> = ({ children }) => <>{children}</>;
 const envVars = {
   facebookId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID ?? ""
+};
+
+type LinkPropsMapped<T extends keyof LinkProps> = {
+  [P in T]: LinkProps[P];
+};
+
+type RouterPropsMapped<K extends keyof ReturnType<typeof useRouter>> = {
+  [L in K]: ReturnType<typeof useRouter>[L];
 };
 
 export default function NestNextApp<T extends AppProps>({
@@ -26,17 +48,53 @@ export default function NestNextApp<T extends AppProps>({
   Component
 }: T): ReactElement {
   const LayoutNoop = (Component as any).LayoutNoop || Noop;
-  // const cookieAuth =
-  //   document.cookie && document.cookie.includes("nest-next-2022")
-  //     ? decodeURIComponent(document.cookie)
-  //     : getCookie("nest-next-2022")?.toString();
-
   const apolloClient = useApollo(
     pageProps.initialApolloState ?? null,
     pageProps.resolverContext ?? {}
-  );
-
+  ) as ApolloClient<NormalizedCacheObject>;
   const router = useRouter();
+
+  // useEffect(() => {
+  //   const isProd = process.env.NODE_ENV === "production";
+  //   const handleRouteChange = <
+  //     T extends RouterPropsMapped<"events">,
+  //     P extends URL,
+  //     S extends LinkPropsMapped<"shallow">
+  //   >(
+  //     events: T,
+  //     url: P,
+  //     shallow: S
+  //   ) => {
+  //     !isProd
+  //       ? console.log(
+  //           `App is changing to ${url} ${
+  //             shallow ? "with" : "without"
+  //           } shallow routing with query: ${Object.values(router.query).join(", \n")}`
+  //         )
+  //       : () => {
+  //           events.events.emit("routeChangeError");
+  //         };
+  //   };
+  //   router.events.on(
+  //     "routeChangeStart",
+  //     (
+  //       events: RouterPropsMapped<"events">,
+  //       url: URL,
+  //       shallow: LinkPropsMapped<"shallow">
+  //     ) => handleRouteChange(events, url, shallow)
+  //   );
+  //   return () => {
+  //     router.events.off(
+  //       "routeChangeComplete",
+  //       (
+  //         events: RouterPropsMapped<"events">,
+  //         url: URL,
+  //         shallow: LinkPropsMapped<"shallow">
+  //       ) => handleRouteChange(events, url, shallow)
+  //     );
+  //   };
+  // }, [router.events, router.query]);
+
   useEffect(() => {
     // getCookie("nest-next-2022") ? router.replace(window.location.href, { auth: cookieAuth }) : document.cookie;
     document?.body?.classList?.remove("loading");

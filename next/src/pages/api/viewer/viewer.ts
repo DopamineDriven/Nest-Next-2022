@@ -38,17 +38,16 @@ export default async function api(
   console.log(req.headers ?? "no forwarded");
   const apolloClient = initializeApollo({}, { req, res });
   try {
-    const { data, errors } =
-    await apolloClient.query<
-    ViewerQuery,
-    ViewerQueryVariables
-  >({
-    query: ViewerDocument,
-    context: { req, res },
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: "network-only",
-    errorPolicy: "all" as RequireOnlyOne<ErrorPolicy>
-  });
+    const { data, errors } = await apolloClient.query<
+      ViewerQuery,
+      ViewerQueryVariables
+    >({
+      query: ViewerDocument,
+      context: { req, res },
+      notifyOnNetworkStatusChange: true,
+      fetchPolicy: "network-only",
+      errorPolicy: "all" as RequireOnlyOne<ErrorPolicy>
+    });
     const setAuthHeader = res.setHeader(
       "authorization",
       `Bearer ${data.me.auth?.accessToken}`
@@ -65,18 +64,19 @@ export default async function api(
         errorPolicy: "all" as RequireOnlyOne<ErrorPolicy>
       });
 
-      return dataActiveViewer.data != null
-        ? (() =>
+      dataActiveViewer.data != null
+        ? () =>
             setCookies("nest-next-2022", dataActiveViewer, {
               req,
               res,
               secure: process.env.NODE_ENV === "production" ? true : false,
               sameSite: "none",
               path: "/"
-            }))
-          ? res.status(204).json(dataActiveViewer.data)
-          : console.error(`no data to send ${dataActiveViewer.data}`)
-        : console.error("no cookies set");
+            })
+        : () => {};
+      return dataActiveViewer
+        ? res.status(204).send(dataActiveViewer.data)
+        : console.error(`no data to send ${new Error("no data").message}`);
     }
   } catch (error) {
     throw new Error(

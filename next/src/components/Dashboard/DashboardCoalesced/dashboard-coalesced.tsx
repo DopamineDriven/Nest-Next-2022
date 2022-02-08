@@ -91,7 +91,7 @@ export default function Example() {
 
   return (
     <>
-      <div className='min-h-full flex font-sans max-w-[2870px] mx-auto'>
+      <div className='min-h-full flex font-interVar max-w-[2870px] mx-auto'>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as='div'

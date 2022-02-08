@@ -65,21 +65,21 @@ export default function Login({
 
   const router = useRouter();
 
-  useEffect(() => {
-    setAccessTokenVal(res.data?.data?.login.accessToken ? res.data.data.login.accessToken : undefined)
-    if (accessToken != null && accessTokenVal != null && accessToken.length > 0) {
-      return setAccessTokenVal(accessToken)
-    }
-    (function isLoggedIn() {
-      return res.data?.data?.login.accessToken != null
-        ? res.data.data.login.accessToken && router.replace("/profile", {
-          auth: `Bearer ${accessToken}`
-        }): console.log(
-            `Your session has ended or expired. Please Sign In.`
-          )
-    })();
-  }, [status, router, setAccessTokenVal, accessToken, accessTokenVal, res.data?.data?.login.accessToken]);
-
+  // useEffect(() => {
+  //   setAccessTokenVal(res.data?.data?.login.accessToken ? res.data.data.login.accessToken : undefined)
+  //   if (accessToken != null && accessTokenVal != null && accessToken.length > 0) {
+  //     return setAccessTokenVal(accessToken)
+  //   }
+  //   (function isLoggedIn() {
+  //     return res.data?.data?.login.accessToken != null
+  //       ? res.data.data.login.accessToken && router.replace("/profile", {
+  //         auth: `Bearer ${accessToken}`
+  //       }): console.log(
+  //           `Your session has ended or expired. Please Sign In.`
+  //         )
+  //   })();
+  // }, [status, router, setAccessTokenVal, accessToken, accessTokenVal, res.data?.data?.login.accessToken]);
+console.log(        document.cookie.valueOf())
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const variables = new FormData(event.currentTarget);
