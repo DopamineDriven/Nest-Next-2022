@@ -7,12 +7,33 @@ Project "2022 Nesting" {
   Note: ''
 }
 
+Table MediaItem {
+  id String [pk]
+  userId String [not null]
+  uploadedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime
+  user User [not null]
+  name String
+  size String
+  type MimeTypes
+  fileLastModified DateTime
+  width Float
+  height Float
+  quality Int
+  src String
+  srcSet String
+
+  indexes {
+    (name, userId) [unique]
+  }
+}
+
 Table User {
   id String [pk]
   firstName String
   lastName String
   email String [unique, not null]
-  image String
+  image Json [not null]
   role Role [default: 'USER']
   status UserStatus [default: 'OFFLINE']
   password String [not null, default: '']
@@ -26,6 +47,7 @@ Table User {
   categories Category [not null]
   comments Comment [not null]
   sessions Session [not null]
+  mediaItems MediaItem [not null]
 }
 
 Table Profile {
@@ -34,7 +56,7 @@ Table Profile {
   memberSince DateTime [default: `now()`, not null]
   gender Gender [default: 'OTHER']
   pronouns Pronouns [default: 'NOT_LISTED']
-  coverPhoto String
+  coverPhoto Json [not null]
   lastSeen DateTime
   dob String
   phoneNumber String
@@ -74,6 +96,10 @@ Table Comment {
   reactions CommentReactions [not null]
   entry Entry [not null]
   author User [not null]
+
+  indexes {
+    (authorId, entryId) [unique]
+  }
 }
 
 Table Connection {
@@ -96,7 +122,7 @@ Table Entry {
   content Json [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime
-  featuredImage String
+  featuredImage Json [not null]
   categories Category [not null]
   author User [not null]
   comments Comment [not null]
@@ -194,6 +220,19 @@ Enum UserStatus {
   BANNED
   DEACTIVATED
 }
+
+Enum MimeTypes {
+  GIF
+  JPEG
+  WEBP
+  AVIF
+  PNG
+  SVG
+  TIFF
+  BMP
+}
+
+Ref: MediaItem.userId > User.id [delete: Cascade]
 
 Ref: Profile.userId - User.id [delete: Cascade]
 

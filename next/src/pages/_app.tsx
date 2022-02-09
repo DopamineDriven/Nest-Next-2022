@@ -1,4 +1,4 @@
-import "../styles/index.css";
+import "@/styles/index.css";
 
 import React, {
   useEffect,
@@ -50,50 +50,50 @@ export default function NestNextApp<T extends AppProps>({
   const LayoutNoop = (Component as any).LayoutNoop || Noop;
   const apolloClient = useApollo(
     pageProps.initialApolloState ?? null,
-    pageProps.resolverContext ?? {}
+   {}
   ) as ApolloClient<NormalizedCacheObject>;
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const isProd = process.env.NODE_ENV === "production";
-  //   const handleRouteChange = <
-  //     T extends RouterPropsMapped<"events">,
-  //     P extends URL,
-  //     S extends LinkPropsMapped<"shallow">
-  //   >(
-  //     events: T,
-  //     url: P,
-  //     shallow: S
-  //   ) => {
-  //     !isProd
-  //       ? console.log(
-  //           `App is changing to ${url} ${
-  //             shallow ? "with" : "without"
-  //           } shallow routing with query: ${Object.values(router.query).join(", \n")}`
-  //         )
-  //       : () => {
-  //           events.events.emit("routeChangeError");
-  //         };
-  //   };
-  //   router.events.on(
-  //     "routeChangeStart",
-  //     (
-  //       events: RouterPropsMapped<"events">,
-  //       url: URL,
-  //       shallow: LinkPropsMapped<"shallow">
-  //     ) => handleRouteChange(events, url, shallow)
-  //   );
-  //   return () => {
-  //     router.events.off(
-  //       "routeChangeComplete",
-  //       (
-  //         events: RouterPropsMapped<"events">,
-  //         url: URL,
-  //         shallow: LinkPropsMapped<"shallow">
-  //       ) => handleRouteChange(events, url, shallow)
-  //     );
-  //   };
-  // }, [router.events, router.query]);
+  useEffect(() => {
+    const isProd = process.env.NODE_ENV === "production";
+    const handleRouteChange = <
+      T extends RouterPropsMapped<"events">,
+      P extends URL,
+      S extends LinkPropsMapped<"shallow">
+    >(
+      events: T,
+      url: P,
+      shallow: S
+    ) => {
+      !isProd
+        ? console.log(
+            `App is changing to ${url} ${
+              shallow ? "with" : "without"
+            } shallow routing with query: ${Object.values(router.query).join(", \n")}`
+          )
+        : () => {
+            events.events.emit("routeChangeError");
+          };
+    };
+    router.events.on(
+      "routeChangeStart",
+      (
+        events: RouterPropsMapped<"events">,
+        url: URL,
+        shallow: LinkPropsMapped<"shallow">
+      ) => handleRouteChange(events, url, shallow)
+    );
+    return () => {
+      router.events.off(
+        "routeChangeComplete",
+        (
+          events: RouterPropsMapped<"events">,
+          url: URL,
+          shallow: LinkPropsMapped<"shallow">
+        ) => handleRouteChange(events, url, shallow)
+      );
+    };
+  }, [router.events, router.query]);
 
   useEffect(() => {
     // getCookie("nest-next-2022") ? router.replace(window.location.href, { auth: cookieAuth }) : document.cookie;
@@ -103,7 +103,7 @@ export default function NestNextApp<T extends AppProps>({
   return (
     <>
       <ApolloProvider client={apolloClient}>
-        <LayoutNoop {...(pageProps as any)}>
+        <LayoutNoop pageProps={pageProps}>
           <Component {...pageProps} />
         </LayoutNoop>
       </ApolloProvider>

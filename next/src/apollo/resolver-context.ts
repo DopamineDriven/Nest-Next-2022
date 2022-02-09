@@ -18,14 +18,14 @@ const envEndpoint =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000/graphql"
     : "http://[::1]:3000/graphql";
-const uri = typeof window === "undefined" ? envEndpoint : "/";
+const uri = typeof window === "undefined" ? envEndpoint : "http://localhost:3000/graphql";
 
 export const enhancedFetch = async (
   url: RequestInfo,
   init: RequestInit,
   req: IncomingHttpHeaders
 ) => {
-  return await fetch(url, {
+  return await fetch(url=uri, {
     ...init,
     headers: {
       ...init.headers,
@@ -44,7 +44,7 @@ export const enhancedFetch = async (
 };
 export function createBatch<T extends ResolverContext>(context?: T) {
   return new BatchHttpLink({
-    uri: "http://localhost:3000/graphql",
+    uri: uri,
     credentials: "include",
     includeExtensions: true,
     batchInterval: 10,
@@ -56,10 +56,9 @@ export function createBatch<T extends ResolverContext>(context?: T) {
       Authorization:
         "Bearer " + context?.req?.headers.authorization?.split(/([ ])/)[0]
     },
-    fetchOptions: {
-      context: () => ({ ...context })
-    },
-    ...(!browser && context && { fetch })
+    // fetchOptions: {
+    //   context: () => ({ ...context })
+    // },
     // ...(fetcher({...context || {}}))
   });
 }

@@ -1,11 +1,11 @@
 const {
   PHASE_DEVELOPMENT_SERVER,
-  PHASE_PRODUCTION_BUILD,
-} = require('next/constants');
+  PHASE_PRODUCTION_BUILD
+} = require("next/constants");
 
 const superjson = require("next-superjson").withSuperjson;
 
-const withRpc = require('next-rpc')({ experimentalContext: true });
+const withRpc = require("next-rpc")();
 
 require("eslint-config-next/parser");
 
@@ -18,12 +18,10 @@ const {
  * @type {import('next').NextConfig}
  **/
 
-module.exports = withRpc(superjson()({
+module.exports = withRpc({
   webpack(config, options) {
     if (ANALYZE) {
-      config.plugins.push(
-        new withRpc("stats.txt")
-      );
+      config.plugins.push(new withRpc("stats.txt"));
     }
     // config.context = join(process.cwd(), "./");
     config.experiments = config.experiments || {};
@@ -117,7 +115,7 @@ module.exports = withRpc(superjson()({
       }
     ]
   }
-}));
+});
 
 console.log("[next.config.js]: ", JSON.stringify(module.exports, null, 2));
 

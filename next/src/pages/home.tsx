@@ -9,17 +9,19 @@ import { initializeApollo, useApollo } from "@/apollo/apollo";
 import {
   ApolloClient,
   NormalizedCacheObject,
-  useApolloClient
+  useApolloClient,
+  useQuery
 } from "@apollo/client";
 import { ParsedUrlQuery } from "@/types/query-parser";
 import type { UnwrapPromise } from "@/types/helpers";
 import { useRouter } from "next/router";
 import { Inspector, ProfileComponent } from "@/components/UI";
-import { ViewerQuery } from "@/graphql/queries/viewer.graphql";
+import { useViewerQuery, ViewerQuery } from "@/graphql/queries/viewer.graphql";
 import useSWR from "swr";
 import { viewerFetcher } from "@/lib/network/fetchers";
 import { LoginUserMutationResult, ViewerKeySpecifier } from "@/graphql/mutations/login-user.graphql";
 import { Suspense } from "react";
+import { get } from "https";
 
 // export type HomeGetStaticPropsInferred = UnwrapPromise<
 //   ReturnType<typeof getStaticProps>
@@ -30,17 +32,13 @@ import { Suspense } from "react";
 // };
 
 export default function Home() {
-  const data = useSWR(
-    `/api/viewer/viewer`,
-    viewerFetcher
-  );
-
+const getVIewer = useViewerQuery({}).data
   return (
     <>
-      {data?.data?.me ? (
-        <ProfileComponent viewer={data.data} />
+      {getVIewer?.me ? (
+        <ProfileComponent viewer={getVIewer} />
       ) : (
-        <Inspector>{JSON.stringify(data, null, 2)}</Inspector>
+        <Inspector>{JSON.stringify(getVIewer, null, 2)}</Inspector>
       )}
     </>
   );

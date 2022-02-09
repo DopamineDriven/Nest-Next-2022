@@ -10,6 +10,7 @@ import { UserCount } from "../outputs/user-count.output";
 import { Profile } from "../../profile/model/profile.model";
 import { Category } from "../../category/model/category.model";
 import { NullLiteral } from "ts-morph";
+import { JSONResolver } from "graphql-scalars";
 type Nullable<T> = T | null;
 
 @ObjectType("User")
@@ -28,8 +29,8 @@ export class User {
   @Field(() => String, { nullable: false })
   email!: string;
 
-  @Field(() => String, { nullable: true })
-  image: string | null;
+  @Field(() => JSONResolver, { nullable: true })
+  image: typeof JSONResolver | null;
 
   @Field(() => Role, { nullable: true, defaultValue: Role.USER })
   role: Nullable<keyof typeof Role>;

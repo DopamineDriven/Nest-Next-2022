@@ -18,35 +18,12 @@ import {
   Response
 } from "express";
 import { JwtDecoded } from "./dto/jwt-decoded.dto";
-import { LoginInput } from "./inputs/login.input";
 import {
-  refs,
-  SwaggerModule,
-  ApiBearerAuth,
-  ApiNoContentResponse,
-  ApiResponse,
-  ApiResponseMetadata,
-  ApiBody,
-  ApiAcceptedResponse,
-  ApiHeader,
-  ApiHeaders,
-  ApiOperation,
-  ExpressSwaggerCustomOptions,
-  ApiParam,
-  ApiQuery
+  ApiBearerAuth
 } from "@nestjs/swagger";
-import { ConnectUserDto } from "src/.generated/nestjs-dto/connect-user.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AuthDetailed } from "./model/auth-detailed.model";
-import { Ctx } from "@nestjs/microservices";
-import { GqlExecutionContext } from "@nestjs/graphql";
-import {
-  SessionData,
-  Session,
-  SessionOptions,
-  Cookie,
-  CookieOptions
-} from "express-session";
+
 import { SignInSwaggerDto } from "./dto/signin-controller.dto";
 @Controller("auth")
 export default class AuthJwtController {
@@ -131,7 +108,7 @@ export default class AuthJwtController {
         "authorization",
         `Bearer ${userFromToken.auth.accessToken}`
       );
-    res.cookie("nest-2022", userFromToken, {
+    res.cookie("nest-to-next-2022", userFromToken, {
       sameSite: "none",
       path: "/",
       maxAge: new Date(Date.now()).getMilliseconds() + 30 * 24 * 60 * 60 * 1000,

@@ -1,3 +1,5 @@
+import buf from "@/utils/reusable-buffer";
+
 export interface ParsedUrlInfo {
   href: string;
   protocol: string;
@@ -61,7 +63,7 @@ export function base64Decode(decode: string): string {
     return Buffer.from(decode, "base64").toString("utf8");
   }
 
-  return atob(decode);
+  return btoa(decode);
 }
 
 /**

@@ -34,6 +34,7 @@ import { RedisError } from "redis";
 import { PrismaService } from "./prisma";
 import { UserService } from "./user/user.service";
 import { AuthService } from "./auth/auth-jwt.service";
+import { UploadModule } from "./upload/upload.module";
 export type RecordContiional<T> = Record<keyof T, T> | Array<T> | PromiseLike<T> | T;
 
 export type Context<
@@ -235,6 +236,7 @@ export type Context<
     UserModule,
     PaginationModule,
     EntryModule,
+    UploadModule,
     ProfileModule
   ],
   controllers: [AppController],

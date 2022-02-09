@@ -70,104 +70,60 @@ import {
   ApolloErrorComponent
 } from "@/components/UI";
 import { storeKeyNameFromField } from "@apollo/client/utilities";
-
+import {
+  DeriveUserDetailsFromTokenDocument,
+  useDeriveUserDetailsFromTokenMutation
+} from "@/graphql/mutations/get-user-from-access-token.graphql";
 type ProfileProps = {
   apolloCache: NormalizedCacheObject;
-  // fallback?:
-  //   | (Partial<
-  //       PublicConfiguration<ViewerQuery, any, BareFetcher<ViewerQuery>>
-  //     > &
-  //       Partial<ProviderConfiguration> & {
-  //         provider?:
-  //           | ((cache: Readonly<Cache<ViewerQuery>>) => Cache<ViewerQuery>)
-  //           | undefined;
-  //       })
-  //   | undefined;
+  authHeaderReq: string;
+  authHeaderRes: string;
   allUsers: AllUsersQuery | null;
 };
 
-// const UseProfile: FC<{
-//   viewer: ViewerQuery | null;
-//   allUsers: AllUsersQuery;
-//   fallback: ProfileProps["fallback"];
-//   err: ApolloError;
-// }> = ({ viewer, allUsers, fallback, err, children }) => {
-//   const { data, error } = useSWR("/api/viewer/me", viewerFetcher);
-//   return (
-//     <div className='font-interVar text-3xl bg-gradient-to-tl from-[#133050] via-[#133350] to-black text-black font-bold min-w-full text-center  tracking-wide fit'>
-//       {error ? (
-//         <ApolloErrorComponent {...err}>{children}</ApolloErrorComponent>
-//       ) : (
-//         <Inspector>{JSON.stringify(error, null, 2)}</Inspector>
-//       )}
-//       <SWRConfig value={fallback}>
-//         <ProfileComponent
-//           viewer={data ? data : (viewer as unknown as ViewerQuery)}
-//         />
-//       </SWRConfig>
-
-//       <pre>{JSON.stringify(allUsers, null, 2)}</pre>
-//     </div>
-//   );
-// };
-
 export default function Profile<T extends typeof getServerSideProps>({
   allUsers,
-  apolloCache
+  apolloCache,
+  authHeaderReq,
+  authHeaderRes
 }: InferGetServerSidePropsType<T>) {
-  const callbackData = useCallback(
-    (
-      lazyViewer: (
-        options?: QueryLazyOptions<Exact<ViewerQueryVariables>> | undefined
-      ) => Promise<
-        LazyQueryResult<ViewerQuery, Exact<ViewerQueryVariables>>
-      >
-    ) => {
-      async function getViewerLazy() {
-        return await (lazyViewer ? lazyViewer() : () => {});
-      }
-
-      return getViewerLazy();
-    },
-    []
-  );
-  const [lazyViewer, { data, called, client, error, loading }] =
-    useViewerLazyQuery({
-      query: ViewerDocument,
-      client: useApollo(apolloCache),
-      fetchPolicy: "cache-first",
-      partialRefetch: true,
-      returnPartialData: true
+  const [lazyDerivePayload, { data, called, client, error, loading }] =
+    useDeriveUserDetailsFromTokenMutation({
+      mutation: DeriveUserDetailsFromTokenDocument
     });
-  // const [useLazy, setUseLazy] =
-  //   useState<
-  //     (
-  //       options?: QueryLazyOptions<Exact<ViewerQueryVariables>> | undefined
-  //     ) => Promise<
-  //       LazyQueryResult<ViewerQuery, Exact<ViewerQueryVariables>>
-  //     >
-  //   >(lazyViewer);
-
-  // useEffect(() => {
-  //   (async function lazyIIFE() {
-  //     return await (lazyViewer !== undefined
-  //       ? callbackData(lazyViewer)
-  //       : () => {});
-  //   })();
-  //   return setUseLazy(lazyViewer);
-  // }, [lazyViewer, callbackData]);
-
-  // const getViewer = () => {
-  //   return !called && !error && !loading ? (
-  //     callbackData(() => lazyViewer())
-  //   ) : !!loading ? (
-  //     <>{"loading..."}</>
-  //   ) : (
-  //     <pre>{JSON.stringify(data, null, 2)}</pre> ?? (
-  //       <Inspector>{JSON.stringify(error, null, 2)}</Inspector>
-  //     )
-  //   );
-  // };
+  const callbackData = useCallback(async () => {
+    const fetchIt = async () =>
+      await fetch(
+        encodeURIComponent(`http://localhost:3000/auth/token/${
+          authHeaderReq
+            ? authHeaderReq
+            : authHeaderRes
+            ? authHeaderRes
+            : ""
+        }`),
+        {
+          headers: {},
+          body: JSON.stringify({token: authHeaderReq ?? authHeaderRes}),
+          method: "POST",
+          mode: "cors",
+          credentials: "include"
+        }
+      )
+        .then(async res => (await res.json()) as Promise<AuthDetailed>)
+        .then(resolved => resolved as AuthDetailed);
+    return await lazyDerivePayload({
+      variables: {
+        token: authHeaderReq
+          ? authHeaderReq
+          : authHeaderRes ?? (await (await fetchIt()).auth.accessToken)
+      }.token
+    }).then(data => {
+      data.data?.userFromAccessTokenDecoded as unknown as AuthDetailed;
+    });
+  }, [authHeaderReq, authHeaderRes, lazyDerivePayload]);
+  useEffect(() => {
+    if (typeof window !== "undefined") {async ()=> await callbackData() }
+},[callbackData])
   const crm = getCookie("nest-next-2022");
   console.log(crm ?? "no cookie");
   const router = useRouter();
@@ -175,7 +131,16 @@ export default function Profile<T extends typeof getServerSideProps>({
     // <SWRConfig value={fallback}>
     <>
       {allUsers?.listUsers ? (
-        <ProfileComponent viewer={data ? data : null}>
+        <ProfileComponent
+          viewer={
+            data?.userFromAccessTokenDecoded.auth?.user &&
+            ({ accessToken: authHeaderReq } ?? {
+              accessToken: authHeaderRes
+            })
+              ? ((data.userFromAccessTokenDecoded.auth.user &&
+                  authHeaderReq) as unknown as ViewerQuery)
+              : null ?? (null as unknown as ViewerQuery | null)
+          }>
           {error ? (
             <Inspector>{JSON.stringify(error, null, 2)}</Inspector>
           ) : (
@@ -254,9 +219,19 @@ export const getServerSideProps = async (
     context: { ...ctx }
   });
   viewerQuery.getCurrentResult(true);
+
+  const getAuthHeader = ctx.req.headers["authorization"]?.split(
+    /([ ])/
+  )[0] as string;
+
+  const authHeaderRes = ctx.res.req.headers["authorization"]?.split(
+    /([ ])/
+  )[0] as string;
   return {
     props: {
       apolloCache: apolloClient.cache.extract(true),
+      authHeaderRes: authHeaderRes,
+      authHeaderReq: getAuthHeader,
       // fallback: (await viewerQuery.result())
       //   .data as unknown as ProfileProps["fallback"],
       allUsers: allUsers.data

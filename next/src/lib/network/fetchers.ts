@@ -6,6 +6,20 @@ import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { AuthDetailed } from "@/cache/__types__";
 import { ViewerQuery } from "@/graphql/queries/viewer.graphql";
 
+export enum ReqMethod {
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE",
+  HEAD = "HEAD",
+  CONNECT = "CONNECT",
+  TRACE = "TRACE",
+  PATCH = "PATCH",
+  OPTIONS = "OPTIONS",
+  SPECIAL = "SPECIAL",
+  QUERY = "QUERY"
+}
+
 export type NetworkConstructProps = {
   HarvestNetworkInfo: (
     req: GetServerSidePropsContext["req"] | NextApiRequest
@@ -77,10 +91,13 @@ export async function authFetcher<T>(path: string): Promise<T> {
   return await res.json();
 }
 type Maybe<T> = T | null | undefined;
-export async function viewerFetcher(
-  path: string = "/api/me"
-): Promise<Maybe<ViewerQuery>> {
-  const res: Response = await fetch(path, {
+export async function viewerFetcher<T extends keyof typeof ReqMethod>(
+  method: T,
+  accessToken: string,
+  path: string,
+  value?: any | Record<string | number | symbol, any>
+): Promise<AuthDetailed> {
+  const res: Response = await fetch(`${path}/${accessToken}`, {
     headers: {
       "Cache-Control": "s-maxage=86400, stale-while-revalidate=43200",
       "Accept-Encoding": "gzip, deflate, br",
@@ -88,9 +105,11 @@ export async function viewerFetcher(
       "Content-Type": "application/json; charset=utf-8",
       Connection: "keep-alive",
       Accept: "*/*"
-    }
+    },
+    method: method ? method : "GET",
+    body: JSON.stringify({value})
   });
-  return res.json() as Promise<Maybe<ViewerQuery>>;
+  return res.json() as Promise<AuthDetailed>;
 }
 
 export type IpFetcherReturns = UnwrapPromise<ReturnType<typeof ipFetcher>>;

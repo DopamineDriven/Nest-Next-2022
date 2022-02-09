@@ -1,6 +1,6 @@
 import * as os from "os";
 
-export const config = { rpc: true };
+// export const config = { rpc: true };
 
 export type HostInfo = {
   now: string;
