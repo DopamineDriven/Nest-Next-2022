@@ -5,6 +5,7 @@ import { CommentCreateNestedManyWithoutEntryInput } from "src/.generated/prisma-
 import { UserCreateOrConnectWithoutEntriesInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-create-or-connect-without-entries.input";
 import { EntryCreatecontentInput } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/entry-createcontent.input";
 import { GraphQLJSON, JSONObjectResolver } from "graphql-scalars";
+import { EntryCreatefeaturedImageInput } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/entry-createfeatured-image.input";
 
 @InputType("EntryCreateOneInput")
 export class EntryCreateOneInput {
@@ -23,8 +24,8 @@ export class EntryCreateOneInput {
   @Field(() => Date, { nullable: true })
   updatedAt?: Date | string;
 
-  @Field(() => String, { nullable: true })
-  featuredImage?: string;
+  @Field(() => EntryCreatefeaturedImageInput, {nullable:true})
+  featuredImage?: EntryCreatefeaturedImageInput;
 
   @Field(() => String, { nullable: true })
   categoryId?: string;

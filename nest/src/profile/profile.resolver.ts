@@ -60,7 +60,7 @@ export class ProfileResolver {
   async createProfile(
     @Args("data", { type: () => ProfileCreateInput }) data: ProfileCreateInput,
     @Args("userId", { type: () => String }) userId: string
-  ): Promise<Profile & { user: User }> {
+  ) {
     const newProfile = await this.profileService.createProfile(data, userId);
     pubSub.publish("profileCreated", { profileCreated: newProfile });
     return newProfile;

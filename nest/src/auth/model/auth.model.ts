@@ -6,9 +6,8 @@ import { InstanceOf } from "ts-morph";
 
 @ObjectType("Auth")
 export class Auth {
-  @Field(() => User, { nullable: true })
-  user!: User | null;
-
+  @Field(() => User)
+  user!: User;
   @Field(() => Session, { nullable: true })
   session: Session | null;
 
@@ -59,7 +58,7 @@ export async function PrismaViewer<
   authService: K
 ): Promise<
   T & {
-    getViewer(data: GetViewer): Promise<User | PrismaClientUnknownRequestError>;
+    getViewer(data: GetViewer): any
   }
 > {
   return Object.assign(prisma, {
@@ -68,7 +67,7 @@ export async function PrismaViewer<
         data.accessToken ? data.accessToken : ""
       );
       const findPrismaViewer = await prisma.findFirst({
-        include: {_count: true},
+        include: {_count: true, mediaItems: true},
         where: {
           OR: [
             { id: viewer?.id ? viewer.id : "" },

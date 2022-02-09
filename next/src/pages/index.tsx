@@ -105,7 +105,7 @@ export default function Index() {
             ? setAccessTokenVal(data.data.login.accessToken)
             : setAccessTokenVal(null);
           return lazyDerivation({
-            variables: { token: data.data?.login.accessToken }
+            variables: { token: data.data?.login.accessToken as string }
           }).then(data => {
             return data.data
               ?.userFromAccessTokenDecoded as unknown as AuthDetailed;
@@ -143,7 +143,7 @@ export default function Index() {
       <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
         <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
           {authDetailedState !== null ? (
-            <Inspector>
+            <Inspector className="!container !min-w-fit">
               {JSON.stringify(authDetailedState, null, 2)}
             </Inspector>
           ) : (

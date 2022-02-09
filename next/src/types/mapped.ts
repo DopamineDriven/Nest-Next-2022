@@ -12,7 +12,9 @@ import {
 import { NextApiHandler } from "next";
 import { ImageProps } from "next/image";
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
-
+// export type RecordContiional<T = unknown> = T extends {
+//   [index: keyof T]: T extends infer U ? U extends Array<{ [index: keyof U]: U }> | PromiseLike<T> | Awaited<U> ? T extends Promise<Array<({ [index: keyof T]: T })>>
+// };
 export type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
 };
@@ -26,16 +28,19 @@ export type RecursiveAmbivalent<T> = {
 };
 
 export type ApolloRecursive<
-  T extends keyof ApolloClient<
-    NormalizedCacheObject extends Record<keyof T, infer U>
-      ? Record<keyof T, U>
-      : Record<keyof T, unknown>
+  T,
+  _Implements = ({
+    ...props
+  }) => ApolloClient<
+    T extends Record<keyof T, infer U>
+      ? Record<keyof U, U>
+      : Record<keyof T, T>
   >
 > = RecursiveAmbivalent<ApolloClient<NormalizedCacheObject>>;
-const ApolloClientExample = async ({
+export const ApolloClientProps = async ({
   ...props
 }: {
-  props: ApolloRecursive<
+  normalizedCacheObj: ApolloRecursive<
     | "extract"
     | "__actionHookForDevTools"
     | "addResolvers"
@@ -43,7 +48,8 @@ const ApolloClientExample = async ({
     | "setResolvers"
     | "defaultOptions"
   >;
-}) => ({ ...props.props });
+}) => ({ ...props.normalizedCacheObj });
+
 // infer a Promise Wrapped Type
 export type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 

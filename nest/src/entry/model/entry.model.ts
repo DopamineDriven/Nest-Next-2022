@@ -3,8 +3,9 @@ import { Comment } from "../../comment/model/comment.model";
 import { User } from "../../user/model/user.model";
 import { EntryCount } from "../../.generated/prisma-nestjs-graphql/entry/outputs/entry-count.output";
 import { Category } from "../../category/model/category.model";
-import { JSONResolver } from "graphql-scalars";
+import { JSONObjectResolver, JSONResolver } from "graphql-scalars";
 import GraphQLJSON from "graphql-type-json";
+import { Prisma } from "@prisma/client";
 
 @ObjectType("Entry")
 export class Entry {
@@ -20,8 +21,8 @@ export class Entry {
   @Field(() => String, { nullable: false })
   authorId!: string;
 
-  @Field(() => [GraphQLJSON], { nullable: true })
-  content!: Array<typeof GraphQLJSON>;
+  @Field(() => [JSONObjectResolver], { nullable: true })
+  content!: Array<any>
 
   @Field(() => Date, { nullable: false })
   createdAt!: Date;
@@ -29,8 +30,8 @@ export class Entry {
   @Field(() => Date, { nullable: true })
   updatedAt?: Date | null;
 
-  @Field(() => String, { nullable: true })
-  featuredImage?: string | null;
+  @Field(() => [JSONObjectResolver], {nullable:true})
+  featuredImage?: Array<any>
 
   @Field(() => [Category], { nullable: true })
   categories?: Array<Category>;

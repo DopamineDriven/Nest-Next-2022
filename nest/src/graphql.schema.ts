@@ -43,7 +43,6 @@ export enum CommentReactions {
 export enum EntryOrderByRelevanceFieldEnum {
     authorId = "authorId",
     categoryId = "categoryId",
-    featuredImage = "featuredImage",
     id = "id",
     title = "title"
 }
@@ -67,10 +66,60 @@ export enum Gender {
     UNCERTAIN = "UNCERTAIN"
 }
 
+export enum MediaItemDestination {
+    AVATAR = "AVATAR",
+    COMMENT_ATTACHMENT = "COMMENT_ATTACHMENT",
+    COVER_IMAGE = "COVER_IMAGE",
+    ENTRY_ATTACHMENT = "ENTRY_ATTACHMENT",
+    FEATURED_IMAGE = "FEATURED_IMAGE"
+}
+
+export enum MediaItemOrderByRelevanceFieldEnum {
+    ariaLabel = "ariaLabel",
+    caption = "caption",
+    id = "id",
+    name = "name",
+    size = "size",
+    src = "src",
+    srcSet = "srcSet",
+    title = "title",
+    userId = "userId"
+}
+
+export enum MediaItemScalarFieldEnum {
+    ariaLabel = "ariaLabel",
+    caption = "caption",
+    destination = "destination",
+    fileLastModified = "fileLastModified",
+    height = "height",
+    id = "id",
+    name = "name",
+    quality = "quality",
+    size = "size",
+    src = "src",
+    srcSet = "srcSet",
+    title = "title",
+    type = "type",
+    updatedAt = "updatedAt",
+    uploadedAt = "uploadedAt",
+    userId = "userId",
+    width = "width"
+}
+
+export enum MimeTypes {
+    AVIF = "AVIF",
+    BMP = "BMP",
+    GIF = "GIF",
+    JPEG = "JPEG",
+    PNG = "PNG",
+    SVG = "SVG",
+    TIFF = "TIFF",
+    WEBP = "WEBP"
+}
+
 export enum ProfileOrderByRelevanceFieldEnum {
     city = "city",
     country = "country",
-    coverPhoto = "coverPhoto",
     dob = "dob",
     id = "id",
     occupation = "occupation",
@@ -125,7 +174,6 @@ export enum UserOrderByRelevanceFieldEnum {
     email = "email",
     firstName = "firstName",
     id = "id",
-    image = "image",
     lastName = "lastName",
     password = "password"
 }
@@ -339,6 +387,11 @@ export class ChangePasswordInput {
     oldPassword: string;
 }
 
+export class CommentAuthorIdEntryIdCompoundUniqueInput {
+    authorId: string;
+    entryId: string;
+}
+
 export class CommentCreateManyAuthorInput {
     body?: Nullable<JSON>;
     createdAt?: Nullable<DateTime>;
@@ -448,6 +501,7 @@ export class CommentWhereInput {
 }
 
 export class CommentWhereUniqueInput {
+    authorId_entryId?: Nullable<CommentAuthorIdEntryIdCompoundUniqueInput>;
     id?: Nullable<string>;
 }
 
@@ -546,7 +600,7 @@ export class EntryCreateInput {
     comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
     content?: Nullable<EntryCreatecontentInput>;
     createdAt?: Nullable<DateTime>;
-    featuredImage?: Nullable<string>;
+    featuredImage?: Nullable<EntryCreatefeaturedImageInput>;
     id?: Nullable<string>;
     published?: Nullable<boolean>;
     title: string;
@@ -557,7 +611,7 @@ export class EntryCreateManyAuthorInput {
     categoryId?: Nullable<string>;
     content?: Nullable<EntryCreateManycontentInput>;
     createdAt?: Nullable<DateTime>;
-    featuredImage?: Nullable<string>;
+    featuredImage?: Nullable<EntryCreateManyfeaturedImageInput>;
     id?: Nullable<string>;
     published?: Nullable<boolean>;
     title: string;
@@ -570,6 +624,10 @@ export class EntryCreateManyAuthorInputEnvelope {
 }
 
 export class EntryCreateManycontentInput {
+    set: JSON[];
+}
+
+export class EntryCreateManyfeaturedImageInput {
     set: JSON[];
 }
 
@@ -613,7 +671,7 @@ export class EntryCreateWithoutAuthorInput {
     comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
     content?: Nullable<EntryCreatecontentInput>;
     createdAt?: Nullable<DateTime>;
-    featuredImage?: Nullable<string>;
+    featuredImage?: Nullable<EntryCreatefeaturedImageInput>;
     id?: Nullable<string>;
     published?: Nullable<boolean>;
     title: string;
@@ -626,7 +684,7 @@ export class EntryCreateWithoutCategoriesInput {
     comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
     content?: Nullable<EntryCreatecontentInput>;
     createdAt?: Nullable<DateTime>;
-    featuredImage?: Nullable<string>;
+    featuredImage?: Nullable<EntryCreatefeaturedImageInput>;
     id?: Nullable<string>;
     published?: Nullable<boolean>;
     title: string;
@@ -639,7 +697,7 @@ export class EntryCreateWithoutCommentsInput {
     categoryId?: Nullable<string>;
     content?: Nullable<EntryCreatecontentInput>;
     createdAt?: Nullable<DateTime>;
-    featuredImage?: Nullable<string>;
+    featuredImage?: Nullable<EntryCreatefeaturedImageInput>;
     id?: Nullable<string>;
     published?: Nullable<boolean>;
     title: string;
@@ -647,6 +705,10 @@ export class EntryCreateWithoutCommentsInput {
 }
 
 export class EntryCreatecontentInput {
+    set: JSON[];
+}
+
+export class EntryCreatefeaturedImageInput {
     set: JSON[];
 }
 
@@ -698,7 +760,7 @@ export class EntryWhereInput {
     comments?: Nullable<CommentListRelationFilter>;
     content?: Nullable<JsonNullableListFilter>;
     createdAt?: Nullable<DateTimeFilter>;
-    featuredImage?: Nullable<StringNullableFilter>;
+    featuredImage?: Nullable<JsonNullableListFilter>;
     id?: Nullable<StringFilter>;
     published?: Nullable<BoolFilter>;
     title?: Nullable<StringFilter>;
@@ -723,6 +785,20 @@ export class EnumGenderNullableFilter {
     in?: Nullable<Gender[]>;
     not?: Nullable<NestedEnumGenderNullableFilter>;
     notIn?: Nullable<Gender[]>;
+}
+
+export class EnumMediaItemDestinationNullableFilter {
+    equals?: Nullable<MediaItemDestination>;
+    in?: Nullable<MediaItemDestination[]>;
+    not?: Nullable<NestedEnumMediaItemDestinationNullableFilter>;
+    notIn?: Nullable<MediaItemDestination[]>;
+}
+
+export class EnumMimeTypesNullableFilter {
+    equals?: Nullable<MimeTypes>;
+    in?: Nullable<MimeTypes[]>;
+    not?: Nullable<NestedEnumMimeTypesNullableFilter>;
+    notIn?: Nullable<MimeTypes[]>;
 }
 
 export class EnumPronounsNullableFilter {
@@ -756,6 +832,16 @@ export class FindManyEntriessPaginatedInput {
     where?: Nullable<EntryWhereInput>;
 }
 
+export class FindManyMediaItemsInput {
+    cursor?: Nullable<MediaItemWhereUniqueInput>;
+    distinct?: Nullable<MediaItemScalarFieldEnum[]>;
+    orderBy?: Nullable<MediaItemOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination?: Nullable<PaginationArgsInput>;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<MediaItemWhereInput>;
+}
+
 export class FindManyProfilesPaginatedInput {
     cursor?: Nullable<ProfileWhereUniqueInput>;
     distinct?: Nullable<ProfileScalarFieldEnum[]>;
@@ -774,6 +860,17 @@ export class FindManyUsersPaginatedInput {
     skip?: Nullable<number>;
     take?: Nullable<number>;
     where?: Nullable<UserWhereInput>;
+}
+
+export class FloatNullableFilter {
+    equals?: Nullable<number>;
+    gt?: Nullable<number>;
+    gte?: Nullable<number>;
+    in?: Nullable<number[]>;
+    lt?: Nullable<number>;
+    lte?: Nullable<number>;
+    not?: Nullable<NestedFloatNullableFilter>;
+    notIn?: Nullable<number[]>;
 }
 
 export class IntNullableFilter {
@@ -816,6 +913,133 @@ export class LoginInput {
     password?: Nullable<string>;
 }
 
+export class MediaItemCreateManyUserInput {
+    ariaLabel?: Nullable<string>;
+    caption?: Nullable<string>;
+    destination?: Nullable<MediaItemDestination>;
+    fileLastModified?: Nullable<DateTime>;
+    height?: Nullable<number>;
+    id?: Nullable<string>;
+    name?: Nullable<string>;
+    quality?: Nullable<number>;
+    size?: Nullable<string>;
+    src?: Nullable<string>;
+    srcSet?: Nullable<string>;
+    title?: Nullable<string>;
+    type?: Nullable<MimeTypes>;
+    updatedAt?: Nullable<DateTime>;
+    uploadedAt?: Nullable<DateTime>;
+    width?: Nullable<number>;
+}
+
+export class MediaItemCreateManyUserInputEnvelope {
+    data: MediaItemCreateManyUserInput[];
+    skipDuplicates?: Nullable<boolean>;
+}
+
+export class MediaItemCreateNestedManyWithoutUserInput {
+    connect?: Nullable<MediaItemWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<MediaItemCreateOrConnectWithoutUserInput[]>;
+    create?: Nullable<MediaItemCreateWithoutUserInput[]>;
+    createMany?: Nullable<MediaItemCreateManyUserInputEnvelope>;
+}
+
+export class MediaItemCreateOrConnectWithoutUserInput {
+    create: MediaItemCreateWithoutUserInput;
+    where: MediaItemWhereUniqueInput;
+}
+
+export class MediaItemCreateWithoutUserInput {
+    ariaLabel?: Nullable<string>;
+    caption?: Nullable<string>;
+    destination?: Nullable<MediaItemDestination>;
+    fileLastModified?: Nullable<DateTime>;
+    height?: Nullable<number>;
+    id?: Nullable<string>;
+    name?: Nullable<string>;
+    quality?: Nullable<number>;
+    size?: Nullable<string>;
+    src?: Nullable<string>;
+    srcSet?: Nullable<string>;
+    title?: Nullable<string>;
+    type?: Nullable<MimeTypes>;
+    updatedAt?: Nullable<DateTime>;
+    uploadedAt?: Nullable<DateTime>;
+    width?: Nullable<number>;
+}
+
+export class MediaItemListRelationFilter {
+    every?: Nullable<MediaItemWhereInput>;
+    none?: Nullable<MediaItemWhereInput>;
+    some?: Nullable<MediaItemWhereInput>;
+}
+
+export class MediaItemNameUserIdCompoundUniqueInput {
+    name: string;
+    userId: string;
+}
+
+export class MediaItemOrderByRelationAggregateInput {
+    _count?: Nullable<SortOrder>;
+}
+
+export class MediaItemOrderByRelevanceInput {
+    fields: MediaItemOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
+}
+
+export class MediaItemOrderByWithRelationAndSearchRelevanceInput {
+    _relevance?: Nullable<MediaItemOrderByRelevanceInput>;
+    ariaLabel?: Nullable<SortOrder>;
+    caption?: Nullable<SortOrder>;
+    destination?: Nullable<SortOrder>;
+    fileLastModified?: Nullable<SortOrder>;
+    height?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    name?: Nullable<SortOrder>;
+    quality?: Nullable<SortOrder>;
+    size?: Nullable<SortOrder>;
+    src?: Nullable<SortOrder>;
+    srcSet?: Nullable<SortOrder>;
+    title?: Nullable<SortOrder>;
+    type?: Nullable<SortOrder>;
+    updatedAt?: Nullable<SortOrder>;
+    uploadedAt?: Nullable<SortOrder>;
+    user?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    userId?: Nullable<SortOrder>;
+    width?: Nullable<SortOrder>;
+}
+
+export class MediaItemWhereInput {
+    AND?: Nullable<MediaItemWhereInput[]>;
+    NOT?: Nullable<MediaItemWhereInput[]>;
+    OR?: Nullable<MediaItemWhereInput[]>;
+    ariaLabel?: Nullable<StringNullableFilter>;
+    caption?: Nullable<StringNullableFilter>;
+    destination?: Nullable<EnumMediaItemDestinationNullableFilter>;
+    fileLastModified?: Nullable<DateTimeNullableFilter>;
+    height?: Nullable<FloatNullableFilter>;
+    id?: Nullable<StringFilter>;
+    name?: Nullable<StringNullableFilter>;
+    quality?: Nullable<IntNullableFilter>;
+    size?: Nullable<StringNullableFilter>;
+    src?: Nullable<StringNullableFilter>;
+    srcSet?: Nullable<StringNullableFilter>;
+    title?: Nullable<StringNullableFilter>;
+    type?: Nullable<EnumMimeTypesNullableFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
+    uploadedAt?: Nullable<DateTimeFilter>;
+    user?: Nullable<UserRelationFilter>;
+    userId?: Nullable<StringFilter>;
+    width?: Nullable<FloatNullableFilter>;
+}
+
+export class MediaItemWhereUniqueInput {
+    id?: Nullable<string>;
+    name_userId?: Nullable<MediaItemNameUserIdCompoundUniqueInput>;
+}
+
 export class NestedBoolFilter {
     equals?: Nullable<boolean>;
     not?: Nullable<NestedBoolFilter>;
@@ -850,6 +1074,20 @@ export class NestedEnumGenderNullableFilter {
     notIn?: Nullable<Gender[]>;
 }
 
+export class NestedEnumMediaItemDestinationNullableFilter {
+    equals?: Nullable<MediaItemDestination>;
+    in?: Nullable<MediaItemDestination[]>;
+    not?: Nullable<NestedEnumMediaItemDestinationNullableFilter>;
+    notIn?: Nullable<MediaItemDestination[]>;
+}
+
+export class NestedEnumMimeTypesNullableFilter {
+    equals?: Nullable<MimeTypes>;
+    in?: Nullable<MimeTypes[]>;
+    not?: Nullable<NestedEnumMimeTypesNullableFilter>;
+    notIn?: Nullable<MimeTypes[]>;
+}
+
 export class NestedEnumPronounsNullableFilter {
     equals?: Nullable<Pronouns>;
     in?: Nullable<Pronouns[]>;
@@ -869,6 +1107,17 @@ export class NestedEnumUserStatusNullableFilter {
     in?: Nullable<UserStatus[]>;
     not?: Nullable<NestedEnumUserStatusNullableFilter>;
     notIn?: Nullable<UserStatus[]>;
+}
+
+export class NestedFloatNullableFilter {
+    equals?: Nullable<number>;
+    gt?: Nullable<number>;
+    gte?: Nullable<number>;
+    in?: Nullable<number[]>;
+    lt?: Nullable<number>;
+    lte?: Nullable<number>;
+    not?: Nullable<NestedFloatNullableFilter>;
+    notIn?: Nullable<number[]>;
 }
 
 export class NestedIntNullableFilter {
@@ -917,7 +1166,6 @@ export class PaginationArgsInput {
     before?: Nullable<string>;
     first?: Nullable<number>;
     last?: Nullable<number>;
-    skip?: Nullable<number>;
 }
 
 export class ProfileCreateInput {
@@ -925,7 +1173,7 @@ export class ProfileCreateInput {
     bio?: Nullable<ProfileCreatebioInput>;
     city?: Nullable<string>;
     country?: Nullable<string>;
-    coverPhoto?: Nullable<string>;
+    coverPhoto?: Nullable<ProfileCreatecoverPhotoInput>;
     dob?: Nullable<string>;
     gender?: Nullable<Gender>;
     id?: Nullable<string>;
@@ -954,7 +1202,7 @@ export class ProfileCreateWithoutUserInput {
     bio?: Nullable<ProfileCreatebioInput>;
     city?: Nullable<string>;
     country?: Nullable<string>;
-    coverPhoto?: Nullable<string>;
+    coverPhoto?: Nullable<ProfileCreatecoverPhotoInput>;
     dob?: Nullable<string>;
     gender?: Nullable<Gender>;
     id?: Nullable<string>;
@@ -971,6 +1219,10 @@ export class ProfileCreateactiviyFeedInput {
 }
 
 export class ProfileCreatebioInput {
+    set: JSON[];
+}
+
+export class ProfileCreatecoverPhotoInput {
     set: JSON[];
 }
 
@@ -1017,7 +1269,7 @@ export class ProfileWhereInput {
     bio?: Nullable<JsonNullableListFilter>;
     city?: Nullable<StringNullableFilter>;
     country?: Nullable<StringNullableFilter>;
-    coverPhoto?: Nullable<StringNullableFilter>;
+    coverPhoto?: Nullable<JsonNullableListFilter>;
     dob?: Nullable<StringNullableFilter>;
     gender?: Nullable<EnumGenderNullableFilter>;
     id?: Nullable<StringFilter>;
@@ -1233,8 +1485,9 @@ export class UserCreateWithoutCategoriesInput {
     entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
     firstName?: Nullable<string>;
     id?: Nullable<string>;
-    image?: Nullable<string>;
+    image?: Nullable<UserCreateimageInput>;
     lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
     password?: Nullable<string>;
     profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
     role?: Nullable<Role>;
@@ -1253,8 +1506,9 @@ export class UserCreateWithoutCommentsInput {
     entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
     firstName?: Nullable<string>;
     id?: Nullable<string>;
-    image?: Nullable<string>;
+    image?: Nullable<UserCreateimageInput>;
     lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
     password?: Nullable<string>;
     profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
     role?: Nullable<Role>;
@@ -1273,8 +1527,9 @@ export class UserCreateWithoutEntriesInput {
     emailVerified?: Nullable<DateTime>;
     firstName?: Nullable<string>;
     id?: Nullable<string>;
-    image?: Nullable<string>;
+    image?: Nullable<UserCreateimageInput>;
     lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
     password?: Nullable<string>;
     profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
     role?: Nullable<Role>;
@@ -1294,13 +1549,18 @@ export class UserCreateWithoutProfileInput {
     entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
     firstName?: Nullable<string>;
     id?: Nullable<string>;
-    image?: Nullable<string>;
+    image?: Nullable<UserCreateimageInput>;
     lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
     password?: Nullable<string>;
     role?: Nullable<Role>;
     sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
     status?: Nullable<UserStatus>;
     updatedAt?: Nullable<DateTime>;
+}
+
+export class UserCreateimageInput {
+    set: JSON[];
 }
 
 export class UserOrderByRelevanceInput {
@@ -1323,6 +1583,7 @@ export class UserOrderByWithRelationAndSearchRelevanceInput {
     id?: Nullable<SortOrder>;
     image?: Nullable<SortOrder>;
     lastName?: Nullable<SortOrder>;
+    mediaItems?: Nullable<MediaItemOrderByRelationAggregateInput>;
     password?: Nullable<SortOrder>;
     profile?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput>;
     role?: Nullable<SortOrder>;
@@ -1350,8 +1611,9 @@ export class UserWhereInput {
     entries?: Nullable<EntryListRelationFilter>;
     firstName?: Nullable<StringNullableFilter>;
     id?: Nullable<StringFilter>;
-    image?: Nullable<StringNullableFilter>;
+    image?: Nullable<JsonNullableListFilter>;
     lastName?: Nullable<StringNullableFilter>;
+    mediaItems?: Nullable<MediaItemListRelationFilter>;
     password?: Nullable<StringFilter>;
     profile?: Nullable<ProfileRelationFilter>;
     role?: Nullable<EnumRoleNullableFilter>;
@@ -1390,7 +1652,7 @@ export class Auth {
     accessToken?: Nullable<string>;
     refreshToken?: Nullable<string>;
     session?: Nullable<Session>;
-    user?: Nullable<User>;
+    user: User;
 }
 
 export class AuthDetailed {
@@ -1472,9 +1734,9 @@ export class Entry {
     categories?: Nullable<Category[]>;
     categoryId?: Nullable<string>;
     comments?: Nullable<Comment[]>;
-    content?: Nullable<JSON[]>;
+    content?: Nullable<JSONObject[]>;
     createdAt: DateTime;
-    featuredImage?: Nullable<string>;
+    featuredImage?: Nullable<JSONObject[]>;
     id: string;
     published?: Nullable<boolean>;
     title?: Nullable<string>;
@@ -1520,6 +1782,37 @@ export class JwtPayload {
     userId?: Nullable<string>;
 }
 
+export class MediaItem {
+    __typename?: 'MediaItem';
+    fileLastModified?: Nullable<DateTime>;
+    height?: Nullable<number>;
+    id: string;
+    name?: Nullable<string>;
+    quality?: Nullable<number>;
+    size?: Nullable<string>;
+    src?: Nullable<string>;
+    srcSet?: Nullable<string>;
+    type?: Nullable<MimeTypes>;
+    updatedAt?: Nullable<DateTime>;
+    uploadedAt: DateTime;
+    user: User;
+    userId: string;
+    width?: Nullable<number>;
+}
+
+export class MediaItemConnection {
+    __typename?: 'MediaItemConnection';
+    edges: MediaItemEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
+}
+
+export class MediaItemEdge {
+    __typename?: 'MediaItemEdge';
+    cursor: string;
+    node: MediaItem;
+}
+
 export abstract class IMutation {
     __typename?: 'IMutation';
 
@@ -1556,11 +1849,11 @@ export class PageInfo {
 
 export class Profile {
     __typename?: 'Profile';
-    activiyFeed?: Nullable<JSON[]>;
-    bio?: Nullable<JSON[]>;
+    activiyFeed?: Nullable<JSONObject[]>;
+    bio?: Nullable<JSONObject[]>;
     city?: Nullable<string>;
     country?: Nullable<string>;
-    coverPhoto?: Nullable<string>;
+    coverPhoto?: Nullable<JSONObject[]>;
     dob?: Nullable<string>;
     gender?: Nullable<Gender>;
     id: string;
@@ -1569,7 +1862,7 @@ export class Profile {
     occupation?: Nullable<string>;
     phoneNumber?: Nullable<string>;
     pronouns?: Nullable<Pronouns>;
-    recentActivity?: Nullable<JSON[]>;
+    recentActivity?: Nullable<JSONObject[]>;
     user: User;
     userId: string;
     userInProfile: User;
@@ -1600,6 +1893,8 @@ export abstract class IQuery {
     abstract helloWorld(): string | Promise<string>;
 
     abstract listEntries(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput): EntryConnection | Promise<EntryConnection>;
+
+    abstract listMediaItems(findManyMediaItemsPaginated?: Nullable<FindManyMediaItemsInput>): MediaItemConnection | Promise<MediaItemConnection>;
 
     abstract listProfiles(findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput): ProfileConnection | Promise<ProfileConnection>;
 
@@ -1664,8 +1959,9 @@ export class User {
     entries?: Nullable<Entry[]>;
     firstName?: Nullable<string>;
     id: string;
-    image?: Nullable<string>;
+    image: JSONObject[];
     lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItem[]>;
     password: string;
     profile?: Nullable<Profile>;
     role?: Nullable<Role>;
@@ -1688,6 +1984,7 @@ export class UserCount {
     comments: number;
     connections: number;
     entries: number;
+    mediaItems: number;
     sessions: number;
 }
 
@@ -1711,8 +2008,9 @@ export class Viewer {
     entries?: Nullable<Entry[]>;
     firstName?: Nullable<string>;
     id: string;
-    image?: Nullable<string>;
+    image: JSONObject[];
     lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItem[]>;
     password: string;
     profile?: Nullable<Profile>;
     role?: Nullable<Role>;

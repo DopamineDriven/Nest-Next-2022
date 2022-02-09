@@ -107,7 +107,7 @@ export class AuthResolver {
       .then(async data => {
         const updateUser = await this.prismaService.user.update({
           where: { id: data?.id ? data.id : "" },
-          include: { sessions: true, _count: true },
+          include: { sessions: true, _count: true, mediaItems: true },
           data: {
             sessions: {
               connectOrCreate: {

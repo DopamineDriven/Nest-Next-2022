@@ -64,14 +64,11 @@ export class ProfileService {
   async createProfile(
     data: ProfileCreateInput,
     userId: string | undefined
-  ): Promise<
-    Profile & {
-      user: User;
-    }
-  > {
+  ) {
     const userToProfileCreate = await this.prisma.user
       .findFirst({
-        where: { id: userId }
+        where: { id: userId },
+        include: {_count: true, mediaItems: true,profile: true}
       })
       .then(async dataUser => {
         const createUserProfile = await this.prisma.profile.create({
@@ -93,8 +90,10 @@ export class ProfileService {
             coverPhoto: data.coverPhoto,
             recentActivity: [{ recentActivity: "On the radar" }]
           },
-          include: { user: true }
-        });
+          include: {
+            user: { include: { mediaItems: true, _count: true } }
+          }
+        })
         return createUserProfile;
       });
     return userToProfileCreate;

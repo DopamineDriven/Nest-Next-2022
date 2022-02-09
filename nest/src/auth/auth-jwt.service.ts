@@ -69,7 +69,7 @@ export class AuthService {
     }
   }
 
-  async getUserWithDecodedToken(token: string): Promise<AuthDetailed> {
+  async getUserWithDecodedToken(token: string) {
     const id = this.jwtService.decode(token, {
       complete: true
     }) as JwtDecoded;
@@ -81,7 +81,7 @@ export class AuthService {
       async (prisma = this.prismaService) => {
         const userUpdate = await prisma.user.update({
           where: { id: id.payload.userId },
-          include: { _count: true },
+          include: { _count: true, mediaItems: true },
           data: {
             status: { set: "ONLINE" },
             updatedAt: { set: new Date(Date.now()) },
@@ -228,7 +228,7 @@ export class AuthService {
 
     const userInfo = await this.prismaService.user.update({
       where: { id: auth.user?.id ? auth.user.id : "" },
-      include: { _count: true },
+      include: { _count: true, mediaItems: true },
       data: {
         updatedAt: new Date(Date.now()),
         status: "ONLINE",
@@ -262,7 +262,7 @@ export class AuthService {
         accessToken: auth.accessToken,
         refreshToken: auth.refreshToken,
         session: session,
-        user: userInfo
+        user: auth.user
       },
       jwt: jwt
     };
@@ -289,9 +289,9 @@ export class AuthService {
     });
   }
 
-  async validateUser(userId: string | null): Promise<User | null> {
+  async validateUser(userId: string | null) {
     return await this.prismaService.user.findUnique({
-      include: { _count: true },
+      include: { _count: true, mediaItems: true },
       where: { id: userId ? userId : "" }
     });
   }
@@ -314,14 +314,14 @@ export class AuthService {
     return Buffer.from("base64").toString("utf-8");
   }
 
-  getUserFromToken(token: string): Promise<User | null> {
+  getUserFromToken(token: string) {
     console.log(token ?? "");
 
     const id = this.jwtService.decode(token, {
       complete: true
     }) as JwtDecoded;
     return this.prismaService.user.findUnique({
-      include: { _count: true },
+      include: { _count: true, mediaItems: true },
       where: { id: id.payload.userId }
     });
   }
