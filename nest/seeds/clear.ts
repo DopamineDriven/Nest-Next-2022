@@ -12,6 +12,7 @@ export const clearData = async <
   const verificationRequests = await prisma.verificationToken.deleteMany({});
   const sessions = await prisma.session.deleteMany({});
   const profile = await prisma.profile.deleteMany({});
+  const mediaItems = await prisma.mediaItem.deleteMany({})
 
   return {
     accounts,
@@ -22,6 +23,7 @@ export const clearData = async <
     categories,
     comments,
     verificationRequests,
+    mediaItems,
     users
   };
 };
@@ -39,6 +41,7 @@ export const clearUsers = async <
         comments: true,
         connections: true,
         entries: true,
+        mediaItems: true,
         profile: true,
         sessions: true,
         _count: true
@@ -76,7 +79,7 @@ async function main() {
     const s = async (): Promise<ClearInferred> =>
       await clearData(prisma).then(data => {
         console.log(
-          `[clearing]: there are ${data.users.count} users, ${data.accounts.count} accounts, ${data.comments.count} comments, ${data.connections.count} connections, ${data.categories.count} categories, ${data.entries.count} entries, ${data.profile.count} profiles, ${data.sessions.count} sessions, and ${data.verificationRequests.count} verification requests remaining`
+          `[clearing]: there are ${data.users.count} users, ${data.accounts.count} accounts, ${data.comments.count} comments, ${data.connections.count} connections, ${data.categories.count} categories, ${data.entries.count} entries, ${data.profile.count} profiles, ${data.sessions.count} sessions, ${data.mediaItems.count} media items, and ${data.verificationRequests.count} verification requests remaining`
         );
         return data;
       });

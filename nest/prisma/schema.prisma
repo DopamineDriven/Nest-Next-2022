@@ -63,12 +63,16 @@ model MediaItem {
   name String?
   size String?
   type MimeTypes?
+  destination MediaItemDestination?
   fileLastModified DateTime?
   width Float?
   height Float?
   quality Int?
   src String?
   srcSet String?
+  ariaLabel String?
+  title String?
+  caption String?
   @@unique([name, userId])
 }
 
@@ -77,7 +81,7 @@ model User {
   firstName     String?
   lastName      String?
   email         String       @unique
-  image         Json[]
+  image         Json[]       
   role          Role?        @default(USER)
   status        UserStatus?  @default(OFFLINE)
   password      String       @default("")
@@ -266,4 +270,12 @@ enum MimeTypes {
   SVG
   TIFF
   BMP
+}
+
+enum MediaItemDestination {
+  COVER_IMAGE
+  AVATAR
+  COMMENT_ATTACHMENT
+  ENTRY_ATTACHMENT
+  FEATURED_IMAGE
 }

@@ -23,6 +23,14 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
     USER = "USER"
   }
 
+  enum MediaItemDestination {
+    COVER_IMAGE = "COVER_IMAGE",
+    AVATAR = "AVATAR",
+    COMMENT_ATTACHMENT = "COMMENT_ATTACHMENT",
+    ENTRY_ATTACHMENT = "ENTRY_ATTACHMENT",
+    FEATURED_IMAGE = "FEATURED_IMAGE"
+  }
+
   enum CommentReactions {
     LIKE = "LIKE",
     LOVE = "LOVE",
@@ -83,206 +91,93 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
     return round(random() * (max - min) + min);
   }
 
-  const indexGenerator: {
-    quasiRandomGenderIndexGenerator: number[];
-    quasiRandomPronounIndexGenerator: number[];
-    randomReactionIndexGenerator: number[];
-    quasiRandomUserStatusIndexGenerator: number[];
-    quasiRandomRoleIndexGenerator: number[];
-    randomCountryIndexGenerator: number[];
-    randomCountryCodeIndexGenerator: number[];
-    randomMimeTypeIndexGenerator: number[];
-  } = {
-    quasiRandomGenderIndexGenerator: [0, 1, 2, 3, 4, 5, 6, 7].map(
-      quasiRandomGenderIndexValue => {
-        quasiRandomGenderIndexValue = n(0, 7);
-        return quasiRandomGenderIndexValue;
-      }
-    ),
-    quasiRandomPronounIndexGenerator: [0, 1, 2, 3, 4, 5, 6, 7, 8].map(
-      quasiRandomPronounIndexValue => {
-        quasiRandomPronounIndexValue = n(0, 8);
-        return quasiRandomPronounIndexValue;
-      }
-    ),
-    randomReactionIndexGenerator: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
-      randomReactionIndexValue => {
-        randomReactionIndexValue = n(0, 10);
-        return randomReactionIndexValue;
-      }
-    ),
-    quasiRandomUserStatusIndexGenerator: [
-      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
-    ].map(quasiRandomUserStatusIndexValue => {
-      quasiRandomUserStatusIndexValue = n(0, 11);
-      return quasiRandomUserStatusIndexValue;
-    }),
-    quasiRandomRoleIndexGenerator: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
-      quasiRandomRoleIndexValue => {
-        quasiRandomRoleIndexValue = n(0, 10);
-        return quasiRandomRoleIndexValue;
-      }
-    ),
-    randomCountryIndexGenerator: [
-      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15, 16, 17, 18, 19, 20
-    ].map(randomCountryIndexValue => {
-      randomCountryIndexValue = n(0, 20);
-      return randomCountryIndexValue;
-    }),
-    randomCountryCodeIndexGenerator: [
-      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15, 16, 17, 18, 19, 20
-    ].map(randomCountryCodeIndexValue => {
-      randomCountryCodeIndexValue = n(0, 20);
-      return randomCountryCodeIndexValue;
-    }),
-    randomMimeTypeIndexGenerator: [0, 1, 2, 3, 4, 5, 6].map(
-      randomMimeIndexGenerator => {
-        randomMimeIndexGenerator = n(0, 7);
-        return randomMimeIndexGenerator;
-      }
-    )
-  };
+  const {
+    UnitedStates,
+    UnitedKingdom,
+    Australia,
+    Germany,
+    SouthAfrica,
+    Bahamas,
+    Taiwan,
+    Japan,
+    Vietnam,
+    India,
+    Norway,
+    Canada,
+    Mexico,
+    Chile,
+    SaudiArabia,
+    Argentina,
+    Italy,
+    Poland,
+    RussianFederation,
+    France
+  } = Country;
+  const seedUserCountry = [
+    UnitedStates,
+    UnitedKingdom,
+    Australia,
+    Germany,
+    SouthAfrica,
+    Bahamas,
+    Taiwan,
+    Japan,
+    Vietnam,
+    India,
+    Norway,
+    Canada,
+    Mexico,
+    Chile,
+    SaudiArabia,
+    Argentina,
+    Italy,
+    Poland,
+    RussianFederation,
+    France
+  ][n(0, 20)];
 
-  const enumSeeder: {
-    quasiRandomGender: keyof typeof Gender;
-    quasiRandomPronouns: keyof typeof Pronouns;
-    randomCommentReaction: keyof typeof CommentReactions;
-    quasiRandomUserStatus: keyof typeof UserStatus;
-    quasiRandomRole: keyof typeof Role;
-    randomCountryCodeSubset: number;
-    randomCountrySubset: keyof typeof Country;
-    randomMimeSelection: keyof typeof MimeTypes;
-  } = {
-    quasiRandomGender: [
-      Gender.FEMALE,
-      Gender.MALE,
-      Gender.FEMALE,
-      Gender.MALE,
-      Gender.OTHER,
-      Gender.UNCERTAIN,
-      Gender.FEMALE,
-      Gender.MALE
-    ][
-      indexGenerator.quasiRandomGenderIndexGenerator[n(0, 7)]
-    ].toString() as unknown as keyof typeof Gender,
-    quasiRandomPronouns: [
-      Pronouns.HE_HIM_HIS,
-      Pronouns.SHE_HER_HERS,
-      Pronouns.HE_HIM_HIS,
-      Pronouns.SHE_HER_HERS,
-      Pronouns.THEY_THEM_THEIRS,
-      Pronouns.NOT_LISTED,
-      Pronouns.PREFER_NOT_TO_SAY,
-      Pronouns.HE_HIM_HIS,
-      Pronouns.SHE_HER_HERS
-    ][
-      indexGenerator.quasiRandomPronounIndexGenerator[n(0, 8)]
-    ].toString() as unknown as keyof typeof Pronouns,
-    randomCommentReaction: [
-      CommentReactions.ANGRY,
-      CommentReactions.CARE,
-      CommentReactions.CONFUSED,
-      CommentReactions.DISLIKE,
-      CommentReactions.LAUGH,
-      CommentReactions.LIKE,
-      CommentReactions.LOVE,
-      CommentReactions.PARROT,
-      CommentReactions.ROCKET,
-      CommentReactions.TEARS,
-      CommentReactions.WOW
-    ][
-      indexGenerator.randomReactionIndexGenerator[n(0, 10)]
-    ].toString() as unknown as keyof typeof CommentReactions,
-    quasiRandomUserStatus: [
-      UserStatus.ONLINE,
-      UserStatus.OFFLINE,
-      UserStatus.BANNED,
-      UserStatus.DEACTIVATED,
-      UserStatus.ONLINE,
-      UserStatus.OFFLINE,
-      UserStatus.ONLINE,
-      UserStatus.OFFLINE,
-      UserStatus.DELETED,
-      UserStatus.SUSPENDED,
-      UserStatus.ONLINE,
-      UserStatus.OFFLINE
-    ][
-      indexGenerator.quasiRandomUserStatusIndexGenerator[n(0, 11)]
-    ].toString() as unknown as keyof typeof UserStatus,
-    quasiRandomRole: [
-      Role.USER,
-      Role.USER,
-      Role.MAINTAINER,
-      Role.USER,
-      Role.USER,
-      Role.ADMIN,
-      Role.USER,
-      Role.USER,
-      Role.ADMIN,
-      Role.USER,
-      Role.USER
-    ][
-      indexGenerator.quasiRandomRoleIndexGenerator[n(0, 10)]
-    ].toString() as unknown as keyof typeof Role,
-    randomCountryCodeSubset: [
-      CountryCode.USA,
-      CountryCode.UK,
-      CountryCode.Australia,
-      CountryCode.Germany,
-      CountryCode.SouthAfrica,
-      CountryCode.Bahamas,
-      CountryCode.Taiwan,
-      CountryCode.Japan,
-      CountryCode.Vietnam,
-      CountryCode.India,
-      CountryCode.Norway,
-      CountryCode.Canada,
-      CountryCode.Mexico,
-      CountryCode.Chile,
-      CountryCode.SaudiArabia,
-      CountryCode.Argentina,
-      CountryCode.Italy,
-      CountryCode.Poland,
-      CountryCode.Russia,
-      CountryCode.France
-    ][indexGenerator.randomCountryCodeIndexGenerator[n(0, 20)]],
-    randomCountrySubset: [
-      Country.UnitedStates,
-      Country.UnitedKingdom,
-      Country.Australia,
-      Country.Germany,
-      Country.SouthAfrica,
-      Country.Bahamas,
-      Country.Taiwan,
-      Country.Japan,
-      Country.Vietnam,
-      Country.India,
-      Country.Norway,
-      Country.Canada,
-      Country.Mexico,
-      Country.Chile,
-      Country.SaudiArabia,
-      Country.Argentina,
-      Country.Italy,
-      Country.Poland,
-      Country.RussianFederation,
-      Country.France
-    ][
-      indexGenerator.randomCountryIndexGenerator[n(0, 20)]
-    ] as unknown as keyof typeof Country,
-    randomMimeSelection: [
-      MimeTypes.AVIF,
-      MimeTypes.BMP,
-      MimeTypes.GIF,
-      MimeTypes.JPEG,
-      MimeTypes.PNG,
-      MimeTypes.SVG,
-      MimeTypes.TIFF,
-      MimeTypes.WEBP
-    ][
-      indexGenerator.randomMimeTypeIndexGenerator[n(0, 7)]
-    ].toString() as unknown as keyof typeof MimeTypes
-  };
+  const countryToCountryCode =
+    seedUserCountry === UnitedStates
+      ? 1
+      : seedUserCountry === UnitedKingdom
+      ? 44
+      : seedUserCountry === Australia
+      ? 61
+      : seedUserCountry === Germany
+      ? 49
+      : seedUserCountry === SouthAfrica
+      ? 27
+      : seedUserCountry === Bahamas
+      ? 1242
+      : seedUserCountry === Taiwan
+      ? 886
+      : seedUserCountry === Japan
+      ? 81
+      : seedUserCountry === Vietnam
+      ? 84
+      : seedUserCountry === India
+      ? 91
+      : seedUserCountry === Norway
+      ? 47
+      : seedUserCountry === Canada
+      ? 1
+      : seedUserCountry === Mexico
+      ? 52
+      : seedUserCountry === Chile
+      ? 56
+      : seedUserCountry === SaudiArabia
+      ? 966
+      : seedUserCountry === Argentina
+      ? 54
+      : seedUserCountry === Italy
+      ? 39
+      : seedUserCountry === Poland
+      ? 48
+      : seedUserCountry === RussianFederation
+      ? 7
+      : seedUserCountry === France
+      ? 33
+      : 0;
 
   const thoseDigits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     .map(value => {
@@ -291,7 +186,7 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
     })
     .join("");
   // E164 Intl Format +countrycode${thoseDigits}
-  const standardE164 = `+1${thoseDigits}`.trim();
+  const standardE164 = `+${countryToCountryCode}${thoseDigits}`.trim();
 
   const usingUnixTime = (): number => {
     const twoThousandFourUnix = 1095379200500; // 2004
@@ -319,7 +214,11 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
       type: MimeTypes.WEBP,
       size: "1.35MB",
       width: 2250.75,
-      height: 1550.75
+      height: 1550.75,
+      caption: faker.lorem.sentence(5),
+      title: `${seedFirstName} ${seedSurname}'s Featured Image`,
+      ariaLabel: "Accessibility label",
+      destination: MediaItemDestination.FEATURED_IMAGE
     },
     { unique: `${seedUserId}_${featuredImageName}` }
   ];
@@ -339,7 +238,11 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
       size: "12.5MB",
       width: 2500.0,
       quality: 80,
-      height: 1750.25
+      height: 1750.25,
+      title: `${seedFirstName} ${seedSurname}'s Cover Image`,
+      ariaLabel: "Accessibility label",
+      caption: faker.lorem.sentence(5),
+      destination: MediaItemDestination.COVER_IMAGE
     },
     { unique: `${seedUserId}_${coverImageFilename}` }
   ];
@@ -360,7 +263,11 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
       type: MimeTypes.WEBP,
       size: "0.25MB",
       width: 125.0,
-      height: 125.0
+      height: 125.0,
+      caption: faker.lorem.sentence(5),
+      title: `${seedFirstName} ${seedSurname}'s Avatar`,
+      ariaLabel: "Accessibility label",
+      destination: MediaItemDestination.AVATAR
     },
     { unique: `${seedUserId}_${userAvatarFileName}` }
   ];
@@ -373,28 +280,37 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
   const entryId = faker.datatype.uuid();
   const signature = toBase64(refreshToken);
   const reactionTemplate = (min: number, max: number) =>
-    [
-      "ANGRY",
-      "CARE",
-      "CONFUSED",
-      "DISLIKE",
-      "LAUGH",
-      "LIKE",
-      "LOVE",
-      "PARROT",
-      "ROCKET",
-      "TEARS",
-      "WOW",
-      "ANGRY",
-      "LOVE",
-      "LIKE",
-      "LIKE",
-      "LIKE",
-      "LAUGH",
-      "LOVE",
-      "DISLIKE",
-      "WOW",
-      "PARROT"
+    [CommentReactions.ANGRY,
+      CommentReactions.CARE,
+      CommentReactions.CONFUSED,
+      CommentReactions.DISLIKE,
+      CommentReactions.LAUGH,
+      CommentReactions.LIKE,
+      CommentReactions.LOVE,
+      CommentReactions.PARROT,
+      CommentReactions.ROCKET,
+      CommentReactions.TEARS,
+      CommentReactions.WOW,
+      CommentReactions.LAUGH,
+      CommentReactions.LIKE,
+      CommentReactions.LOVE,
+      CommentReactions.PARROT,
+      CommentReactions.LAUGH,
+      CommentReactions.LIKE,
+      CommentReactions.LOVE,
+      CommentReactions.PARROT,
+      CommentReactions.LAUGH,
+      CommentReactions.LIKE,
+      CommentReactions.LOVE,
+      CommentReactions.PARROT,
+      CommentReactions.LAUGH,
+      CommentReactions.LIKE,
+      CommentReactions.LOVE,
+      CommentReactions.PARROT,
+      CommentReactions.LAUGH,
+      CommentReactions.LIKE,
+      CommentReactions.LOVE,
+      CommentReactions.PARROT
     ][n(min, max)] as keyof typeof CommentReactions;
   // intra-enum field ratios reflective of general population frequencies
   const seedUser = async () => {
@@ -462,26 +378,26 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
             ][n(0, 11)] as keyof typeof Gender,
             id: faker.datatype.uuid(),
             country: [
-              Country.UnitedStates,
-              Country.UnitedKingdom,
-              Country.Australia,
-              Country.Germany,
-              Country.SouthAfrica,
-              Country.Bahamas,
-              Country.Taiwan,
-              Country.Japan,
-              Country.Vietnam,
-              Country.India,
-              Country.Norway,
-              Country.Canada,
-              Country.Mexico,
-              Country.Chile,
-              Country.SaudiArabia,
-              Country.Argentina,
-              Country.Italy,
-              Country.Poland,
-              Country.RussianFederation,
-              Country.France
+              UnitedStates,
+              UnitedKingdom,
+              Australia,
+              Germany,
+              SouthAfrica,
+              Bahamas,
+              Taiwan,
+              Japan,
+              Vietnam,
+              India,
+              Norway,
+              Canada,
+              Mexico,
+              Chile,
+              SaudiArabia,
+              Argentina,
+              Italy,
+              Poland,
+              RussianFederation,
+              France
             ][n(0, 20)],
             phoneNumber: standardE164,
             memberSince: new Date(Date.now()),
@@ -581,11 +497,11 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
               updatedAt: new Date(Date.now()),
               reactions: {
                 set: [
-                  reactionTemplate(0, 20),
-                  reactionTemplate(0, 21),
-                  reactionTemplate(0, 22),
-                  reactionTemplate(0, 19),
-                  reactionTemplate(0, 20)
+                  reactionTemplate(0, 30),
+                  reactionTemplate(0, 30),
+                  reactionTemplate(0, 30),
+                  reactionTemplate(0, 30),
+                  reactionTemplate(0, 30)
                 ]
               },
               position: "MAIN"
@@ -611,7 +527,12 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
                 uploadedAt: new Date(
                   `${coverImage.find(uploadedAt => uploadedAt)?.uploadedAt}`
                 ),
-                type: coverImage.find(type => type)?.type
+                type: coverImage.find(type => type)?.type,
+                ariaLabel: coverImage.find(ariaLabel => ariaLabel)?.ariaLabel,
+                destination: coverImage.find(destination => destination)
+                  ?.destination,
+                caption: coverImage.find(caption => caption)?.caption,
+                title: coverImage.find(title => title)?.title
               },
               {
                 id: featuredImage.find(id => id)?.id,
@@ -628,7 +549,13 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
                 uploadedAt: new Date(
                   `${featuredImage.find(uploadedAt => uploadedAt)?.uploadedAt}`
                 ),
-                type: featuredImage.find(type => type)?.type
+                type: featuredImage.find(type => type)?.type,
+                ariaLabel: featuredImage.find(ariaLabel => ariaLabel)
+                  ?.ariaLabel,
+                destination: featuredImage.find(destination => destination)
+                  ?.destination,
+                caption: featuredImage.find(caption => caption)?.caption,
+                title: featuredImage.find(title => title)?.title
               },
               {
                 id: userAvatar.find(id => id)?.id,
@@ -645,13 +572,20 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
                 uploadedAt: new Date(
                   `${userAvatar.find(uploadedAt => uploadedAt)?.uploadedAt}`
                 ),
-                type: userAvatar.find(type => type)?.type
+                type: userAvatar.find(type => type)?.type,
+                ariaLabel: userAvatar.find(ariaLabel => ariaLabel)?.ariaLabel,
+                destination: userAvatar.find(destination => destination)
+                  ?.destination,
+                caption: userAvatar.find(caption => caption)?.caption,
+                title: userAvatar.find(title => title)?.title
               }
             ]
           }
         }
       },
       include: {
+        categories: true,
+        connections: true,
         sessions: true,
         accounts: true,
         profile: true,
