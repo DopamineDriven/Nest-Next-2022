@@ -54,12 +54,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model MediaItem {
+  id String @id @default(uuid())
+  userId String
+  uploadedAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+  user User @relation("UserMedia", fields: [userId], references: [id], onDelete: Cascade)
+  name String?
+  size String?
+  type MimeTypes?
+  fileLastModified DateTime?
+  width Float?
+  height Float?
+  quality Int?
+  src String?
+  srcSet String?
+  @@unique([name, userId])
+}
+
 model User {
   id            String       @id @default(uuid())
   firstName     String?
   lastName      String?
   email         String       @unique
-  image         String?
+  image         Json[]
   role          Role?        @default(USER)
   status        UserStatus?  @default(OFFLINE)
   password      String       @default("")
@@ -73,6 +91,7 @@ model User {
   categories    Category[]   @relation("CategoryCreator")
   comments      Comment[]    @relation("CommentAuthor")
   sessions      Session[]    @relation("UserSessions")
+  mediaItems    MediaItem[]      @relation("UserMedia")
 }
 
 model Profile {
@@ -81,7 +100,7 @@ model Profile {
   memberSince    DateTime  @default(now())
   gender         Gender?   @default(OTHER)
   pronouns       Pronouns? @default(NOT_LISTED)
-  coverPhoto     String?
+  coverPhoto     Json[]
   lastSeen       DateTime? @updatedAt
   dob            String?
   phoneNumber    String?
@@ -121,6 +140,7 @@ model Comment {
   reactions CommentReactions[]
   entry     Entry              @relation("EntryComments", fields: [entryId], references: [id], onDelete: Cascade)
   author    User               @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  @@unique([authorId, entryId])
 }
 
 model Connection {
@@ -143,7 +163,7 @@ model Entry {
   content       Json[]
   createdAt     DateTime   @default(now())
   updatedAt     DateTime?  @updatedAt
-  featuredImage String?
+  featuredImage Json[]
   categories    Category[] @relation("CategoryToEntry", fields: [categoryId], references: [id])
   author        User       @relation("Author", fields: [authorId], references: [id], onDelete: Cascade)
   comments      Comment[]  @relation("EntryComments")
@@ -235,4 +255,15 @@ enum UserStatus {
   DELETED
   BANNED
   DEACTIVATED
+}
+
+enum MimeTypes {
+  GIF
+  JPEG
+  WEBP
+  AVIF
+  PNG
+  SVG
+  TIFF
+  BMP
 }

@@ -1541,6 +1541,8 @@ export abstract class IMutation {
 
     abstract signup(data: SignupInput): Token | Promise<Token>;
 
+    abstract uploadFile(name: Upload): JSONObject | Promise<JSONObject>;
+
     abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
 }
 
@@ -1724,5 +1726,6 @@ export type DateTime = any;
 export type JSON = any;
 export type JSONObject = any;
 export type PhoneNumber = any;
+export type Upload = any;
 export type TypesUnion = Entry | Profile | User;
 type Nullable<T> = T | null;

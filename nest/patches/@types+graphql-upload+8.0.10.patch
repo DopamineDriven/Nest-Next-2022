@@ -1,0 +1,13 @@
+diff --git a/node_modules/@types/graphql-upload/index.d.ts b/node_modules/@types/graphql-upload/index.d.ts
+index 0ae282f..c02a043 100755
+--- a/node_modules/@types/graphql-upload/index.d.ts
++++ b/node_modules/@types/graphql-upload/index.d.ts
+@@ -43,7 +43,7 @@ export const GraphQLUpload: GraphQLScalarType;
+ export interface FileUpload {
+   filename: string;
+   mimetype: string;
+-  encoding: string;
++  encoding: BufferEncoding;
+   createReadStream(): ReadStream;
+ }
+ 
