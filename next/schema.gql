@@ -137,7 +137,7 @@ type Auth {
   accessToken: String
   refreshToken: String
   session: Session
-  user: User
+  user: User!
 }
 
 type AuthDetailed {
@@ -289,6 +289,11 @@ type Comment {
   updatedAt: DateTime
 }
 
+input CommentAuthorIdEntryIdCompoundUniqueInput {
+  authorId: String!
+  entryId: String!
+}
+
 input CommentCreateManyAuthorInput {
   body: JSON
   createdAt: DateTime
@@ -412,6 +417,7 @@ input CommentWhereInput {
 }
 
 input CommentWhereUniqueInput {
+  authorId_entryId: CommentAuthorIdEntryIdCompoundUniqueInput
   id: String
 }
 
@@ -527,9 +533,9 @@ type Entry {
   categories: [Category!]
   categoryId: String
   comments: [Comment!]
-  content: [JSON!]
+  content: [JSONObject!]
   createdAt: DateTime!
-  featuredImage: String
+  featuredImage: [JSONObject!]
   id: ID!
   published: Boolean
   title: String
@@ -554,7 +560,7 @@ input EntryCreateInput {
   comments: CommentCreateNestedManyWithoutEntryInput
   content: EntryCreatecontentInput
   createdAt: DateTime
-  featuredImage: String
+  featuredImage: EntryCreatefeaturedImageInput
   id: String
   published: Boolean
   title: String!
@@ -565,7 +571,7 @@ input EntryCreateManyAuthorInput {
   categoryId: String
   content: EntryCreateManycontentInput
   createdAt: DateTime
-  featuredImage: String
+  featuredImage: EntryCreateManyfeaturedImageInput
   id: String
   published: Boolean
   title: String!
@@ -578,6 +584,10 @@ input EntryCreateManyAuthorInputEnvelope {
 }
 
 input EntryCreateManycontentInput {
+  set: [JSON!]!
+}
+
+input EntryCreateManyfeaturedImageInput {
   set: [JSON!]!
 }
 
@@ -621,7 +631,7 @@ input EntryCreateWithoutAuthorInput {
   comments: CommentCreateNestedManyWithoutEntryInput
   content: EntryCreatecontentInput
   createdAt: DateTime
-  featuredImage: String
+  featuredImage: EntryCreatefeaturedImageInput
   id: String
   published: Boolean
   title: String!
@@ -634,7 +644,7 @@ input EntryCreateWithoutCategoriesInput {
   comments: CommentCreateNestedManyWithoutEntryInput
   content: EntryCreatecontentInput
   createdAt: DateTime
-  featuredImage: String
+  featuredImage: EntryCreatefeaturedImageInput
   id: String
   published: Boolean
   title: String!
@@ -647,7 +657,7 @@ input EntryCreateWithoutCommentsInput {
   categoryId: String
   content: EntryCreatecontentInput
   createdAt: DateTime
-  featuredImage: String
+  featuredImage: EntryCreatefeaturedImageInput
   id: String
   published: Boolean
   title: String!
@@ -655,6 +665,10 @@ input EntryCreateWithoutCommentsInput {
 }
 
 input EntryCreatecontentInput {
+  set: [JSON!]!
+}
+
+input EntryCreatefeaturedImageInput {
   set: [JSON!]!
 }
 
@@ -676,7 +690,6 @@ input EntryOrderByRelationAggregateInput {
 enum EntryOrderByRelevanceFieldEnum {
   authorId
   categoryId
-  featuredImage
   id
   title
 }
@@ -731,7 +744,7 @@ input EntryWhereInput {
   comments: CommentListRelationFilter
   content: JsonNullableListFilter
   createdAt: DateTimeFilter
-  featuredImage: StringNullableFilter
+  featuredImage: JsonNullableListFilter
   id: StringFilter
   published: BoolFilter
   title: StringFilter
@@ -756,6 +769,20 @@ input EnumGenderNullableFilter {
   in: [Gender!]
   not: NestedEnumGenderNullableFilter
   notIn: [Gender!]
+}
+
+input EnumMediaItemDestinationNullableFilter {
+  equals: MediaItemDestination
+  in: [MediaItemDestination!]
+  not: NestedEnumMediaItemDestinationNullableFilter
+  notIn: [MediaItemDestination!]
+}
+
+input EnumMimeTypesNullableFilter {
+  equals: MimeTypes
+  in: [MimeTypes!]
+  not: NestedEnumMimeTypesNullableFilter
+  notIn: [MimeTypes!]
 }
 
 input EnumPronounsNullableFilter {
@@ -789,6 +816,16 @@ input FindManyEntriessPaginatedInput {
   where: EntryWhereInput
 }
 
+input FindManyMediaItemsInput {
+  cursor: MediaItemWhereUniqueInput
+  distinct: [MediaItemScalarFieldEnum!]
+  orderBy: [MediaItemOrderByWithRelationAndSearchRelevanceInput!]
+  pagination: PaginationArgsInput = {first: 10}
+  skip: Int
+  take: Int
+  where: MediaItemWhereInput
+}
+
 input FindManyProfilesPaginatedInput {
   cursor: ProfileWhereUniqueInput
   distinct: [ProfileScalarFieldEnum!]
@@ -807,6 +844,17 @@ input FindManyUsersPaginatedInput {
   skip: Int
   take: Int
   where: UserWhereInput
+}
+
+input FloatNullableFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatNullableFilter
+  notIn: [Float!]
 }
 
 enum Gender {
@@ -883,6 +931,212 @@ input LoginInput {
   password: String
 }
 
+type MediaItem {
+  fileLastModified: DateTime
+  height: Float
+  id: ID!
+  name: String
+  quality: Int
+  size: String
+  src: String
+  srcSet: String
+  type: MimeTypes
+  updatedAt: DateTime
+  uploadedAt: DateTime!
+  user: User!
+  userId: String!
+  width: Float
+}
+
+type MediaItemConnection {
+  edges: [MediaItemEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+input MediaItemCreateManyUserInput {
+  ariaLabel: String
+  caption: String
+  destination: MediaItemDestination
+  fileLastModified: DateTime
+  height: Float
+  id: String
+  name: String
+  quality: Int
+  size: String
+  src: String
+  srcSet: String
+  title: String
+  type: MimeTypes
+  updatedAt: DateTime
+  uploadedAt: DateTime
+  width: Float
+}
+
+input MediaItemCreateManyUserInputEnvelope {
+  data: [MediaItemCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input MediaItemCreateNestedManyWithoutUserInput {
+  connect: [MediaItemWhereUniqueInput!]
+  connectOrCreate: [MediaItemCreateOrConnectWithoutUserInput!]
+  create: [MediaItemCreateWithoutUserInput!]
+  createMany: MediaItemCreateManyUserInputEnvelope
+}
+
+input MediaItemCreateOrConnectWithoutUserInput {
+  create: MediaItemCreateWithoutUserInput!
+  where: MediaItemWhereUniqueInput!
+}
+
+input MediaItemCreateWithoutUserInput {
+  ariaLabel: String
+  caption: String
+  destination: MediaItemDestination
+  fileLastModified: DateTime
+  height: Float
+  id: String
+  name: String
+  quality: Int
+  size: String
+  src: String
+  srcSet: String
+  title: String
+  type: MimeTypes
+  updatedAt: DateTime
+  uploadedAt: DateTime
+  width: Float
+}
+
+enum MediaItemDestination {
+  AVATAR
+  COMMENT_ATTACHMENT
+  COVER_IMAGE
+  ENTRY_ATTACHMENT
+  FEATURED_IMAGE
+}
+
+type MediaItemEdge {
+  cursor: String!
+  node: MediaItem!
+}
+
+input MediaItemListRelationFilter {
+  every: MediaItemWhereInput
+  none: MediaItemWhereInput
+  some: MediaItemWhereInput
+}
+
+input MediaItemNameUserIdCompoundUniqueInput {
+  name: String!
+  userId: String!
+}
+
+input MediaItemOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+enum MediaItemOrderByRelevanceFieldEnum {
+  ariaLabel
+  caption
+  id
+  name
+  size
+  src
+  srcSet
+  title
+  userId
+}
+
+input MediaItemOrderByRelevanceInput {
+  fields: [MediaItemOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input MediaItemOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: MediaItemOrderByRelevanceInput
+  ariaLabel: SortOrder
+  caption: SortOrder
+  destination: SortOrder
+  fileLastModified: SortOrder
+  height: SortOrder
+  id: SortOrder
+  name: SortOrder
+  quality: SortOrder
+  size: SortOrder
+  src: SortOrder
+  srcSet: SortOrder
+  title: SortOrder
+  type: SortOrder
+  updatedAt: SortOrder
+  uploadedAt: SortOrder
+  user: UserOrderByWithRelationAndSearchRelevanceInput
+  userId: SortOrder
+  width: SortOrder
+}
+
+enum MediaItemScalarFieldEnum {
+  ariaLabel
+  caption
+  destination
+  fileLastModified
+  height
+  id
+  name
+  quality
+  size
+  src
+  srcSet
+  title
+  type
+  updatedAt
+  uploadedAt
+  userId
+  width
+}
+
+input MediaItemWhereInput {
+  AND: [MediaItemWhereInput!]
+  NOT: [MediaItemWhereInput!]
+  OR: [MediaItemWhereInput!]
+  ariaLabel: StringNullableFilter
+  caption: StringNullableFilter
+  destination: EnumMediaItemDestinationNullableFilter
+  fileLastModified: DateTimeNullableFilter
+  height: FloatNullableFilter
+  id: StringFilter
+  name: StringNullableFilter
+  quality: IntNullableFilter
+  size: StringNullableFilter
+  src: StringNullableFilter
+  srcSet: StringNullableFilter
+  title: StringNullableFilter
+  type: EnumMimeTypesNullableFilter
+  updatedAt: DateTimeNullableFilter
+  uploadedAt: DateTimeFilter
+  user: UserRelationFilter
+  userId: StringFilter
+  width: FloatNullableFilter
+}
+
+input MediaItemWhereUniqueInput {
+  id: String
+  name_userId: MediaItemNameUserIdCompoundUniqueInput
+}
+
+enum MimeTypes {
+  AVIF
+  BMP
+  GIF
+  JPEG
+  PNG
+  SVG
+  TIFF
+  WEBP
+}
+
 type Mutation {
   changePassword(accessToken: String!, data: ChangePasswordInput!): User!
   createEntry(createInput: EntryCreateInput!): Entry!
@@ -893,6 +1147,7 @@ type Mutation {
   register(dataRegister: SignupInput!): AuthSansSession!
   signin: AuthDetailed!
   signup(data: SignupInput!): Token!
+  uploadFile(name: Upload!): JSONObject!
   userFromAccessTokenDecoded(token: String!): AuthDetailed!
 }
 
@@ -930,6 +1185,20 @@ input NestedEnumGenderNullableFilter {
   notIn: [Gender!]
 }
 
+input NestedEnumMediaItemDestinationNullableFilter {
+  equals: MediaItemDestination
+  in: [MediaItemDestination!]
+  not: NestedEnumMediaItemDestinationNullableFilter
+  notIn: [MediaItemDestination!]
+}
+
+input NestedEnumMimeTypesNullableFilter {
+  equals: MimeTypes
+  in: [MimeTypes!]
+  not: NestedEnumMimeTypesNullableFilter
+  notIn: [MimeTypes!]
+}
+
 input NestedEnumPronounsNullableFilter {
   equals: Pronouns
   in: [Pronouns!]
@@ -949,6 +1218,17 @@ input NestedEnumUserStatusNullableFilter {
   in: [UserStatus!]
   not: NestedEnumUserStatusNullableFilter
   notIn: [UserStatus!]
+}
+
+input NestedFloatNullableFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatNullableFilter
+  notIn: [Float!]
 }
 
 input NestedIntNullableFilter {
@@ -1004,7 +1284,6 @@ input PaginationArgsInput {
   before: String = null
   first: Int = 10
   last: Int = null
-  skip: Int = null
 }
 
 """
@@ -1013,11 +1292,11 @@ A field whose value conforms to the standard E.164 format as specified in: https
 scalar PhoneNumber
 
 type Profile {
-  activiyFeed: [JSON!]
-  bio: [JSON!]
+  activiyFeed: [JSONObject!]
+  bio: [JSONObject!]
   city: String
   country: String
-  coverPhoto: String
+  coverPhoto: [JSONObject!]
   dob: String
   gender: Gender
   id: ID!
@@ -1026,7 +1305,7 @@ type Profile {
   occupation: String
   phoneNumber: String
   pronouns: Pronouns
-  recentActivity: [JSON!]
+  recentActivity: [JSONObject!]
   user: User!
   userId: String!
   userInProfile: User!
@@ -1043,7 +1322,7 @@ input ProfileCreateInput {
   bio: ProfileCreatebioInput
   city: String
   country: String
-  coverPhoto: String
+  coverPhoto: ProfileCreatecoverPhotoInput
   dob: String
   gender: Gender
   id: String
@@ -1072,7 +1351,7 @@ input ProfileCreateWithoutUserInput {
   bio: ProfileCreatebioInput
   city: String
   country: String
-  coverPhoto: String
+  coverPhoto: ProfileCreatecoverPhotoInput
   dob: String
   gender: Gender
   id: String
@@ -1092,6 +1371,10 @@ input ProfileCreatebioInput {
   set: [JSON!]!
 }
 
+input ProfileCreatecoverPhotoInput {
+  set: [JSON!]!
+}
+
 input ProfileCreaterecentActivityInput {
   set: [JSON!]!
 }
@@ -1104,7 +1387,6 @@ type ProfileEdge {
 enum ProfileOrderByRelevanceFieldEnum {
   city
   country
-  coverPhoto
   dob
   id
   occupation
@@ -1169,7 +1451,7 @@ input ProfileWhereInput {
   bio: JsonNullableListFilter
   city: StringNullableFilter
   country: StringNullableFilter
-  coverPhoto: StringNullableFilter
+  coverPhoto: JsonNullableListFilter
   dob: StringNullableFilter
   gender: EnumGenderNullableFilter
   id: StringFilter
@@ -1211,6 +1493,7 @@ type Query {
   hello(name: String!): String!
   helloWorld: String!
   listEntries(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!): EntryConnection!
+  listMediaItems(findManyMediaItemsPaginated: FindManyMediaItemsInput): MediaItemConnection!
   listProfiles(findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput!): ProfileConnection!
   listUsers(findManyUsersPaginatedInput: FindManyUsersPaginatedInput = {}): UserConnection!
   me: AuthDetailed!
@@ -1404,6 +1687,9 @@ type Token {
 
 union TypesUnion = Entry | Profile | User
 
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
 type User {
   _count: UserCount
   accounts: [Account!]
@@ -1418,8 +1704,9 @@ type User {
   entries: [Entry!]
   firstName: String
   id: ID!
-  image: String
+  image: [JSONObject!]!
   lastName: String
+  mediaItems: [MediaItem!]
   password: String!
   profile: Profile
   role: Role
@@ -1442,6 +1729,7 @@ type UserCount {
   comments: Int!
   connections: Int!
   entries: Int!
+  mediaItems: Int!
   sessions: Int!
 }
 
@@ -1499,8 +1787,9 @@ input UserCreateWithoutCategoriesInput {
   entries: EntryCreateNestedManyWithoutAuthorInput
   firstName: String
   id: String
-  image: String
+  image: UserCreateimageInput
   lastName: String
+  mediaItems: MediaItemCreateNestedManyWithoutUserInput
   password: String
   profile: ProfileCreateNestedOneWithoutUserInput
   role: Role
@@ -1519,8 +1808,9 @@ input UserCreateWithoutCommentsInput {
   entries: EntryCreateNestedManyWithoutAuthorInput
   firstName: String
   id: String
-  image: String
+  image: UserCreateimageInput
   lastName: String
+  mediaItems: MediaItemCreateNestedManyWithoutUserInput
   password: String
   profile: ProfileCreateNestedOneWithoutUserInput
   role: Role
@@ -1539,8 +1829,9 @@ input UserCreateWithoutEntriesInput {
   emailVerified: DateTime
   firstName: String
   id: String
-  image: String
+  image: UserCreateimageInput
   lastName: String
+  mediaItems: MediaItemCreateNestedManyWithoutUserInput
   password: String
   profile: ProfileCreateNestedOneWithoutUserInput
   role: Role
@@ -1560,13 +1851,18 @@ input UserCreateWithoutProfileInput {
   entries: EntryCreateNestedManyWithoutAuthorInput
   firstName: String
   id: String
-  image: String
+  image: UserCreateimageInput
   lastName: String
+  mediaItems: MediaItemCreateNestedManyWithoutUserInput
   password: String
   role: Role
   sessions: SessionCreateNestedManyWithoutUserInput
   status: UserStatus
   updatedAt: DateTime
+}
+
+input UserCreateimageInput {
+  set: [JSON!]!
 }
 
 type UserEdge {
@@ -1578,7 +1874,6 @@ enum UserOrderByRelevanceFieldEnum {
   email
   firstName
   id
-  image
   lastName
   password
 }
@@ -1603,6 +1898,7 @@ input UserOrderByWithRelationAndSearchRelevanceInput {
   id: SortOrder
   image: SortOrder
   lastName: SortOrder
+  mediaItems: MediaItemOrderByRelationAggregateInput
   password: SortOrder
   profile: ProfileOrderByWithRelationAndSearchRelevanceInput
   role: SortOrder
@@ -1653,8 +1949,9 @@ input UserWhereInput {
   entries: EntryListRelationFilter
   firstName: StringNullableFilter
   id: StringFilter
-  image: StringNullableFilter
+  image: JsonNullableListFilter
   lastName: StringNullableFilter
+  mediaItems: MediaItemListRelationFilter
   password: StringFilter
   profile: ProfileRelationFilter
   role: EnumRoleNullableFilter
@@ -1683,8 +1980,9 @@ type Viewer {
   entries: [Entry!]
   firstName: String
   id: ID!
-  image: String
+  image: [JSONObject!]!
   lastName: String
+  mediaItems: [MediaItem!]
   password: String!
   profile: Profile
   role: Role

@@ -7,8 +7,7 @@ import {
 } from "../../common/pagination/pagination";
 import { Profile } from "./profile.model";
 import { ProfileRelationFilter } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-relation-filter.input";
-import { ProfileOrderByRelevanceInput } from "src/graphql.schema";
-
+import { ProfileOrderByRelevanceInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-order-by-relevance.input";
 @ConnectionFilterArgsType(ProfileRelationFilter)
 export class ProfileFilter {}
 

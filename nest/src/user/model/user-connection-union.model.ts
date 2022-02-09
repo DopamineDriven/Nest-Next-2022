@@ -9,16 +9,10 @@ import {
 } from "@nestjs/graphql";
 import { isTypeOfExpression } from "@ts-morph/common/lib/typescript";
 import { GraphQLTypeResolver, __TypeKind } from "graphql";
-import { TypeResolveFn } from "src/.generated/nest/graphql.nest";
 import { Entry } from "src/entry";
-import {
-  EntryConnection,
-  UserConnection,
-  ProfileConnection,
-  ProfileEdge,
-  EntryEdge,
-  UserEdge
-} from "src/graphql.schema";
+import { EntryConnection } from "src/entry/model/entry-connection.model";
+import { UserConnection } from "./user-connection.model";
+import { ProfileConnection } from "src/profile/model/profile-connection.model";
 import { Profile } from "src/profile";
 import { User } from "./user.model";
 import {
@@ -30,31 +24,31 @@ export type TypeConnectionsUnionType =
   | EntryConnection
   | ProfileConnection;
 
-export const typeConnectionsUnion = createUnionType<
-  Type<TypeConnectionsUnionType>[]
->({
-  name: "TypeConnectionsUnion",
-  types: () => [UserConnection, EntryConnection, ProfileConnection],
-  resolveType: ({
-    "0": { __typename, edges, pageInfo, totalCount },
-    "1": { getType, getContext },
-    "2": { returnType, fieldName, fieldNodes },
-    "3": { name, resolveType }
-  }: Parameters<
-    GraphQLTypeResolver<
-      Union<Type<TypeConnectionsUnionType>[]>,
-      GraphQLExecutionContext
-    >
-  >): UserConnection | EntryConnection | ProfileConnection | undefined => {
-    return __typename === "EntryConnection"
-      ? new EntryConnection()
-      : __typename === "ProfileConnection"
-      ? new ProfileConnection()
-      : __typename === "UserConnection"
-      ? new UserConnection()
-      : undefined;
-  }
-});
+// export const typeConnectionsUnion = createUnionType<
+//   Type<TypeConnectionsUnionType>[]
+// >({
+//   name: "TypeConnectionsUnion",
+//   types: () => [UserConnection, EntryConnection, ProfileConnection],
+//   resolveType: ({
+//     "0": {  },
+//     "1": { getType, getContext },
+//     "2": { returnType, fieldName, fieldNodes },
+//     "3": { name, resolveType }
+//   }: Parameters<
+//     GraphQLTypeResolver<
+//       Union<Type<TypeConnectionsUnionType>[]>,
+//       GraphQLExecutionContext
+//     >
+//   >): UserConnection | EntryConnection | ProfileConnection | undefined => {
+//     return __typename === "EntryConnection"
+//       ? new EntryConnection()
+//       : __typename === "ProfileConnection"
+//       ? new ProfileConnection()
+//       : __typename === "UserConnection"
+//       ? new UserConnection()
+//       : undefined;
+//   }
+// });
 
 export type BaseTypes = User | Entry | Profile;
 

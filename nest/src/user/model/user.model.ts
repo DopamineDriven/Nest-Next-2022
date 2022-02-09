@@ -10,8 +10,9 @@ import { UserCount } from "../outputs/user-count.output";
 import { Profile } from "../../profile/model/profile.model";
 import { Category } from "../../category/model/category.model";
 import { NullLiteral } from "ts-morph";
-import { GraphQLJSON, JSONResolver } from "graphql-scalars";
+import { GraphQLJSON, JSONObjectResolver, JSONResolver } from "graphql-scalars";
 import { MediaItem } from "src/media/model/media.model";
+import { Prisma } from "@prisma/client";
 type Nullable<T> = T | null;
 
 @ObjectType("User")
@@ -30,8 +31,8 @@ export class User {
   @Field(() => String, { nullable: false })
   email!: string;
 
-  @Field(() => [GraphQLJSON], {nullable:true})
-  image!: Array<any>;
+  @Field(() => [JSONObjectResolver])
+  image!: Array<any>
 
   @Field(() => Role, { nullable: true, defaultValue: Role.USER })
   role: Nullable<keyof typeof Role>;
@@ -83,7 +84,7 @@ export class User {
   categories?: Array<Category>;
 
   @Field(() => [MediaItem], { nullable: true })
-  mediaItems: Array<MediaItem> | null
+  mediaItems?: Array<MediaItem> | null
 
   @Field(() => UserCount, {
     defaultValue: {
@@ -92,7 +93,8 @@ export class User {
       connections: 0,
       categories: 0,
       comments: 0,
-      sessions: 0
+      sessions: 0,
+      mediaItems: 0
     },
     nullable: true
   })

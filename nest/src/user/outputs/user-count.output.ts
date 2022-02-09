@@ -19,4 +19,7 @@ export class UserCount {
 
   @Field(() => Int, { nullable: false, defaultValue: 0 })
   sessions!: number;
+
+  @Field(() => Int, { nullable: false, defaultValue: 0 })
+  mediaItems!: number;
 }

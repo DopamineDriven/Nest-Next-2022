@@ -2,7 +2,7 @@ import { CommentReactions } from "../../.generated/prisma-nestjs-graphql/prisma/
 import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { User } from "../../user/model/user.model";
 import { Entry } from "../../entry";
-import { JSONObjectResolver } from "graphql-scalars";
+import { GraphQLJSON, JSONObjectResolver } from "graphql-scalars";
 
 @ObjectType("Comment")
 export class Comment {
@@ -16,7 +16,7 @@ export class Comment {
   entryId!: string;
 
   @Field(() => JSONObjectResolver, { nullable: true })
-  body?: typeof JSONObjectResolver | null;
+  body?: any | null;
 
   @Field(() => String, { nullable: true })
   position?: string | null;

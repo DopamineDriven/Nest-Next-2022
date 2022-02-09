@@ -113,70 +113,75 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
     RussianFederation,
     France
   } = Country;
-  const seedUserCountry = [
-    UnitedStates,
-    UnitedKingdom,
-    Australia,
-    Germany,
-    SouthAfrica,
-    Bahamas,
-    Taiwan,
-    Japan,
-    Vietnam,
-    India,
-    Norway,
-    Canada,
-    Mexico,
-    Chile,
-    SaudiArabia,
-    Argentina,
-    Italy,
-    Poland,
-    RussianFederation,
-    France
-  ][n(0, 20)];
+  const seedUserCountry = (min: number, max: number) =>
+    [
+      UnitedStates,
+      UnitedKingdom,
+      Australia,
+      Germany,
+      SouthAfrica,
+      Bahamas,
+      Taiwan,
+      Japan,
+      Vietnam,
+      India,
+      Norway,
+      Canada,
+      Mexico,
+      Chile,
+      SaudiArabia,
+      Argentina,
+      Italy,
+      Poland,
+      RussianFederation,
+      France
+    ][n(min, max)];
 
-  const countryToCountryCode =
-    seedUserCountry === UnitedStates
-      ? 1
-      : seedUserCountry === UnitedKingdom
-      ? 44
-      : seedUserCountry === Australia
-      ? 61
-      : seedUserCountry === Germany
-      ? 49
-      : seedUserCountry === SouthAfrica
-      ? 27
-      : seedUserCountry === Bahamas
-      ? 1242
-      : seedUserCountry === Taiwan
-      ? 886
-      : seedUserCountry === Japan
-      ? 81
-      : seedUserCountry === Vietnam
-      ? 84
-      : seedUserCountry === India
-      ? 91
-      : seedUserCountry === Norway
-      ? 47
-      : seedUserCountry === Canada
-      ? 1
-      : seedUserCountry === Mexico
-      ? 52
-      : seedUserCountry === Chile
-      ? 56
-      : seedUserCountry === SaudiArabia
-      ? 966
-      : seedUserCountry === Argentina
-      ? 54
-      : seedUserCountry === Italy
-      ? 39
-      : seedUserCountry === Poland
-      ? 48
-      : seedUserCountry === RussianFederation
-      ? 7
-      : seedUserCountry === France
-      ? 33
+  const userCountry = seedUserCountry(0, 20);
+
+  const countryToCountryCode = (country: typeof userCountry = userCountry) =>
+    userCountry.valueOf().includes(UnitedStates) && country === UnitedStates
+      ? CountryCode.USA.valueOf()
+      : userCountry.valueOf().includes(UnitedKingdom) &&
+        country === UnitedKingdom
+      ? CountryCode.UK.valueOf()
+      : userCountry.valueOf().includes(Australia) && country === Australia
+      ? CountryCode.Australia.valueOf()
+      : userCountry.valueOf().includes(Germany) && country === Germany
+      ? CountryCode.Germany.valueOf()
+      : userCountry.valueOf().includes(SouthAfrica) && country === SouthAfrica
+      ? CountryCode.SouthAfrica.valueOf()
+      : userCountry.valueOf().includes(Bahamas) && country === Bahamas
+      ? CountryCode.Bahamas.valueOf()
+      : userCountry.valueOf().includes(Taiwan) && country === Taiwan
+      ? CountryCode.Taiwan.valueOf()
+      : userCountry.valueOf().includes(Japan) && country === Japan
+      ? CountryCode.Japan.valueOf()
+      : userCountry.valueOf().includes(Vietnam) && country === Vietnam
+      ? CountryCode.Vietnam.valueOf()
+      : userCountry.valueOf().includes(India) && country === India
+      ? CountryCode.India.valueOf()
+      : userCountry.valueOf().includes(Norway) && country === Norway
+      ? CountryCode.Norway.valueOf()
+      : userCountry.valueOf().includes(Canada) && country === Canada
+      ? CountryCode.Canada.valueOf()
+      : userCountry.valueOf().includes(Mexico) && country === Mexico
+      ? CountryCode.Mexico.valueOf()
+      : userCountry.valueOf().includes(Chile) && country === Chile
+      ? CountryCode.Chile.valueOf()
+      : userCountry.valueOf().includes(SaudiArabia) && country === SaudiArabia
+      ? CountryCode.SaudiArabia.valueOf()
+      : userCountry.valueOf().includes(Argentina) && country === Argentina
+      ? CountryCode.Argentina.valueOf()
+      : userCountry.valueOf().includes(Italy) && country === Italy
+      ? CountryCode.Italy.valueOf()
+      : userCountry.valueOf().includes(Poland) && country === Poland
+      ? CountryCode.Poland.valueOf()
+      : userCountry.valueOf().includes(RussianFederation) &&
+        country === RussianFederation
+      ? CountryCode.Russia.valueOf()
+      : userCountry.valueOf().includes(France) && country === France
+      ? CountryCode.France.valueOf()
       : 0;
 
   const thoseDigits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -185,8 +190,12 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
       return value;
     })
     .join("");
+  const phoneNumberCallingCode = countryToCountryCode(userCountry)
+    .valueOf()
+    .toString()
+    .trim();
   // E164 Intl Format +countrycode${thoseDigits}
-  const standardE164 = `+${countryToCountryCode}${thoseDigits}`.trim();
+  const standardE164 = `+${phoneNumberCallingCode}${thoseDigits}`.trim();
 
   const usingUnixTime = (): number => {
     const twoThousandFourUnix = 1095379200500; // 2004
@@ -280,7 +289,8 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
   const entryId = faker.datatype.uuid();
   const signature = toBase64(refreshToken);
   const reactionTemplate = (min: number, max: number) =>
-    [CommentReactions.ANGRY,
+    [
+      CommentReactions.ANGRY,
       CommentReactions.CARE,
       CommentReactions.CONFUSED,
       CommentReactions.DISLIKE,
@@ -619,7 +629,21 @@ async function main() {
     }> = async (): Promise<SeedInferred> =>
       await seed(prisma).then(data => {
         console.log(
-          `[seeding]: success 🎉 created ${data.role} with id ${data.id} and email ${data.email} -- in country ${data.profile?.country} having phone number ${data.profile?.phoneNumber} -- gender: ${data.profile?.gender}; pronouns: ${data.profile?.pronouns} -- authored ${data.entries[0].title} having id ${data.entries[0].id}`
+          JSON.stringify(
+            `[seeding]: success 🎉 created ${data.role} with id ${
+              data.id
+            } and email ${data.email} -- in country ${
+              data.profile?.country
+            } having phone number ${data.profile?.phoneNumber} -- gender: ${
+              data.profile?.gender
+            }; pronouns: ${data.profile?.pronouns} -- authored ${
+              data.entries[0].title
+            } having id ${data.entries[0].id} -- with avatar ${data.image
+              .find(src => src)
+              ?.valueOf()} having reactions to a comment on their entry of ${data.comments[0].reactions}`,
+            null,
+            2
+          )
         );
         return data;
       });

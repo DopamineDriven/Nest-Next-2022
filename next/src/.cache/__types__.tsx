@@ -26,6 +26,8 @@ export type Scalars = {
   JSONObject: any;
   /** A field whose value conforms to the standard E.164 format as specified in: https://en.wikipedia.org/wiki/E.164. Basically this is +17895551234. */
   PhoneNumber: any;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any;
 };
 
 export type Account = {
@@ -165,7 +167,7 @@ export type Auth = {
   accessToken?: Maybe<Scalars['String']>;
   refreshToken?: Maybe<Scalars['String']>;
   session?: Maybe<Session>;
-  user?: Maybe<User>;
+  user: User;
 };
 
 export type AuthDetailed = {
@@ -319,6 +321,11 @@ export type Comment = {
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
+export type CommentAuthorIdEntryIdCompoundUniqueInput = {
+  authorId: Scalars['String'];
+  entryId: Scalars['String'];
+};
+
 export type CommentCreateManyAuthorInput = {
   body?: InputMaybe<Scalars['JSON']>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -442,6 +449,7 @@ export type CommentWhereInput = {
 };
 
 export type CommentWhereUniqueInput = {
+  authorId_entryId?: InputMaybe<CommentAuthorIdEntryIdCompoundUniqueInput>;
   id?: InputMaybe<Scalars['String']>;
 };
 
@@ -554,9 +562,9 @@ export type Entry = {
   categories?: Maybe<Array<Category>>;
   categoryId?: Maybe<Scalars['String']>;
   comments?: Maybe<Array<Comment>>;
-  content?: Maybe<Array<Scalars['JSON']>>;
+  content?: Maybe<Array<Scalars['JSONObject']>>;
   createdAt: Scalars['DateTime'];
-  featuredImage?: Maybe<Scalars['String']>;
+  featuredImage?: Maybe<Array<Scalars['JSONObject']>>;
   id: Scalars['ID'];
   published?: Maybe<Scalars['Boolean']>;
   title?: Maybe<Scalars['String']>;
@@ -583,7 +591,7 @@ export type EntryCreateInput = {
   comments?: InputMaybe<CommentCreateNestedManyWithoutEntryInput>;
   content?: InputMaybe<EntryCreatecontentInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
-  featuredImage?: InputMaybe<Scalars['String']>;
+  featuredImage?: InputMaybe<EntryCreatefeaturedImageInput>;
   id?: InputMaybe<Scalars['String']>;
   published?: InputMaybe<Scalars['Boolean']>;
   title: Scalars['String'];
@@ -594,7 +602,7 @@ export type EntryCreateManyAuthorInput = {
   categoryId?: InputMaybe<Scalars['String']>;
   content?: InputMaybe<EntryCreateManycontentInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
-  featuredImage?: InputMaybe<Scalars['String']>;
+  featuredImage?: InputMaybe<EntryCreateManyfeaturedImageInput>;
   id?: InputMaybe<Scalars['String']>;
   published?: InputMaybe<Scalars['Boolean']>;
   title: Scalars['String'];
@@ -607,6 +615,10 @@ export type EntryCreateManyAuthorInputEnvelope = {
 };
 
 export type EntryCreateManycontentInput = {
+  set: Array<Scalars['JSON']>;
+};
+
+export type EntryCreateManyfeaturedImageInput = {
   set: Array<Scalars['JSON']>;
 };
 
@@ -650,7 +662,7 @@ export type EntryCreateWithoutAuthorInput = {
   comments?: InputMaybe<CommentCreateNestedManyWithoutEntryInput>;
   content?: InputMaybe<EntryCreatecontentInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
-  featuredImage?: InputMaybe<Scalars['String']>;
+  featuredImage?: InputMaybe<EntryCreatefeaturedImageInput>;
   id?: InputMaybe<Scalars['String']>;
   published?: InputMaybe<Scalars['Boolean']>;
   title: Scalars['String'];
@@ -663,7 +675,7 @@ export type EntryCreateWithoutCategoriesInput = {
   comments?: InputMaybe<CommentCreateNestedManyWithoutEntryInput>;
   content?: InputMaybe<EntryCreatecontentInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
-  featuredImage?: InputMaybe<Scalars['String']>;
+  featuredImage?: InputMaybe<EntryCreatefeaturedImageInput>;
   id?: InputMaybe<Scalars['String']>;
   published?: InputMaybe<Scalars['Boolean']>;
   title: Scalars['String'];
@@ -676,7 +688,7 @@ export type EntryCreateWithoutCommentsInput = {
   categoryId?: InputMaybe<Scalars['String']>;
   content?: InputMaybe<EntryCreatecontentInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
-  featuredImage?: InputMaybe<Scalars['String']>;
+  featuredImage?: InputMaybe<EntryCreatefeaturedImageInput>;
   id?: InputMaybe<Scalars['String']>;
   published?: InputMaybe<Scalars['Boolean']>;
   title: Scalars['String'];
@@ -684,6 +696,10 @@ export type EntryCreateWithoutCommentsInput = {
 };
 
 export type EntryCreatecontentInput = {
+  set: Array<Scalars['JSON']>;
+};
+
+export type EntryCreatefeaturedImageInput = {
   set: Array<Scalars['JSON']>;
 };
 
@@ -706,7 +722,6 @@ export type EntryOrderByRelationAggregateInput = {
 export enum EntryOrderByRelevanceFieldEnum {
   AuthorId = 'authorId',
   CategoryId = 'categoryId',
-  FeaturedImage = 'featuredImage',
   Id = 'id',
   Title = 'title'
 }
@@ -761,7 +776,7 @@ export type EntryWhereInput = {
   comments?: InputMaybe<CommentListRelationFilter>;
   content?: InputMaybe<JsonNullableListFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
-  featuredImage?: InputMaybe<StringNullableFilter>;
+  featuredImage?: InputMaybe<JsonNullableListFilter>;
   id?: InputMaybe<StringFilter>;
   published?: InputMaybe<BoolFilter>;
   title?: InputMaybe<StringFilter>;
@@ -786,6 +801,20 @@ export type EnumGenderNullableFilter = {
   in?: InputMaybe<Array<Gender>>;
   not?: InputMaybe<NestedEnumGenderNullableFilter>;
   notIn?: InputMaybe<Array<Gender>>;
+};
+
+export type EnumMediaItemDestinationNullableFilter = {
+  equals?: InputMaybe<MediaItemDestination>;
+  in?: InputMaybe<Array<MediaItemDestination>>;
+  not?: InputMaybe<NestedEnumMediaItemDestinationNullableFilter>;
+  notIn?: InputMaybe<Array<MediaItemDestination>>;
+};
+
+export type EnumMimeTypesNullableFilter = {
+  equals?: InputMaybe<MimeTypes>;
+  in?: InputMaybe<Array<MimeTypes>>;
+  not?: InputMaybe<NestedEnumMimeTypesNullableFilter>;
+  notIn?: InputMaybe<Array<MimeTypes>>;
 };
 
 export type EnumPronounsNullableFilter = {
@@ -819,6 +848,16 @@ export type FindManyEntriessPaginatedInput = {
   where?: InputMaybe<EntryWhereInput>;
 };
 
+export type FindManyMediaItemsInput = {
+  cursor?: InputMaybe<MediaItemWhereUniqueInput>;
+  distinct?: InputMaybe<Array<MediaItemScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<MediaItemOrderByWithRelationAndSearchRelevanceInput>>;
+  pagination?: InputMaybe<PaginationArgsInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<MediaItemWhereInput>;
+};
+
 export type FindManyProfilesPaginatedInput = {
   cursor?: InputMaybe<ProfileWhereUniqueInput>;
   distinct?: InputMaybe<Array<ProfileScalarFieldEnum>>;
@@ -837,6 +876,17 @@ export type FindManyUsersPaginatedInput = {
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<UserWhereInput>;
+};
+
+export type FloatNullableFilter = {
+  equals?: InputMaybe<Scalars['Float']>;
+  gt?: InputMaybe<Scalars['Float']>;
+  gte?: InputMaybe<Scalars['Float']>;
+  in?: InputMaybe<Array<Scalars['Float']>>;
+  lt?: InputMaybe<Scalars['Float']>;
+  lte?: InputMaybe<Scalars['Float']>;
+  not?: InputMaybe<NestedFloatNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['Float']>>;
 };
 
 export enum Gender {
@@ -906,6 +956,215 @@ export type LoginInput = {
   password?: InputMaybe<Scalars['String']>;
 };
 
+export type MediaItem = {
+  __typename?: 'MediaItem';
+  fileLastModified?: Maybe<Scalars['DateTime']>;
+  height?: Maybe<Scalars['Float']>;
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  quality?: Maybe<Scalars['Int']>;
+  size?: Maybe<Scalars['String']>;
+  src?: Maybe<Scalars['String']>;
+  srcSet?: Maybe<Scalars['String']>;
+  type?: Maybe<MimeTypes>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  uploadedAt: Scalars['DateTime'];
+  user: User;
+  userId: Scalars['String'];
+  width?: Maybe<Scalars['Float']>;
+};
+
+export type MediaItemConnection = {
+  __typename?: 'MediaItemConnection';
+  edges: Array<MediaItemEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type MediaItemCreateManyUserInput = {
+  ariaLabel?: InputMaybe<Scalars['String']>;
+  caption?: InputMaybe<Scalars['String']>;
+  destination?: InputMaybe<MediaItemDestination>;
+  fileLastModified?: InputMaybe<Scalars['DateTime']>;
+  height?: InputMaybe<Scalars['Float']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  quality?: InputMaybe<Scalars['Int']>;
+  size?: InputMaybe<Scalars['String']>;
+  src?: InputMaybe<Scalars['String']>;
+  srcSet?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<MimeTypes>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  uploadedAt?: InputMaybe<Scalars['DateTime']>;
+  width?: InputMaybe<Scalars['Float']>;
+};
+
+export type MediaItemCreateManyUserInputEnvelope = {
+  data: Array<MediaItemCreateManyUserInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type MediaItemCreateNestedManyWithoutUserInput = {
+  connect?: InputMaybe<Array<MediaItemWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<MediaItemCreateOrConnectWithoutUserInput>>;
+  create?: InputMaybe<Array<MediaItemCreateWithoutUserInput>>;
+  createMany?: InputMaybe<MediaItemCreateManyUserInputEnvelope>;
+};
+
+export type MediaItemCreateOrConnectWithoutUserInput = {
+  create: MediaItemCreateWithoutUserInput;
+  where: MediaItemWhereUniqueInput;
+};
+
+export type MediaItemCreateWithoutUserInput = {
+  ariaLabel?: InputMaybe<Scalars['String']>;
+  caption?: InputMaybe<Scalars['String']>;
+  destination?: InputMaybe<MediaItemDestination>;
+  fileLastModified?: InputMaybe<Scalars['DateTime']>;
+  height?: InputMaybe<Scalars['Float']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  quality?: InputMaybe<Scalars['Int']>;
+  size?: InputMaybe<Scalars['String']>;
+  src?: InputMaybe<Scalars['String']>;
+  srcSet?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<MimeTypes>;
+  updatedAt?: InputMaybe<Scalars['DateTime']>;
+  uploadedAt?: InputMaybe<Scalars['DateTime']>;
+  width?: InputMaybe<Scalars['Float']>;
+};
+
+export enum MediaItemDestination {
+  Avatar = 'AVATAR',
+  CommentAttachment = 'COMMENT_ATTACHMENT',
+  CoverImage = 'COVER_IMAGE',
+  EntryAttachment = 'ENTRY_ATTACHMENT',
+  FeaturedImage = 'FEATURED_IMAGE'
+}
+
+export type MediaItemEdge = {
+  __typename?: 'MediaItemEdge';
+  cursor: Scalars['String'];
+  node: MediaItem;
+};
+
+export type MediaItemListRelationFilter = {
+  every?: InputMaybe<MediaItemWhereInput>;
+  none?: InputMaybe<MediaItemWhereInput>;
+  some?: InputMaybe<MediaItemWhereInput>;
+};
+
+export type MediaItemNameUserIdCompoundUniqueInput = {
+  name: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type MediaItemOrderByRelationAggregateInput = {
+  _count?: InputMaybe<SortOrder>;
+};
+
+export enum MediaItemOrderByRelevanceFieldEnum {
+  AriaLabel = 'ariaLabel',
+  Caption = 'caption',
+  Id = 'id',
+  Name = 'name',
+  Size = 'size',
+  Src = 'src',
+  SrcSet = 'srcSet',
+  Title = 'title',
+  UserId = 'userId'
+}
+
+export type MediaItemOrderByRelevanceInput = {
+  fields: Array<MediaItemOrderByRelevanceFieldEnum>;
+  search: Scalars['String'];
+  sort: SortOrder;
+};
+
+export type MediaItemOrderByWithRelationAndSearchRelevanceInput = {
+  _relevance?: InputMaybe<MediaItemOrderByRelevanceInput>;
+  ariaLabel?: InputMaybe<SortOrder>;
+  caption?: InputMaybe<SortOrder>;
+  destination?: InputMaybe<SortOrder>;
+  fileLastModified?: InputMaybe<SortOrder>;
+  height?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  name?: InputMaybe<SortOrder>;
+  quality?: InputMaybe<SortOrder>;
+  size?: InputMaybe<SortOrder>;
+  src?: InputMaybe<SortOrder>;
+  srcSet?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+  type?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  uploadedAt?: InputMaybe<SortOrder>;
+  user?: InputMaybe<UserOrderByWithRelationAndSearchRelevanceInput>;
+  userId?: InputMaybe<SortOrder>;
+  width?: InputMaybe<SortOrder>;
+};
+
+export enum MediaItemScalarFieldEnum {
+  AriaLabel = 'ariaLabel',
+  Caption = 'caption',
+  Destination = 'destination',
+  FileLastModified = 'fileLastModified',
+  Height = 'height',
+  Id = 'id',
+  Name = 'name',
+  Quality = 'quality',
+  Size = 'size',
+  Src = 'src',
+  SrcSet = 'srcSet',
+  Title = 'title',
+  Type = 'type',
+  UpdatedAt = 'updatedAt',
+  UploadedAt = 'uploadedAt',
+  UserId = 'userId',
+  Width = 'width'
+}
+
+export type MediaItemWhereInput = {
+  AND?: InputMaybe<Array<MediaItemWhereInput>>;
+  NOT?: InputMaybe<Array<MediaItemWhereInput>>;
+  OR?: InputMaybe<Array<MediaItemWhereInput>>;
+  ariaLabel?: InputMaybe<StringNullableFilter>;
+  caption?: InputMaybe<StringNullableFilter>;
+  destination?: InputMaybe<EnumMediaItemDestinationNullableFilter>;
+  fileLastModified?: InputMaybe<DateTimeNullableFilter>;
+  height?: InputMaybe<FloatNullableFilter>;
+  id?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringNullableFilter>;
+  quality?: InputMaybe<IntNullableFilter>;
+  size?: InputMaybe<StringNullableFilter>;
+  src?: InputMaybe<StringNullableFilter>;
+  srcSet?: InputMaybe<StringNullableFilter>;
+  title?: InputMaybe<StringNullableFilter>;
+  type?: InputMaybe<EnumMimeTypesNullableFilter>;
+  updatedAt?: InputMaybe<DateTimeNullableFilter>;
+  uploadedAt?: InputMaybe<DateTimeFilter>;
+  user?: InputMaybe<UserRelationFilter>;
+  userId?: InputMaybe<StringFilter>;
+  width?: InputMaybe<FloatNullableFilter>;
+};
+
+export type MediaItemWhereUniqueInput = {
+  id?: InputMaybe<Scalars['String']>;
+  name_userId?: InputMaybe<MediaItemNameUserIdCompoundUniqueInput>;
+};
+
+export enum MimeTypes {
+  Avif = 'AVIF',
+  Bmp = 'BMP',
+  Gif = 'GIF',
+  Jpeg = 'JPEG',
+  Png = 'PNG',
+  Svg = 'SVG',
+  Tiff = 'TIFF',
+  Webp = 'WEBP'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   changePassword: User;
@@ -917,6 +1176,7 @@ export type Mutation = {
   register: AuthSansSession;
   signin: AuthDetailed;
   signup: Token;
+  uploadFile: Scalars['JSONObject'];
   userFromAccessTokenDecoded: AuthDetailed;
 };
 
@@ -963,6 +1223,11 @@ export type MutationSignupArgs = {
 };
 
 
+export type MutationUploadFileArgs = {
+  name: Scalars['Upload'];
+};
+
+
 export type MutationUserFromAccessTokenDecodedArgs = {
   token: Scalars['String'];
 };
@@ -1001,6 +1266,20 @@ export type NestedEnumGenderNullableFilter = {
   notIn?: InputMaybe<Array<Gender>>;
 };
 
+export type NestedEnumMediaItemDestinationNullableFilter = {
+  equals?: InputMaybe<MediaItemDestination>;
+  in?: InputMaybe<Array<MediaItemDestination>>;
+  not?: InputMaybe<NestedEnumMediaItemDestinationNullableFilter>;
+  notIn?: InputMaybe<Array<MediaItemDestination>>;
+};
+
+export type NestedEnumMimeTypesNullableFilter = {
+  equals?: InputMaybe<MimeTypes>;
+  in?: InputMaybe<Array<MimeTypes>>;
+  not?: InputMaybe<NestedEnumMimeTypesNullableFilter>;
+  notIn?: InputMaybe<Array<MimeTypes>>;
+};
+
 export type NestedEnumPronounsNullableFilter = {
   equals?: InputMaybe<Pronouns>;
   in?: InputMaybe<Array<Pronouns>>;
@@ -1020,6 +1299,17 @@ export type NestedEnumUserStatusNullableFilter = {
   in?: InputMaybe<Array<UserStatus>>;
   not?: InputMaybe<NestedEnumUserStatusNullableFilter>;
   notIn?: InputMaybe<Array<UserStatus>>;
+};
+
+export type NestedFloatNullableFilter = {
+  equals?: InputMaybe<Scalars['Float']>;
+  gt?: InputMaybe<Scalars['Float']>;
+  gte?: InputMaybe<Scalars['Float']>;
+  in?: InputMaybe<Array<Scalars['Float']>>;
+  lt?: InputMaybe<Scalars['Float']>;
+  lte?: InputMaybe<Scalars['Float']>;
+  not?: InputMaybe<NestedFloatNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['Float']>>;
 };
 
 export type NestedIntNullableFilter = {
@@ -1076,16 +1366,15 @@ export type PaginationArgsInput = {
   before?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
 };
 
 export type Profile = {
   __typename?: 'Profile';
-  activiyFeed?: Maybe<Array<Scalars['JSON']>>;
-  bio?: Maybe<Array<Scalars['JSON']>>;
+  activiyFeed?: Maybe<Array<Scalars['JSONObject']>>;
+  bio?: Maybe<Array<Scalars['JSONObject']>>;
   city?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
-  coverPhoto?: Maybe<Scalars['String']>;
+  coverPhoto?: Maybe<Array<Scalars['JSONObject']>>;
   dob?: Maybe<Scalars['String']>;
   gender?: Maybe<Gender>;
   id: Scalars['ID'];
@@ -1094,7 +1383,7 @@ export type Profile = {
   occupation?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
   pronouns?: Maybe<Pronouns>;
-  recentActivity?: Maybe<Array<Scalars['JSON']>>;
+  recentActivity?: Maybe<Array<Scalars['JSONObject']>>;
   user: User;
   userId: Scalars['String'];
   userInProfile: User;
@@ -1112,7 +1401,7 @@ export type ProfileCreateInput = {
   bio?: InputMaybe<ProfileCreatebioInput>;
   city?: InputMaybe<Scalars['String']>;
   country?: InputMaybe<Scalars['String']>;
-  coverPhoto?: InputMaybe<Scalars['String']>;
+  coverPhoto?: InputMaybe<ProfileCreatecoverPhotoInput>;
   dob?: InputMaybe<Scalars['String']>;
   gender?: InputMaybe<Gender>;
   id?: InputMaybe<Scalars['String']>;
@@ -1141,7 +1430,7 @@ export type ProfileCreateWithoutUserInput = {
   bio?: InputMaybe<ProfileCreatebioInput>;
   city?: InputMaybe<Scalars['String']>;
   country?: InputMaybe<Scalars['String']>;
-  coverPhoto?: InputMaybe<Scalars['String']>;
+  coverPhoto?: InputMaybe<ProfileCreatecoverPhotoInput>;
   dob?: InputMaybe<Scalars['String']>;
   gender?: InputMaybe<Gender>;
   id?: InputMaybe<Scalars['String']>;
@@ -1161,6 +1450,10 @@ export type ProfileCreatebioInput = {
   set: Array<Scalars['JSON']>;
 };
 
+export type ProfileCreatecoverPhotoInput = {
+  set: Array<Scalars['JSON']>;
+};
+
 export type ProfileCreaterecentActivityInput = {
   set: Array<Scalars['JSON']>;
 };
@@ -1174,7 +1467,6 @@ export type ProfileEdge = {
 export enum ProfileOrderByRelevanceFieldEnum {
   City = 'city',
   Country = 'country',
-  CoverPhoto = 'coverPhoto',
   Dob = 'dob',
   Id = 'id',
   Occupation = 'occupation',
@@ -1239,7 +1531,7 @@ export type ProfileWhereInput = {
   bio?: InputMaybe<JsonNullableListFilter>;
   city?: InputMaybe<StringNullableFilter>;
   country?: InputMaybe<StringNullableFilter>;
-  coverPhoto?: InputMaybe<StringNullableFilter>;
+  coverPhoto?: InputMaybe<JsonNullableListFilter>;
   dob?: InputMaybe<StringNullableFilter>;
   gender?: InputMaybe<EnumGenderNullableFilter>;
   id?: InputMaybe<StringFilter>;
@@ -1282,6 +1574,7 @@ export type Query = {
   hello: Scalars['String'];
   helloWorld: Scalars['String'];
   listEntries: EntryConnection;
+  listMediaItems: MediaItemConnection;
   listProfiles: ProfileConnection;
   listUsers: UserConnection;
   me: AuthDetailed;
@@ -1311,6 +1604,11 @@ export type QueryHelloArgs = {
 
 export type QueryListEntriesArgs = {
   findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput;
+};
+
+
+export type QueryListMediaItemsArgs = {
+  findManyMediaItemsPaginated?: InputMaybe<FindManyMediaItemsInput>;
 };
 
 
@@ -1543,8 +1841,9 @@ export type User = {
   entries?: Maybe<Array<Entry>>;
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  image?: Maybe<Scalars['String']>;
+  image: Array<Scalars['JSONObject']>;
   lastName?: Maybe<Scalars['String']>;
+  mediaItems?: Maybe<Array<MediaItem>>;
   password: Scalars['String'];
   profile?: Maybe<Profile>;
   role?: Maybe<Role>;
@@ -1568,6 +1867,7 @@ export type UserCount = {
   comments: Scalars['Int'];
   connections: Scalars['Int'];
   entries: Scalars['Int'];
+  mediaItems: Scalars['Int'];
   sessions: Scalars['Int'];
 };
 
@@ -1625,8 +1925,9 @@ export type UserCreateWithoutCategoriesInput = {
   entries?: InputMaybe<EntryCreateNestedManyWithoutAuthorInput>;
   firstName?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
-  image?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<UserCreateimageInput>;
   lastName?: InputMaybe<Scalars['String']>;
+  mediaItems?: InputMaybe<MediaItemCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   profile?: InputMaybe<ProfileCreateNestedOneWithoutUserInput>;
   role?: InputMaybe<Role>;
@@ -1645,8 +1946,9 @@ export type UserCreateWithoutCommentsInput = {
   entries?: InputMaybe<EntryCreateNestedManyWithoutAuthorInput>;
   firstName?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
-  image?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<UserCreateimageInput>;
   lastName?: InputMaybe<Scalars['String']>;
+  mediaItems?: InputMaybe<MediaItemCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   profile?: InputMaybe<ProfileCreateNestedOneWithoutUserInput>;
   role?: InputMaybe<Role>;
@@ -1665,8 +1967,9 @@ export type UserCreateWithoutEntriesInput = {
   emailVerified?: InputMaybe<Scalars['DateTime']>;
   firstName?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
-  image?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<UserCreateimageInput>;
   lastName?: InputMaybe<Scalars['String']>;
+  mediaItems?: InputMaybe<MediaItemCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   profile?: InputMaybe<ProfileCreateNestedOneWithoutUserInput>;
   role?: InputMaybe<Role>;
@@ -1686,13 +1989,18 @@ export type UserCreateWithoutProfileInput = {
   entries?: InputMaybe<EntryCreateNestedManyWithoutAuthorInput>;
   firstName?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['String']>;
-  image?: InputMaybe<Scalars['String']>;
+  image?: InputMaybe<UserCreateimageInput>;
   lastName?: InputMaybe<Scalars['String']>;
+  mediaItems?: InputMaybe<MediaItemCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<Role>;
   sessions?: InputMaybe<SessionCreateNestedManyWithoutUserInput>;
   status?: InputMaybe<UserStatus>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type UserCreateimageInput = {
+  set: Array<Scalars['JSON']>;
 };
 
 export type UserEdge = {
@@ -1705,7 +2013,6 @@ export enum UserOrderByRelevanceFieldEnum {
   Email = 'email',
   FirstName = 'firstName',
   Id = 'id',
-  Image = 'image',
   LastName = 'lastName',
   Password = 'password'
 }
@@ -1730,6 +2037,7 @@ export type UserOrderByWithRelationAndSearchRelevanceInput = {
   id?: InputMaybe<SortOrder>;
   image?: InputMaybe<SortOrder>;
   lastName?: InputMaybe<SortOrder>;
+  mediaItems?: InputMaybe<MediaItemOrderByRelationAggregateInput>;
   password?: InputMaybe<SortOrder>;
   profile?: InputMaybe<ProfileOrderByWithRelationAndSearchRelevanceInput>;
   role?: InputMaybe<SortOrder>;
@@ -1780,8 +2088,9 @@ export type UserWhereInput = {
   entries?: InputMaybe<EntryListRelationFilter>;
   firstName?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<StringFilter>;
-  image?: InputMaybe<StringNullableFilter>;
+  image?: InputMaybe<JsonNullableListFilter>;
   lastName?: InputMaybe<StringNullableFilter>;
+  mediaItems?: InputMaybe<MediaItemListRelationFilter>;
   password?: InputMaybe<StringFilter>;
   profile?: InputMaybe<ProfileRelationFilter>;
   role?: InputMaybe<EnumRoleNullableFilter>;
@@ -1810,8 +2119,9 @@ export type Viewer = {
   entries?: Maybe<Array<Entry>>;
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  image?: Maybe<Scalars['String']>;
+  image: Array<Scalars['JSONObject']>;
   lastName?: Maybe<Scalars['String']>;
+  mediaItems?: Maybe<Array<MediaItem>>;
   password: Scalars['String'];
   profile?: Maybe<Profile>;
   role?: Maybe<Role>;
@@ -1927,6 +2237,7 @@ export type ResolversTypes = ResolversObject<{
   CategoryWhereUniqueInput: CategoryWhereUniqueInput;
   ChangePasswordInput: ChangePasswordInput;
   Comment: ResolverTypeWrapper<Comment>;
+  CommentAuthorIdEntryIdCompoundUniqueInput: CommentAuthorIdEntryIdCompoundUniqueInput;
   CommentCreateManyAuthorInput: CommentCreateManyAuthorInput;
   CommentCreateManyAuthorInputEnvelope: CommentCreateManyAuthorInputEnvelope;
   CommentCreateManyEntryInput: CommentCreateManyEntryInput;
@@ -1964,6 +2275,7 @@ export type ResolversTypes = ResolversObject<{
   EntryCreateManyAuthorInput: EntryCreateManyAuthorInput;
   EntryCreateManyAuthorInputEnvelope: EntryCreateManyAuthorInputEnvelope;
   EntryCreateManycontentInput: EntryCreateManycontentInput;
+  EntryCreateManyfeaturedImageInput: EntryCreateManyfeaturedImageInput;
   EntryCreateNestedManyWithoutAuthorInput: EntryCreateNestedManyWithoutAuthorInput;
   EntryCreateNestedManyWithoutCategoriesInput: EntryCreateNestedManyWithoutCategoriesInput;
   EntryCreateNestedOneWithoutCommentsInput: EntryCreateNestedOneWithoutCommentsInput;
@@ -1974,6 +2286,7 @@ export type ResolversTypes = ResolversObject<{
   EntryCreateWithoutCategoriesInput: EntryCreateWithoutCategoriesInput;
   EntryCreateWithoutCommentsInput: EntryCreateWithoutCommentsInput;
   EntryCreatecontentInput: EntryCreatecontentInput;
+  EntryCreatefeaturedImageInput: EntryCreatefeaturedImageInput;
   EntryEdge: ResolverTypeWrapper<EntryEdge>;
   EntryListRelationFilter: EntryListRelationFilter;
   EntryOrderByRelationAggregateInput: EntryOrderByRelationAggregateInput;
@@ -1986,12 +2299,17 @@ export type ResolversTypes = ResolversObject<{
   EntryWhereUniqueInput: EntryWhereUniqueInput;
   EnumCommentReactionsNullableListFilter: EnumCommentReactionsNullableListFilter;
   EnumGenderNullableFilter: EnumGenderNullableFilter;
+  EnumMediaItemDestinationNullableFilter: EnumMediaItemDestinationNullableFilter;
+  EnumMimeTypesNullableFilter: EnumMimeTypesNullableFilter;
   EnumPronounsNullableFilter: EnumPronounsNullableFilter;
   EnumRoleNullableFilter: EnumRoleNullableFilter;
   EnumUserStatusNullableFilter: EnumUserStatusNullableFilter;
   FindManyEntriessPaginatedInput: FindManyEntriessPaginatedInput;
+  FindManyMediaItemsInput: FindManyMediaItemsInput;
   FindManyProfilesPaginatedInput: FindManyProfilesPaginatedInput;
   FindManyUsersPaginatedInput: FindManyUsersPaginatedInput;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
+  FloatNullableFilter: FloatNullableFilter;
   Gender: Gender;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -2004,14 +2322,36 @@ export type ResolversTypes = ResolversObject<{
   JwtHeaders: ResolverTypeWrapper<JwtHeaders>;
   JwtPayload: ResolverTypeWrapper<JwtPayload>;
   LoginInput: LoginInput;
+  MediaItem: ResolverTypeWrapper<MediaItem>;
+  MediaItemConnection: ResolverTypeWrapper<MediaItemConnection>;
+  MediaItemCreateManyUserInput: MediaItemCreateManyUserInput;
+  MediaItemCreateManyUserInputEnvelope: MediaItemCreateManyUserInputEnvelope;
+  MediaItemCreateNestedManyWithoutUserInput: MediaItemCreateNestedManyWithoutUserInput;
+  MediaItemCreateOrConnectWithoutUserInput: MediaItemCreateOrConnectWithoutUserInput;
+  MediaItemCreateWithoutUserInput: MediaItemCreateWithoutUserInput;
+  MediaItemDestination: MediaItemDestination;
+  MediaItemEdge: ResolverTypeWrapper<MediaItemEdge>;
+  MediaItemListRelationFilter: MediaItemListRelationFilter;
+  MediaItemNameUserIdCompoundUniqueInput: MediaItemNameUserIdCompoundUniqueInput;
+  MediaItemOrderByRelationAggregateInput: MediaItemOrderByRelationAggregateInput;
+  MediaItemOrderByRelevanceFieldEnum: MediaItemOrderByRelevanceFieldEnum;
+  MediaItemOrderByRelevanceInput: MediaItemOrderByRelevanceInput;
+  MediaItemOrderByWithRelationAndSearchRelevanceInput: MediaItemOrderByWithRelationAndSearchRelevanceInput;
+  MediaItemScalarFieldEnum: MediaItemScalarFieldEnum;
+  MediaItemWhereInput: MediaItemWhereInput;
+  MediaItemWhereUniqueInput: MediaItemWhereUniqueInput;
+  MimeTypes: MimeTypes;
   Mutation: ResolverTypeWrapper<{}>;
   NestedBoolFilter: NestedBoolFilter;
   NestedDateTimeFilter: NestedDateTimeFilter;
   NestedDateTimeNullableFilter: NestedDateTimeNullableFilter;
   NestedEnumGenderNullableFilter: NestedEnumGenderNullableFilter;
+  NestedEnumMediaItemDestinationNullableFilter: NestedEnumMediaItemDestinationNullableFilter;
+  NestedEnumMimeTypesNullableFilter: NestedEnumMimeTypesNullableFilter;
   NestedEnumPronounsNullableFilter: NestedEnumPronounsNullableFilter;
   NestedEnumRoleNullableFilter: NestedEnumRoleNullableFilter;
   NestedEnumUserStatusNullableFilter: NestedEnumUserStatusNullableFilter;
+  NestedFloatNullableFilter: NestedFloatNullableFilter;
   NestedIntNullableFilter: NestedIntNullableFilter;
   NestedStringFilter: NestedStringFilter;
   NestedStringNullableFilter: NestedStringNullableFilter;
@@ -2026,6 +2366,7 @@ export type ResolversTypes = ResolversObject<{
   ProfileCreateWithoutUserInput: ProfileCreateWithoutUserInput;
   ProfileCreateactiviyFeedInput: ProfileCreateactiviyFeedInput;
   ProfileCreatebioInput: ProfileCreatebioInput;
+  ProfileCreatecoverPhotoInput: ProfileCreatecoverPhotoInput;
   ProfileCreaterecentActivityInput: ProfileCreaterecentActivityInput;
   ProfileEdge: ResolverTypeWrapper<ProfileEdge>;
   ProfileOrderByRelevanceFieldEnum: ProfileOrderByRelevanceFieldEnum;
@@ -2061,6 +2402,7 @@ export type ResolversTypes = ResolversObject<{
   Subscription: ResolverTypeWrapper<{}>;
   Token: ResolverTypeWrapper<Token>;
   TypesUnion: ResolversTypes['Entry'] | ResolversTypes['Profile'] | ResolversTypes['User'];
+  Upload: ResolverTypeWrapper<Scalars['Upload']>;
   User: ResolverTypeWrapper<User>;
   UserConnection: ResolverTypeWrapper<UserConnection>;
   UserCount: ResolverTypeWrapper<UserCount>;
@@ -2076,6 +2418,7 @@ export type ResolversTypes = ResolversObject<{
   UserCreateWithoutCommentsInput: UserCreateWithoutCommentsInput;
   UserCreateWithoutEntriesInput: UserCreateWithoutEntriesInput;
   UserCreateWithoutProfileInput: UserCreateWithoutProfileInput;
+  UserCreateimageInput: UserCreateimageInput;
   UserEdge: ResolverTypeWrapper<UserEdge>;
   UserOrderByRelevanceFieldEnum: UserOrderByRelevanceFieldEnum;
   UserOrderByRelevanceInput: UserOrderByRelevanceInput;
@@ -2125,6 +2468,7 @@ export type ResolversParentTypes = ResolversObject<{
   CategoryWhereUniqueInput: CategoryWhereUniqueInput;
   ChangePasswordInput: ChangePasswordInput;
   Comment: Comment;
+  CommentAuthorIdEntryIdCompoundUniqueInput: CommentAuthorIdEntryIdCompoundUniqueInput;
   CommentCreateManyAuthorInput: CommentCreateManyAuthorInput;
   CommentCreateManyAuthorInputEnvelope: CommentCreateManyAuthorInputEnvelope;
   CommentCreateManyEntryInput: CommentCreateManyEntryInput;
@@ -2161,6 +2505,7 @@ export type ResolversParentTypes = ResolversObject<{
   EntryCreateManyAuthorInput: EntryCreateManyAuthorInput;
   EntryCreateManyAuthorInputEnvelope: EntryCreateManyAuthorInputEnvelope;
   EntryCreateManycontentInput: EntryCreateManycontentInput;
+  EntryCreateManyfeaturedImageInput: EntryCreateManyfeaturedImageInput;
   EntryCreateNestedManyWithoutAuthorInput: EntryCreateNestedManyWithoutAuthorInput;
   EntryCreateNestedManyWithoutCategoriesInput: EntryCreateNestedManyWithoutCategoriesInput;
   EntryCreateNestedOneWithoutCommentsInput: EntryCreateNestedOneWithoutCommentsInput;
@@ -2171,6 +2516,7 @@ export type ResolversParentTypes = ResolversObject<{
   EntryCreateWithoutCategoriesInput: EntryCreateWithoutCategoriesInput;
   EntryCreateWithoutCommentsInput: EntryCreateWithoutCommentsInput;
   EntryCreatecontentInput: EntryCreatecontentInput;
+  EntryCreatefeaturedImageInput: EntryCreatefeaturedImageInput;
   EntryEdge: EntryEdge;
   EntryListRelationFilter: EntryListRelationFilter;
   EntryOrderByRelationAggregateInput: EntryOrderByRelationAggregateInput;
@@ -2181,12 +2527,17 @@ export type ResolversParentTypes = ResolversObject<{
   EntryWhereUniqueInput: EntryWhereUniqueInput;
   EnumCommentReactionsNullableListFilter: EnumCommentReactionsNullableListFilter;
   EnumGenderNullableFilter: EnumGenderNullableFilter;
+  EnumMediaItemDestinationNullableFilter: EnumMediaItemDestinationNullableFilter;
+  EnumMimeTypesNullableFilter: EnumMimeTypesNullableFilter;
   EnumPronounsNullableFilter: EnumPronounsNullableFilter;
   EnumRoleNullableFilter: EnumRoleNullableFilter;
   EnumUserStatusNullableFilter: EnumUserStatusNullableFilter;
   FindManyEntriessPaginatedInput: FindManyEntriessPaginatedInput;
+  FindManyMediaItemsInput: FindManyMediaItemsInput;
   FindManyProfilesPaginatedInput: FindManyProfilesPaginatedInput;
   FindManyUsersPaginatedInput: FindManyUsersPaginatedInput;
+  Float: Scalars['Float'];
+  FloatNullableFilter: FloatNullableFilter;
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   IntNullableFilter: IntNullableFilter;
@@ -2198,14 +2549,32 @@ export type ResolversParentTypes = ResolversObject<{
   JwtHeaders: JwtHeaders;
   JwtPayload: JwtPayload;
   LoginInput: LoginInput;
+  MediaItem: MediaItem;
+  MediaItemConnection: MediaItemConnection;
+  MediaItemCreateManyUserInput: MediaItemCreateManyUserInput;
+  MediaItemCreateManyUserInputEnvelope: MediaItemCreateManyUserInputEnvelope;
+  MediaItemCreateNestedManyWithoutUserInput: MediaItemCreateNestedManyWithoutUserInput;
+  MediaItemCreateOrConnectWithoutUserInput: MediaItemCreateOrConnectWithoutUserInput;
+  MediaItemCreateWithoutUserInput: MediaItemCreateWithoutUserInput;
+  MediaItemEdge: MediaItemEdge;
+  MediaItemListRelationFilter: MediaItemListRelationFilter;
+  MediaItemNameUserIdCompoundUniqueInput: MediaItemNameUserIdCompoundUniqueInput;
+  MediaItemOrderByRelationAggregateInput: MediaItemOrderByRelationAggregateInput;
+  MediaItemOrderByRelevanceInput: MediaItemOrderByRelevanceInput;
+  MediaItemOrderByWithRelationAndSearchRelevanceInput: MediaItemOrderByWithRelationAndSearchRelevanceInput;
+  MediaItemWhereInput: MediaItemWhereInput;
+  MediaItemWhereUniqueInput: MediaItemWhereUniqueInput;
   Mutation: {};
   NestedBoolFilter: NestedBoolFilter;
   NestedDateTimeFilter: NestedDateTimeFilter;
   NestedDateTimeNullableFilter: NestedDateTimeNullableFilter;
   NestedEnumGenderNullableFilter: NestedEnumGenderNullableFilter;
+  NestedEnumMediaItemDestinationNullableFilter: NestedEnumMediaItemDestinationNullableFilter;
+  NestedEnumMimeTypesNullableFilter: NestedEnumMimeTypesNullableFilter;
   NestedEnumPronounsNullableFilter: NestedEnumPronounsNullableFilter;
   NestedEnumRoleNullableFilter: NestedEnumRoleNullableFilter;
   NestedEnumUserStatusNullableFilter: NestedEnumUserStatusNullableFilter;
+  NestedFloatNullableFilter: NestedFloatNullableFilter;
   NestedIntNullableFilter: NestedIntNullableFilter;
   NestedStringFilter: NestedStringFilter;
   NestedStringNullableFilter: NestedStringNullableFilter;
@@ -2220,6 +2589,7 @@ export type ResolversParentTypes = ResolversObject<{
   ProfileCreateWithoutUserInput: ProfileCreateWithoutUserInput;
   ProfileCreateactiviyFeedInput: ProfileCreateactiviyFeedInput;
   ProfileCreatebioInput: ProfileCreatebioInput;
+  ProfileCreatecoverPhotoInput: ProfileCreatecoverPhotoInput;
   ProfileCreaterecentActivityInput: ProfileCreaterecentActivityInput;
   ProfileEdge: ProfileEdge;
   ProfileOrderByRelevanceInput: ProfileOrderByRelevanceInput;
@@ -2249,6 +2619,7 @@ export type ResolversParentTypes = ResolversObject<{
   Subscription: {};
   Token: Token;
   TypesUnion: ResolversParentTypes['Entry'] | ResolversParentTypes['Profile'] | ResolversParentTypes['User'];
+  Upload: Scalars['Upload'];
   User: User;
   UserConnection: UserConnection;
   UserCount: UserCount;
@@ -2264,6 +2635,7 @@ export type ResolversParentTypes = ResolversObject<{
   UserCreateWithoutCommentsInput: UserCreateWithoutCommentsInput;
   UserCreateWithoutEntriesInput: UserCreateWithoutEntriesInput;
   UserCreateWithoutProfileInput: UserCreateWithoutProfileInput;
+  UserCreateimageInput: UserCreateimageInput;
   UserEdge: UserEdge;
   UserOrderByRelevanceInput: UserOrderByRelevanceInput;
   UserOrderByWithRelationAndSearchRelevanceInput: UserOrderByWithRelationAndSearchRelevanceInput;
@@ -2297,7 +2669,7 @@ export type AuthResolvers<ContextType = any, ParentType extends ResolversParentT
   accessToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   refreshToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   session?: Resolver<Maybe<ResolversTypes['Session']>, ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -2387,9 +2759,9 @@ export type EntryResolvers<ContextType = any, ParentType extends ResolversParent
   categories?: Resolver<Maybe<Array<ResolversTypes['Category']>>, ParentType, ContextType>;
   categoryId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   comments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType>;
-  content?: Resolver<Maybe<Array<ResolversTypes['JSON']>>, ParentType, ContextType>;
+  content?: Resolver<Maybe<Array<ResolversTypes['JSONObject']>>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  featuredImage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  featuredImage?: Resolver<Maybe<Array<ResolversTypes['JSONObject']>>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   published?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -2444,6 +2816,37 @@ export type JwtPayloadResolvers<ContextType = any, ParentType extends ResolversP
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type MediaItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaItem'] = ResolversParentTypes['MediaItem']> = ResolversObject<{
+  fileLastModified?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  height?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  quality?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  size?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  src?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  srcSet?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['MimeTypes']>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  uploadedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  width?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type MediaItemConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaItemConnection'] = ResolversParentTypes['MediaItemConnection']> = ResolversObject<{
+  edges?: Resolver<Array<ResolversTypes['MediaItemEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type MediaItemEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaItemEdge'] = ResolversParentTypes['MediaItemEdge']> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['MediaItem'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   changePassword?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationChangePasswordArgs, 'accessToken' | 'data'>>;
   createEntry?: Resolver<ResolversTypes['Entry'], ParentType, ContextType, RequireFields<MutationCreateEntryArgs, 'createInput'>>;
@@ -2454,6 +2857,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   register?: Resolver<ResolversTypes['AuthSansSession'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'dataRegister'>>;
   signin?: Resolver<ResolversTypes['AuthDetailed'], ParentType, ContextType>;
   signup?: Resolver<ResolversTypes['Token'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'data'>>;
+  uploadFile?: Resolver<ResolversTypes['JSONObject'], ParentType, ContextType, RequireFields<MutationUploadFileArgs, 'name'>>;
   userFromAccessTokenDecoded?: Resolver<ResolversTypes['AuthDetailed'], ParentType, ContextType, RequireFields<MutationUserFromAccessTokenDecodedArgs, 'token'>>;
 }>;
 
@@ -2470,11 +2874,11 @@ export interface PhoneNumberScalarConfig extends GraphQLScalarTypeConfig<Resolve
 }
 
 export type ProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']> = ResolversObject<{
-  activiyFeed?: Resolver<Maybe<Array<ResolversTypes['JSON']>>, ParentType, ContextType>;
-  bio?: Resolver<Maybe<Array<ResolversTypes['JSON']>>, ParentType, ContextType>;
+  activiyFeed?: Resolver<Maybe<Array<ResolversTypes['JSONObject']>>, ParentType, ContextType>;
+  bio?: Resolver<Maybe<Array<ResolversTypes['JSONObject']>>, ParentType, ContextType>;
   city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  coverPhoto?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  coverPhoto?: Resolver<Maybe<Array<ResolversTypes['JSONObject']>>, ParentType, ContextType>;
   dob?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   gender?: Resolver<Maybe<ResolversTypes['Gender']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -2483,7 +2887,7 @@ export type ProfileResolvers<ContextType = any, ParentType extends ResolversPare
   occupation?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   phoneNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   pronouns?: Resolver<Maybe<ResolversTypes['Pronouns']>, ParentType, ContextType>;
-  recentActivity?: Resolver<Maybe<Array<ResolversTypes['JSON']>>, ParentType, ContextType>;
+  recentActivity?: Resolver<Maybe<Array<ResolversTypes['JSONObject']>>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   userInProfile?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
@@ -2509,6 +2913,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   hello?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryHelloArgs, 'name'>>;
   helloWorld?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   listEntries?: Resolver<ResolversTypes['EntryConnection'], ParentType, ContextType, RequireFields<QueryListEntriesArgs, 'findManyEntriesPaginatedInput'>>;
+  listMediaItems?: Resolver<ResolversTypes['MediaItemConnection'], ParentType, ContextType, Partial<QueryListMediaItemsArgs>>;
   listProfiles?: Resolver<ResolversTypes['ProfileConnection'], ParentType, ContextType, RequireFields<QueryListProfilesArgs, 'findManyProfilesPaginatedInput'>>;
   listUsers?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QueryListUsersArgs, 'findManyUsersPaginatedInput'>>;
   me?: Resolver<ResolversTypes['AuthDetailed'], ParentType, ContextType>;
@@ -2552,6 +2957,10 @@ export type TypesUnionResolvers<ContextType = any, ParentType extends ResolversP
   __resolveType: TypeResolveFn<'Entry' | 'Profile' | 'User', ParentType, ContextType>;
 }>;
 
+export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload';
+}
+
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   _count?: Resolver<Maybe<ResolversTypes['UserCount']>, ParentType, ContextType>;
   accounts?: Resolver<Maybe<Array<ResolversTypes['Account']>>, ParentType, ContextType>;
@@ -2564,8 +2973,9 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   entries?: Resolver<Maybe<Array<ResolversTypes['Entry']>>, ParentType, ContextType>;
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  image?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  image?: Resolver<Array<ResolversTypes['JSONObject']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  mediaItems?: Resolver<Maybe<Array<ResolversTypes['MediaItem']>>, ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
   role?: Resolver<Maybe<ResolversTypes['Role']>, ParentType, ContextType>;
@@ -2588,6 +2998,7 @@ export type UserCountResolvers<ContextType = any, ParentType extends ResolversPa
   comments?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   connections?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   entries?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  mediaItems?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   sessions?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -2611,8 +3022,9 @@ export type ViewerResolvers<ContextType = any, ParentType extends ResolversParen
   entries?: Resolver<Maybe<Array<ResolversTypes['Entry']>>, ParentType, ContextType>;
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  image?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  image?: Resolver<Array<ResolversTypes['JSONObject']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  mediaItems?: Resolver<Maybe<Array<ResolversTypes['MediaItem']>>, ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   profile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
   role?: Resolver<Maybe<ResolversTypes['Role']>, ParentType, ContextType>;
@@ -2644,6 +3056,9 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   JwtDecoded?: JwtDecodedResolvers<ContextType>;
   JwtHeaders?: JwtHeadersResolvers<ContextType>;
   JwtPayload?: JwtPayloadResolvers<ContextType>;
+  MediaItem?: MediaItemResolvers<ContextType>;
+  MediaItemConnection?: MediaItemConnectionResolvers<ContextType>;
+  MediaItemEdge?: MediaItemEdgeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   PhoneNumber?: GraphQLScalarType;
@@ -2655,6 +3070,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Subscription?: SubscriptionResolvers<ContextType>;
   Token?: TokenResolvers<ContextType>;
   TypesUnion?: TypesUnionResolvers<ContextType>;
+  Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
   UserConnection?: UserConnectionResolvers<ContextType>;
   UserCount?: UserCountResolvers<ContextType>;

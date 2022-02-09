@@ -1,3 +1,4 @@
+
 export type TalVez<T> = T extends PromiseLike<infer U>
   ? PromiseLike<U | Record<keyof T, U>>
   : PromiseLike<unknown | Record<keyof T, unknown>> extends Record<
