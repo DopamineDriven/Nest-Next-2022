@@ -16,12 +16,16 @@ Table MediaItem {
   name String
   size String
   type MimeTypes
+  destination MediaItemDestination
   fileLastModified DateTime
   width Float
   height Float
   quality Int
   src String
   srcSet String
+  ariaLabel String
+  title String
+  caption String
 
   indexes {
     (name, userId) [unique]
@@ -230,6 +234,14 @@ Enum MimeTypes {
   SVG
   TIFF
   BMP
+}
+
+Enum MediaItemDestination {
+  COVER_IMAGE
+  AVATAR
+  COMMENT_ATTACHMENT
+  ENTRY_ATTACHMENT
+  FEATURED_IMAGE
 }
 
 Ref: MediaItem.userId > User.id [delete: Cascade]
