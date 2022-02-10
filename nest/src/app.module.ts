@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { GraphQLModule } from "@nestjs/graphql";
+import { GraphQLModule, ReturnTypeFuncValue } from "@nestjs/graphql";
 import { join } from "path";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import {
@@ -36,15 +36,18 @@ import { UserService } from "./user/user.service";
 import { AuthService } from "./auth/auth-jwt.service";
 import { UploadModule } from "./upload/upload.module";
 import { MediaModule } from "./media/media.module";
-export type RecordContiional<T> = Record<keyof T, T> | Array<T> | PromiseLike<T> | T;
+import { graphqlUploadExpress, Upload } from "graphql-upload";
+export type RecordContiional<T> =
+  | Record<keyof T, T>
+  | Array<T>
+  | PromiseLike<T>
+  | T;
 
-export type Context<
-  T = unknown extends infer P ? P : unknown
-> = {
+export type Context<T = unknown extends infer P ? P : unknown> = {
   req: ExpressContext["req"];
   res: ExpressContext["res"];
-    token: string | null;
-    extras?: T extends infer U ? U : T
+  token: string | null;
+  extras?: T extends infer U ? U : T;
 };
 
 @Module({
@@ -152,6 +155,7 @@ export type Context<
         const graphqlConfig = configService.get<GraphqlConfig>("graphql");
         const apolloConfig = configService.get<ApolloConfig>("apollo");
         return {
+          fieldResolverEnhancers: ['guards'],
           installSubscriptionHandlers: true,
           cors: false,
           buildSchemaOptions: {
@@ -191,36 +195,16 @@ export type Context<
             : false,
           context: <T extends AuthService>({ req, res }: Context<T>): any => {
             const token = req.header("authorization")?.split(" ")[1] ?? null;
-
             const ctx = {
               req,
               res,
-              token: token
+              token: token as string | null
             };
-
             token != null && token.length > 0
               ? res.setHeader("authorization", `Bearer ${token}`)
               : console.log("no auth token to parse");
-
-            // const getUserFromToken = (token: string) => {
-            //   return Promise.resolve(
-            //     authService
-            //       .getUserFromToken(
-            //         token
-            //           ? token
-            //           : req.headers?.authorization?.split(/([ ])/)[1]
-            //           ? req.headers.authorization?.split(/([[ ]])/)[1]
-            //           : ""
-            //       )
-            //       .then(data => {
-            //         console.log(JSON.stringify(data ?? "no user", null, 2));
-            //         return { ...data };
-            //       })
-            //   );
-            // };
-            // console.log(token ? getUserFromToken(token) ?? "emptystring" : "no token")
             if (ctx.token != null && ctx.token.length > 0) {
-              res.setHeader("authorization", `Bearer ${token}`)
+              res.setHeader("authorization", `Bearer ${token}`);
 
               return { ...ctx };
             } else {
@@ -249,21 +233,38 @@ export type Context<
       provide: APP_FILTER,
       useClass: AllExceptionsFilter
     }
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: CacheInterceptor
-    // }
   ]
 })
 export class AppModule {}
-/**
-          // plugins: [
-          //   (await import("apollo-server-plugin-operation-registry")).default({
-          //     debug: true
-          //   })
-          // ],
-          // plugins: [
-          //   ApolloServerPluginLandingPageLocalDefault(),
-          //   ApolloServerPluginInlineTrace()
-          // ],
- */
+// export class AppModule<
+//   T extends Context<T[keyof T]>,
+//   K extends Record<keyof K, K> extends infer U
+//     ? Record<keyof K, U>
+//     : Record<keyof K, unknown> extends Record<keyof K, infer T>
+//     ? Record<keyof K, T>
+//     : { [index: string | number | symbol]: unknown },
+//   _implements = () => {
+//     prisma: <K>(props: ReturnTypeFuncValue) => import("./prisma/prisma.service").PrismaService;
+//   }
+// > {
+//   constructor(private readonly context: T) {
+//     context = this.context;
+//   }
+// }
+// const getUserFromToken = (token: string) => {
+//   return Promise.resolve(
+//     authService
+//       .getUserFromToken(
+//         token
+//           ? token
+//           : req.headers?.authorization?.split(/([ ])/)[1]
+//           ? req.headers.authorization?.split(/([[ ]])/)[1]
+//           : ""
+//       )
+//       .then(data => {
+//         console.log(JSON.stringify(data ?? "no user", null, 2));
+//         return { ...data };
+//       })
+//   );
+// };
+// console.log(token ? getUserFromToken(token) ?? "emptystring" : "no token")

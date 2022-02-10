@@ -1145,6 +1145,7 @@ type Mutation {
   login(data: LoginInput!): Token!
   refreshToken(token: String!): Token!
   register(dataRegister: SignupInput!): AuthSansSession!
+  registerNewUser(userCreateInput: UserCreateMutationInput!): AuthDetailed!
   signin: AuthDetailed!
   signup(data: SignupInput!): Token!
   uploadFile(name: Upload!): JSONObject!
@@ -1622,7 +1623,6 @@ input SessionWhereUniqueInput {
 input SignupInput {
   email: String!
   firstName: String
-  image: String
   lastName: String
   password: String!
 }
@@ -1731,6 +1731,28 @@ type UserCount {
   entries: Int!
   mediaItems: Int!
   sessions: Int!
+}
+
+input UserCreateMutationInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  categories: CategoryCreateNestedManyWithoutCreatorInput
+  comments: CommentCreateNestedManyWithoutAuthorInput
+  connections: ConnectionCreateNestedManyWithoutOwnerInput
+  createdAt: DateTime
+  email: String!
+  emailVerified: DateTime
+  entries: EntryCreateNestedManyWithoutAuthorInput
+  firstName: String
+  id: ID
+  image: UserCreateimageInput
+  lastName: String
+  mediaItems: MediaItemCreateNestedManyWithoutUserInput
+  password: String
+  profile: ProfileCreateNestedOneWithoutUserInput
+  role: Role
+  sessions: SessionCreateNestedManyWithoutUserInput
+  status: UserStatus
+  updatedAt: DateTime
 }
 
 input UserCreateNestedOneWithoutCategoriesInput {

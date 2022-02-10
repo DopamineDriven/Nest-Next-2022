@@ -1,0 +1,14 @@
+fragment MediaItemsPartial on MediaItem {
+  id
+  name
+  width
+  height
+  quality
+  size
+  src
+  type
+  uploadedAt
+  userId
+  fileLastModified
+  __typename
+}

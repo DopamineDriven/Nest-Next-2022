@@ -9,7 +9,9 @@ import {
   GraphQLUpload,
   FileUpload,
   graphqlUploadExpress,
-  UploadOptions
+  UploadOptions,
+  processRequest,
+  Upload,GraphQLOperation
 } from "graphql-upload";
 import { createWriteStream } from "fs";
 import { ReadStream } from "fs-capacitor";
@@ -19,7 +21,10 @@ import { JSONObjectResolver } from "graphql-scalars";
 import { Context as LocalContext } from "../app.module";
 
 @Injectable()
-export class UploadService implements FileUpload, UploadOptions {
+export class UploadService implements GraphQLOperation, FileUpload, UploadOptions {
+  operationName?: string | null | undefined;
+  query: string;
+  variables?: unknown;
   public encoding: BufferEncoding;
   public maxFieldSize?: number | undefined;
   public maxFileSize?: number | undefined;
@@ -31,6 +36,7 @@ export class UploadService implements FileUpload, UploadOptions {
     @Inject(PrismaService) private readonly prismaService: PrismaService
   ) {
     ({
+      // Upload(upload: ReturnType<typeof Upload>)=> (processRequest(this.createReadStream(upload()).setEncoding("base64").emit("data")),
       encoding: this.encoding,
       filename: this.filename,
       mimetype: this.mimetype,

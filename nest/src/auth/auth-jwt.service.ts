@@ -51,7 +51,6 @@ export class AuthService {
           status: "ONLINE",
           createdAt: new Date(Date.now()),
           emailVerified: new Date(Date.now()),
-          image: payload.image
         }
       });
       return this.generateTokens({

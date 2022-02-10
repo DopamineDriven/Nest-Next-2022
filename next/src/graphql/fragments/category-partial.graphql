@@ -1,0 +1,9 @@
+fragment CategoryPartial on Category {
+  createdAt
+  creatorId
+  entryId
+  id
+  name
+  updatedAt
+  __typename
+}

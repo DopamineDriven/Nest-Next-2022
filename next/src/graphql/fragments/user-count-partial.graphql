@@ -3,6 +3,7 @@ fragment UserCountPartial on UserCount {
   categories
   comments
   connections
+  mediaItems
   entries
   sessions
   __typename

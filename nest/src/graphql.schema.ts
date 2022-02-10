@@ -1386,7 +1386,6 @@ export class SessionWhereUniqueInput {
 export class SignupInput {
     email: string;
     firstName?: Nullable<string>;
-    image?: Nullable<string>;
     lastName?: Nullable<string>;
     password: string;
 }
@@ -1429,6 +1428,28 @@ export class StringNullableListFilter {
     hasEvery?: Nullable<string[]>;
     hasSome?: Nullable<string[]>;
     isEmpty?: Nullable<boolean>;
+}
+
+export class UserCreateMutationInput {
+    accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
+    categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
+    comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
+    connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTime>;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    image?: Nullable<UserCreateimageInput>;
+    lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
+    password?: Nullable<string>;
+    profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
+    role?: Nullable<Role>;
+    sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
+    status?: Nullable<UserStatus>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class UserCreateNestedOneWithoutCategoriesInput {
@@ -1829,6 +1850,8 @@ export abstract class IMutation {
     abstract refreshToken(token: string): Token | Promise<Token>;
 
     abstract register(dataRegister: SignupInput): AuthSansSession | Promise<AuthSansSession>;
+
+    abstract registerNewUser(userCreateInput: UserCreateMutationInput): AuthDetailed | Promise<AuthDetailed>;
 
     abstract signin(): AuthDetailed | Promise<AuthDetailed>;
 
