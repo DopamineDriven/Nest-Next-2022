@@ -17,7 +17,7 @@ export class UserOrderBy {}
 @ConnectionNodesObjectType(User)
 export class UserNodes {}
 
-@ConnectionEdgeObjectType(User)
+@ConnectionEdgeObjectType(User, { id: new User().id })
 export class UserEdge {}
 
 @ConnectionObjectType(UserEdge)

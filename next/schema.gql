@@ -1145,9 +1145,9 @@ type Mutation {
   login(data: LoginInput!): Token!
   refreshToken(token: String!): Token!
   register(dataRegister: SignupInput!): AuthSansSession!
-  signin: AuthDetailed!
+  registerNewUser(userCreateInput: UserCreateMutationInput!): AuthDetailed!
+  signin(userloginInput: LoginInput!): AuthDetailed!
   signup(data: SignupInput!): Token!
-  uploadFile(name: Upload!): JSONObject!
   userFromAccessTokenDecoded(token: String!): AuthDetailed!
 }
 
@@ -1622,7 +1622,6 @@ input SessionWhereUniqueInput {
 input SignupInput {
   email: String!
   firstName: String
-  image: String
   lastName: String
   password: String!
 }
@@ -1687,9 +1686,6 @@ type Token {
 
 union TypesUnion = Entry | Profile | User
 
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
-
 type User {
   _count: UserCount
   accounts: [Account!]
@@ -1731,6 +1727,28 @@ type UserCount {
   entries: Int!
   mediaItems: Int!
   sessions: Int!
+}
+
+input UserCreateMutationInput {
+  accounts: AccountCreateNestedManyWithoutUserInput
+  categories: CategoryCreateNestedManyWithoutCreatorInput
+  comments: CommentCreateNestedManyWithoutAuthorInput
+  connections: ConnectionCreateNestedManyWithoutOwnerInput
+  createdAt: DateTime
+  email: String!
+  emailVerified: DateTime
+  entries: EntryCreateNestedManyWithoutAuthorInput
+  firstName: String
+  id: ID
+  image: UserCreateimageInput
+  lastName: String
+  mediaItems: MediaItemCreateNestedManyWithoutUserInput
+  password: String
+  profile: ProfileCreateNestedOneWithoutUserInput
+  role: Role
+  sessions: SessionCreateNestedManyWithoutUserInput
+  status: UserStatus
+  updatedAt: DateTime
 }
 
 input UserCreateNestedOneWithoutCategoriesInput {

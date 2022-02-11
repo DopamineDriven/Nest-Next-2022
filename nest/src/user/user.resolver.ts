@@ -1,13 +1,20 @@
 import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
-import { Args, Context, Resolver } from "@nestjs/graphql";
+import { Args, Context, GqlContextType, Resolver } from "@nestjs/graphql";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "./model/user.model";
 import { UserService } from "./user.service";
 import { Query, Mutation } from "@nestjs/graphql";
-import { UserConnection } from "./model/user-connection.model";
+import {
+  UserConnection,
+  UserEdge,
+  UserNodes
+} from "./model/user-connection.model";
 import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
 import { ChangePasswordInput } from "./inputs/change-passsword.input";
-import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
+import {
+  findManyCursorConnection,
+  PrismaFindManyArguments
+} from "@devoxa/prisma-relay-cursor-connection";
 import { Type } from "@nestjs/common";
 import { Request } from "express";
 import * as JWT from "jsonwebtoken";
@@ -19,15 +26,31 @@ import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { AuthDetailed } from "src/auth/model/auth-detailed.model";
 import { ManyUsersPaginatedArgs } from "./args/find-many-paginated.args";
 import { FindManyUsersPaginatedInput } from "./inputs/user-paginated-args.input";
-import { Connection, connectionFromArray, Edge } from "graphql-relay";
+import {
+  Connection,
+  connectionFromArray,
+  Edge,
+  fromGlobalId,
+  toGlobalId
+} from "graphql-relay";
 import { EntryConnection } from "src/entry/model/entry-connection.model";
 import { UsersToEntriesPaginatedInput } from "./inputs/users-to-entries-paginated.input";
 import { UsersToEntriesOutput } from "./outputs/user-to-entries.output";
-import { BaseTypesConnection, TypeConnectionsUnionType } from "./model/user-connection-union.model";
+import {
+  baseTypes,
+  BaseTypesConnection
+} from "./model/user-connection-union.model";
 import { FindManyProfilesPaginatedInput } from "src/profile/inputs/profile-paginated.input";
 import { FindManyEntriesPaginatedInput } from "src/entry/inputs/entry-paginated.input";
 import { Prisma } from "@prisma/client";
 import { UserCount } from "./outputs/user-count.output";
+import { FindManyMediaItemsInput } from "src/media/inputs/find-many-media-items-paginated.input";
+import { PickType } from "@nestjs/mapped-types";
+import { MediaItem } from "src/media/model/media.model";
+import { Entry } from "src/entry";
+import { MediaItemConnection } from "src/media/model/media-connection";
+import { ContentNodes } from "./outputs/content-nodes.output";
+import { PrismaClientValidationError } from "@prisma/client/runtime";
 @Resolver(() => User)
 export class UserResolver {
   constructor(
@@ -50,25 +73,25 @@ export class UserResolver {
     );
   }
 
-  @Query(() => BaseTypesConnection)
-  async typeConnectionUnionFuncton(
+  @Query(() => ContentNodes)
+  async contentNodesUnion(
     @Args("findManyUsersPaginatedInput", {
       type: () => FindManyUsersPaginatedInput,
-      nullable: true,
-      defaultValue: {
-        findManyUsersPaginatedInput: { pagination: { first: 10 } }
-      }
+      nullable: true
     })
     params: FindManyUsersPaginatedInput,
-    @Args("findManyEntriesPaginatedInput") entryParams: FindManyEntriesPaginatedInput,
-    @Args("findManyProfilesPaginatedInput", { type: () => FindManyProfilesPaginatedInput })
-    profileParams: FindManyProfilesPaginatedInput
-  ): Promise<BaseTypesConnection> {
+    @Args("findManyEntriesPaginatedInput")
+    entryParams: FindManyEntriesPaginatedInput,
+    @Args("findManyMediaItemsPaginated", {
+      type: () => FindManyMediaItemsInput,
+      nullable: true
+    })
+    mediaParams: FindManyMediaItemsInput
+  ): Promise<ContentNodes> {
     const edgingUserNodes = await findManyCursorConnection(
       args =>
         this.prismaService.user.findMany({
           take: params.take,
-          include: { _count: true },
           skip: params.skip,
           distinct: params.distinct,
           where: params.where,
@@ -91,36 +114,35 @@ export class UserResolver {
         after: params.pagination.after
       }
     );
-    const edgingThoseProfiles = await findManyCursorConnection(
+    const edgingThoseMediaItems = await findManyCursorConnection(
       args =>
-        this.prismaService.profile.findMany({
-          skip: profileParams.skip,
-          take: profileParams.take,
-          distinct: profileParams.distinct,
-          where: profileParams.where,
-          orderBy: profileParams.orderBy,
-          cursor: profileParams.cursor,
+        this.prismaService.mediaItem.findMany({
+          skip: mediaParams.skip,
+          take: mediaParams.take,
+          distinct: mediaParams.distinct,
+          where: mediaParams.where,
+          orderBy: mediaParams.orderBy,
+          cursor: mediaParams.cursor,
           ...args
         }),
       () =>
-        this.prismaService.profile.count({
-          skip: profileParams.skip,
-          take: profileParams.take,
-          distinct: profileParams.distinct,
-          where: profileParams.where,
-          orderBy: profileParams.orderBy
+        this.prismaService.mediaItem.count({
+          skip: mediaParams.skip,
+          take: mediaParams.take,
+          distinct: mediaParams.distinct,
+          where: mediaParams.where,
+          orderBy: mediaParams.orderBy
         }),
       {
-        first: profileParams.pagination.first ?? 10,
-        last: profileParams.pagination.last,
-        before: profileParams.pagination.before,
-        after: profileParams.pagination.after
+        first: mediaParams.pagination.first ?? 10,
+        last: mediaParams.pagination.last,
+        before: mediaParams.pagination.before,
+        after: mediaParams.pagination.after
       }
     );
     const edgingThoseNodes = await findManyCursorConnection(
       args =>
         this.prismaService.entry.findMany({
-          include: {_count: true},
           distinct: entryParams.distinct,
           take: entryParams.take,
           skip: entryParams.skip,
@@ -143,8 +165,8 @@ export class UserResolver {
         after: entryParams.pagination.after
       }
     );
-    const output = ([edgingThoseNodes || edgingThoseProfiles || edgingUserNodes]);
-    return output
+    const output = edgingThoseMediaItems || edgingThoseNodes || edgingUserNodes;
+    return { contentNodes: { nodes: output } };
   }
 
   @Query(() => User)
@@ -191,111 +213,46 @@ export class UserResolver {
         last: params.pagination.last,
         before: params.pagination.before,
         after: params.pagination.after
+      },
+      {
+        getCursor: (record: { id: string }) => {
+          return record;
+        },
+        decodeCursor: (cursor: string) => fromGlobalId(cursor),
+        encodeCursor: (cursor: { id: string }) =>
+          toGlobalId(User.name, cursor.id)
       }
     );
   }
 
-  // @Query(() => UsersToEntriesOutput)
-  // async usersToEntriesPaginated(
-  //   @Args("usersToEntriesPaginatedInput", {
-  //     type: () => UsersToEntriesPaginatedInput
-  //   })
-  //   params: UsersToEntriesPaginatedInput
-  // ): Promise<UsersToEntriesOutput> {
-  //   const findManyUsersTransaction = await this.prismaService.$transaction(
-  //     async (prisma = this.prismaService) => {
-  //       const edgingUserNodes = await findManyCursorConnection(
-  //         args =>
-  //           prisma.user.findMany({
-  //             take: params.findManyUsersPaginatedInput.take,
-  //             skip: params.findManyUsersPaginatedInput.skip,
-  //             distinct: params.findManyUsersPaginatedInput.distinct,
-  //             where: params.findManyUsersPaginatedInput.where,
-  //             orderBy: params.findManyUsersPaginatedInput.orderBy,
-  //             ...args
-  //           }),
-  //         () =>
-  //           prisma.user.count({
-  //             orderBy: params.findManyUsersPaginatedInput.orderBy,
-  //             distinct: params.findManyUsersPaginatedInput.distinct,
-  //             skip: params.findManyUsersPaginatedInput.skip,
-  //             where: params.findManyUsersPaginatedInput.where,
-  //             cursor: params.findManyUsersPaginatedInput.cursor
-  //           }),
-  //         {
-  //           first: params.findManyUsersPaginatedInput.pagination.first ?? 10,
-  //           last: params.findManyUsersPaginatedInput.pagination.last,
-  //           before: params.findManyUsersPaginatedInput.pagination.before,
-  //           after: params.findManyUsersPaginatedInput.pagination.after
-  //         }
-  //       );
-
-  //       const edgingThoseNodes = await findManyCursorConnection(
-  //         args =>
-  //           prisma.entry.findMany({
-  //             distinct: params.findManyEntriesPaginatedInput.distinct,
-  //             take: params.findManyEntriesPaginatedInput.take,
-  //             skip: params.findManyEntriesPaginatedInput.skip,
-  //             where: params.findManyEntriesPaginatedInput.where,
-  //             cursor: params.findManyEntriesPaginatedInput.cursor,
-  //             orderBy: params.findManyEntriesPaginatedInput.orderBy,
-  //             ...args
-  //           }),
-  //         () =>
-  //           prisma.entry.count({
-  //             distinct: params.findManyEntriesPaginatedInput.distinct,
-  //             skip: params.findManyEntriesPaginatedInput.skip,
-  //             where: params.findManyEntriesPaginatedInput.where,
-  //             cursor: params.findManyEntriesPaginatedInput.cursor,
-  //             orderBy: params.findManyEntriesPaginatedInput.orderBy
-  //           }),
-  //         {
-  //           first: params.findManyEntriesPaginatedInput.pagination.first ?? 10,
-  //           last: params.findManyEntriesPaginatedInput.pagination.last,
-  //           before: params.findManyEntriesPaginatedInput.pagination.before,
-  //           after: params.findManyEntriesPaginatedInput.pagination.after
-  //         }
-  //       );
-  //       return { entries: edgingThoseNodes, users: edgingUserNodes };
-  //     },
-  //     { maxWait: 5000, timeout: 10000 }
-  //   );
-
-  //   return (
-  //     findManyUsersTransaction.users && {
-  //       entries: findManyUsersTransaction.entries
-  //     }
-  //   );
-  // }
-
   @Query(() => User)
-  async userByRelayId(@Context("CONTEXT") CONTEXT: Request) {
-    const token = CONTEXT.header("authorization")
-      ? CONTEXT.header("authorization")
-      : "";
-    const user = JWT.decode(token ? token : "", {
-      complete: true
-    }) as JwtDecoded;
-    console.log(user);
+  async userByRelayId(
+    @Args("cursor", { type: () => String }) cursor: string
+  ): Promise<User> {
     return await this.userService.relayFindUniqueUser({
-      id: user.payload.userId
+      id: cursor
     });
   }
 
-  @UseGuards(GraphqlAuthGuard)
   @Mutation(() => User)
+  @UseGuards(AuthGuard)
   async changePassword(
-    @Args("accessToken", { type: () => String }) accessToken: string,
-    @Args("data") data: ChangePasswordInput
+    @Context("token") ctx: ExecutionContext,
+    @Args("changePasswordInput") changePasswordInput: ChangePasswordInput
   ) {
-    const jwtDecoded = (await this.authService.getUserFromToken(
-      accessToken
-    )) as User | null;
-
-    return await this.userService.changePassword(
-      jwtDecoded?.id ? jwtDecoded.id : "",
-      jwtDecoded?.password ? jwtDecoded.password : data.oldPassword,
-      { ...data }
-    );
+    return await this.authService
+      .getUserFromToken(ctx as unknown as string)
+      .then(async data => {
+        const changePW = await this.userService.changePassword(
+          { ...changePasswordInput },
+          ctx as unknown as string
+        );
+        if (changePW != null) {
+          return changePW
+        } else {
+          const {mediaItems, ...user} = {mediaItems: {...data?.mediaItems}, ...data }
+          return user
+        }
+      });
   }
 }

@@ -6,9 +6,10 @@ import { Category } from "../../category/model/category.model";
 import { JSONObjectResolver, JSONResolver } from "graphql-scalars";
 import GraphQLJSON from "graphql-type-json";
 import { Prisma } from "@prisma/client";
+import { Node } from "src/node/model/node.model";
 
 @ObjectType("Entry")
-export class Entry {
+export class Entry implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
 

@@ -8,6 +8,7 @@ import {
   ConnectionObjectType,
   ConnectionOrderingInputType
 } from "../../common/pagination/pagination";
+import { Node } from "src/node/model/node.model";
 
 
 @ObjectType("ViewerEntity")

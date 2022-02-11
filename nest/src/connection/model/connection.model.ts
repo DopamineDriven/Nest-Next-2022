@@ -1,9 +1,10 @@
 import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { PhoneNumberResolver } from "graphql-scalars";
 import { User } from "../../user/model/user.model";
+import { Node } from "src/node/model/node.model";
 
 @ObjectType("Connection")
-export class Connection {
+export class Connection implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
 

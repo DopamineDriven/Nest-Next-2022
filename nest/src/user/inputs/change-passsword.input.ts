@@ -1,19 +1,15 @@
 import { InputType, Field } from "@nestjs/graphql";
-import { IsNotEmpty, MinLength } from "class-validator";
 
 export interface ChangePasswordDto {
   oldPassword: string;
   newPassword: string;
 }
 
-@InputType()
-export class ChangePasswordInput {
-  @Field({ nullable: false })
-  @IsNotEmpty()
+@InputType("ChangePasswordInput")
+export class ChangePasswordInput implements ChangePasswordDto {
+  @Field(() => String, { nullable: false, name: "oldPassword" })
   oldPassword!: string;
 
-  @Field({ nullable: false })
-  @IsNotEmpty()
-  @MinLength(8)
+  @Field(() => String, { nullable: false, name: "newPassword" })
   newPassword!: string;
 }

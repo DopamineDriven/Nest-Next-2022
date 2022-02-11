@@ -3,6 +3,8 @@
 # import UserEdgePartial from "../fragments/user-partial.graphql";
 # import EntryPartial from "../fragments/entry-partial.graphql";
 # import UserPartial from "../fragments/user-partial.graphql";
+# import MediaItemPartial from "../fragments/media-item-partial.graphql";
+# import ProfilePartial from "../fragments/profile-partial.graphql";
 
 query allUsers($findManyUsersPaginatedInput: FindManyUsersPaginatedInput) {
   listUsers(findManyUsersPaginatedInput: $findManyUsersPaginatedInput) {
@@ -15,6 +17,12 @@ query allUsers($findManyUsersPaginatedInput: FindManyUsersPaginatedInput) {
       node {
         entries {
           ...EntryPartial
+        }
+        profile {
+          ...ProfilePartial
+        }
+        mediaItems {
+          ...MediaItemPartial
         }
         ...UserPartial
       }

@@ -1,0 +1,11 @@
+fragment CommentPartial on Comment {
+  authorId
+  body
+  createdAt
+  updatedAt
+  entryId
+  id
+  position
+  reactions
+  __typename
+}

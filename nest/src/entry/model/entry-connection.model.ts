@@ -17,7 +17,7 @@ export class EntryOrderBy {}
 @ConnectionNodesObjectType(Entry)
 export class EntryNodes {}
 
-@ConnectionEdgeObjectType(Entry)
+@ConnectionEdgeObjectType(Entry, {id: new Entry().id})
 export class EntryEdge {}
 
 @ConnectionObjectType(EntryEdge)

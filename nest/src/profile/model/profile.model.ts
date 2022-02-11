@@ -13,8 +13,10 @@ import { JSONValue } from "src/common/types/json.type";
 import { isInputObjectType } from "graphql";
 import GraphQLJSON from "graphql-type-json";
 import { Prisma } from "@prisma/client";
+import { Node } from "src/node/model/node.model";
+
 @ObjectType("Profile")
-export class Profile {
+export class Profile implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
 

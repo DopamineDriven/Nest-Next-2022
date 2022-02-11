@@ -23,6 +23,7 @@ import {
   SecurityConfig,
   SwaggerConfig
 } from "./common/config/config-interfaces.config";
+import { json, urlencoded } from 'body-parser';
 import * as cookieParser from "cookie-parser";
 import { PrismaService } from "./prisma/prisma.service";
 import * as fs from "fs";
@@ -34,6 +35,10 @@ import {
 } from "@nestjs/microservices";
 import { PrismaModel } from "./.generated/prisma-class-generator";
 import { AuthGuard } from "./common/guards/gql-context.guard";
+import { graphqlUploadExpress } from 'graphql-upload';
+import multer from "multer";
+import { Application } from "express";
+import {ExpressAdapter} from "@nestjs/platform-express"
 // import { GqlExecutionContext } from "@nestjs/graphql";
 // import { ExecutionContextHost } from "@nestjs/core/helpers/execution-context-host";
 // import { PipesContextCreator } from "@nestjs/core/pipes/pipes-context-creator";
@@ -102,7 +107,9 @@ const options: Options = {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { ...options });
-
+  app.use(json({ limit: '50mb' }));
+  // app.use(multer({dest: "./src/uploads"}))
+  app.use(urlencoded({ limit: '50mb', extended: true }));
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   app.use(cookieParser());

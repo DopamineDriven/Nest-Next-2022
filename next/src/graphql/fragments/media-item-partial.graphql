@@ -1,0 +1,23 @@
+fragment MediaItemPartial on MediaItem {
+  id
+  name
+  width
+  height
+  quality
+  size
+  src
+  type
+  uploadedAt
+  userId
+  fileLastModified
+  __typename
+}
+fragment MediaItemEdgePartial on MediaItemEdge {
+  cursor
+  __typename
+}
+
+fragment MediaItemConnectionPartial on MediaItemConnection {
+  totalCount
+  __typename
+}

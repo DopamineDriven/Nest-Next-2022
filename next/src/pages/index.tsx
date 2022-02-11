@@ -1,22 +1,38 @@
-import { AuthDetailed, Viewer } from "@/cache/__types__";
+import {
+  AuthDetailed,
+  Exact,
+  LoginInput,
+  Viewer
+} from "@/cache/__types__";
 import { CookieValueTypes } from "cookies-next/lib/types";
 import { Inspector } from "@/components/UI";
 import { ViewerQuery } from "@/graphql/queries/viewer.graphql";
-import { NormalizedCacheObject } from "@apollo/client";
+import {
+  ApolloCache,
+  DefaultContext,
+  MutationFunctionOptions,
+  NormalizedCacheObject
+} from "@apollo/client";
 import {
   LoginUserDocument,
+  LoginUserMutation,
+  LoginUserMutationResult,
   useLoginUserMutation
 } from "@/graphql/mutations/login-user.graphql";
 import { useRouter } from "next/router";
 import cn from "classnames";
 import { TypeScript } from "@/components/Icons";
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { UnwrapInputProps } from "@/types/mapped";
 import {
   DeriveUserDetailsFromTokenDocument,
   useDeriveUserDetailsFromTokenMutation
 } from "@/graphql/mutations/get-user-from-access-token.graphql";
+import {
+  SignInUserDocument,
+  useSignInUserMutation
+} from "@/graphql/mutations/sign-in.graphql";
 
 const ReusableInput = ({
   ...props
@@ -51,6 +67,16 @@ export default function Index() {
   const [accessTokenVal, setAccessTokenVal] = useState<string | null>(
     null
   );
+  const [
+    UseDetailedHandle,
+    {
+      data: dataSignin,
+      called: calledSignin,
+      error: errorSignin,
+      client: clientSignin,
+      reset: resetSignin
+    }
+  ] = useSignInUserMutation({ mutation: SignInUserDocument });
 
   const [authDetailedState, setAuthDetailedState] =
     useState<AuthDetailed | null>(null);
@@ -80,6 +106,34 @@ export default function Index() {
         : () => {};
     })();
   }, [accessTokenVal, lazyDerivation]);
+  const [authPayload, setAuthPayload] = useState<
+    AuthDetailed | undefined
+  >();
+  const handleSubmitLifecycleHook = useCallback(
+    (input: { email: string; password: string }) => {
+      if (input.email && input.password !== null) {
+        // return useSignInUserMutation({
+        //   variables: { loginInput: input },
+        //   mutation=
+        // })
+      }
+      (
+        props: (
+          options?:
+            | MutationFunctionOptions<
+                LoginUserMutation,
+                Exact<{
+                  data: LoginInput;
+                }>,
+                DefaultContext,
+                ApolloCache<any>
+              >
+            | undefined
+        ) => Promise<LoginUserMutationResult>
+      ) => {};
+    },
+    []
+  );
 
   const [emailState, setEmailState] = useState<string | null>(null);
   const [passwordState, setPasswordState] = useState<string | null>(null);
@@ -91,35 +145,20 @@ export default function Index() {
     console.log(password ?? "");
     setEmailState(email.toString());
     setPasswordState(password.toString());
-    const lazyLogger = () =>
-      lazyLogin({
+    const lazyLogger = async () =>
+      await UseDetailedHandle({
         variables: {
-          data: {
+          loginInput: {
             email: `${email}` ?? emailState,
             password: `${password}` ?? passwordState
           }
         }
-      })
-        .then(data => {
-          data.data?.login.accessToken != null
-            ? setAccessTokenVal(data.data.login.accessToken)
-            : setAccessTokenVal(null);
-          return lazyDerivation({
-            variables: { token: data.data?.login.accessToken as string }
-          }).then(data => {
-            return data.data
-              ?.userFromAccessTokenDecoded as unknown as AuthDetailed;
-          });
-        })
-        .then(promiseLikeAuthDetailed => {
-          return promiseLikeAuthDetailed as unknown as AuthDetailed;
-        });
-    return lazyLogger()
-      .then(data => {
-        setAuthDetailedState(data);
-        return data;
-      })
-      .finally((): void => {});
+      }).then(authDeets => {
+        dataSignin?.signin;
+        setAuthDetailedState(authDeets.data?.signin as AuthDetailed);
+        return authDeets.data?.signin;
+      });
+
   }
 
   return (
@@ -143,7 +182,7 @@ export default function Index() {
       <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
         <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
           {authDetailedState !== null ? (
-            <Inspector className="!container !min-w-fit">
+            <Inspector className='!container !min-w-fit'>
               {JSON.stringify(authDetailedState, null, 2)}
             </Inspector>
           ) : (

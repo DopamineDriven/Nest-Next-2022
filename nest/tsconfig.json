@@ -12,7 +12,7 @@
     "noStrictGenericChecks": false,
     "strictPropertyInitialization": false,
     "target": "ESNext",
-    "lib": ["ESNext", "ESNext.AsyncIterable"],
+    "lib": ["ESNext", "ESNext.AsyncIterable", "DOM"],
     "moduleResolution": "node",
     "strictNullChecks": true,
     "sourceMap": true,
@@ -22,5 +22,5 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["./**/*.ts", "./src/.generated/**/*.ts", "./prisma/**/*"],
+  "include": ["./src/**/*.ts", "./src/.generated/**/*.ts", "./prisma/**/*"],
 }

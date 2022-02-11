@@ -3,9 +3,10 @@ import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { User } from "../../user/model/user.model";
 import { Entry } from "../../entry";
 import { GraphQLJSON, JSONObjectResolver } from "graphql-scalars";
+import { Node } from "src/node/model/node.model";
 
 @ObjectType("Comment")
-export class Comment {
+export class Comment implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
 

@@ -1,0 +1,13 @@
+fragment ConnectionPartial on Connection {
+  firstName
+  email
+  firstName
+  lastName
+  id
+  ip
+  lastModified
+  lastName
+  ownerId
+  phoneNumber
+  __typename
+}

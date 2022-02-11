@@ -1,0 +1,34 @@
+# import UserCountPartial from "../fragments/user-count-partial.graphql";
+# import SessionPartial from "../fragments/session-partial.graphql";
+# import AuthPartial from "../fragments/auth-partial.graphql";
+# import UserPartial from "../fragments/user-partial.graphql";
+# import JwtHeadersPartial from "../fragments/jwt-header-partial.graphql";
+# import JwtPayloadPartial from "../fragments/jwt-payload-partial.graphql";
+# import JwtDecodedPartial from "../fragments/jwt-decoded-partial.graphql";
+
+mutation signInUser($loginInput: LoginInput!) {
+  signin(userloginInput: $loginInput) {
+    auth {
+      ...AuthPartial
+      user {
+        ...UserPartial
+        _count {
+          ...UserCountPartial
+        }
+      }
+      session {
+        ...SessionPartial
+      }
+    }
+    jwt {
+      header {
+        ...JwtHeadersPartial
+      }
+      payload {
+        ...JwtPayloadPartial
+      }
+      ...JwtDecodedPartial
+    }
+    __typename
+  }
+}

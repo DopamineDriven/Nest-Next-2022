@@ -7,10 +7,16 @@ import { AuthService } from "src/auth/auth-jwt.service";
 import { Inject, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
+import { MediaItemService } from "./media.service";
+import { fromGlobalId, toGlobalId } from "graphql-relay";
 
 @Resolver(() => MediaItem)
 export class MediaResolver {
-  constructor(@Inject(PrismaService) private prismaService: PrismaService) {}
+  constructor(
+    @Inject(PrismaService) private prismaService: PrismaService,
+    @Inject(MediaItemService)
+    private readonly mediaItemService: MediaItemService
+  ) {}
 
   @Query(() => MediaItemConnection)
   async listMediaItems(
@@ -44,7 +50,18 @@ export class MediaResolver {
         last: params.pagination.last,
         before: params.pagination.before,
         after: params.pagination.after
+      },
+      {
+        getCursor: (record: {id: string}) => {
+          return record
+        },
+        decodeCursor: (cursor: string) => fromGlobalId(cursor),
+        encodeCursor: (cursor: { id: string }) => toGlobalId(MediaItem.name, cursor.id)
       }
     );
+  }
+  @Query(() => MediaItem)
+  findUniqueMediaItem(@Args("mediaItemId") mediaItemId: string) {
+    return this.mediaItemService.relayFindUniqueMediaItem({ id: mediaItemId });
   }
 }
