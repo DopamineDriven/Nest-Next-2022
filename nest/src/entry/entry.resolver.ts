@@ -10,7 +10,7 @@ import { HostParam, Inject, UseGuards } from "@nestjs/common";
 import { Entry } from "./model/entry.model";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { PrismaService } from "../prisma/prisma.service";
-import { PubSub } from "graphql-subscriptions";
+import { PubSub, PubSubEngine, PubSubOptions } from "graphql-subscriptions";
 import { UserIdArgs } from "../user/args/user-id.args";
 import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
 import { EntryService } from "./entry.service";
@@ -24,6 +24,28 @@ import { UpsertOneEntryArgs } from "src/.generated/prisma-nestjs-graphql/entry/a
 import { EntryUpsertWithWhereUniqueWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-upsert-with-where-unique-without-author.input";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
 const pubSub = new PubSub();
+export declare const ENTRY_CREATED: unique symbol;
+export declare const ENTRY_CREATED_KEY: keyof typeof ENTRY_CREATED;
+
+/**
+ *   @Subscription(() => Entry, {name: ENTRY_CREATED_KEY.toString()})
+  entryCreated() {
+    return this.pubSub.asyncIterator(ENTRY_CREATED_KEY.toString());
+  }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => Entry)
+  async createEntry(
+    @Args("createInput", { type: () => EntryCreateInput })
+    data: EntryCreateInput
+  ) {
+    const newEntry = await this.prisma.entry.create({ data }).then((entry) => {
+      this.pubSub.publish(ENTRY_CREATED_KEY.toString(), { [ENTRY_CREATED]: { entry } })
+    })    @Inject("PUB_SUB") pubSub: PubSubEngine,
+    this.pubSub.publish("entryCreated", { entryCreated: newEntry });
+    return newEntry;
+  }
+ */
 @Resolver(() => Entry)
 export class EntryResolver {
   constructor(
@@ -33,7 +55,7 @@ export class EntryResolver {
 
   @Subscription(() => Entry)
   entryCreated() {
-    return pubSub.asyncIterator("entryCreated");
+    return pubSub.asyncIterator("ENTRY_CREATED");
   }
 
   @UseGuards(GraphqlAuthGuard)

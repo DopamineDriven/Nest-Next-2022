@@ -30,7 +30,6 @@ import { ConnectionCursor } from "graphql-relay";
 import { ModelsEnum } from "./enums/models.enum";
 import { Category } from "src/category/model/category.model";
 import { Account } from "src/account/model/account.model";
-import { Viewer } from "src/auth/model/auth.model";
 import { UnionDefinitionFactory } from "@nestjs/graphql/dist/schema-builder/factories/union-definition.factory";
 type Constructor = { new (...args: any[]): any };
 
@@ -44,7 +43,7 @@ export interface RootTypes<
     | Connection
     | Category
     | Account
-    | Viewer
+
 > {
   __typename: keyof typeof ModelsEnum;
   node(id: string): RootTypes<T>;
@@ -57,7 +56,6 @@ export interface RootTypes<
     | Connection["id"]
     | Category["id"]
     | Account["id"]
-    | Viewer["id"];
 }
 
 @Injectable()
@@ -74,7 +72,6 @@ export class NodeService
     | Connection
     | Category
     | Account
-    | Viewer
   >;
   __typename:keyof typeof ModelsEnum
   id:
@@ -86,7 +83,6 @@ export class NodeService
     | Connection["id"]
     | Category["id"]
     | Account["id"]
-    | Viewer["id"];
   nodehandler<T extends ReturnTypeFuncValue, V extends Constructor,   U extends {id: string}>(
     nodeType: T, cursor: U
   ): (target: V) => Constructor {

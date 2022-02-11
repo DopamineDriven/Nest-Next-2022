@@ -1152,6 +1152,7 @@ type Mutation {
   registerNewUser(userCreateInput: UserCreateMutationInput!): AuthDetailed!
   signin(userloginInput: LoginInput!): AuthDetailed!
   signup(data: SignupInput!): Token!
+  updateUserPassword(passwordInput: ChangePasswordInput!): User!
   userFromAccessTokenDecoded(token: String!): AuthDetailed!
 }
 
@@ -1499,7 +1500,7 @@ type Query {
   contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!, findManyMediaItemsPaginated: FindManyMediaItemsInput, findManyUsersPaginatedInput: FindManyUsersPaginatedInput): ContentNodes!
   entryById(id: String!): Entry!
   findUniqueMediaItem(mediaItemId: String!): MediaItem!
-  getViewer(id: String!): Viewer!
+  getViewer: AuthDetailed!
   hello(name: String!): String!
   helloWorld: String!
   listEntries(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!): EntryConnection!
@@ -1991,32 +1992,4 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   email: String
   id: String
-}
-
-type Viewer {
-  _count: UserCount
-  accessToken: String
-  accounts: [Account!]
-  categories: [Category!]
-  comments: [Comment!]
-  connections: [Connection!]
-
-  """Identifies the date and time when the user was created."""
-  createdAt: DateTime!
-  email: String!
-  emailVerified: DateTime
-  entries: [Entry!]
-  firstName: String
-  id: ID!
-  image: [JSONObject!]!
-  lastName: String
-  mediaItems: [MediaItem!]
-  password: String!
-  profile: Profile
-  role: Role
-  sessions: [Session!]
-  status: UserStatus!
-
-  """Identifies the date and time when the user was last updated."""
-  updatedAt: DateTime
 }

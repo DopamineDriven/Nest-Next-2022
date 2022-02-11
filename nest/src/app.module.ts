@@ -38,6 +38,7 @@ import { UploadModule } from "./upload/upload.module";
 import { MediaModule } from "./media/media.module";
 import { graphqlUploadExpress, Upload } from "graphql-upload";
 import { NodeModule } from "./node/node.module";
+import { PubSub, PubSubOptions, PubSubEngine } from "graphql-subscriptions";
 export type RecordContiional<T> =
   | Record<keyof T, T>
   | Array<T>
