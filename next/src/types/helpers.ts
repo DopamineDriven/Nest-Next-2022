@@ -1,3 +1,16 @@
+export type ReturnTypeMixinOg<T extends (...args: any) => any> = T extends (
+  ...args: any
+) => infer R
+  ? R
+  : any;
+
+export type ReturnTypeMixinV2<
+  T extends (...args: Enumerable<any extends infer U ? U : any>) => any
+> = T extends (
+  ...args: any extends ReturnType<infer U> ? ReturnType<U> : ReturnType<T>
+) => infer R
+  ? R
+  : T;
 
 export type TalVez<T> = T extends PromiseLike<infer U>
   ? PromiseLike<U | Record<keyof T, U>>
@@ -47,7 +60,9 @@ export type OneOf<T extends Record<string, unknown>[]> = _OneOf<
 >;
 
 abstract class A<
-  T extends number extends { [index: string | number | symbol]: infer U } ? U : number
+  T extends number extends { [index: string | number | symbol]: infer U }
+    ? U
+    : number
 > {
   obj;
 

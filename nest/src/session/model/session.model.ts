@@ -1,9 +1,10 @@
 import { ObjectType, Field, ID, Int } from "@nestjs/graphql";
 import { JwtSigningAlgorithm } from "../../auth/enums/jwt-signing-algorithm.enum";
 import { User } from "../../user/model/user.model";
+import { Node } from "src/node/model/node.model";
 
 @ObjectType("Session")
-export class Session {
+export class Session implements Node {
   @Field(_type => ID, { nullable: false })
   id!: string;
 

@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
 import { PasswordService } from "../password/password.service";
 import { Prisma } from "@prisma/client";
-import { fromGlobalId } from "graphql-relay";
+import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { UserConnection } from "./model/user-connection.model";
 // import { UserConnection } from "../../Entities/Pagination/user-connection.entity";
 import { PrismaService } from "../prisma/prisma.service";
@@ -24,6 +24,8 @@ import { StringNullableFilter } from "src/.generated/prisma-nestjs-graphql/prism
 import { EnumUserStatusNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-user-status-nullable-filter.input";
 import { UserOrderByWithRelationAndSearchRelevanceInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-order-by-with-relation-and-search-relevance.input";
 import { StringFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/string-filter.input";
+import { User } from "./model/user.model";
+import { FindManyUsersPaginatedInput } from "./inputs/user-paginated-args.input";
 
 type Enumerable<T> = T | Array<T>;
 @Injectable()
@@ -56,23 +58,31 @@ export class UserService {
       .then();
   }
 
-
   async usersPaginated(params: ManyUsersPaginatedArgs) {
-    const { paginationArgs
-    } = params;
+    const { paginationArgs } = params;
 
     const firstNameFilter = params as StringNullableFilter;
     const lastNameFilter = params.lastNameFilter as StringNullableFilter;
-    const userStatus = params.userStatus as unknown as EnumUserStatusNullableFilter;
-    const { first, last, before, after } = paginationArgs as unknown as PaginationArgs;
+    const userStatus =
+      params.userStatus as unknown as EnumUserStatusNullableFilter;
+    const { first, last, before, after } =
+      paginationArgs as unknown as PaginationArgs;
     const roles = params.roles as unknown as EnumRoleNullableFilter;
-    const emailFilter = this.prisma.excludeStringNullableField(params.emailFilter);
-    const orderByRelevance = params.orderByRelevance as Enumerable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    const emailFilter = this.prisma.excludeStringNullableField(
+      params.emailFilter
+    );
+    const orderByRelevance =
+      params.orderByRelevance as Enumerable<UserOrderByWithRelationAndSearchRelevanceInput>;
 
     return await findManyCursorConnection(
       args =>
         this.prisma.user.findMany({
-          include: { _count: true, entries: true, profile: true, sessions: true },
+          include: {
+            _count: true,
+            entries: true,
+            profile: true,
+            sessions: true
+          },
           where: {
             role: roles,
             email: emailFilter,
@@ -94,7 +104,15 @@ export class UserService {
             status: userStatus
           }
         }),
-      { first, last, before, after }
+      { first, last, before, after },
+      {
+        getCursor: (record: { id: string }) => {
+          return record;
+        },
+        decodeCursor: (cursor: string) => fromGlobalId(cursor),
+        encodeCursor: (cursor: { id: string }) =>
+          toGlobalId(User.name, cursor.id)
+      }
     );
   }
 
@@ -216,21 +234,56 @@ export class UserService {
     return user;
   }
 
+  toGlobalRelayId(cursor: { id: string }, typename: string) {
+    return toGlobalId(typename, cursor.id);
+  }
+
+  fromGlobalRelayId(cursor: string) {
+    return fromGlobalId(cursor);
+  }
+
   async relayFindManyUsers(
-    params: PaginationArgs,
-    orderBy: UserOrder
+    params: FindManyUsersPaginatedInput
   ): Promise<UserConnection> {
-    const counting = this.prisma.user.count({
-      where: {
-        email: { contains: "gmail" }
+    return await findManyCursorConnection(
+      args =>
+        this.prisma.user.findMany({
+          take: params.take,
+          include: {
+            entries: true,
+            profile: true,
+            _count: true,
+            mediaItems: true
+          },
+          skip: params.skip,
+          distinct: params.distinct,
+          where: params.where,
+          orderBy: params.orderBy,
+          ...args
+        }),
+      () =>
+        this.prisma.user.count({
+          orderBy: params.orderBy,
+          distinct: params.distinct,
+          skip: params.skip,
+          where: params.where,
+          cursor: params.cursor
+        }),
+      {
+        first: params.pagination.first ?? 10,
+        last: params.pagination.last,
+        before: params.pagination.before,
+        after: params.pagination.after
       },
-      orderBy: { [orderBy.field]: orderBy.direction }
-    });
-    return await this.prisma.user
-      .findMany({
-        ...(await this.paginationService.relayToPrismaPagination(params))
-      })
-      .then();
+      {
+        getCursor: (record: { id: string }) => {
+          return record;
+        },
+        decodeCursor: (cursor: string) => fromGlobalId(cursor),
+        encodeCursor: (cursor: { id: string }) =>
+          toGlobalId(User.name, cursor.id)
+      }
+    );
   }
 
   updateUser(data: Prisma.UserUncheckedUpdateInput, email: string) {
@@ -247,28 +300,38 @@ export class UserService {
   }
 
   async changePassword(
-    userId: string,
-    userPassword: string,
-    changePassword: ChangePasswordInput
+    changePasswordInput: ChangePasswordInput,
+    accessToken: string
   ) {
+    const getUser = await this.authService.getUserFromToken(accessToken);
+
+    const { newPassword, oldPassword } = changePasswordInput;
+
     const passwordValid = await this.passwordService.validatePassword(
-      changePassword.oldPassword,
-      userPassword
+      oldPassword,
+      getUser?.password
+        ? getUser.password
+        : await this.passwordService.hashPassword(oldPassword)
     );
 
     if (!passwordValid) {
       throw new BadRequestException("Invalid password");
     }
 
-    const hashedPassword = await this.passwordService.hashPassword(
-      changePassword.newPassword
-    );
+    const hashedPassword = await this.passwordService.hashPassword(newPassword);
 
-    return this.prisma.user.update({
-      data: {
-        password: hashedPassword
+    return await this.prisma.user.upsert({
+      update: {
+        password: { set: hashedPassword },
+        updatedAt: new Date(Date.now()),
+        status: "ONLINE"
       },
-      where: { id: userId }
+      where: getUser?.id ? { id: getUser.id } : { email: getUser?.email },
+      create: {
+        password: hashedPassword,
+        email: getUser?.email ? getUser.email : "",
+        updatedAt: new Date(Date.now())
+      }
     });
   }
 }

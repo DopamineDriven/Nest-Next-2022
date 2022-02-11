@@ -167,6 +167,16 @@ export class ProfileService {
     return profile;
   }
 
+  excludeCursorConnection<ProfileEdge, Key extends keyof ProfileEdge>(
+    profileEdge: ProfileEdge,
+    ...keys: Key[]
+  ): Omit<ProfileEdge, Key> {
+    for (const key of keys) {
+      delete profileEdge[key];
+    }
+    return profileEdge;
+  }
+
   async relayFindManyProfiles(params: PaginationArgs) {
     return await this.prisma.profile.findMany({
       ...(await this.paginationService.relayToPrismaPagination(params))

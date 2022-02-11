@@ -15,9 +15,9 @@ import { PubSub } from "graphql-subscriptions";
 import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
 import { ProfileCreateOrConnectWithoutUserInput } from "../.generated/prisma-nestjs-graphql/profile/inputs/profile-create-or-connect-without-user.input";
 import { ProfileOrderByWithRelationAndSearchRelevanceInput } from "../.generated/prisma-nestjs-graphql/profile/inputs/profile-order-by-with-relation-and-search-relevance.input";
-import { ProfileConnection } from "./model/profile-connection.model";
+import { ProfileConnection, ProfileEdge } from "./model/profile-connection.model";
 import { PaginationArgs } from "../common/pagination/pagination.args";
-import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
+import { Edge, findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import {} from "@devoxa/prisma-relay-cursor-connection";
 import { User } from "../user/model/user.model";
 import { ProfileCreateWithoutUserInput } from "../.generated/prisma-nestjs-graphql/profile/inputs/profile-create-without-user.input";
@@ -28,6 +28,7 @@ import { StringNullableFilter } from "src/.generated/prisma-nestjs-graphql/prism
 import { ProfilesInput } from "./inputs/profiles.input";
 import { ProfileCreateInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-create.input";
 import { FindManyProfilesPaginatedInput } from "./inputs/profile-paginated.input";
+import { fromGlobalId, toGlobalId } from "graphql-relay";
 const pubSub = new PubSub();
 @Resolver(() => Profile)
 export class ProfileResolver {
@@ -92,6 +93,13 @@ export class ProfileResolver {
         last: findManyProfiles.pagination.last,
         before: findManyProfiles.pagination.before,
         after: findManyProfiles.pagination.after
+      },
+      {
+        getCursor: (record: {id: string}) => {
+          return record
+        },
+        decodeCursor: (cursor: string) => fromGlobalId(cursor),
+        encodeCursor: (cursor: { id: string }) => toGlobalId(Profile.name, cursor.id)
       }
     );
     return edgingThoseProfiles;

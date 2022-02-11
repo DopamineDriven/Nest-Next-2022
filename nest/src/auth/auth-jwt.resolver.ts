@@ -247,13 +247,13 @@ export class AuthResolver {
   }
 
   @Mutation(() => AuthDetailed)
-  async signin(
-    @Context("token") ctx: ExecutionContext,
-    @UserMeta<User>() user: User
+  async signin(@Args("userloginInput") userloginInput: LoginInput
   ): Promise<AuthDetailed> {
-    const getUserWithToken = await this.auth.getUserFromToken(ctx.getType());
+    const { email, password } = userloginInput;
+
+    const getUserWithToken = await this.auth.signIn({email, password});
     console.log(getUserWithToken ?? "no context");
-    return await this.auth.getUserWithDecodedToken(ctx as unknown as string);
+    return await getUserWithToken;
   }
 
   // @CacheKey("login")

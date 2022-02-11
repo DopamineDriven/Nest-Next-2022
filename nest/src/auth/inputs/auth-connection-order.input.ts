@@ -1,6 +1,6 @@
 import { InputType, Field } from "@nestjs/graphql";
 import { SortOrder } from "src/.generated/prisma-nestjs-graphql/prisma/enums/sort-order.enum";
-import { UserOrderByRelevanceFieldEnum } from "src/.generated/nest/graphql.nest";
+import { UserOrderByRelevanceFieldEnum } from "src/.generated/prisma-nestjs-graphql/user/enums/user-order-by-relevance-field.enum";
 @InputType()
 export class UserOrderByRelevanceInput {
 

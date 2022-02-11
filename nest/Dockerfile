@@ -29,6 +29,10 @@ COPY ./src/ ./src/
 # bring in prisma from context
 COPY ./prisma/ ./prisma/
 
+COPY ./seeds/ ./seeds/
+
+COPY ./patchees/ ./patches/
+
 # run yarn
 RUN yarn
 
@@ -47,8 +51,14 @@ COPY --from=BASE /app/.env ./
 # get the dist
 COPY --from=DEV /app/dist/ ./dist/
 
-# get prisma contents  
+# get prisma contents
 COPY --from=DEV /app/prisma/ ./prisma/
+
+# get seed directory from context
+COPY --from=DEV /app/seeds/ ./seeds/
+
+# get patched package from context
+COPY --from=DEV /app/patches/ ./patches/
 
 # get node_modules from the intial cache
 COPY --from=BASE /app/node_modules/ ./node_modules/

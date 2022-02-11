@@ -10,19 +10,24 @@ import {
 import { isTypeOfExpression } from "@ts-morph/common/lib/typescript";
 import { GraphQLTypeResolver, __TypeKind } from "graphql";
 import { Entry } from "src/entry";
-import { EntryConnection } from "src/entry/model/entry-connection.model";
-import { UserConnection } from "./user-connection.model";
+import {
+  EntryConnection,
+  EntryEdge
+} from "src/entry/model/entry-connection.model";
+import { UserConnection, UserEdge } from "./user-connection.model";
 import { ProfileConnection } from "src/profile/model/profile-connection.model";
 import { Profile } from "src/profile";
 import { User } from "./user.model";
 import {
   ConnectionEdgeObjectType,
-  ConnectionObjectType
+  ConnectionObjectType,
+  ConnectionNodesObjectType
 } from "src/common/pagination/pagination";
-export type TypeConnectionsUnionType =
-  | UserConnection
-  | EntryConnection
-  | ProfileConnection;
+import { MediaItem } from "src/media/model/media.model";
+import {
+  MediaItemConnection,
+  MediaItemEdge
+} from "src/media/model/media-connection";
 
 // export const typeConnectionsUnion = createUnionType<
 //   Type<TypeConnectionsUnionType>[]
@@ -50,30 +55,40 @@ export type TypeConnectionsUnionType =
 //   }
 // });
 
-export type BaseTypes = User | Entry | Profile;
+export type BaseTypes = Entry | User | MediaItem;
 
 export const baseTypes = createUnionType<Type<BaseTypes>[]>({
   name: "TypesUnion",
-  types: () => [Profile, Entry, User],
-  resolveType: ({
-    "0": { id },
-    "1": { getType, getClass },
-    "2": { returnType },
-    "3": { name }
-  }: Parameters<
-    GraphQLTypeResolver<Union<Type<BaseTypes>[]>, GraphQLExecutionContext>
-  >): typeof Profile | typeof Entry | typeof User | undefined => {
-    return new Profile().id === id
-      ? Profile
-      : new Entry().id === id
-      ? Entry
-      : new User().id === id
+  types: () => [Entry, MediaItem, User],
+  resolveType({
+    id
+  }: BaseTypes): typeof Entry | typeof MediaItem | typeof User | null {
+    return id in User
       ? User
-      : undefined;
+      : id in MediaItem
+      ? MediaItem
+      : id in Entry
+      ? Entry
+      : null;
+
+    // else if (__typename?.name.includes(EntryConnection.name)) {
+    //   return EntryConnection
+    // }
+    // else if (__typename?.name.includes(MediaItemConnection.name)) {
+    //   return MediaItemConnection
+    // }
+    // else {
+    //   return null;
+    // }
   }
 });
-@ConnectionEdgeObjectType(baseTypes as BaseTypes)
+@ConnectionEdgeObjectType(baseTypes, {
+  id: new Entry().id || new User().id || new MediaItem().id
+})
 export class BaseTypesEdge {}
+
+@ConnectionNodesObjectType(baseTypes)
+export class BaseTypeNodes {}
 
 @ConnectionObjectType(BaseTypesEdge)
 export class BaseTypesConnection {}

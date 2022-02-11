@@ -22,6 +22,7 @@ import { EntryUpsertInput } from "./inputs/entry-upsert.input";
 import { XOR } from "src/common/types/helpers.type";
 import { UpsertOneEntryArgs } from "src/.generated/prisma-nestjs-graphql/entry/args/upsert-one-entry.args";
 import { EntryUpsertWithWhereUniqueWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-upsert-with-where-unique-without-author.input";
+import { fromGlobalId, toGlobalId } from "graphql-relay";
 const pubSub = new PubSub();
 @Resolver(() => Entry)
 export class EntryResolver {
@@ -73,6 +74,13 @@ export class EntryResolver {
         last: params.pagination.last,
         before: params.pagination.before,
         after: params.pagination.after
+      },
+      {
+        getCursor: (record: {id: string}) => {
+          return record
+        },
+        decodeCursor: (cursor: string) => fromGlobalId(cursor),
+        encodeCursor: (cursor: { id: string }) => toGlobalId(Entry.name, cursor.id)
       }
     );
     return edgingThoseNodes;

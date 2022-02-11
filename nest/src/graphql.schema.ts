@@ -1648,6 +1648,10 @@ export class UserWhereUniqueInput {
     id?: Nullable<string>;
 }
 
+export interface Node {
+    id: string;
+}
+
 export class Account {
     __typename?: 'Account';
     access_token?: Nullable<string>;
@@ -1689,10 +1693,10 @@ export class AuthSansSession {
     user?: Nullable<User>;
 }
 
-export class BaseTypesConnection {
-    __typename?: 'BaseTypesConnection';
-    edges: BaseTypesEdge[];
-    pageInfo: PageInfo;
+export class BaseTypeNodes {
+    __typename?: 'BaseTypeNodes';
+    nodes: TypesUnion[];
+    pageInfo?: Nullable<PageInfo>;
     totalCount: number;
 }
 
@@ -1745,6 +1749,11 @@ export class Connection {
     owner: User;
     ownerId: string;
     phoneNumber?: Nullable<PhoneNumber>;
+}
+
+export class ContentNodes {
+    __typename?: 'ContentNodes';
+    contentNodes: BaseTypeNodes;
 }
 
 export class Entry {
@@ -1837,7 +1846,7 @@ export class MediaItemEdge {
 export abstract class IMutation {
     __typename?: 'IMutation';
 
-    abstract changePassword(accessToken: string, data: ChangePasswordInput): User | Promise<User>;
+    abstract changePassword(changePasswordInput: ChangePasswordInput): User | Promise<User>;
 
     abstract createEntry(createInput: EntryCreateInput): Entry | Promise<Entry>;
 
@@ -1853,11 +1862,9 @@ export abstract class IMutation {
 
     abstract registerNewUser(userCreateInput: UserCreateMutationInput): AuthDetailed | Promise<AuthDetailed>;
 
-    abstract signin(): AuthDetailed | Promise<AuthDetailed>;
+    abstract signin(userloginInput: LoginInput): AuthDetailed | Promise<AuthDetailed>;
 
     abstract signup(data: SignupInput): Token | Promise<Token>;
-
-    abstract uploadFile(name: Upload): JSONObject | Promise<JSONObject>;
 
     abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
 }
@@ -1907,7 +1914,11 @@ export class ProfileEdge {
 export abstract class IQuery {
     __typename?: 'IQuery';
 
+    abstract contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput, findManyMediaItemsPaginated?: Nullable<FindManyMediaItemsInput>, findManyUsersPaginatedInput?: Nullable<FindManyUsersPaginatedInput>): ContentNodes | Promise<ContentNodes>;
+
     abstract entryById(id: string): Entry | Promise<Entry>;
+
+    abstract findUniqueMediaItem(mediaItemId: string): MediaItem | Promise<MediaItem>;
 
     abstract getViewer(id: string): Viewer | Promise<Viewer>;
 
@@ -1925,15 +1936,15 @@ export abstract class IQuery {
 
     abstract me(): AuthDetailed | Promise<AuthDetailed>;
 
+    abstract node(id: string): Nullable<Node> | Promise<Nullable<Node>>;
+
     abstract profileByRelayId(): Profile | Promise<Profile>;
 
     abstract profiles(profilesArgs: ProfilesInput): ProfileConnection | Promise<ProfileConnection>;
 
-    abstract typeConnectionUnionFuncton(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput, findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput, findManyUsersPaginatedInput?: Nullable<FindManyUsersPaginatedInput>): BaseTypesConnection | Promise<BaseTypesConnection>;
-
     abstract userById(id: string): User | Promise<User>;
 
-    abstract userByRelayId(): User | Promise<User>;
+    abstract userByRelayId(cursor: string): User | Promise<User>;
 
     abstract userPosts(userId: string): Entry[] | Promise<Entry[]>;
 }
@@ -2047,6 +2058,5 @@ export type DateTime = any;
 export type JSON = any;
 export type JSONObject = any;
 export type PhoneNumber = any;
-export type Upload = any;
-export type TypesUnion = Entry | Profile | User;
+export type TypesUnion = Entry | MediaItem | User;
 type Nullable<T> = T | null;

@@ -25,7 +25,8 @@ import multer, { Multer } from "multer";
 
   //       })
   // } })],
-  providers: [UploadResolver, UploadService]
+  providers: [UploadResolver, UploadService],
+  exports: [UploadService]
 })
 export class UploadModule {
   configure(consumer: MiddlewareConsumer) {

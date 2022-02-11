@@ -25,20 +25,6 @@ generator nestgraphql {
   outputFilePattern = "{model}/{plural.type}/{name}.{type}.ts"
 }
 
-generator nestjsDto {
-  provider                        = "prisma-generator-nestjs-dto"
-  output                          = "../src/.generated/nestjs-dto"
-  outputToNestJsResourceStructure = "false"
-  exportRelationModifierClasses   = "true"
-  reExport                        = "false"
-  createDtoPrefix                 = "Create"
-  updateDtoPrefix                 = "Update"
-  dtoSuffix                       = "Dto"
-  entityPrefix                    = ""
-  entitySuffix                    = ""
-  fileNamingStyle                 = "camel"
-}
-
 generator prismaClassGenerator {
   provider               = "prisma-class-generator"
   dryRun                 = "false"
@@ -81,7 +67,7 @@ model User {
   firstName     String?
   lastName      String?
   email         String       @unique
-  image         Json[]       
+  image         Json[]
   role          Role?        @default(USER)
   status        UserStatus?  @default(OFFLINE)
   password      String       @default("")

@@ -9,6 +9,7 @@ import {
 } from "../../common/pagination/pagination";
 import { UserRelationFilter } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-relation-filter.input";
 import { UserOrderByRelevanceInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-order-by-relevance.input";
+import { v4 } from "uuid";
 
 @ConnectionFilterArgsType(UserRelationFilter)
 export class UserFilter {}
@@ -19,7 +20,7 @@ export class UserOrderBy {}
 @ConnectionNodesObjectType(Auth)
 export class AuthNodes {}
 
-@ConnectionEdgeObjectType(Auth)
+@ConnectionEdgeObjectType(Auth, {id: v4()})
 export class AuthEdge {}
 
 @ConnectionObjectType(AuthEdge)

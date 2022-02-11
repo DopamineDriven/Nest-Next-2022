@@ -151,9 +151,9 @@ type AuthSansSession {
   user: User
 }
 
-type BaseTypesConnection {
-  edges: [BaseTypesEdge!]!
-  pageInfo: PageInfo!
+type BaseTypeNodes {
+  nodes: [TypesUnion!]!
+  pageInfo: PageInfo
   totalCount: Int!
 }
 
@@ -497,6 +497,10 @@ input ConnectionWhereInput {
 
 input ConnectionWhereUniqueInput {
   id: String
+}
+
+type ContentNodes {
+  contentNodes: BaseTypeNodes!
 }
 
 """
@@ -1138,7 +1142,7 @@ enum MimeTypes {
 }
 
 type Mutation {
-  changePassword(accessToken: String!, data: ChangePasswordInput!): User!
+  changePassword(changePasswordInput: ChangePasswordInput!): User!
   createEntry(createInput: EntryCreateInput!): Entry!
   createProfile(data: ProfileCreateInput!, userId: String!): Profile!
   getUserFromAccessToken(token: String!): User!
@@ -1146,9 +1150,8 @@ type Mutation {
   refreshToken(token: String!): Token!
   register(dataRegister: SignupInput!): AuthSansSession!
   registerNewUser(userCreateInput: UserCreateMutationInput!): AuthDetailed!
-  signin: AuthDetailed!
+  signin(userloginInput: LoginInput!): AuthDetailed!
   signup(data: SignupInput!): Token!
-  uploadFile(name: Upload!): JSONObject!
   userFromAccessTokenDecoded(token: String!): AuthDetailed!
 }
 
@@ -1271,6 +1274,10 @@ input NestedStringNullableFilter {
   notIn: [String!]
   search: String
   startsWith: String
+}
+
+interface Node {
+  id: ID!
 }
 
 type PageInfo {
@@ -1489,7 +1496,9 @@ enum Pronouns {
 }
 
 type Query {
+  contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!, findManyMediaItemsPaginated: FindManyMediaItemsInput, findManyUsersPaginatedInput: FindManyUsersPaginatedInput): ContentNodes!
   entryById(id: String!): Entry!
+  findUniqueMediaItem(mediaItemId: String!): MediaItem!
   getViewer(id: String!): Viewer!
   hello(name: String!): String!
   helloWorld: String!
@@ -1498,11 +1507,11 @@ type Query {
   listProfiles(findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput!): ProfileConnection!
   listUsers(findManyUsersPaginatedInput: FindManyUsersPaginatedInput = {}): UserConnection!
   me: AuthDetailed!
+  node(id: ID!): Node
   profileByRelayId: Profile!
   profiles(profilesArgs: ProfilesInput!): ProfileConnection!
-  typeConnectionUnionFuncton(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!, findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput!, findManyUsersPaginatedInput: FindManyUsersPaginatedInput = {}): BaseTypesConnection!
   userById(id: String!): User!
-  userByRelayId: User!
+  userByRelayId(cursor: String!): User!
   userPosts(userId: ID!): [Entry!]!
 }
 
@@ -1685,10 +1694,7 @@ type Token {
   refreshToken: String
 }
 
-union TypesUnion = Entry | Profile | User
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
+union TypesUnion = Entry | MediaItem | User
 
 type User {
   _count: UserCount

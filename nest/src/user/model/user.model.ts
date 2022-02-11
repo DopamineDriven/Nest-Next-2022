@@ -13,10 +13,11 @@ import { NullLiteral } from "ts-morph";
 import { GraphQLJSON, JSONObjectResolver, JSONResolver } from "graphql-scalars";
 import { MediaItem } from "src/media/model/media.model";
 import { Prisma } from "@prisma/client";
+import { Node } from "src/node/model/node.model";
 type Nullable<T> = T | null;
 
 @ObjectType("User")
-export class User {
+export class User implements Node {
   @Field(() => ID, {
     name: "id",
     nullable: false

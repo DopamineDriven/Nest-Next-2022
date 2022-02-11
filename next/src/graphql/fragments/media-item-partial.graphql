@@ -1,4 +1,4 @@
-fragment MediaItemsPartial on MediaItem {
+fragment MediaItemPartial on MediaItem {
   id
   name
   width
@@ -10,5 +10,14 @@ fragment MediaItemsPartial on MediaItem {
   uploadedAt
   userId
   fileLastModified
+  __typename
+}
+fragment MediaItemEdgePartial on MediaItemEdge {
+  cursor
+  __typename
+}
+
+fragment MediaItemConnectionPartial on MediaItemConnection {
+  totalCount
   __typename
 }

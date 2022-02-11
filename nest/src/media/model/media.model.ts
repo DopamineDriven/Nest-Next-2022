@@ -1,9 +1,10 @@
 import { ObjectType, Field, ID, Float, Int } from "@nestjs/graphql";
 import { MimeTypes } from "src/.generated/prisma-nestjs-graphql/prisma/enums/mime-types.enum";
 import { User } from "src/user/model/user.model";
+import { Node } from "src/node/model/node.model";
 
 @ObjectType("MediaItem")
-export class MediaItem {
+export class MediaItem implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
 

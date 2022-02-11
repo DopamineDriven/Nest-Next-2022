@@ -22,5 +22,5 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["./**/*.ts", "./src/.generated/**/*.ts", "./prisma/**/*"],
+  "include": ["./src/**/*.ts", "./src/.generated/**/*.ts", "./prisma/**/*"],
 }

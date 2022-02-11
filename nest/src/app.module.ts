@@ -37,6 +37,7 @@ import { AuthService } from "./auth/auth-jwt.service";
 import { UploadModule } from "./upload/upload.module";
 import { MediaModule } from "./media/media.module";
 import { graphqlUploadExpress, Upload } from "graphql-upload";
+import { NodeModule } from "./node/node.module";
 export type RecordContiional<T> =
   | Record<keyof T, T>
   | Array<T>
@@ -221,8 +222,9 @@ export type Context<T = unknown extends infer P ? P : unknown> = {
     UserModule,
     PaginationModule,
     EntryModule,
+    NodeModule,
     MediaModule,
-    UploadModule,
+    // UploadModule,
     ProfileModule
   ],
   controllers: [AppController],

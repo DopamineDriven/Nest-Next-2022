@@ -131,16 +131,19 @@ export function ConnectionOrderingInputType<
 
 export function ConnectionEdgeObjectType<
   T extends Constructor,
+  U extends {id: string},
   V extends ReturnTypeFuncValue
->(nodeType: V): (target: T) => Constructor {
+>(nodeType: V, idRef: U): (target: T) => Constructor {
   return (target: T): Constructor => {
     @ObjectType(target.name)
     class ConnectionEdgeObjectType extends target {
       @Field(() => nodeType)
       node: V;
 
-      @Field()
-      cursor: ConnectionCursor;
+      @Field(() => String)
+      cursor(id: U['id'], __typename: string): ConnectionCursor {
+       return toGlobalId(target.name, id)
+      }
     }
     return ConnectionEdgeObjectType;
   };
@@ -174,7 +177,7 @@ export function ConnectionNodesObjectType<
   return (target: T): Constructor => {
     @ObjectType(target.name)
     class NodesObjectType extends target {
-      @Field(() => PageInfo)
+      @Field(() => PageInfo, {defaultValue: null, nullable: true})
       pageInfo: PageInfo;
 
       @Field(() => Int, { defaultValue: 0 })

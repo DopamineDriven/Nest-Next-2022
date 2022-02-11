@@ -1,5 +1,5 @@
 # import PageInfoPartial from "../fragments/page-info-partial.graphql";
-# import MediaItemsPartial from "../fragments/media-item-partial.graphql";
+# import MediaItemPartial from "../fragments/media-item-partial.graphql";
 
 query getMediaItems(
   $findManyMediaItemsPaginated: FindManyMediaItemsInput!
@@ -14,7 +14,7 @@ query getMediaItems(
     edges {
       cursor
       node {
-        ...MediaItemsPartial
+        ...MediaItemPartial
       }
     }
   }

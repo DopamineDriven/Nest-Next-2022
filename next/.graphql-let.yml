@@ -2,7 +2,7 @@
 schema:
   - "http://localhost:3000/graphql"
   - headers:
-    - authorization: "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4ZmUyNzFlMC1jMGM0LTQ3YWEtOGJjYi1hOTVhOTgwMjJiOTciLCJpYXQiOjE2NDQyODU1MjMsImV4cCI6MTY0NDM3MTkyM30.WRhNaPw1ztlAzddz26LYWTSbxKAHtb081EXmcBwe272XxQ23yAU_0ypzMou3K_NWPo71Ixt_5vOo0plZNSDAew"
+    - "authorization": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4NmE3NDY1My05MTg4LTQ2YTQtYjNiOS1lMTYwMzhjMTNjOGMiLCJpYXQiOjE2NDQ0NDEzNTYsImV4cCI6MTY0NDUyNzc1Nn0.2D7ZjaCEJNJzRh4K7dEXUkxuvh0uKJ4nZoiEdr_-INyy_Qw7kIQ_uNYriB92YxbryCfnZ788Q7TpkeDubVBsyA"
 documents:
   - "./src/graphql/**/*.graphql"
   - "!./src/graphql/graphql.schema.graphql"

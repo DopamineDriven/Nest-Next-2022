@@ -17,7 +17,7 @@ import { createWriteStream } from "fs";
 import { ReadStream } from "fs-capacitor";
 import { Inject, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma";
-import { JSONObjectResolver } from "graphql-scalars";
+import { GraphQLJSON, JSONObjectResolver, GraphQLJSONObject } from "graphql-scalars";
 import { Context as LocalContext } from "../app.module";
 
 @Injectable()
@@ -44,10 +44,34 @@ export class UploadService implements GraphQLOperation, FileUpload, UploadOption
     });
   }
 
+  readFileEventWithCb = (
+    img: File | Blob,
+    callback: (imageBase64Value: string) => void
+  ) => {
+    const reader = new FileReader();
+
+    reader.readAsDataURL(img);
+
+    reader.onload = e => {
+      console.log(
+        JSON.stringify(
+          {
+            total: e.total,
+            target: e.target,
+            loaded: e.loaded
+          },
+          null,
+          2
+        )
+      );
+      callback(reader.result as string);
+    };
+  };
+
   async uploadFile({
     createReadStream = this.createReadStream,
     filename = this.filename
-  }: FileUpload): Promise<typeof JSONObjectResolver> {
+  }: FileUpload): Promise<typeof GraphQLJSONObject> {
     return new Promise(async (resolve, reject) =>
       createReadStream()
         .pipe(createWriteStream(`./uploads/${filename}`))

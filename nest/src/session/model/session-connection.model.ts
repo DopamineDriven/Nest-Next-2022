@@ -17,7 +17,7 @@ export class SessionOrderBy {}
 @ConnectionNodesObjectType(Session)
 export class SessionNodes {}
 
-@ConnectionEdgeObjectType(Session)
+@ConnectionEdgeObjectType(Session, {id: new Session().id as string})
 export class SessionEdge {}
 
 @ConnectionObjectType(SessionEdge)
