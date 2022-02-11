@@ -63,7 +63,7 @@ export class NodeResolver {
         break;
     }
     return toGlobalId(
-      "User" || "Entry" || "Profile" || resolvedGlobalId.type,
+      "User" || "Entry" || "Profile" || "MediaItem" || resolvedGlobalId.type,
       resolvedGlobalId.id
     );
   }
