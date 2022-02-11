@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { hash, compare } from "bcrypt";
+import { Inject, Injectable } from "@nestjs/common";
+import { hash, compare, hashSync, compareSync } from "bcrypt";
 import { ConfigService } from "@nestjs/config";
 import { SecurityConfig } from "../common/config/config-interfaces.config";
+import { createBrotliCompress } from "zlib";
 
 @Injectable()
 export class PasswordService {
@@ -15,17 +16,44 @@ export class PasswordService {
       : this.bcryptSaltRounds;
   }
 
-  constructor(private configService: ConfigService) { }
+  constructor(
+    @Inject(ConfigService) private readonly configService: ConfigService
+  ) {}
 
-  async validatePassword(
-    password: string,
-    hashedPassword: string
-  ): Promise<boolean> {
-    return await compare(password, hashedPassword);
+  async validatePassword(validateInput: {
+    password: string;
+    encryptedPassword: string;
+  }): Promise<boolean> {
+    return await (async () => {
+      return await compare(validateInput.password, validateInput.encryptedPassword);
+    })()
+      .finally(() => Promise.resolve({}))
+      .then(val => val);
   }
 
   async hashPassword(password: string) {
-    return await hash(password, this.bcryptSaltRounds).then((data) => data)
+    return await (async () => {
+      return await hash(password, this.bcryptSaltRounds);
+    })()
+      .finally(() => Promise.resolve({}))
+      .then(val => val);
   }
 
+  hashSynchronously(password: string) {
+    return hashSync(password, this.bcryptSaltRounds);
+  }
+
+  validateSynchronously(validateInput: {
+    password: string;
+    encryptedPassword: string;
+  }) {
+    return compareSync(validateInput.password, validateInput.encryptedPassword);
+  }
 }
+/**
+ *     T = string extends infer U
+      ? U
+      : any extends WithImplicitCoercion<infer C>
+      ? WithImplicitCoercion<C>
+      : WithImplicitCoercion<any>
+ */

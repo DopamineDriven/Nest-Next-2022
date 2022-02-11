@@ -19,14 +19,20 @@ import { PrismaService } from "../prisma";
 import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
 import { PasswordService } from "src/password";
 import { CacheScope } from "apollo-server-types";
-import { Viewer, PrismaViewer } from "./model/auth.model";
 import { UserMeta } from "src/common/decorators/user.decorator";
-import { ConflictException, ExecutionContext, UsePipes } from "@nestjs/common";
+import {
+  ConflictException,
+  ExecutionContext,
+  UseGuards,
+  UsePipes
+} from "@nestjs/common";
 import { UserCreateMutationInput } from "./inputs/create-one-user.input";
 import { v4 } from "uuid";
 import { Prisma } from "@prisma/client";
 import { PrismaClientValidationError } from "@prisma/client/runtime";
-
+import { Context as LocalContext } from "src/app.module";
+import { AuthGuard } from "src/common/guards/gql-context.guard";
+import { ChangePasswordInput } from "src/user/inputs/change-passsword.input";
 @Resolver(() => Auth)
 export class AuthResolver {
   constructor(
@@ -34,7 +40,20 @@ export class AuthResolver {
     private readonly prismaService: PrismaService,
     private readonly passwordService: PasswordService
   ) {}
-
+  @Mutation(() => User)
+  @UseGuards(AuthGuard)
+  async updateUserPassword(
+    @Context("token") ctx: ExecutionContext,
+    @Args("passwordInput") passwordInput: ChangePasswordInput
+  ) {
+    return await this.auth.updatePassword(
+      {
+        newPassword: passwordInput.newPassword,
+        oldPassword: passwordInput.oldPassword
+      },
+      ctx as unknown as string
+    );
+  }
   @Mutation(() => AuthDetailed)
   async registerNewUser(
     @Args("userCreateInput", { type: () => UserCreateMutationInput })
@@ -91,96 +110,6 @@ export class AuthResolver {
               }
         }
       });
-
-      /**
-     *         profile: {
-              create: {
-                memberSince: new Date(Date.now()),
-                recentActivity: {
-                  set: [
-                    {
-                      signedUp: `Created an account on ${new Date(Date.now())
-                        .toUTCString()
-                        .split(/([T])/)} 🎉`
-                    }
-                  ]
-                },
-                lastSeen: new Date(Date.now()),
-                city: params.profile?.create?.city
-              }
-            },
-            mediaItems: {
-              create: params.mediaItems?.create
-                ? { ...params.mediaItems.create }
-                : {
-                    uploadedAt: new Date(
-                      params.mediaItems?.create
-                        ? (params.mediaItems.create[0].uploadedAt as string)
-                        : (uploadDate as string)
-                    ).toUTCString(),
-                    ariaLabel: "Accessibility label",
-                    caption: "default avatar",
-                    destination: "AVATAR",
-                    quality: 90,
-                    name: "g4apn65eo8acy988pfhb",
-                    src: "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
-                    srcSet: "",
-                    height: 141,
-                    width: 220,
-                    type: "GIF",
-                    title: "Archer Default",
-                    size: ""
-                  }
-            }
-     */
-
-      // return await this.prismaService.user.update({
-      //   where: { id: userCreate.id },
-      //   data: {
-      //     profile: {
-      //       connectOrCreate: {
-      //         where: { userId: userCreate.id }, create: {
-      //           memberSince: new Date(Date.now()),
-      //           recentActivity: {
-      //             set: [
-      //               {
-      //                 signedUp: `Created an account on ${new Date(Date.now())
-      //                   .toUTCString()
-      //                   .split(/([T])/)} 🎉`
-      //               }
-      //             ]
-      //           },
-      //           lastSeen: new Date(Date.now()),
-      //           city: params.profile?.create?.city
-
-      //         }
-      //       }
-      //     },
-      //     mediaItems: {
-      //       create: {
-      //         uploadedAt: new Date(
-      //           params.mediaItems?.create
-      //             ? (params.mediaItems.create[0].uploadedAt as string)
-      //             : (uploadDate as string)
-      //         ).toUTCString(),
-      //         ariaLabel: "Accessibility label",
-      //         caption: "default avatar",
-      //         destination: "AVATAR",
-      //         quality: 90,
-      //         name: "g4apn65eo8acy988pfhb",
-      //         src: "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
-      //         srcSet: "",
-      //         height: 141,
-      //         width: 220,
-      //         type: "GIF",
-      //         title: "Archer Default",
-      //         size: ""
-
-      //       }
-      //     }
-      //   }
-      // }).then(async (user) => {
-      //   const getTokens = this.auth.generateTokens({ userId: user.id });
 
       const getTokes = this.auth.generateTokens({ userId: userCreate.id });
 
@@ -247,13 +176,14 @@ export class AuthResolver {
   }
 
   @Mutation(() => AuthDetailed)
-  async signin(@Args("userloginInput") userloginInput: LoginInput
+  async signin(
+    @Args("userloginInput") userloginInput: LoginInput
   ): Promise<AuthDetailed> {
     const { email, password } = userloginInput;
 
-    const getUserWithToken = await this.auth.signIn({email, password});
+    const getUserWithToken = await this.auth.signIn({ email, password });
     console.log(getUserWithToken ?? "no context");
-    return await getUserWithToken;
+    return getUserWithToken;
   }
 
   // @CacheKey("login")
@@ -262,7 +192,10 @@ export class AuthResolver {
     @Args("data") data: LoginInput,
     @Info() info: GraphQLResolveInfo
   ): Promise<Token> {
-    info.cacheControl.setCacheHint({ scope: CacheScope.Public, maxAge: 20000 });
+    info.cacheControl.setCacheHint({
+      scope: CacheScope.Public,
+      maxAge: 200000
+    });
     const { email, password } = data;
     const payload = await this.auth.login(email, password);
 
@@ -273,43 +206,12 @@ export class AuthResolver {
     return payload;
   }
 
-  @Query(() => Viewer)
+  @Query(() => AuthDetailed)
+  @UseGuards(AuthGuard)
   async getViewer(
-    @Args("id", { type: () => String }) id: string
-  ): Promise<Viewer> {
-    const getTokens = this.auth.generateTokens({ userId: id ? id : "" });
-
-    const getViewer = await PrismaViewer(this.prismaService["user"], this.auth);
-    const findFirstViewer = await getViewer
-      .findFirst({ where: { id: id ? id : "" } })
-      .then(async data => {
-        const updateUser = await this.prismaService.user.update({
-          where: { id: data?.id ? data.id : "" },
-          include: { sessions: true, _count: true, mediaItems: true },
-          data: {
-            sessions: {
-              connectOrCreate: {
-                where: { userId: data?.id ? data.id : "" },
-                create: {
-                  accessToken: getTokens.accessToken
-                    ? getTokens.accessToken
-                    : null,
-                  refreshToken: getTokens.refreshToken
-                    ? getTokens.refreshToken
-                    : null
-                }
-              }
-            }
-          }
-        });
-        return { user: data, updatedWithSession: updateUser };
-      });
-    const { sessions, ...userUpdated } = findFirstViewer.updatedWithSession;
-    const viewerObj = {
-      accessToken: getTokens.accessToken ? getTokens.accessToken : "",
-      ...userUpdated
-    };
-    return viewerObj;
+    @Context("token") ctx: ExecutionContext
+  ): Promise<AuthDetailed> {
+    return await this.auth.getUserWithDecodedToken(ctx as unknown as string);
   }
 
   @Mutation(() => Token)

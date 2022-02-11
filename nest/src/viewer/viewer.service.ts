@@ -44,6 +44,8 @@ export class ViewerService {
     return viewer;
   }
 
+
+
   async PrismaViewer(
     prisma: PrismaService["user"] = this.prismaService.user,
     authService = this.authService
@@ -56,7 +58,7 @@ export class ViewerService {
   > {
     const createViewer = Object.assign(prisma, {
       async signUpViewer<T extends Viewer>(viewer: T) {
-        const signupViewer = await prisma.create({
+        const signupViewer: Viewer = await prisma.create({
           include: { _count: true, mediaItems: true },
           data: {
             email: viewer.email,
@@ -86,9 +88,8 @@ export class ViewerService {
                 height: viewer.mediaItems?.find(height => height)?.height
               },
               {
-                unique: `${viewer.id}_${
-                  viewer.mediaItems?.find(name => name)?.name
-                }`
+                unique: `${viewer.id}_${viewer.mediaItems?.find(name => name)?.name
+                  }`
               }
             ],
             mediaItems: {
@@ -126,9 +127,14 @@ export class ViewerService {
               }
             }
           }
-        });
+        }).then((user) => ({
+          viewer: { accessToken: authService.generateTokens({ userId: user.id }).accessToken, ...user },
+        }).viewer).finally(() => Promise.resolve({})).then((viewer) => viewer);
+
+        return { viewerCreated: (createViewer), signUpViewer: signupViewer };
       }
-    });
+
+    })
     const signInViewer = (email: string, password: string) =>
       authService.signIn({ email, password });
     const getViewerAccesssToken = (token: string) =>

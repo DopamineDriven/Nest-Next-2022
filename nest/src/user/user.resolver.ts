@@ -243,15 +243,21 @@ export class UserResolver {
     return await this.authService
       .getUserFromToken(ctx as unknown as string)
       .then(async data => {
-        const changePW = await this.userService.changePassword(
-          { ...changePasswordInput },
-          ctx as unknown as string
-        );
+        const changePW = await this.userService.changePassword({
+          changePasswordInput: {
+            newPassword: changePasswordInput.newPassword,
+            oldPassword: changePasswordInput.oldPassword
+          },
+          accessToken: ctx as unknown as string
+        });
         if (changePW != null) {
-          return changePW
+          return changePW;
         } else {
-          const {mediaItems, ...user} = {mediaItems: {...data?.mediaItems}, ...data }
-          return user
+          const { user, mediaItems } = {
+            mediaItems: { ...data?.mediaItems },
+            user: { ...data }
+          };
+          return user;
         }
       });
   }

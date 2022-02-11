@@ -118,3 +118,6 @@ next/notes.md
 next/.env.local
 next/src/graphql/**/*.d.ts
 next/src/.cache/src
+
+# Vs Code Counter Extension
+.VSCodeCounter

@@ -1866,6 +1866,8 @@ export abstract class IMutation {
 
     abstract signup(data: SignupInput): Token | Promise<Token>;
 
+    abstract updateUserPassword(passwordInput: ChangePasswordInput): User | Promise<User>;
+
     abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
 }
 
@@ -1920,7 +1922,7 @@ export abstract class IQuery {
 
     abstract findUniqueMediaItem(mediaItemId: string): MediaItem | Promise<MediaItem>;
 
-    abstract getViewer(id: string): Viewer | Promise<Viewer>;
+    abstract getViewer(): AuthDetailed | Promise<AuthDetailed>;
 
     abstract hello(name: string): string | Promise<string>;
 
@@ -2026,31 +2028,6 @@ export class UserEdge {
     __typename?: 'UserEdge';
     cursor: string;
     node: User;
-}
-
-export class Viewer {
-    __typename?: 'Viewer';
-    _count?: Nullable<UserCount>;
-    accessToken?: Nullable<string>;
-    accounts?: Nullable<Account[]>;
-    categories?: Nullable<Category[]>;
-    comments?: Nullable<Comment[]>;
-    connections?: Nullable<Connection[]>;
-    createdAt: DateTime;
-    email: string;
-    emailVerified?: Nullable<DateTime>;
-    entries?: Nullable<Entry[]>;
-    firstName?: Nullable<string>;
-    id: string;
-    image: JSONObject[];
-    lastName?: Nullable<string>;
-    mediaItems?: Nullable<MediaItem[]>;
-    password: string;
-    profile?: Nullable<Profile>;
-    role?: Nullable<Role>;
-    sessions?: Nullable<Session[]>;
-    status: UserStatus;
-    updatedAt?: Nullable<DateTime>;
 }
 
 export type BigInt = any;

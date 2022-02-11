@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from "@nestjs/common";
+import { Injectable, BadRequestException, Inject } from "@nestjs/common";
 import { PasswordService } from "../password/password.service";
 import { Prisma } from "@prisma/client";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
@@ -31,10 +31,9 @@ type Enumerable<T> = T | Array<T>;
 @Injectable()
 export class UserService {
   constructor(
-    private prisma: PrismaService,
-    private passwordService: PasswordService,
-    private readonly authService: AuthService,
-    private readonly paginationService: PaginationService
+    @Inject(PrismaService) private readonly prismaService: PrismaService,
+    private readonly passwordService: PasswordService,
+    private readonly authService: AuthService
   ) {}
   async user(params: {
     userWhereUniqueInput: XOR<
@@ -48,7 +47,7 @@ export class UserService {
       userWhereUniqueInput: { email, id }
     } = params;
 
-    return this.prisma.user
+    return this.prismaService.user
       .findFirst({
         where: id ? { id: id } : { email: email },
         include: { profile: true }
@@ -68,7 +67,7 @@ export class UserService {
     const { first, last, before, after } =
       paginationArgs as unknown as PaginationArgs;
     const roles = params.roles as unknown as EnumRoleNullableFilter;
-    const emailFilter = this.prisma.excludeStringNullableField(
+    const emailFilter = this.prismaService.excludeStringNullableField(
       params.emailFilter
     );
     const orderByRelevance =
@@ -76,7 +75,7 @@ export class UserService {
 
     return await findManyCursorConnection(
       args =>
-        this.prisma.user.findMany({
+        this.prismaService.user.findMany({
           include: {
             _count: true,
             entries: true,
@@ -94,7 +93,7 @@ export class UserService {
           ...args
         }),
       () =>
-        this.prisma.user.count({
+        this.prismaService.user.count({
           orderBy: orderByRelevance,
           where: {
             role: roles,
@@ -117,7 +116,7 @@ export class UserService {
   }
 
   async usersForPaginationCount() {
-    return await this.prisma.user.findMany();
+    return await this.prismaService.user.findMany();
   }
 
   excludeUserField<User, Key extends keyof User>(
@@ -128,6 +127,16 @@ export class UserService {
       delete user[key];
     }
     return user;
+  }
+
+  excludeUserEdgeField<UserEdge, Key extends keyof UserEdge>(
+    userEdge: UserEdge,
+    ...keys: Key[]
+  ): Omit<UserEdge, Key> {
+    for (const key of keys) {
+      delete userEdge[key];
+    }
+    return userEdge;
   }
 
   excludeUserConnectionField<UserConnection, Key extends keyof UserConnection>(
@@ -142,7 +151,7 @@ export class UserService {
 
   async users(params: Omit<Prisma.UserFindManyArgs, "select">) {
     const { skip, take, cursor, where, orderBy, include } = params;
-    const users = this.prisma.user.findMany({
+    const users = this.prismaService.user.findMany({
       skip: skip,
       where: { ...where },
       include: { ...include },
@@ -154,7 +163,7 @@ export class UserService {
   }
 
   async createUser(data: Prisma.UserCreateInput) {
-    return this.prisma.user.create({
+    return this.prismaService.user.create({
       data: { ...data }
     });
   }
@@ -182,7 +191,7 @@ export class UserService {
       userWhereUniqueInput: { email, id },
       data
     } = params;
-    return await this.prisma.user.update({
+    return await this.prismaService.user.update({
       include: {
         _count: true,
         accounts: true,
@@ -207,7 +216,7 @@ export class UserService {
     >
   ) {
     const { id, email } = where;
-    return this.prisma.user.delete({
+    return this.prismaService.user.delete({
       where: id
         ? { id: id }
         : { email: email ? email : ("" as unknown as string) },
@@ -225,7 +234,7 @@ export class UserService {
   }
 
   async relayFindUniqueUser(params: { id: string }) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: { id: fromGlobalId(params.id).id }
     });
     if (!user) {
@@ -247,7 +256,7 @@ export class UserService {
   ): Promise<UserConnection> {
     return await findManyCursorConnection(
       args =>
-        this.prisma.user.findMany({
+        this.prismaService.user.findMany({
           take: params.take,
           include: {
             entries: true,
@@ -262,7 +271,7 @@ export class UserService {
           ...args
         }),
       () =>
-        this.prisma.user.count({
+        this.prismaService.user.count({
           orderBy: params.orderBy,
           distinct: params.distinct,
           skip: params.skip,
@@ -287,32 +296,34 @@ export class UserService {
   }
 
   updateUser(data: Prisma.UserUncheckedUpdateInput, email: string) {
-    return this.prisma.user.update({
+    return this.prismaService.user.update({
       where: { email: email },
       data: { ...data }
     });
   }
 
   create(data: Prisma.UserCreateInput, account: Prisma.AccountCreateInput) {
-    return this.prisma.user.create({
+    return this.prismaService.user.create({
       data: { ...data, accounts: { create: { ...account } } }
     });
   }
 
-  async changePassword(
-    changePasswordInput: ChangePasswordInput,
-    accessToken: string
-  ) {
-    const getUser = await this.authService.getUserFromToken(accessToken);
-
-    const { newPassword, oldPassword } = changePasswordInput;
-
-    const passwordValid = await this.passwordService.validatePassword(
-      oldPassword,
-      getUser?.password
-        ? getUser.password
-        : await this.passwordService.hashPassword(oldPassword)
+  async changePassword(passwordInput: {
+    changePasswordInput: ChangePasswordInput;
+    accessToken: string;
+  }) {
+    const getUser = await this.authService.getUserFromToken(
+      passwordInput.accessToken
     );
+
+    const { newPassword, oldPassword } = passwordInput.changePasswordInput;
+
+    const passwordValid = await this.passwordService.validatePassword({
+      encryptedPassword: getUser?.password
+        ? getUser.password
+        : this.passwordService.hashSynchronously(`${getUser?.password}`),
+      password: oldPassword
+    });
 
     if (!passwordValid) {
       throw new BadRequestException("Invalid password");
@@ -320,7 +331,7 @@ export class UserService {
 
     const hashedPassword = await this.passwordService.hashPassword(newPassword);
 
-    return await this.prisma.user.upsert({
+    return await this.prismaService.user.upsert({
       update: {
         password: { set: hashedPassword },
         updatedAt: new Date(Date.now()),
