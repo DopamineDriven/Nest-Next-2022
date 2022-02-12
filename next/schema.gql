@@ -151,9 +151,9 @@ type AuthSansSession {
   user: User
 }
 
-type BaseTypesConnection {
-  edges: [BaseTypesEdge!]!
-  pageInfo: PageInfo!
+type BaseTypeNodes {
+  nodes: [TypesUnion!]!
+  pageInfo: PageInfo
   totalCount: Int!
 }
 
@@ -497,6 +497,10 @@ input ConnectionWhereInput {
 
 input ConnectionWhereUniqueInput {
   id: String
+}
+
+type ContentNodes {
+  contentNodes: BaseTypeNodes!
 }
 
 """
@@ -1138,7 +1142,7 @@ enum MimeTypes {
 }
 
 type Mutation {
-  changePassword(accessToken: String!, data: ChangePasswordInput!): User!
+  changePassword(changePasswordInput: ChangePasswordInput!): User!
   createEntry(createInput: EntryCreateInput!): Entry!
   createProfile(data: ProfileCreateInput!, userId: String!): Profile!
   getUserFromAccessToken(token: String!): User!
@@ -1148,6 +1152,7 @@ type Mutation {
   registerNewUser(userCreateInput: UserCreateMutationInput!): AuthDetailed!
   signin(userloginInput: LoginInput!): AuthDetailed!
   signup(data: SignupInput!): Token!
+  updateUserPassword(passwordInput: ChangePasswordInput!): User!
   userFromAccessTokenDecoded(token: String!): AuthDetailed!
 }
 
@@ -1270,6 +1275,10 @@ input NestedStringNullableFilter {
   notIn: [String!]
   search: String
   startsWith: String
+}
+
+interface Node {
+  id: ID!
 }
 
 type PageInfo {
@@ -1488,8 +1497,10 @@ enum Pronouns {
 }
 
 type Query {
+  contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!, findManyMediaItemsPaginated: FindManyMediaItemsInput, findManyUsersPaginatedInput: FindManyUsersPaginatedInput): ContentNodes!
   entryById(id: String!): Entry!
-  getViewer(id: String!): Viewer!
+  findUniqueMediaItem(mediaItemId: String!): MediaItem!
+  getViewer: AuthDetailed!
   hello(name: String!): String!
   helloWorld: String!
   listEntries(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!): EntryConnection!
@@ -1497,11 +1508,11 @@ type Query {
   listProfiles(findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput!): ProfileConnection!
   listUsers(findManyUsersPaginatedInput: FindManyUsersPaginatedInput = {}): UserConnection!
   me: AuthDetailed!
+  node(id: ID!): Node
   profileByRelayId: Profile!
   profiles(profilesArgs: ProfilesInput!): ProfileConnection!
-  typeConnectionUnionFuncton(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!, findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput!, findManyUsersPaginatedInput: FindManyUsersPaginatedInput = {}): BaseTypesConnection!
   userById(id: String!): User!
-  userByRelayId: User!
+  userByRelayId(cursor: String!): User!
   userPosts(userId: ID!): [Entry!]!
 }
 
@@ -1684,7 +1695,7 @@ type Token {
   refreshToken: String
 }
 
-union TypesUnion = Entry | Profile | User
+union TypesUnion = Entry | MediaItem | User
 
 type User {
   _count: UserCount
@@ -1981,32 +1992,4 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   email: String
   id: String
-}
-
-type Viewer {
-  _count: UserCount
-  accessToken: String
-  accounts: [Account!]
-  categories: [Category!]
-  comments: [Comment!]
-  connections: [Connection!]
-
-  """Identifies the date and time when the user was created."""
-  createdAt: DateTime!
-  email: String!
-  emailVerified: DateTime
-  entries: [Entry!]
-  firstName: String
-  id: ID!
-  image: [JSONObject!]!
-  lastName: String
-  mediaItems: [MediaItem!]
-  password: String!
-  profile: Profile
-  role: Role
-  sessions: [Session!]
-  status: UserStatus!
-
-  """Identifies the date and time when the user was last updated."""
-  updatedAt: DateTime
 }

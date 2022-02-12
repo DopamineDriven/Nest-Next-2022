@@ -26,7 +26,15 @@ export class EntryService {
       where: id ? { id } : { authorId }
     });
   }
-
+  excludeUserOrViewerField<FindManyEntriesPaginatedInput, Key extends keyof FindManyEntriesPaginatedInput>(
+    params: FindManyEntriesPaginatedInput,
+      ...keys: Key[]
+    ): Omit<FindManyEntriesPaginatedInput, Key> {
+      for (const key of keys) {
+      `${delete params[key]}`;
+      }
+      return params;
+    }
   async entries(
     params: Omit<Prisma.EntryFindManyArgs, "include">,
     args: Relay.ConnectionArguments & {

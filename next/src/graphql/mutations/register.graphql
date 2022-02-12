@@ -1,11 +1,35 @@
-# import AuthSansSessionPartial from "../fragments/auth-sans-session-partial.graphql";
+# import UserCountPartial from "../fragments/user-count-partial.graphql";
+# import SessionPartial from "../fragments/session-partial.graphql";
+# import AuthPartial from "../fragments/auth-partial.graphql";
 # import UserPartial from "../fragments/user-partial.graphql";
+# import JwtHeadersPartial from "../fragments/jwt-header-partial.graphql";
+# import JwtPayloadPartial from "../fragments/jwt-payload-partial.graphql";
+# import JwtDecodedPartial from "../fragments/jwt-decoded-partial.graphql";
+# import ProfilePartial from "../fragments/profile-partial.graphql";
+# import MediaItemPartial from "../fragments/media-item-partial.graphql";
 
-mutation register($dataRegister: SignupInput!) {
-  register(dataRegister: $dataRegister) {
-    ...AuthSansSessionPartial
-    user {
-      ...UserPartial
+mutation registerUser($userCreateInput: UserCreateMutationInput!) {
+  registerNewUser(userCreateInput: $userCreateInput) {
+    auth {
+      user {
+        profile {
+          ...ProfilePartial
+        }
+        mediaItems {
+          ...MediaItemPartial
+        }
+        ...UserPartial
+      }
+      ...AuthPartial
+    }
+    jwt {
+      header {
+        ...JwtHeadersPartial
+      }
+      payload {
+        ...JwtPayloadPartial
+      }
+      ...JwtDecodedPartial
     }
   }
 }

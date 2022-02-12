@@ -1854,9 +1854,9 @@ export abstract class IMutation {
 
     abstract getUserFromAccessToken(token: string): User | Promise<User>;
 
-    abstract login(data: LoginInput): Token | Promise<Token>;
+    abstract getViewerRefreshToken(): Token | Promise<Token>;
 
-    abstract refreshToken(token: string): Token | Promise<Token>;
+    abstract login(data: LoginInput): Token | Promise<Token>;
 
     abstract register(dataRegister: SignupInput): AuthSansSession | Promise<AuthSansSession>;
 
@@ -1949,6 +1949,8 @@ export abstract class IQuery {
     abstract userByRelayId(cursor: string): User | Promise<User>;
 
     abstract userPosts(userId: string): Entry[] | Promise<Entry[]>;
+
+    abstract viewer(): ViewerDetailed | Promise<ViewerDetailed>;
 }
 
 export class Session {
@@ -2028,6 +2030,33 @@ export class UserEdge {
     __typename?: 'UserEdge';
     cursor: string;
     node: User;
+}
+
+export class ViewerDetailed {
+    __typename?: 'ViewerDetailed';
+    _count?: Nullable<UserCount>;
+    accessToken?: Nullable<string>;
+    accounts?: Nullable<Account[]>;
+    categories?: Nullable<Category[]>;
+    comments?: Nullable<Comment[]>;
+    connections?: Nullable<Connection[]>;
+    createdAt: DateTime;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<Entry[]>;
+    firstName?: Nullable<string>;
+    id: string;
+    image: JSONObject[];
+    lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItem[]>;
+    password: string;
+    profile?: Nullable<Profile>;
+    refreshToken?: Nullable<string>;
+    role?: Nullable<Role>;
+    secret?: Nullable<string>;
+    sessions?: Nullable<Session[]>;
+    status: UserStatus;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export type BigInt = any;

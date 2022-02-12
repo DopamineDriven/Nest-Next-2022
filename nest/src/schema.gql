@@ -1146,8 +1146,8 @@ type Mutation {
   createEntry(createInput: EntryCreateInput!): Entry!
   createProfile(data: ProfileCreateInput!, userId: String!): Profile!
   getUserFromAccessToken(token: String!): User!
+  getViewerRefreshToken: Token!
   login(data: LoginInput!): Token!
-  refreshToken(token: String!): Token!
   register(dataRegister: SignupInput!): AuthSansSession!
   registerNewUser(userCreateInput: UserCreateMutationInput!): AuthDetailed!
   signin(userloginInput: LoginInput!): AuthDetailed!
@@ -1514,6 +1514,7 @@ type Query {
   userById(id: String!): User!
   userByRelayId(cursor: String!): User!
   userPosts(userId: ID!): [Entry!]!
+  viewer: ViewerDetailed!
 }
 
 enum QueryMode {
@@ -1992,4 +1993,34 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   email: String
   id: String
+}
+
+type ViewerDetailed {
+  _count: UserCount
+  accessToken: String
+  accounts: [Account!]
+  categories: [Category!]
+  comments: [Comment!]
+  connections: [Connection!]
+
+  """Identifies the date and time when the user was created."""
+  createdAt: DateTime!
+  email: String!
+  emailVerified: DateTime
+  entries: [Entry!]
+  firstName: String
+  id: ID!
+  image: [JSONObject!]!
+  lastName: String
+  mediaItems: [MediaItem!]
+  password: String!
+  profile: Profile
+  refreshToken: String
+  role: Role
+  secret: String
+  sessions: [Session!]
+  status: UserStatus!
+
+  """Identifies the date and time when the user was last updated."""
+  updatedAt: DateTime
 }

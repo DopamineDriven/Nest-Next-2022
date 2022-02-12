@@ -17,10 +17,11 @@ import { PrismaClientUnknownRequestError } from "@prisma/client/runtime";
 import { XOR } from "src/common/types/helpers.type";
 import { nanoid } from "nanoid";
 import { MimeTypes } from "src/.generated/prisma-nestjs-graphql/prisma/enums/mime-types.enum";
+import { ViewerDetailed } from "src/auth/model";
 @Injectable()
 export class ViewerService {
   constructor(
-    @Inject(PrismaService) private readonly prismaService: PrismaService,
+    @Inject(PrismaService) private readonly prismaService: PrismaService['user'],
     @Inject(AuthService) private readonly authService: AuthService
   ) {}
 
@@ -44,18 +45,14 @@ export class ViewerService {
     return viewer;
   }
 
-
+  s() {
+    const p = this.PrismaViewer
+  }
 
   async PrismaViewer(
-    prisma: PrismaService["user"] = this.prismaService.user,
+    prisma: PrismaService["user"] = this.prismaService,
     authService = this.authService
-  ): Promise<
-    typeof prisma & {
-      getViewer(
-        data: GetViewer
-      ): Promise<User | PrismaClientUnknownRequestError>;
-    }
-  > {
+  ) {
     const createViewer = Object.assign(prisma, {
       async signUpViewer<T extends Viewer>(viewer: T) {
         const signupViewer: Viewer = await prisma.create({
@@ -136,39 +133,55 @@ export class ViewerService {
 
     })
     const signInViewer = (email: string, password: string) =>
-      authService.signIn({ email, password });
-    const getViewerAccesssToken = (token: string) =>
-      authService.generateTokens({ userId: token });
-    return Object.assign(prisma, {
-      async getViewer(data: GetViewer) {
-        const viewer = await authService.getUserFromToken(
-          data.accessToken ? data.accessToken : ""
-        );
-        const findPrismaViewer = await prisma.findFirst({
-          include: { _count: true, mediaItems: true },
-          where: {
-            OR: [
-              { id: viewer?.id ? viewer.id : "" },
-              {
-                email: viewer?.email ? viewer.email : ""
-              }
-            ]
-          }
-        });
-        if (!findPrismaViewer) {
-          return new PrismaClientUnknownRequestError(
-            `could not process ${findPrismaViewer}`,
-            `could not get ${findPrismaViewer}`
-          );
+      authService.signIn({ email, password }).then(data => {
+
+        const {viewer} = {
+          viewer: { accessToken: data.auth.accessToken, refreshToken: data.auth.refreshToken, secret: data.jwt.signature, ...data.auth.user } as  ViewerDetailed
         }
-        return findPrismaViewer
-          ? ({
-              accessToken: getViewerAccesssToken(findPrismaViewer.id)
-                .accessToken,
-              ...findPrismaViewer
-            } as Viewer)
-          : findPrismaViewer;
-      }
-    });
+        return viewer as ViewerDetailed
+      });
+    const getViewerAccesssToken = (token: string) => ({
+     tokens: authService.generateTokens({ userId: token })
+    }).tokens
+    const getViewerTokes = getViewerAccesssToken
+    return {
+      viewerOptions: createViewer,
+      signUpViewer: createViewer.signUpViewer,
+      signInViewer: signInViewer,
+      getViewerTokes: getViewerTokes
+    }
+    // return Object.assign(prisma, {
+    //   async getViewer(data: GetViewer): Promise<ViewerDetailed | PrismaClientUnknownRequestError> {
+    //     const viewer = await authService.getUserFromToken(
+    //       data.accessToken ? data.accessToken : ""
+    //     );
+    //     const findPrismaViewer = await prisma.findFirst({
+    //       include: { _count: true, mediaItems: true },
+    //       where: {
+    //         OR: [
+    //           { id: viewer?.id ? viewer.id : "" },
+    //           {
+    //             email: viewer?.email ? viewer.email : ""
+    //           }
+    //         ]
+    //       }
+    //     });
+    //     if (!findPrismaViewer) {
+    //       return new PrismaClientUnknownRequestError(
+    //         `could not process ${findPrismaViewer}`,
+    //         `could not get ${findPrismaViewer}`
+    //       );
+    //     }
+    //     return findPrismaViewer
+    //       ? ({
+    //           accessToken: getViewerAccesssToken(findPrismaViewer.id)
+    //           .accessToken,
+    //         refreshToken: getViewerAccesssToken(findPrismaViewer.id).refreshToken,
+    //         secret: (viewerId: string) => (await authService.getUserWithDecodedToken(getViewerAccesssToken(viewerId)!.accessToken).then((data) => data.jwt)).signature
+    //           ...findPrismaViewer
+    //         } as Viewer)
+    //       : findPrismaViewer;
+    //   }
+    // });
   }
 }

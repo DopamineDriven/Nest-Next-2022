@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { GraphQLModule, ReturnTypeFuncValue } from "@nestjs/graphql";
+import { GraphQLModule, ReturnTypeFuncValue, GqlModuleAsyncOptions } from "@nestjs/graphql";
 import { join } from "path";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import {
@@ -12,7 +12,7 @@ import { ExpressContext } from "apollo-server-express";
 import { AppController } from "./app/app.controller";
 import { AppService } from "./app/app.service";
 import { AppResolver } from "./app/app.resolver";
-import { APP_FILTER } from "@nestjs/core";
+import { APP_FILTER, ModulesContainer } from "@nestjs/core";
 import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
 import { PrismaModule } from "./prisma/prisma.module";
 import { loadSchema } from "@graphql-tools/load";
@@ -38,7 +38,10 @@ import { UploadModule } from "./upload/upload.module";
 import { MediaModule } from "./media/media.module";
 import { graphqlUploadExpress, Upload } from "graphql-upload";
 import { NodeModule } from "./node/node.module";
+import { ApolloDriverAsyncConfig, ServerRegistration, getApolloServer, ApolloDriver } from "@nestjs/apollo";
 import { PubSub, PubSubOptions, PubSubEngine } from "graphql-subscriptions";
+import { ViewerModule } from "./viewer/viewer.module";
+import { ApolloConfigInput } from "apollo-server-types";
 export type RecordContiional<T> =
   | Record<keyof T, T>
   | Array<T>
@@ -147,7 +150,8 @@ export type Context<T = unknown extends infer P ? P : unknown> = {
       envFilePath: "./.env"
     }),
     GraphQLModule.forRootAsync({
-      useFactory: async <T extends ConfigService>(configService: T) => {
+       useFactory: async <T extends ConfigService>(configService: T) => {
+
         const rootSchema = await loadSchema("./src/schema.gql", {
           loaders: [new GraphQLFileLoader()],
           sort: true,
@@ -157,6 +161,7 @@ export type Context<T = unknown extends infer P ? P : unknown> = {
         const graphqlConfig = configService.get<GraphqlConfig>("graphql");
         const apolloConfig = configService.get<ApolloConfig>("apollo");
         return {
+          // driver: ApolloDriver,
           fieldResolverEnhancers: ['guards'],
           installSubscriptionHandlers: true,
           cors: false,

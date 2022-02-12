@@ -468,10 +468,10 @@ export class AuthService {
       }).then(user => user)
   }
 
-  async refreshToken(token: string) {
+  async refreshToken(id: string) {
     try {
       const secuityConfig = this.configService.get<SecurityConfig>("security");
-      const user = await this.jwtService.verifyAsync(token, {
+      const user = await this.jwtService.verifyAsync(id, {
         secret: this.configService.get(
           secuityConfig?.refreshSecret
             ? secuityConfig.refreshSecret
