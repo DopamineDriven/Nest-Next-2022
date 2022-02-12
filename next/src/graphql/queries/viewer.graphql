@@ -3,13 +3,12 @@
 # import JwtHeadersPartial from "../fragments/jwt-header-partial.graphql";
 # import JwtPayloadPartial from "../fragments/jwt-payload-partial.graphql";
 # import JwtDecodedPartial from "../fragments/jwt-decoded-partial.graphql";
+# import AuthPartial from "../fragments/auth-partial.graphql";
 
 query Viewer {
   me {
     auth {
-      accessToken
-      refreshToken
-      __typename
+...AuthPartial
       user {
         ...UserPartial
       }
