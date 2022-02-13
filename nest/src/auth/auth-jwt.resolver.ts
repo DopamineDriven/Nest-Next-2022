@@ -40,6 +40,7 @@ import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { ChangePasswordInput } from "src/user/inputs/change-passsword.input";
 import { ViewerDetailed } from "./model";
 import { pipe } from "rxjs";
+import { ViewerAuthInfo } from "./model/jwt-auth.model";
 @Resolver(() => Auth)
 export class AuthResolver {
   constructor(
@@ -217,10 +218,24 @@ export class AuthResolver {
     return await this.auth.getUserWithDecodedToken(ctx as unknown as string);
   }
 
-  @Mutation(() => String)
+  @Mutation(() => ViewerAuthInfo)
   @UseGuards(AuthGuard)
-  async getViewerRefreshToken(@Context("token") ctx: ExecutionContext): Promise<string | null> {
-    return (await this.auth.getUserWithDecodedToken(ctx as unknown as string)).auth.refreshToken;
+  async viewerAuthInfoFromContext(
+    @Context("token") ctx: ExecutionContext
+  ): Promise<ViewerAuthInfo> {
+    return await this.auth
+      .getUserWithDecodedToken(ctx as unknown as string)
+      .then(getAuth => {
+        return {
+          accessToken: getAuth.auth?.accessToken
+            ? getAuth.auth.accessToken
+            : (ctx as unknown as string),
+          refreshToken: getAuth.auth.refreshToken
+            ? getAuth.auth.refreshToken
+            : "",
+          viewerJwt: getAuth.jwt
+        };
+      });
   }
 
   @Mutation(() => User)

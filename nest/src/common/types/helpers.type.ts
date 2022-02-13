@@ -2,6 +2,25 @@ import { Type } from "@nestjs/common";
 import { ClassDecoratorFactory } from "@nestjs/graphql/dist/interfaces/class-decorator-factory.interface";
 import { Prisma } from "@prisma/client";
 import { Upload } from "graphql-upload";
+export interface ClassType<T = any> {
+  new (...args: any[]): T;
+}
+
+/**
+ * Obtain the return type of a function type
+ */
+// export type ReturnTypeExtracted<T extends (...args: any) => any> = T extends (
+//   ...args: any
+// ) => infer R
+//   ? R
+//   : any;
+
+/**
+ * Obtain the return type of a constructor function type
+ */
+// export type InstanceReturnedFromConstructor<
+//   T extends abstract new (...args: any) => any
+// > = T extends abstract new (...args: any) => infer R ? R : any;
 /**
  * Applies Partial utility type to all nested objects.
  */

@@ -145,6 +145,15 @@ type AuthDetailed {
   jwt: JwtDecoded
 }
 
+type AuthDetailedExtended {
+  accessToken: String
+  jwt: JwtDecoded
+  operation: EntryOperations!
+  refreshToken: String
+  session: Session
+  user: User!
+}
+
 type AuthSansSession {
   accessToken: String
   refreshToken: String
@@ -552,6 +561,11 @@ type EntryConnection {
   totalCount: Int!
 }
 
+type EntryConnectionExtended {
+  connection: EntryConnection!
+  operation: EntryOperations!
+}
+
 type EntryCount {
   categories: Int!
   comments: Int!
@@ -685,6 +699,21 @@ input EntryListRelationFilter {
   every: EntryWhereInput
   none: EntryWhereInput
   some: EntryWhereInput
+}
+
+enum EntryOperations {
+  AUTH_DETAILED_EXTENDED
+  ENTRY_CONNECTION_EXTENDED
+}
+
+union EntryOperationsUnion = AuthDetailedExtended | EntryConnectionExtended
+
+type EntryOperationsUnionOutput implements EntryOpsUnionInterface {
+  connect: EntryOperationsUnion!
+}
+
+interface EntryOpsUnionInterface {
+  connect: EntryOperationsUnion!
 }
 
 input EntryOrderByRelationAggregateInput {
@@ -1146,7 +1175,6 @@ type Mutation {
   createEntry(createInput: EntryCreateInput!): Entry!
   createProfile(data: ProfileCreateInput!, userId: String!): Profile!
   getUserFromAccessToken(token: String!): User!
-  getViewerRefreshToken: Token!
   login(data: LoginInput!): Token!
   register(dataRegister: SignupInput!): AuthSansSession!
   registerNewUser(userCreateInput: UserCreateMutationInput!): AuthDetailed!
@@ -1154,6 +1182,7 @@ type Mutation {
   signup(data: SignupInput!): Token!
   updateUserPassword(passwordInput: ChangePasswordInput!): User!
   userFromAccessTokenDecoded(token: String!): AuthDetailed!
+  viewerAuthInfoFromContext: ViewerAuthInfo!
 }
 
 input NestedBoolFilter {
@@ -1515,6 +1544,7 @@ type Query {
   userByRelayId(cursor: String!): User!
   userPosts(userId: ID!): [Entry!]!
   viewer: ViewerDetailed!
+  viewerEntriesPaginated(viewerEntriesInput: ViewerEntriesInput!): EntryOperationsUnionOutput!
 }
 
 enum QueryMode {
@@ -1995,6 +2025,12 @@ input UserWhereUniqueInput {
   id: String
 }
 
+type ViewerAuthInfo {
+  accessToken: String!
+  refreshToken: String!
+  viewerJwt: JwtDecoded!
+}
+
 type ViewerDetailed {
   _count: UserCount
   accessToken: String
@@ -2023,4 +2059,14 @@ type ViewerDetailed {
 
   """Identifies the date and time when the user was last updated."""
   updatedAt: DateTime
+}
+
+input ViewerEntriesInput {
+  cursor: EntryWhereUniqueInput
+  distinct: [EntryScalarFieldEnum!]
+  orderBy: [EntryOrderByWithRelationAndSearchRelevanceInput!]
+  pagination: PaginationArgsInput!
+  skip: Int
+  take: Int
+  where: EntryWhereInput!
 }

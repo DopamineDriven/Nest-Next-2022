@@ -7,10 +7,24 @@ import {
   Subscription,
   Context
 } from "@nestjs/graphql";
-import { HostParam, Inject, UseGuards, ExecutionContext } from "@nestjs/common";
+import {
+  HostParam,
+  Inject,
+  UseGuards,
+  ExecutionContext,
+  Type
+} from "@nestjs/common";
 import { AuthService } from "src/auth/auth-jwt.service";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
-import { Entry, EntryOperationsIntersectionDeailed } from "./model/entry.model";
+import {
+  Entry,
+  EntryOperationsUnion,
+  EntryOpsUnion,
+  AuthDetailedExtended,
+  EntryConnectionExtended,
+  EntryOperationsUnionOutput
+} from "./model/entry.model";
+import { Edge, Connection } from "graphql-relay";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { PrismaService } from "../prisma/prisma.service";
 import { PubSub, PubSubEngine, PubSubOptions } from "graphql-subscriptions";
@@ -27,6 +41,7 @@ import { UpsertOneEntryArgs } from "src/.generated/prisma-nestjs-graphql/entry/a
 import { EntryUpsertWithWhereUniqueWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-upsert-with-where-unique-without-author.input";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { EntryOperations } from "./enums/entry-operations.enum";
+import { ViewerEntriesInput } from "./inputs/viewer-entries.input";
 const pubSub = new PubSub();
 export declare const ENTRY_CREATED: unique symbol;
 export declare const ENTRY_CREATED_KEY: keyof typeof ENTRY_CREATED;
@@ -81,6 +96,7 @@ export class EntryResolver {
     const edgingThoseNodes = await findManyCursorConnection(
       args =>
         this.prisma.entry.findMany({
+          include: { _count: true, author: true },
           distinct: params.distinct,
           take: params.take,
           skip: params.skip,
@@ -114,52 +130,31 @@ export class EntryResolver {
     return edgingThoseNodes;
   }
 
-  // @Query(() => EntryOperationsIntersectionDeailed)
-  // async viewerEntries(
-  //   @Context() ctx: ExecutionContext,
-  //   @Args("findManyEntriesPaginatedInput") params: FindManyEntriesPaginatedInput
-  // ): Promise<EntryOperationsIntersectionDeailed> {
+  // @Query(() => EntryOperationsUnionOutput)
+  // async viewerEntriesPaginated(
+  //   @Context("token") ctx: ExecutionContext,
+  //   @Args("viewerEntriesInput", { type: () => ViewerEntriesInput })
+  //   viewerEntriesInput: ViewerEntriesInput
+  // ): Promise<EntryOperationsUnionOutput> {
   //   return await this.authService
   //     .getUserWithDecodedToken(ctx as unknown as string)
   //     .then(async data => {
-  //       const consumeData = data;
-  //       const getConnection = await findManyCursorConnection(
-  //         args =>
-  //           this.prisma.entry.findMany({
-  //             include: { author: true, _count: true },
-  //             distinct: params.distinct,
-  //             take: params.take,
-  //             skip: params.skip,
-  //             where: params.where,
-  //             cursor: args.cursor,
-  //             orderBy: params.orderBy,
-  //             ...args
-  //           }),
-  //         () =>
-  //           this.prisma.entry.count({
-  //             include: {author: true, _count: true},
-  //             distinct: params.distinct,
-  //             skip: params.skip,
-  //             where:  params.where,
-  //             cursor: params.cursor
-  //           }),
-  //         {
-  //           first: params.pagination.first ?? 10,
-  //           last: params.pagination.last,
-  //           before: params.pagination.before,
-  //           after: params.pagination.after
-  //         },
-  //         {
-  //           getCursor: (record: { id: string }) => {
-  //             return record;
-  //           },
-  //           decodeCursor: (cursor: string) => fromGlobalId(cursor),
-  //           encodeCursor: (cursor: { id: string }) =>
-  //             toGlobalId(Entry.name, cursor.id)
+  //       const getEntriesPaginated = await this.listEntries({
+  //         ...viewerEntriesInput
+  //       });
+
+  //       const output = {
+  //         connect: {
+
+  //           accessToken: data.auth.accessToken,
+  //           refreshToken: data.auth.refreshToken,
+  //           session: data.auth.session,
+  //           user: data.auth?.user ? data.auth.user : null,
+  //           jwt: { ...data.jwt },
+  //           connection: { ...getEntriesPaginated }
   //         }
-  //       );
-  //       const combine = {getConnection.totalCount, ...getConnection.edges, ...getConnection.pageInfo, ...data}
-  //       return combine
+  //       }
+  //       return output as EntryOperationsUnionOutput;
   //     })
   // }
 

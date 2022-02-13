@@ -24,6 +24,8 @@ import { Serializer } from "src/common/types/json.type";
 import crypto from "crypto";
 import { PrismaClientValidationError } from "@prisma/client/runtime";
 import { MimeTypes } from "src/.generated/prisma-nestjs-graphql/prisma/enums/mime-types.enum";
+import { serialize, parse } from "cookie";
+import { Response } from "express";
 
 @Injectable()
 export class AuthService {
@@ -32,7 +34,26 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly passwordService: PasswordService,
     private readonly configService: ConfigService
-  ) {}
+  ) {
+  }
+  
+  public maxAge=60*60*360; // 360 hours ~ 15 days
+  setTokenCookie(res: Response, token: string) {
+    const authConfig = this.configService.get<SecurityConfig>("security");
+    const cookie = serialize(authConfig?.secret ? authConfig.secret : `${process.env.JWT_SECRET ?? ""}`, token, {
+      maxAge: this.maxAge, // 360 hours ~ 15 days
+      expires: new Date(Date.now() + this.maxAge * 1000),
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      path: "/",
+      sameSite: "lax"
+    });
+    return res.setHeader("Set-Cookie", cookie);
+  }
+
+
+
+
   async createUser(payload: SignupInput): Promise<Token> {
     const hashedPassword = await this.passwordService.hashPassword(
       payload.password

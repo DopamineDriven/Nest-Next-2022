@@ -1,0 +1,19 @@
+# import JwtHeadersPartial from "../fragments/jwt-header-partial.graphql";
+# import JwtPayloadPartial from "../fragments/jwt-payload-partial.graphql";
+# import JwtDecodedPartial from "../fragments/jwt-decoded-partial.graphql";
+# import ViewerAuthInfoPartial from "../fragments/viewer-auth-info-partial.graphql";
+
+mutation viewerAuthFromContext {
+  viewerAuthInfoFromContext {
+    viewerJwt {
+      header {
+        ...JwtHeadersPartial
+      }
+      payload {
+        ...JwtPayloadPartial
+      }
+      ...JwtDecodedPartial
+    }
+    ...ViewerAuthInfoPartial
+  }
+}

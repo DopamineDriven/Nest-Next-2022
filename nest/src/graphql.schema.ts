@@ -1854,8 +1854,6 @@ export abstract class IMutation {
 
     abstract getUserFromAccessToken(token: string): User | Promise<User>;
 
-    abstract getViewerRefreshToken(): Token | Promise<Token>;
-
     abstract login(data: LoginInput): Token | Promise<Token>;
 
     abstract register(dataRegister: SignupInput): AuthSansSession | Promise<AuthSansSession>;
@@ -1869,6 +1867,8 @@ export abstract class IMutation {
     abstract updateUserPassword(passwordInput: ChangePasswordInput): User | Promise<User>;
 
     abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
+
+    abstract viewerAuthInfoFromContext(): ViewerAuthInfo | Promise<ViewerAuthInfo>;
 }
 
 export class PageInfo {
@@ -2030,6 +2030,13 @@ export class UserEdge {
     __typename?: 'UserEdge';
     cursor: string;
     node: User;
+}
+
+export class ViewerAuthInfo {
+    __typename?: 'ViewerAuthInfo';
+    accessToken: string;
+    refreshToken: string;
+    viewerJwt: JwtDecoded;
 }
 
 export class ViewerDetailed {

@@ -1,20 +1,30 @@
-import { ObjectType, Field, ID, createUnionType } from "@nestjs/graphql";
+import {
+  ObjectType,
+  Field,
+  ID,
+  createUnionType
+} from "@nestjs/graphql";
 import { Comment } from "../../comment/model/comment.model";
 import { User } from "../../user/model/user.model";
 import { EntryCount } from "../../.generated/prisma-nestjs-graphql/entry/outputs/entry-count.output";
 import { Category } from "../../category/model/category.model";
-import { JSONObjectResolver, JSONResolver } from "graphql-scalars";
-import GraphQLJSON from "graphql-type-json";
-import { Prisma } from "@prisma/client";
+import { JSONObjectResolver } from "graphql-scalars";
 import { Node } from "src/node/model/node.model";
-import { FindManyEntriesPaginatedInput } from "../inputs/entry-paginated.input";
 import { EntryConnection } from "./entry-connection.model";
-import { AuthDetailed } from "src/auth/model/auth-detailed.model";
 import { EntryOperations } from "../enums/entry-operations.enum";
 import { Type } from "@nestjs/common";
 import { Auth } from "src/auth/model";
 import { JwtDecoded } from "src/auth/dto";
-import { IntersectionType } from "@nestjs/mapped-types";
+import {
+  IntersectionType,
+  PartialType,
+  PickType,
+  MappedType} from "@nestjs/mapped-types";
+import { Edge, Connection } from "@devoxa/prisma-relay-cursor-connection";
+import { Session } from "src/session/model/session.model";
+import { ReturnTypedNode } from "ts-morph";
+
+//function IntersectionType<A, B>(target: Type<A>, source: Type<B>): MappedType<A & B>;
 
 @ObjectType("Entry")
 export class Entry implements Node {
@@ -62,55 +72,75 @@ export class Entry implements Node {
 }
 
 @ObjectType("AuthDetailedExtended")
-export class AuthDetailedExtended extends AuthDetailed {
-  constructor() {
-    super();
-  }
-  jwt: JwtDecoded = this.jwt;
-  auth: Auth = this.auth;
+export class AuthDetailedExtended {
+  @Field(() => User)
+  user: User | null;
+  @Field(() => Session, { nullable: true })
+  session: Session | null;
+
+  @Field(_type => String, { nullable: true })
+  accessToken!: string | null;
+
+  @Field(_type => String, { nullable: true })
+  refreshToken!: string | null;
+
+  @Field(_type => JwtDecoded, { nullable: true })
+  jwt: JwtDecoded;
+
   @Field(() => EntryOperations)
-  operation: keyof typeof EntryOperations = "AUTH_DETAILED";
-}
-@ObjectType("EntryConnectionExtended")
-export class EntryConnectionExtended extends EntryConnection {
-  constructor() {
-    super();
-  }
-  @Field(() => EntryOperations)
-  operation: keyof typeof EntryOperations = "ENTRY_CONNECTION";
+  operation?: EntryOperations.AUTH_DETAILED_EXTENDED;
 }
 
-export type EntryOpsUnion = AuthDetailedExtended | EntryConnectionExtended;
+@ObjectType("EntryConnectionExtended")
+export class EntryConnectionExtended {
+  @Field(() => EntryConnection)
+  connection: Connection<Entry, Edge<Entry>>;
+
+  @Field(() => EntryOperations)
+  operation: EntryOperations.ENTRY_CONNECTION_EXTENDED;
+}
+export function UnionType<A, B>(
+  targetOne: Type<A>,
+  targetTwo: Type<B>
+): MappedType<A | B> {
+  return targetOne || targetTwo;
+}
+export interface ClassType<T = any> {
+  new(...args: any[]): T;
+}
+// }
+// export type ArrayElement<ArrayType extends readonly unknown[]> =
+//   ArrayType[number];
+// export type Union<T extends any[]> = InstanceType<ArrayElement<T>>;
+
+export type EntryOpsUnion =
+  (AuthDetailedExtended | EntryConnectionExtended);
 export const EntryOperationsUnion = createUnionType<Type<EntryOpsUnion>[]>({
   name: "EntryOperationsUnion",
   types: () => [AuthDetailedExtended, EntryConnectionExtended],
-  resolveType: ({
-    operation
-  }: EntryOpsUnion): typeof AuthDetailed | typeof EntryConnection | undefined =>
-    operation.includes(EntryOperations.AUTH_DETAILED).valueOf()
-      ? AuthDetailed
-      : operation.includes(EntryOperations.ENTRY_CONNECTION).valueOf()
-      ? EntryConnection
+  resolveType: (
+    { operation }: EntryOpsUnion,
+    {},
+    { fragments, returnType },
+    { name, astNode }
+  ): typeof AuthDetailedExtended | typeof EntryConnectionExtended | undefined =>
+    name === AuthDetailedExtended.name
+      ? AuthDetailedExtended
+      : name === EntryConnectionExtended.name
+      ? EntryConnectionExtended
       : undefined
 });
 
-@ObjectType("EntryOperationsUnionOutput")
-export class EntryOperationsUnionOutput {
+@ObjectType("EntryOpsUnionInterface")
+export class EntryOpsUnionInterface {
   @Field(() => EntryOperationsUnion)
-  viewerToEntriesAndAuthConnection: EntryOpsUnion;
+  connect: EntryOpsUnion;
 }
-
-@ObjectType("EntryOperationsIntersectionDeailed")
-export class EntryOperationsIntersectionDeailed extends IntersectionType<
-  AuthDetailed,
-  EntryConnection
->(AuthDetailed, EntryConnection) {
+@ObjectType("EntryOperationsUnionOutput", {
+  implements: () => [EntryOpsUnionInterface]
+})
+export class EntryOperationsUnionOutput extends EntryOpsUnionInterface {
   constructor() {
-    super(
-      IntersectionType<AuthDetailed, EntryConnection>(
-        AuthDetailed,
-        EntryConnection
-      )
-    );
+    super();
   }
 }

@@ -16,7 +16,6 @@ import { UserWhereInput } from "src/.generated/prisma-nestjs-graphql/user/inputs
 import { UserWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where-unique.input";
 import { UserUncheckedUpdateInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-unchecked-update.input";
 import { AuthService } from "../auth/auth-jwt.service";
-import { Omit } from "@nestjs/graphql/dist/interfaces/gql-module-options.interface";
 import { ManyUsersPaginatedArgs } from "./args/find-many-paginated.args";
 import { EnumRoleNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-role-nullable-filter.input";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";

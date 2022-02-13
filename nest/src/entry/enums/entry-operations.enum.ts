@@ -1,8 +1,8 @@
 import { registerEnumType, EnumOptions } from "@nestjs/graphql";
 
 export enum EntryOperations {
-  ENTRY_CONNECTION = "ENTRY_CONNECTION",
-  AUTH_DETAILED = "AUTH_DETAILED"
+  ENTRY_CONNECTION_EXTENDED = "ENTRY_CONNECTION_EXTENDED",
+  AUTH_DETAILED_EXTENDED = "AUTH_DETAILED_EXTENDED"
 }
 
 registerEnumType<typeof EntryOperations>(EntryOperations, {

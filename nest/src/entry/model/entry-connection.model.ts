@@ -32,3 +32,26 @@ export class EntryConnection extends EntryEdge {
   }
 }
 
+// const EntryUnion = (func: ResolveTypeFn<EntryOpsUnion, ExecutionContext>) =>
+//   createUnionType({
+//     name: "EntryUnion",
+//     types: () => [AuthDetailedExtended, EntryConnectionExtended],
+//     resolveType: (
+//       value: EntryOpsUnion,
+//       context: ExecutionContext,
+//       info: GraphQLResolveInfo,
+//       abstracType: GraphQLAbstractType
+//     ) =>
+//       ({ ...func(value, context, info, abstracType) } as ResolveTypeFn<
+//         EntryOpsUnion,
+//         ExecutionContext
+//       >)
+//   });
+// type Unionn<T extends any[]> = ArrayElement<T> extends abstract new (
+//   ...args: any
+// ) => infer R
+//   ? R
+//   : any;
+// type ResolveTypeFn<TSource = EntryOpsUnion, TContext = ExecutionContext> = (
+//   ...args: Parameters<GraphQLTypeResolver<TSource, TContext>>
+// ) => any;

@@ -1,5 +1,11 @@
 import { Module } from "@nestjs/common";
-import { GraphQLModule, ReturnTypeFuncValue, GqlModuleAsyncOptions } from "@nestjs/graphql";
+import {
+  GraphQLModule,
+  ReturnTypeFuncValue,
+  GqlModuleAsyncOptions,
+  GqlModuleOptions,
+  GqlOptionsFactory
+} from "@nestjs/graphql";
 import { join } from "path";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import {
@@ -15,7 +21,7 @@ import { AppResolver } from "./app/app.resolver";
 import { APP_FILTER, ModulesContainer } from "@nestjs/core";
 import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
 import { PrismaModule } from "./prisma/prisma.module";
-import { loadSchema } from "@graphql-tools/load";
+import { loadSchema, loadSchemaSync } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { PasswordModule } from "./password/password.module";
 import { AuthModule } from "./auth/auth-jwt.module";
@@ -38,10 +44,18 @@ import { UploadModule } from "./upload/upload.module";
 import { MediaModule } from "./media/media.module";
 import { graphqlUploadExpress, Upload } from "graphql-upload";
 import { NodeModule } from "./node/node.module";
-import { ApolloDriverAsyncConfig, ServerRegistration, getApolloServer, ApolloDriver } from "@nestjs/apollo";
+import {
+  ApolloDriverAsyncConfig,
+  ServerRegistration,
+  getApolloServer,
+  ApolloDriver,
+  ApolloDriverConfig
+} from "@nestjs/apollo";
 import { PubSub, PubSubOptions, PubSubEngine } from "graphql-subscriptions";
 import { ViewerModule } from "./viewer/viewer.module";
-import { ApolloConfigInput } from "apollo-server-types";
+import { ApolloConfigInput, GraphQLExecutor } from "apollo-server-types";
+import { ExpressGraphQLDriver } from "src/app/driver/express-graphql.driver";
+import { GraphQLSchema } from "graphql";
 export type RecordContiional<T> =
   | Record<keyof T, T>
   | Array<T>
@@ -149,78 +163,135 @@ export type Context<T = unknown extends infer P ? P : unknown> = {
       load: [config],
       envFilePath: "./.env"
     }),
-    GraphQLModule.forRootAsync({
-       useFactory: async <T extends ConfigService>(configService: T) => {
-
-        const rootSchema = await loadSchema("./src/schema.gql", {
-          loaders: [new GraphQLFileLoader()],
-          sort: true,
-          experimentalFragmentVariables: true,
-          commentDescriptions: true
-        });
-        const graphqlConfig = configService.get<GraphqlConfig>("graphql");
-        const apolloConfig = configService.get<ApolloConfig>("apollo");
-        return {
-          // driver: ApolloDriver,
-          fieldResolverEnhancers: ['guards'],
-          installSubscriptionHandlers: true,
-          cors: false,
-          buildSchemaOptions: {
-            dateScalarMode: "isoDate",
-            numberScalarMode: "integer"
-          },
-          sortSchema: graphqlConfig?.sortSchema
-            ? graphqlConfig.sortSchema
-            : true,
-          autoSchemaFile: "./src/schema.gql",
-          autoTransformHttpErrors: true,
-
-          definitions: {
-            path: "./src/graphql.schema.ts" || graphqlConfig?.schemaDestination,
-            outputAs: "class",
-            emitTypenameField: true
-          },
-          typeDefs: [
-            join(process.cwd(), "/node_modules/.prisma/client/index.d.ts")
-          ],
-          introspection: true,
-          apollo: {
-            key: apolloConfig?.key ? apolloConfig.key : ""
-          },
-          schema: rootSchema,
-          playground: {
-            settings: {
-              "general.betaUpdates": true,
-              "tracing.hideTracingResponse": false,
-              "schema.polling.interval": 5000
-            }
-          },
-          debug: graphqlConfig?.debug
-            ? graphqlConfig.debug
-            : process.env.NODE_ENV !== "production"
-            ? true
-            : false,
-          context: <T extends AuthService>({ req, res }: Context<T>): any => {
-            const token = req.header("authorization")?.split(" ")[1] ?? null;
-            const ctx = {
-              req,
-              res,
-              token: token as string | null
-            };
-            token != null && token.length > 0
-              ? res.setHeader("authorization", `Bearer ${token}`)
-              : console.log("no auth token to parse");
-            if (ctx.token != null && ctx.token.length > 0) {
-              res.setHeader("authorization", `Bearer ${token}`);
-
-              return { ...ctx };
-            } else {
-              return { ...ctx };
-            }
-          }
-        };
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      apollo: { key: process.env.APOLLO_KEY ? process.env.APOLLO_KEY : "" },
+      allowBatchedHttpRequests: true,
+      autoTransformHttpErrors: true,
+      buildSchemaOptions: { dateScalarMode: "isoDate" },
+      installSubscriptionHandlers: true,
+      definitions: {
+        path: "src/graphql.schema.ts",
+        outputAs: "class",
+        emitTypenameField: true
+      },sortSchema: true,
+      debug: true,
+      autoSchemaFile: "schema.gql",
+      cors: {
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+        maxAge: 0,
+        origin: true, // reflects dynamic origin -- Vary
+        allowedHeaders: [
+          "Access-Control-Allow-Methods",
+          "Access-Control-Expose-Headers",
+          "apollographql-client-name",
+          "access-control-allow-headers",
+          "Access-Control-Allow-Origin",
+          "Origin",
+          "X-Requested-With",
+          "Content-Type",
+          "Accept",
+          "Apollo-Federation-Include-Trace",
+          "Authorization",
+          "Cache-Control",
+          "Vary",
+          "Content-Length",
+          "Cookie",
+          "Accept-Encoding",
+          "Transfer-Encoding",
+          "Connection",
+          "Referrer",
+          "Referrer-Policy",
+          "X-Csrf-Token",
+          "Woocommerce-Session",
+          "Accept-Charset",
+          "Forwarded",
+          "Host",
+          "From",
+          "ETag",
+          "Retry-After",
+          "Server",
+          "Set-Cookie",
+          "Trailer",
+          "User-Agent",
+          "Upgrade",
+          "X-XSS-Protection",
+          "Upgrade-Insecure-Requests",
+          "Session",
+          "authorization"
+        ],
+        credentials: true,
+        exposedHeaders: ["*", "authorization", "Authorization"],
+        optionsSuccessStatus: 204,
+        preflightContinue: false
       },
-      inject: [ConfigService]
+      fieldResolverEnhancers: ["guards"],
+      context: <T extends AuthService>({ req, res }: Context<T>): any => {
+        const token = req.header("authorization")?.split(" ")[1] ?? null;
+        const ctx = {
+          req,
+          res,
+          token: token as string | null
+        };
+
+        token != null && token.length > 0
+          ? res.setHeader("authorization", `Bearer ${token}`)
+          : console.log("no auth token to parse");
+        if (ctx.token != null && ctx.token.length > 0) {
+          res.setHeader("authorization", `Bearer ${token}`);
+
+          return { ...ctx };
+        } else {
+          return { ...ctx };
+        }
+      }
+
+      // useFactory: async (configService: ConfigService) => {
+      //   const rootSchema = await loadSchema("./src/schema.gql", {
+      //     loaders: [new GraphQLFileLoader()],
+      //     sort: true,
+      //     experimentalFragmentVariables: true,
+      //     commentDescriptions: true
+      //   });
+      //   const graphqlConfig = configService.get<GraphqlConfig>("graphql");
+      //   const apolloConfig = configService.get<ApolloConfig>("apollo");
+      //   return {schema: rootSchema,
+      //     // driver: ApolloDriver,
+      //     fieldResolverEnhancers: ["guards"],
+      //     installSubscriptionHandlers: true,
+      //     cors: false,
+      //     buildSchemaOptions: {
+      //       dateScalarMode: "isoDate",
+      //       numberScalarMode: "integer"
+      //     },
+      //     sortSchema: graphqlConfig?.sortSchema
+      //       ? graphqlConfig.sortSchema
+      //       : true,
+      //     autoSchemaFile: "src/schema.gql",
+      //     definitions: {
+      //       path: "src/graphql.schema.ts" || graphqlConfig?.schemaDestination,
+      //       outputAs: "class",
+      //       emitTypenameField: true
+      //     },
+      //     typeDefs: [
+      //       join(process.cwd(), "/node_modules/.prisma/client/index.d.ts")
+      //     ],
+      //     apollo: {
+      //       key: apolloConfig?.key ? apolloConfig.key : ""
+      //     },
+      //     playground: {
+      //       settings: {
+      //         "general.betaUpdates": true,
+      //         "tracing.hideTracingResponse": false,
+      //         "schema.polling.interval": 5000
+      //       }
+      //     },
+      //     debug: graphqlConfig?.debug
+      //       ? graphqlConfig.debug
+      //       : process.env.NODE_ENV !== "production"
+      //       ? true
+      //       : false,
+      // },
     }),
     PrismaModule,
     PasswordModule,
