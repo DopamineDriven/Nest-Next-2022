@@ -1,0 +1,5 @@
+fragment ViewerAuthInfoPartial on ViewerAuthInfo {
+  __typename
+  accessToken
+  refreshToken
+}

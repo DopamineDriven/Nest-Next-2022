@@ -1,38 +1,22 @@
-import {
-  AuthDetailed,
-  Exact,
-  LoginInput,
-  Viewer
-} from "@/cache/__types__";
+import { AuthDetailed } from "@/cache/__types__";
 import { CookieValueTypes } from "cookies-next/lib/types";
 import { Inspector } from "@/components/UI";
 import { ViewerQuery } from "@/graphql/queries/viewer.graphql";
-import {
-  ApolloCache,
-  DefaultContext,
-  MutationFunctionOptions,
-  NormalizedCacheObject
-} from "@apollo/client";
+import { NormalizedCacheObject } from "@apollo/client";
 import {
   LoginUserDocument,
-  LoginUserMutation,
-  LoginUserMutationResult,
   useLoginUserMutation
 } from "@/graphql/mutations/login-user.graphql";
 import { useRouter } from "next/router";
 import cn from "classnames";
 import { TypeScript } from "@/components/Icons";
 import Link from "next/link";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { UnwrapInputProps } from "@/types/mapped";
 import {
   DeriveUserDetailsFromTokenDocument,
   useDeriveUserDetailsFromTokenMutation
 } from "@/graphql/mutations/get-user-from-access-token.graphql";
-import {
-  SignInUserDocument,
-  useSignInUserMutation
-} from "@/graphql/mutations/sign-in.graphql";
 
 const ReusableInput = ({
   ...props
@@ -67,16 +51,6 @@ export default function Index() {
   const [accessTokenVal, setAccessTokenVal] = useState<string | null>(
     null
   );
-  const [
-    UseDetailedHandle,
-    {
-      data: dataSignin,
-      called: calledSignin,
-      error: errorSignin,
-      client: clientSignin,
-      reset: resetSignin
-    }
-  ] = useSignInUserMutation({ mutation: SignInUserDocument });
 
   const [authDetailedState, setAuthDetailedState] =
     useState<AuthDetailed | null>(null);
@@ -106,59 +80,61 @@ export default function Index() {
         : () => {};
     })();
   }, [accessTokenVal, lazyDerivation]);
-  const [authPayload, setAuthPayload] = useState<
-    AuthDetailed | undefined
-  >();
-  const handleSubmitLifecycleHook = useCallback(
-    (input: { email: string; password: string }) => {
-      if (input.email && input.password !== null) {
-        // return useSignInUserMutation({
-        //   variables: { loginInput: input },
-        //   mutation=
-        // })
-      }
-      (
-        props: (
-          options?:
-            | MutationFunctionOptions<
-                LoginUserMutation,
-                Exact<{
-                  data: LoginInput;
-                }>,
-                DefaultContext,
-                ApolloCache<any>
-              >
-            | undefined
-        ) => Promise<LoginUserMutationResult>
-      ) => {};
-    },
-    []
-  );
 
   const [emailState, setEmailState] = useState<string | null>(null);
   const [passwordState, setPasswordState] = useState<string | null>(null);
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const variables = new FormData(event.currentTarget);
+    const emailElement = event.currentTarget.elements.namedItem("email");
+    const passwordElement =
+      event.currentTarget.elements.namedItem("password");
+    console.log(
+      JSON.stringify(
+        { emailElement: emailElement, passwordElement: passwordElement },
+        null,
+        2
+      )
+    );
+
     const { email, password } = Object.fromEntries(variables);
     console.log(email ?? "");
     console.log(password ?? "");
     setEmailState(email.toString());
     setPasswordState(password.toString());
-    const lazyLogger = async () =>
-      await UseDetailedHandle({
+    const lazyLogger = () =>
+      lazyLogin({
         variables: {
-          loginInput: {
+          data: {
             email: `${email}` ?? emailState,
             password: `${password}` ?? passwordState
           }
         }
-      }).then(authDeets => {
-        dataSignin?.signin;
-        setAuthDetailedState(authDeets.data?.signin as AuthDetailed);
-        return authDeets.data?.signin;
-      });
-
+      })
+        .then(data => {
+          data.data?.login.accessToken != null
+            ? setAccessTokenVal(data.data.login.accessToken)
+            : setAccessTokenVal(null);
+          return lazyDerivation({
+            variables: {
+              token: data.data?.login.accessToken
+                ? data.data.login.accessToken
+                : ""
+            }
+          }).then(data => {
+            return data.data
+              ?.userFromAccessTokenDecoded as unknown as AuthDetailed;
+          });
+        })
+        .then(promiseLikeAuthDetailed => {
+          return promiseLikeAuthDetailed as unknown as AuthDetailed;
+        });
+    return lazyLogger()
+      .then(data => {
+        setAuthDetailedState(data);
+        return data;
+      })
+      .finally((): void => {});
   }
 
   return (
@@ -182,16 +158,13 @@ export default function Index() {
       <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
         <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
           {authDetailedState !== null ? (
-            <Inspector className='!container !min-w-fit'>
+            <Inspector>
               {JSON.stringify(authDetailedState, null, 2)}
             </Inspector>
           ) : (
             <form
               method='POST'
-              onSubmit={e => {
-                e.preventDefault();
-                return handleSubmit(e);
-              }}
+              onSubmit={handleSubmit}
               className='space-y-6'>
               <fieldset disabled={logingLoading} aria-busy={logingLoading}>
                 <div>
@@ -249,20 +222,7 @@ export default function Index() {
                     </Link>
                   </div>
                 </div>
-                {/* {!login ? (
-                <p className='error-message'>
-                  Invalid username. Please try again.
-                </p>
-              ) : (
-                <span className='sr-only'>{"username valid"}</span>
-              )}
-              {!isPasswordValid ? (
-                <p className='error-message'>
-                  Invalid password. Please try again.
-                </p>
-              ) : (
-                <span className='sr-only'>{"password valid"}</span>
-              )} */}
+
                 <div>
                   <button
                     disabled={logingLoading}
@@ -279,54 +239,7 @@ export default function Index() {
     </>
   );
 }
-// const { data, error, isValidating, mutate } = SWR.default(() =>
-//   accessTokenVal != null
-//     ? [
-//         `http://localhost:3000/auth/token/${accessTokenVal}`.trim(),
-//         { viewerFetcher }
-//       ]
-//     : [null, { viewerFetcher }]
-// ) as SWR.SWRResponse<AuthDetailed, any>;
-
-// const [swrState, setSwrState] = useState(data);
-// export const getServerSideProps = async (
-//   ctx: GetServerSidePropsContext<ParsedUrlQuery>
-// ): Promise<GetServerSidePropsResult<IndexProps>> => {
-//   const apolloClient = initializeApollo({}, ctx);
-//   await apolloClient
-//     .query<ViewerQuery, ViewerQueryVariables>({
-//       query: ViewerDocument,
-//       variables: {},
-//       partialRefetch: true
-//     })
-//     .then(data => data.data);
-//   const parseAuthHeaderFromNest =
-//     ctx.req.headers["authorization"]?.split(/([ ])/)[0] ?? "";
-//   const cookies = (): CookieValueTypes =>
-//     getCookie("nest-to-next-2022", {
-//       req: ctx.req,
-//       res: ctx.res,
-//       encode: (value: string) => encodeURIComponent(value),
-//       maxAge:
-//         new Date(Date.now()).getMilliseconds() + 30 * 24 * 60 * 60 * 1000,
-//       secure: process.env.NODE_ENV === "production" ? true : false,
-//       httpOnly: false,
-//       sameSite: "none"
-//     });
-//   const apolloCache = apolloClient.cache.extract;
-//   const cookiesCalled = cookies();
-//   return {
-//     props: {
-//       viewerServer: await apolloClient
-//         .query<ViewerQuery, ViewerQueryVariables>({
-//           query: ViewerDocument,
-//           variables: {},
-//           partialRefetch: true
-//         })
-//         .then(data => data.data),
-//       cookiesCalled,
-//       normalizedCacheObject: apolloCache(true),
-//       parseAuthHeaderFromNest: parseAuthHeaderFromNest
-//     }
-//   };
-// };
+/*
+    { refetchQueries: [namedOperations.Query.myQuery] }
+https://www.graphql-code-generator.com/plugins/named-operations-object
+               */

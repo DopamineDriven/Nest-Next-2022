@@ -5,8 +5,9 @@
 # import JwtHeadersPartial from "../fragments/jwt-header-partial.graphql";
 # import JwtPayloadPartial from "../fragments/jwt-payload-partial.graphql";
 # import JwtDecodedPartial from "../fragments/jwt-decoded-partial.graphql";
+# import MediaItemPartial from "../fragments/media-item-partial.graphql";
 
-mutation signInUser($loginInput: LoginInput!) {
+mutation signInUser($loginInput: LoginInput! ) {
   signin(userloginInput: $loginInput) {
     auth {
       ...AuthPartial

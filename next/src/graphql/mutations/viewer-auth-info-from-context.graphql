@@ -1,22 +1,11 @@
-# import UserPartial from "../fragments/user-partial.graphql";
-# import SessionPartial from "../fragments/session-partial.graphql";
 # import JwtHeadersPartial from "../fragments/jwt-header-partial.graphql";
 # import JwtPayloadPartial from "../fragments/jwt-payload-partial.graphql";
 # import JwtDecodedPartial from "../fragments/jwt-decoded-partial.graphql";
-# import AuthPartial from "../fragments/auth-partial.graphql";
+# import ViewerAuthInfoPartial from "../fragments/viewer-auth-info-partial.graphql";
 
-query Viewer {
-  me {
-    auth {
-...AuthPartial
-      user {
-        ...UserPartial
-      }
-      session {
-        ...SessionPartial
-      }
-    }
-    jwt {
+mutation viewerAuthFromContext {
+  viewerAuthInfoFromContext {
+    viewerJwt {
       header {
         ...JwtHeadersPartial
       }
@@ -25,6 +14,6 @@ query Viewer {
       }
       ...JwtDecodedPartial
     }
-    __typename
+    ...ViewerAuthInfoPartial
   }
 }

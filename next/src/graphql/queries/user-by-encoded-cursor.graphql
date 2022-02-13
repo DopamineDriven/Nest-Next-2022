@@ -1,0 +1,7 @@
+#import UserPartial from "../fragments/user-partial.graphql";
+
+query userByEncodedCursor($cursor: String!) {
+  userByRelayId(cursor: $cursor) {
+    ...UserPartial
+  }
+}

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "preserveSymlinks": true,
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -17,7 +18,7 @@
     "strictNullChecks": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "incremental": true,
     "skipLibCheck": true,
     "strict": true

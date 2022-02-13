@@ -557,20 +557,6 @@ type EntryCount {
   comments: Int!
 }
 
-input EntryCreateInput {
-  author: UserCreateNestedOneWithoutEntriesInput!
-  categories: CategoryCreateNestedManyWithoutEntriesInput
-  categoryId: String
-  comments: CommentCreateNestedManyWithoutEntryInput
-  content: EntryCreatecontentInput
-  createdAt: DateTime
-  featuredImage: EntryCreatefeaturedImageInput
-  id: String
-  published: Boolean
-  title: String!
-  updatedAt: DateTime
-}
-
 input EntryCreateManyAuthorInput {
   categoryId: String
   content: EntryCreateManycontentInput
@@ -612,6 +598,18 @@ input EntryCreateNestedOneWithoutCommentsInput {
   connect: EntryWhereUniqueInput
   connectOrCreate: EntryCreateOrConnectWithoutCommentsInput
   create: EntryCreateWithoutCommentsInput
+}
+
+input EntryCreateOneInput {
+  categories: CategoryCreateNestedManyWithoutEntriesInput
+  categoryId: String
+  content: EntryCreatecontentInput
+  createdAt: DateTime
+  featuredImage: EntryCreatefeaturedImageInput
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
 }
 
 input EntryCreateOrConnectWithoutAuthorInput {
@@ -1143,17 +1141,17 @@ enum MimeTypes {
 
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
-  createEntry(createInput: EntryCreateInput!): Entry!
+  createEntry(EntryInput: EntryCreateOneInput!): Entry!
   createProfile(data: ProfileCreateInput!, userId: String!): Profile!
   getUserFromAccessToken(token: String!): User!
   login(data: LoginInput!): Token!
-  refreshToken(token: String!): Token!
   register(dataRegister: SignupInput!): AuthSansSession!
   registerNewUser(userCreateInput: UserCreateMutationInput!): AuthDetailed!
   signin(userloginInput: LoginInput!): AuthDetailed!
   signup(data: SignupInput!): Token!
   updateUserPassword(passwordInput: ChangePasswordInput!): User!
   userFromAccessTokenDecoded(token: String!): AuthDetailed!
+  viewerAuthInfoFromContext: ViewerAuthInfo!
 }
 
 input NestedBoolFilter {
@@ -1514,6 +1512,7 @@ type Query {
   userById(id: String!): User!
   userByRelayId(cursor: String!): User!
   userPosts(userId: ID!): [Entry!]!
+  viewer: ViewerDetailed!
 }
 
 enum QueryMode {
@@ -1992,4 +1991,40 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   email: String
   id: String
+}
+
+type ViewerAuthInfo {
+  accessToken: String!
+  refreshToken: String!
+  viewerJwt: JwtDecoded!
+}
+
+type ViewerDetailed {
+  _count: UserCount
+  accessToken: String
+  accounts: [Account!]
+  categories: [Category!]
+  comments: [Comment!]
+  connections: [Connection!]
+
+  """Identifies the date and time when the user was created."""
+  createdAt: DateTime!
+  email: String!
+  emailVerified: DateTime
+  entries: [Entry!]
+  firstName: String
+  id: ID!
+  image: [JSONObject!]!
+  lastName: String
+  mediaItems: [MediaItem!]
+  password: String!
+  profile: Profile
+  refreshToken: String
+  role: Role
+  secret: String
+  sessions: [Session!]
+  status: UserStatus!
+
+  """Identifies the date and time when the user was last updated."""
+  updatedAt: DateTime
 }

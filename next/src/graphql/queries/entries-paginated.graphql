@@ -3,8 +3,12 @@
 # import EntryEdgePartial from "../fragments/entry-partial.graphql";
 # import EntryPartial from "../fragments/entry-partial.graphql";
 
-query allEntries($findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!) {
-  listEntries(findManyEntriesPaginatedInput: $findManyEntriesPaginatedInput) {
+query listEntries(
+  $findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!
+) {
+  listEntries(
+    findManyEntriesPaginatedInput: $findManyEntriesPaginatedInput
+  ) {
     ...EntryConnectionPartial
     pageInfo {
       ...PageInfoPartial

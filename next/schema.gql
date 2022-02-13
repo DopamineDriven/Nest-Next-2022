@@ -151,9 +151,9 @@ type AuthSansSession {
   user: User
 }
 
-type BaseTypesConnection {
-  edges: [BaseTypesEdge!]!
-  pageInfo: PageInfo!
+type BaseTypeNodes {
+  nodes: [TypesUnion!]!
+  pageInfo: PageInfo
   totalCount: Int!
 }
 
@@ -499,6 +499,10 @@ input ConnectionWhereUniqueInput {
   id: String
 }
 
+type ContentNodes {
+  contentNodes: BaseTypeNodes!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -553,20 +557,6 @@ type EntryCount {
   comments: Int!
 }
 
-input EntryCreateInput {
-  author: UserCreateNestedOneWithoutEntriesInput!
-  categories: CategoryCreateNestedManyWithoutEntriesInput
-  categoryId: String
-  comments: CommentCreateNestedManyWithoutEntryInput
-  content: EntryCreatecontentInput
-  createdAt: DateTime
-  featuredImage: EntryCreatefeaturedImageInput
-  id: String
-  published: Boolean
-  title: String!
-  updatedAt: DateTime
-}
-
 input EntryCreateManyAuthorInput {
   categoryId: String
   content: EntryCreateManycontentInput
@@ -608,6 +598,18 @@ input EntryCreateNestedOneWithoutCommentsInput {
   connect: EntryWhereUniqueInput
   connectOrCreate: EntryCreateOrConnectWithoutCommentsInput
   create: EntryCreateWithoutCommentsInput
+}
+
+input EntryCreateOneInput {
+  categories: CategoryCreateNestedManyWithoutEntriesInput
+  categoryId: String
+  content: EntryCreatecontentInput
+  createdAt: DateTime
+  featuredImage: EntryCreatefeaturedImageInput
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
 }
 
 input EntryCreateOrConnectWithoutAuthorInput {
@@ -1138,17 +1140,18 @@ enum MimeTypes {
 }
 
 type Mutation {
-  changePassword(accessToken: String!, data: ChangePasswordInput!): User!
-  createEntry(createInput: EntryCreateInput!): Entry!
+  changePassword(changePasswordInput: ChangePasswordInput!): User!
+  createEntry(EntryInput: EntryCreateOneInput!): Entry!
   createProfile(data: ProfileCreateInput!, userId: String!): Profile!
   getUserFromAccessToken(token: String!): User!
   login(data: LoginInput!): Token!
-  refreshToken(token: String!): Token!
   register(dataRegister: SignupInput!): AuthSansSession!
   registerNewUser(userCreateInput: UserCreateMutationInput!): AuthDetailed!
   signin(userloginInput: LoginInput!): AuthDetailed!
   signup(data: SignupInput!): Token!
+  updateUserPassword(passwordInput: ChangePasswordInput!): User!
   userFromAccessTokenDecoded(token: String!): AuthDetailed!
+  viewerAuthInfoFromContext: ViewerAuthInfo!
 }
 
 input NestedBoolFilter {
@@ -1270,6 +1273,10 @@ input NestedStringNullableFilter {
   notIn: [String!]
   search: String
   startsWith: String
+}
+
+interface Node {
+  id: ID!
 }
 
 type PageInfo {
@@ -1488,8 +1495,10 @@ enum Pronouns {
 }
 
 type Query {
+  contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!, findManyMediaItemsPaginated: FindManyMediaItemsInput, findManyUsersPaginatedInput: FindManyUsersPaginatedInput): ContentNodes!
   entryById(id: String!): Entry!
-  getViewer(id: String!): Viewer!
+  findUniqueMediaItem(mediaItemId: String!): MediaItem!
+  getViewer: AuthDetailed!
   hello(name: String!): String!
   helloWorld: String!
   listEntries(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!): EntryConnection!
@@ -1497,12 +1506,13 @@ type Query {
   listProfiles(findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput!): ProfileConnection!
   listUsers(findManyUsersPaginatedInput: FindManyUsersPaginatedInput = {}): UserConnection!
   me: AuthDetailed!
+  node(id: ID!): Node
   profileByRelayId: Profile!
   profiles(profilesArgs: ProfilesInput!): ProfileConnection!
-  typeConnectionUnionFuncton(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!, findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput!, findManyUsersPaginatedInput: FindManyUsersPaginatedInput = {}): BaseTypesConnection!
   userById(id: String!): User!
-  userByRelayId: User!
+  userByRelayId(cursor: String!): User!
   userPosts(userId: ID!): [Entry!]!
+  viewer: ViewerDetailed!
 }
 
 enum QueryMode {
@@ -1684,7 +1694,7 @@ type Token {
   refreshToken: String
 }
 
-union TypesUnion = Entry | Profile | User
+union TypesUnion = Entry | MediaItem | User
 
 type User {
   _count: UserCount
@@ -1983,7 +1993,13 @@ input UserWhereUniqueInput {
   id: String
 }
 
-type Viewer {
+type ViewerAuthInfo {
+  accessToken: String!
+  refreshToken: String!
+  viewerJwt: JwtDecoded!
+}
+
+type ViewerDetailed {
   _count: UserCount
   accessToken: String
   accounts: [Account!]
@@ -2003,7 +2019,9 @@ type Viewer {
   mediaItems: [MediaItem!]
   password: String!
   profile: Profile
+  refreshToken: String
   role: Role
+  secret: String
   sessions: [Session!]
   status: UserStatus!
 

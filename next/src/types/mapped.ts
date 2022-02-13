@@ -11,6 +11,17 @@ import {
 } from "react";
 import { NextApiHandler } from "next";
 import { ImageProps } from "next/image";
+import {
+  JSONObjectResolver,
+  GraphQLDateTime,
+  GraphQLDate,
+  DateTimeResolver,
+  GraphQLUUID,
+  PhoneNumberResolver,
+  GraphQLPhoneNumber,
+  GraphQLJSONObject,
+  GraphQLUnsignedFloat
+} from "graphql-scalars";
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 // export type RecordContiional<T = unknown> = T extends {
 //   [index: keyof T]: T extends infer U ? U extends Array<{ [index: keyof U]: U }> | PromiseLike<T> | Awaited<U> ? T extends Promise<Array<({ [index: keyof T]: T })>>

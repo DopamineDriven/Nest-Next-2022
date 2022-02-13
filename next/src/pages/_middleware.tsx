@@ -6,7 +6,6 @@ import cors, { CorsOptions } from "@/lib/cors";
 // (next: () => NextResponse)
 
 export default async function middleware(req: NextRequest) {
-  const nextInternals = req.nextUrl.searchParams;
   req.cookies;
   console.log(JSON.stringify(req.cookies ?? {}, null, 2));
   const response = NextResponse.next();
@@ -19,6 +18,8 @@ export default async function middleware(req: NextRequest) {
     "Cache-Control",
     "public, stale-while-revalidate=600, s-maxage=1200"
   );
+  const requestHeader = req.headers.get("authorization");
+  response.headers.set("authorization", requestHeader ?? "");
   // response.headers.set("X-XSS-Protection", "1; mode=block");
   // response.headers.set("X-Frame-Options", "DENY");
   // response.headers.set("X-Content-Type-Options", "nosniff");
@@ -69,7 +70,7 @@ export default async function middleware(req: NextRequest) {
     preflightContinue: false,
     optionsSuccessStatus: 204,
     credentials: true,
-    exposedHeaders: ["*", "Authorization"] // Authorization must be explicitly set
+    exposedHeaders: ["*", "authorization"] // Authorization must be explicitly set
   };
   return cors(req, response, { ...options });
 }

@@ -1,9 +1,8 @@
+const { withSuperjson } = require("next-superjson");
 const {
   PHASE_DEVELOPMENT_SERVER,
   PHASE_PRODUCTION_BUILD
 } = require("next/constants");
-
-const superjson = require("next-superjson").withSuperjson;
 
 const withRpc = require("next-rpc")();
 
@@ -18,7 +17,7 @@ const {
  * @type {import('next').NextConfig}
  **/
 
-module.exports = withRpc({
+module.exports = withSuperjson()({
   webpack(config, options) {
     if (ANALYZE) {
       config.plugins.push(new withRpc("stats.txt"));

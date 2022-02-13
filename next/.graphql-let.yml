@@ -1,32 +1,66 @@
-
-schema:
-  - "http://localhost:3000/graphql"
-  - headers:
-    - "authorization": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4NmE3NDY1My05MTg4LTQ2YTQtYjNiOS1lMTYwMzhjMTNjOGMiLCJpYXQiOjE2NDQ0NDEzNTYsImV4cCI6MTY0NDUyNzc1Nn0.2D7ZjaCEJNJzRh4K7dEXUkxuvh0uKJ4nZoiEdr_-INyy_Qw7kIQ_uNYriB92YxbryCfnZ788Q7TpkeDubVBsyA"
+# schema:
+#   - "http://localhost:3000/graphql"
+#   - headers:
+#       - "authorization": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4NmE3NDY1My05MTg4LTQ2YTQtYjNiOS1lMTYwMzhjMTNjOGMiLCJpYXQiOjE2NDQ0NDEzNTYsImV4cCI6MTY0NDUyNzc1Nn0.2D7ZjaCEJNJzRh4K7dEXUkxuvh0uKJ4nZoiEdr_-INyy_Qw7kIQ_uNYriB92YxbryCfnZ788Q7TpkeDubVBsyA"
+schema: "schema.gql"
 documents:
   - "./src/graphql/**/*.graphql"
   - "!./src/graphql/graphql.schema.graphql"
   - "!./src/swr/**/*.graphql"
   - "!./src/swr/**/*.ts"
   - "./src/graphql/**.graphql"
+hooks:
+  afterOneFileWrite:
+    - prettier --write
 respectGitIgnore: true
 config:
-  experimentalFragments: true
+  experimentalFragmentVariables: true
   reactApolloVersion: 3
   apolloReactComponentsImportFrom: "@apollo/client/react/components"
   useIndexSignature: true
   withHooks: true
   withRefetchFn: true
 plugins:
-  - typescript-operations
-  - typescript-react-apollo
+  - add:
+      content:
+        - "import {ResolverContext} from '@/apollo/resolver-context'"
+        - "import graphqlTypeJson from 'graphql-type-json';"
+        - "import { DeepPartial } from 'utility-types';"
+        - "import { GraphQLJSON, GraphQLDateTime, GraphQLUUID, GraphQLPhoneNumber, GraphQLUnsignedFloat, GraphQLPositiveFloat, GraphQLNegativeFloat } from 'graphql-scalars';"
+  - typescript-operations:
+      dedupeFragments: true
+  - typescript-resolvers:
+      useIndexSignature: true
+      defaultMapper: DeepPartial<{T}>
+      optionalInfoArgument: true
+      contextType: ResolverContext
+      makeResolverTypeCallable: true
+      noSchemaStitching: false
+      scalars:
+        Date: GraphQLDateTime
+        JSON: (GraphQLJson || GraphQLJSONObject)
+        Decimal: (GraphQLUnsignedFloat || GraphQLPositiveFloat || GraphQLNegativeFloat)
+        PhoneNumber: GraphQLPhoneNumber
+        ID: GraphQLUUID
+    config:
+      maybeValue: "T extends PromiseLike<infer U> ? Promise<U | null> : T | null"
+  - typescript-react-apollo:
+      addDocBlocks: true
+      reactApolloVersion: 3
+      withRefetchFn: true
+      withHooks: true
+      experimentalFragmentVariables: true
+      useTypeImports: true
   - named-operations-object
-  - typescript-apollo-client-helpers
+  - typescript-apollo-client-helpers:
+      generates: "./src/apollo/helpers.ts"
+      useTypeImports: true
+
   - fragment-matcher:
-    - config:
+      generates:
+        - "./src/apollo/fragments.ts"
+      config:
         useExplicitTyping: true
         apolloClientVersion: 3
 cacheDir: "./src/.cache"
 TSConfigFile: "./tsconfig.json"
-
-

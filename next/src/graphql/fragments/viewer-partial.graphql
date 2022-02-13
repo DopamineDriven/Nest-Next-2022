@@ -1,4 +1,4 @@
-fragment ViewerPartial on Viewer {
+fragment ViewerPartial on ViewerDetailed {
   id
   accessToken
   createdAt

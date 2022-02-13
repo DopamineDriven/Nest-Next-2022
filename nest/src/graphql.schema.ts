@@ -593,20 +593,6 @@ export class DateTimeNullableFilter {
     notIn?: Nullable<DateTime[]>;
 }
 
-export class EntryCreateInput {
-    author: UserCreateNestedOneWithoutEntriesInput;
-    categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
-    categoryId?: Nullable<string>;
-    comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
-    content?: Nullable<EntryCreatecontentInput>;
-    createdAt?: Nullable<DateTime>;
-    featuredImage?: Nullable<EntryCreatefeaturedImageInput>;
-    id?: Nullable<string>;
-    published?: Nullable<boolean>;
-    title: string;
-    updatedAt?: Nullable<DateTime>;
-}
-
 export class EntryCreateManyAuthorInput {
     categoryId?: Nullable<string>;
     content?: Nullable<EntryCreateManycontentInput>;
@@ -648,6 +634,18 @@ export class EntryCreateNestedOneWithoutCommentsInput {
     connect?: Nullable<EntryWhereUniqueInput>;
     connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCommentsInput>;
     create?: Nullable<EntryCreateWithoutCommentsInput>;
+}
+
+export class EntryCreateOneInput {
+    categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
+    categoryId?: Nullable<string>;
+    content?: Nullable<EntryCreatecontentInput>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<EntryCreatefeaturedImageInput>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class EntryCreateOrConnectWithoutAuthorInput {
@@ -1848,15 +1846,13 @@ export abstract class IMutation {
 
     abstract changePassword(changePasswordInput: ChangePasswordInput): User | Promise<User>;
 
-    abstract createEntry(createInput: EntryCreateInput): Entry | Promise<Entry>;
+    abstract createEntry(EntryInput: EntryCreateOneInput): Entry | Promise<Entry>;
 
     abstract createProfile(data: ProfileCreateInput, userId: string): Profile | Promise<Profile>;
 
     abstract getUserFromAccessToken(token: string): User | Promise<User>;
 
     abstract login(data: LoginInput): Token | Promise<Token>;
-
-    abstract refreshToken(token: string): Token | Promise<Token>;
 
     abstract register(dataRegister: SignupInput): AuthSansSession | Promise<AuthSansSession>;
 
@@ -1869,6 +1865,8 @@ export abstract class IMutation {
     abstract updateUserPassword(passwordInput: ChangePasswordInput): User | Promise<User>;
 
     abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
+
+    abstract viewerAuthInfoFromContext(): ViewerAuthInfo | Promise<ViewerAuthInfo>;
 }
 
 export class PageInfo {
@@ -1949,6 +1947,8 @@ export abstract class IQuery {
     abstract userByRelayId(cursor: string): User | Promise<User>;
 
     abstract userPosts(userId: string): Entry[] | Promise<Entry[]>;
+
+    abstract viewer(): ViewerDetailed | Promise<ViewerDetailed>;
 }
 
 export class Session {
@@ -2028,6 +2028,40 @@ export class UserEdge {
     __typename?: 'UserEdge';
     cursor: string;
     node: User;
+}
+
+export class ViewerAuthInfo {
+    __typename?: 'ViewerAuthInfo';
+    accessToken: string;
+    refreshToken: string;
+    viewerJwt: JwtDecoded;
+}
+
+export class ViewerDetailed {
+    __typename?: 'ViewerDetailed';
+    _count?: Nullable<UserCount>;
+    accessToken?: Nullable<string>;
+    accounts?: Nullable<Account[]>;
+    categories?: Nullable<Category[]>;
+    comments?: Nullable<Comment[]>;
+    connections?: Nullable<Connection[]>;
+    createdAt: DateTime;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<Entry[]>;
+    firstName?: Nullable<string>;
+    id: string;
+    image: JSONObject[];
+    lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItem[]>;
+    password: string;
+    profile?: Nullable<Profile>;
+    refreshToken?: Nullable<string>;
+    role?: Nullable<Role>;
+    secret?: Nullable<string>;
+    sessions?: Nullable<Session[]>;
+    status: UserStatus;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export type BigInt = any;

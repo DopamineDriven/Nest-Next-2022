@@ -9,7 +9,11 @@ import {
   Args,
   Info,
   Query,
-  Context
+  Context,
+  ResolveProperty,
+  Root,
+  GraphQLExecutionContext,
+  ResolveField
 } from "@nestjs/graphql";
 import { AuthService } from "./auth-jwt.service";
 import { GraphQLResolveInfo } from "graphql";
@@ -19,6 +23,7 @@ import { PrismaService } from "../prisma";
 import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
 import { PasswordService } from "src/password";
 import { CacheScope } from "apollo-server-types";
+import { Viewer, PrismaViewer } from "./model/auth.model";
 import { UserMeta } from "src/common/decorators/user.decorator";
 import {
   ConflictException,
@@ -33,6 +38,9 @@ import { PrismaClientValidationError } from "@prisma/client/runtime";
 import { Context as LocalContext } from "src/app.module";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { ChangePasswordInput } from "src/user/inputs/change-passsword.input";
+import { ViewerDetailed } from "./model";
+import { pipe } from "rxjs";
+import { ViewerAuthInfo } from "./model/jwt-auth.model";
 @Resolver(() => Auth)
 export class AuthResolver {
   constructor(
@@ -199,10 +207,6 @@ export class AuthResolver {
     const { email, password } = data;
     const payload = await this.auth.login(email, password);
 
-    // const userFromToken = await this.auth
-    //   .getUserWithDecodedToken(token.accessToken)
-    //   .then(user => user.auth.user);
-
     return payload;
   }
 
@@ -214,9 +218,24 @@ export class AuthResolver {
     return await this.auth.getUserWithDecodedToken(ctx as unknown as string);
   }
 
-  @Mutation(() => Token)
-  async refreshToken(@Args() { token }: TokenInput) {
-    return this.auth.refreshToken(token);
+  @Mutation(() => ViewerAuthInfo)
+  @UseGuards(AuthGuard)
+  async viewerAuthInfoFromContext(
+    @Context("token") ctx: ExecutionContext
+  ): Promise<ViewerAuthInfo> {
+    return await this.auth
+      .getUserWithDecodedToken(ctx as unknown as string)
+      .then(getAuth => {
+        return {
+          accessToken: getAuth.auth?.accessToken
+            ? getAuth.auth.accessToken
+            : (ctx as unknown as string),
+          refreshToken: getAuth.auth.refreshToken
+            ? getAuth.auth.refreshToken
+            : "",
+          viewerJwt: getAuth.jwt
+        };
+      });
   }
 
   @Mutation(() => User)
@@ -228,11 +247,25 @@ export class AuthResolver {
       .then(authDetailed => authDetailed);
   }
 
-  // @ResolveField("user")
-  // async user(@Parent() auth: Auth, @Info() info: GraphQLResolveInfo) {
-  //   console.log(info ?? "");
-  //   return await this.auth
-  //     .getUserWithDecodedToken(auth.accessToken ? auth.accessToken : "")
-  //     .then(user => user.auth.user);
-  // }
+  @Query(() => ViewerDetailed)
+  @UseGuards(AuthGuard)
+  async viewer(
+    @Context("token") token: ExecutionContext,
+    @Info() info: GraphQLResolveInfo
+  ): Promise<ViewerDetailed> {
+    console.log(info ?? "");
+    return await this.auth
+      .getUserWithDecodedToken(token as unknown as string)
+      .then(user => {
+        const { viewer } = {
+          viewer: {
+            accessToken: user.auth.accessToken,
+            secret: user.jwt.signature,
+            refreshToken: user.auth.refreshToken,
+            ...user.auth.user
+          }
+        };
+        return viewer;
+      });
+  }
 }

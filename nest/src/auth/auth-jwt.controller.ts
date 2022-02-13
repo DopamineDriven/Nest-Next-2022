@@ -108,6 +108,7 @@ export default class AuthJwtController {
         "authorization",
         `Bearer ${userFromToken.auth.accessToken}`
       );
+
     res.cookie("nest-to-next-2022", userFromToken, {
       sameSite: "none",
       path: "/",
