@@ -593,20 +593,6 @@ export class DateTimeNullableFilter {
     notIn?: Nullable<DateTime[]>;
 }
 
-export class EntryCreateInput {
-    author: UserCreateNestedOneWithoutEntriesInput;
-    categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
-    categoryId?: Nullable<string>;
-    comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
-    content?: Nullable<EntryCreatecontentInput>;
-    createdAt?: Nullable<DateTime>;
-    featuredImage?: Nullable<EntryCreatefeaturedImageInput>;
-    id?: Nullable<string>;
-    published?: Nullable<boolean>;
-    title: string;
-    updatedAt?: Nullable<DateTime>;
-}
-
 export class EntryCreateManyAuthorInput {
     categoryId?: Nullable<string>;
     content?: Nullable<EntryCreateManycontentInput>;
@@ -648,6 +634,18 @@ export class EntryCreateNestedOneWithoutCommentsInput {
     connect?: Nullable<EntryWhereUniqueInput>;
     connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCommentsInput>;
     create?: Nullable<EntryCreateWithoutCommentsInput>;
+}
+
+export class EntryCreateOneInput {
+    categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
+    categoryId?: Nullable<string>;
+    content?: Nullable<EntryCreatecontentInput>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<EntryCreatefeaturedImageInput>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class EntryCreateOrConnectWithoutAuthorInput {
@@ -1848,7 +1846,7 @@ export abstract class IMutation {
 
     abstract changePassword(changePasswordInput: ChangePasswordInput): User | Promise<User>;
 
-    abstract createEntry(createInput: EntryCreateInput): Entry | Promise<Entry>;
+    abstract createEntry(EntryInput: EntryCreateOneInput): Entry | Promise<Entry>;
 
     abstract createProfile(data: ProfileCreateInput, userId: string): Profile | Promise<Profile>;
 

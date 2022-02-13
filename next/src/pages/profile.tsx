@@ -45,8 +45,7 @@ import {
   SortOrder,
   UserOrderByRelevanceFieldEnum,
   UserScalarFieldEnum,
-  UserStatus,
-  Viewer
+  UserStatus
 } from "../.cache/__types__";
 import { useRouter } from "next/router";
 import { getCookie } from "cookies-next";
@@ -54,8 +53,6 @@ import {
   useViewerLazyQuery,
   useViewerQuery,
   ViewerDocument,
-  ViewerKeySpecifier,
-  ViewerFieldPolicy,
   ViewerQuery,
   ViewerQueryVariables
 } from "@/graphql/queries/viewer.graphql";
@@ -94,16 +91,18 @@ export default function Profile<T extends typeof getServerSideProps>({
   const callbackData = useCallback(async () => {
     const fetchIt = async () =>
       await fetch(
-        encodeURIComponent(`http://localhost:3000/auth/token/${
-          authHeaderReq
-            ? authHeaderReq
-            : authHeaderRes
-            ? authHeaderRes
-            : ""
-        }`),
+        encodeURIComponent(
+          `http://localhost:3000/auth/token/${
+            authHeaderReq
+              ? authHeaderReq
+              : authHeaderRes
+              ? authHeaderRes
+              : ""
+          }`
+        ),
         {
           headers: {},
-          body: JSON.stringify({token: authHeaderReq ?? authHeaderRes}),
+          body: JSON.stringify({ token: authHeaderReq ?? authHeaderRes }),
           method: "POST",
           mode: "cors",
           credentials: "include"
@@ -115,15 +114,18 @@ export default function Profile<T extends typeof getServerSideProps>({
       variables: {
         token: authHeaderReq
           ? authHeaderReq
-          : authHeaderRes ?? (await (await fetchIt()).auth.accessToken)
-      }.token
+          : authHeaderRes ??
+            (await fetchIt()).auth.accessToken.split(/([ ])/)[0]
+      }
     }).then(data => {
       data.data?.userFromAccessTokenDecoded as unknown as AuthDetailed;
     });
   }, [authHeaderReq, authHeaderRes, lazyDerivePayload]);
   useEffect(() => {
-    if (typeof window !== "undefined") {async ()=> await callbackData() }
-},[callbackData])
+    if (typeof window !== "undefined") {
+      async () => await callbackData();
+    }
+  }, [callbackData]);
   const crm = getCookie("nest-next-2022");
   console.log(crm ?? "no cookie");
   const router = useRouter();

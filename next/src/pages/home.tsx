@@ -16,10 +16,13 @@ import { ParsedUrlQuery } from "@/types/query-parser";
 import type { UnwrapPromise } from "@/types/helpers";
 import { useRouter } from "next/router";
 import { Inspector, ProfileComponent } from "@/components/UI";
-import { useViewerQuery, ViewerQuery } from "@/graphql/queries/viewer.graphql";
+import {
+  useViewerQuery,
+  ViewerQuery
+} from "@/graphql/queries/viewer.graphql";
 import useSWR from "swr";
 import { viewerFetcher } from "@/lib/network/fetchers";
-import { LoginUserMutationResult, ViewerKeySpecifier } from "@/graphql/mutations/login-user.graphql";
+import { LoginUserMutationResult } from "@/graphql/mutations/login-user.graphql";
 import { Suspense } from "react";
 import { get } from "https";
 
@@ -32,7 +35,7 @@ import { get } from "https";
 // };
 
 export default function Home() {
-const getVIewer = useViewerQuery({}).data
+  const getVIewer = useViewerQuery({}).data;
   return (
     <>
       {getVIewer?.me ? (

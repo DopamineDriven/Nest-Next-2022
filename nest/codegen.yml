@@ -17,6 +17,7 @@ generates:
           sort: true
       - typescript-operations:
           dedupeFragments: true
+
       - typescript-document-nodes:
           scalars:
             Json: Prisma.Json
@@ -31,8 +32,6 @@ generates:
           contextType: PrismaService
           makeResolverTypeCallable: true
           noSchemaStitching: false
-        config:
-          maybeValue: "T extends PromiseLike<infer U> ? Promise<U | null> : T | null"
       - add:
           content:
             - "import {Prisma} from '@prisma/client';"
@@ -49,6 +48,7 @@ generates:
         Decimal: Prisma.Decimal
         PhoneNumber: String
         ID: string
+      maybeValue: "T extends PromiseLike<infer U> ? Promise<U | null> : T | null"
 
   src/.generated/introspection/introspection.schema.json:
     hooks:

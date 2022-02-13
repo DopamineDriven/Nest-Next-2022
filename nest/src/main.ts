@@ -1,4 +1,4 @@
-import { HttpAdapterHost, NestContainer, NestFactory } from "@nestjs/core";
+import { AbstractHttpAdapter, HttpAdapterHost, NestContainer, NestFactory } from "@nestjs/core";
 import { AppModule, Context } from "./app.module";
 import {
   CanActivate,
@@ -25,6 +25,8 @@ import {
 } from "./common/config/config-interfaces.config";
 import { json, urlencoded } from 'body-parser';
 import * as cookieParser from "cookie-parser";
+import { loadSchema, loadSchemaSync } from "@graphql-tools/load";
+
 import { PrismaService } from "./prisma/prisma.service";
 import * as fs from "fs";
 import * as morgan from "morgan";
@@ -38,13 +40,17 @@ import { AuthGuard } from "./common/guards/gql-context.guard";
 import { graphqlUploadExpress } from 'graphql-upload';
 import multer from "multer";
 import { Application } from "express";
-import {ExpressAdapter} from "@nestjs/platform-express"
+import { ExpressAdapter } from "@nestjs/platform-express"
+import * as bodyParser from "body-parser"
+import { graphqlHTTP } from "express-graphql";
+import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
+import { GraphQLModule } from "@nestjs/graphql";
 // import { GqlExecutionContext } from "@nestjs/graphql";
 // import { ExecutionContextHost } from "@nestjs/core/helpers/execution-context-host";
 // import { PipesContextCreator } from "@nestjs/core/pipes/pipes-context-creator";
 // import { PrismaModule } from "./prisma";
 // import { UserModule } from "./user/user.module";
-
+// declare const module: any
 // .gitignored logs output in root as api.log and error.log
 const logStream = fs.createWriteStream("api.log", {
   flags: "a" // append
@@ -106,16 +112,33 @@ const options: Options = {
 };
 
 async function bootstrap() {
+  const rootSchema = await loadSchema("src/schema.gql", {
+    loaders: [new GraphQLFileLoader()],
+    sort: true,
+    inheritResolversFromInterfaces: true,
+    experimentalFragmentVariables: true,
+    commentDescriptions: true,
+  });
+
   const app = await NestFactory.create(AppModule, { ...options });
-  app.use(json({ limit: '50mb' }));
-  // app.use(multer({dest: "./src/uploads"}))
-  app.use(urlencoded({ limit: '50mb', extended: true }));
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  // app.use(json({ limit: '50mb' }));
+  // // app.use(multer({dest: "./src/uploads"}))
+  // app.use(urlencoded({ limit: '50mb', extended: true }));
+  app.use(bodyParser.json({ limit: '50mb' }))
+  app.use(
+    bodyParser.urlencoded({
+      limit: '50mb',
+      extended: true,
+      parameterLimit: 50000
+    })
+  )
+
 
   app.use(cookieParser());
 
-  const httpAdapter = app.get(HttpAdapterHost);
-  app.getHttpAdapter();
+
+
+  app.getHttpServer();
   app.use(morgan("tiny", { stream: logStream }));
   const configService = app.get(ConfigService);
   const nestConfig = configService.get<NestConfig>("nest");
@@ -180,16 +203,22 @@ async function bootstrap() {
   //   }
   // });
   // await app.startAllMicroservices();
+  // app.getHttpAdapter().use(ExpressGraphQLDriver.prototype.start);
+  app.useGlobalPipes(new ValidationPipe())
   prismaService.enableShutdownHooks(app);
   //  await app.create().useGlobalGuards(new AuthGuard())
   // useGlobalPipes({ transform: new PipesContextCreator(new NestContainer().addModule({ PrismaModule }, { UserModule }, { AuthModule }).addInjectable(PrismaService)})
   await app
     .listen(process.env.PORT ?? nestConfig?.port ?? 3000)
     .then(async () => {
-      return console.log(
+      console.log(
         `[GraphQL Playground]: ${await app.getUrl()}/graphql  \n[Swagger Api]: ${await app.getUrl()}/api`
       );
-    });
+    })
+  // if (module.hot) {
+  //   module.hot.accept()
+  //   module.hot.dispose(() => app.close())
+  // }
 }
 
 bootstrap();

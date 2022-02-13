@@ -17,10 +17,11 @@ import {
   AuthDetailedFieldPolicy,
   AuthDetailedKeySpecifier,
   AuthFieldPolicy,
-  ViewerKeySpecifier,
-  ViewerFieldPolicy,
   JwtDecodedFieldPolicy
 } from "@/graphql/mutations/login-user.graphql";
+import emittedIntrospection, {
+  PossibleTypesResultData
+} from "@/graphql/queries/viewer.graphql";
 import {
   ViewerPartialFragment,
   ViewerPartialFragmentDoc
@@ -37,26 +38,8 @@ function createApolloClient(
     link: crmSesh.concat(createBatch(context) || errorLink),
     connectToDevTools: true,
     cache: new InMemoryCache({
+      possibleTypes: emittedIntrospection.possibleTypes,
       typePolicies: {
-        Viewer: {
-          keyFields: [
-            "accessToken",
-            "email",
-            "firstName",
-            "id",
-            "role",
-            "lastName",
-            "status"
-          ] as ViewerKeySpecifier,
-          queryType: true,
-          merge(
-            existing: ViewerFieldPolicy,
-            incoming: ViewerFieldPolicy,
-            { mergeObjects }
-          ) {
-            return mergeObjects<ViewerFieldPolicy>(existing, incoming);
-          }
-        },
         AuthDetailed: {
           mutationType: true,
           keyFields: ["auth", "jwt"] as AuthDetailedKeySpecifier,

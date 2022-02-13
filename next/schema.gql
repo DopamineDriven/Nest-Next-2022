@@ -145,15 +145,6 @@ type AuthDetailed {
   jwt: JwtDecoded
 }
 
-type AuthDetailedExtended {
-  accessToken: String
-  jwt: JwtDecoded
-  operation: EntryOperations!
-  refreshToken: String
-  session: Session
-  user: User!
-}
-
 type AuthSansSession {
   accessToken: String
   refreshToken: String
@@ -561,28 +552,9 @@ type EntryConnection {
   totalCount: Int!
 }
 
-type EntryConnectionExtended {
-  connection: EntryConnection!
-  operation: EntryOperations!
-}
-
 type EntryCount {
   categories: Int!
   comments: Int!
-}
-
-input EntryCreateInput {
-  author: UserCreateNestedOneWithoutEntriesInput!
-  categories: CategoryCreateNestedManyWithoutEntriesInput
-  categoryId: String
-  comments: CommentCreateNestedManyWithoutEntryInput
-  content: EntryCreatecontentInput
-  createdAt: DateTime
-  featuredImage: EntryCreatefeaturedImageInput
-  id: String
-  published: Boolean
-  title: String!
-  updatedAt: DateTime
 }
 
 input EntryCreateManyAuthorInput {
@@ -626,6 +598,18 @@ input EntryCreateNestedOneWithoutCommentsInput {
   connect: EntryWhereUniqueInput
   connectOrCreate: EntryCreateOrConnectWithoutCommentsInput
   create: EntryCreateWithoutCommentsInput
+}
+
+input EntryCreateOneInput {
+  categories: CategoryCreateNestedManyWithoutEntriesInput
+  categoryId: String
+  content: EntryCreatecontentInput
+  createdAt: DateTime
+  featuredImage: EntryCreatefeaturedImageInput
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
 }
 
 input EntryCreateOrConnectWithoutAuthorInput {
@@ -699,21 +683,6 @@ input EntryListRelationFilter {
   every: EntryWhereInput
   none: EntryWhereInput
   some: EntryWhereInput
-}
-
-enum EntryOperations {
-  AUTH_DETAILED_EXTENDED
-  ENTRY_CONNECTION_EXTENDED
-}
-
-union EntryOperationsUnion = AuthDetailedExtended | EntryConnectionExtended
-
-type EntryOperationsUnionOutput implements EntryOpsUnionInterface {
-  connect: EntryOperationsUnion!
-}
-
-interface EntryOpsUnionInterface {
-  connect: EntryOperationsUnion!
 }
 
 input EntryOrderByRelationAggregateInput {
@@ -1172,7 +1141,7 @@ enum MimeTypes {
 
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
-  createEntry(createInput: EntryCreateInput!): Entry!
+  createEntry(EntryInput: EntryCreateOneInput!): Entry!
   createProfile(data: ProfileCreateInput!, userId: String!): Profile!
   getUserFromAccessToken(token: String!): User!
   login(data: LoginInput!): Token!
@@ -1544,7 +1513,6 @@ type Query {
   userByRelayId(cursor: String!): User!
   userPosts(userId: ID!): [Entry!]!
   viewer: ViewerDetailed!
-  viewerEntriesPaginated(viewerEntriesInput: ViewerEntriesInput!): EntryOperationsUnionOutput!
 }
 
 enum QueryMode {
@@ -2059,14 +2027,4 @@ type ViewerDetailed {
 
   """Identifies the date and time when the user was last updated."""
   updatedAt: DateTime
-}
-
-input ViewerEntriesInput {
-  cursor: EntryWhereUniqueInput
-  distinct: [EntryScalarFieldEnum!]
-  orderBy: [EntryOrderByWithRelationAndSearchRelevanceInput!]
-  pagination: PaginationArgsInput!
-  skip: Int
-  take: Int
-  where: EntryWhereInput!
 }

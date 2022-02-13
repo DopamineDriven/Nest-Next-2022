@@ -5,7 +5,9 @@ import {
   Args,
   ResolveField,
   Subscription,
-  Context
+  Context,
+  InputType,
+  ArgsType
 } from "@nestjs/graphql";
 import {
   HostParam,
@@ -16,14 +18,7 @@ import {
 } from "@nestjs/common";
 import { AuthService } from "src/auth/auth-jwt.service";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
-import {
-  Entry,
-  EntryOperationsUnion,
-  EntryOpsUnion,
-  AuthDetailedExtended,
-  EntryConnectionExtended,
-  EntryOperationsUnionOutput
-} from "./model/entry.model";
+import { Entry } from "./model/entry.model";
 import { Edge, Connection } from "graphql-relay";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { PrismaService } from "../prisma/prisma.service";
@@ -34,17 +29,13 @@ import { EntryService } from "./entry.service";
 import { EntryConnection } from "./model/entry-connection.model";
 import { FindManyEntriesPaginatedInput } from "./inputs/entry-paginated.input";
 import { EntryCreateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create.input";
-import { EntryCreateOneInput } from "./inputs/entry-create.input";
-import { EntryUpsertInput } from "./inputs/entry-upsert.input";
-import { XOR } from "src/common/types/helpers.type";
-import { UpsertOneEntryArgs } from "src/.generated/prisma-nestjs-graphql/entry/args/upsert-one-entry.args";
-import { EntryUpsertWithWhereUniqueWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-upsert-with-where-unique-without-author.input";
+import {
+  EntryCreateIntersectedTitle,
+  EntryCreateOneInput
+} from "./inputs/entry-create.input";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
-import { EntryOperations } from "./enums/entry-operations.enum";
-import { ViewerEntriesInput } from "./inputs/viewer-entries.input";
 const pubSub = new PubSub();
-export declare const ENTRY_CREATED: unique symbol;
-export declare const ENTRY_CREATED_KEY: keyof typeof ENTRY_CREATED;
+
 
 /**
  *   @Subscription(() => Entry, {name: ENTRY_CREATED_KEY.toString()})
@@ -65,8 +56,16 @@ export declare const ENTRY_CREATED_KEY: keyof typeof ENTRY_CREATED;
     return newEntry;
   }
  */
+
+class TitleReadded {
+  public title: string;
+}
 @Resolver(() => Entry)
 export class EntryResolver {
+  // public h = class IntersectedResult extends IntersectionType(
+  //       OmitType(EntryCreateOneInput, ["author", "title"] as const),
+  //       EntryCreateIntersectedTitle
+  //     ){}
   constructor(
     @Inject(PrismaService) private readonly prisma: PrismaService,
     @Inject(AuthService) private readonly authService: AuthService,
@@ -78,15 +77,28 @@ export class EntryResolver {
     return pubSub.asyncIterator("ENTRY_CREATED");
   }
 
-  @UseGuards(GraphqlAuthGuard)
+  // helper() {
+  //   return class IntersectedResult extends IntersectionType(
+  //     OmitType(EntryCreateOneInput, ["author", "title"] as const),
+  //     EntryCreateIntersectedTitle
+  //   ){}
+  // }
+  /**
+ *
+  OmitType<T, K extends keyof T>(
+      classRef: Type<T>, keys: readonly K[], decorator?: ClassDecoratorFactory
+      ): Type<Omit<T, typeof keys[number]>>;
+ */
   @Mutation(() => Entry)
   async createEntry(
-    @Args("createInput", { type: () => EntryCreateInput })
-    data: EntryCreateInput
-  ) {
-    const newEntry = await this.prisma.entry.create({ data });
-    pubSub.publish("entryCreated", { entryCreated: newEntry });
-    return newEntry;
+    @Context("token") ctx: ExecutionContext,
+    @Args("EntryInput", { type: () => EntryCreateOneInput })
+    data: EntryCreateOneInput
+  ): Promise<Entry> {
+    return await this.entryService.createEntry({
+      token: ctx as unknown as string,
+      data: data
+    });
   }
 
   @Query(() => EntryConnection)

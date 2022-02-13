@@ -10,12 +10,15 @@ import { EntryCreateOneInput } from "./inputs/entry-create.input";
 import * as Relay from "graphql-relay";
 import { EntryNodes } from "./model/entry-connection.model";
 import { EntryUpsertInput } from "./inputs/entry-upsert.input";
+import { AuthService } from "src/auth/auth-jwt.service";
+import { EntryCount } from "src/.generated/prisma-nestjs-graphql/entry/outputs/entry-count.output";
 
 @Injectable()
 export class EntryService {
   constructor(
     private prisma: PrismaService,
-    private readonly paginationService: PaginationService
+    private readonly paginationService: PaginationService,
+    @Inject(AuthService) private readonly authService: AuthService
   ) {}
 
   async entry(
@@ -26,15 +29,18 @@ export class EntryService {
       where: id ? { id } : { authorId }
     });
   }
-  excludeUserOrViewerField<FindManyEntriesPaginatedInput, Key extends keyof FindManyEntriesPaginatedInput>(
+  excludeUserOrViewerField<
+    FindManyEntriesPaginatedInput,
+    Key extends keyof FindManyEntriesPaginatedInput
+  >(
     params: FindManyEntriesPaginatedInput,
-      ...keys: Key[]
-    ): Omit<FindManyEntriesPaginatedInput, Key> {
-      for (const key of keys) {
+    ...keys: Key[]
+  ): Omit<FindManyEntriesPaginatedInput, Key> {
+    for (const key of keys) {
       `${delete params[key]}`;
-      }
-      return params;
     }
+    return params;
+  }
   async entries(
     params: Omit<Prisma.EntryFindManyArgs, "include">,
     args: Relay.ConnectionArguments & {
@@ -138,5 +144,25 @@ export class EntryService {
     return this.prisma.entry.findMany({
       ...(await this.paginationService.relayToPrismaPagination(params))
     });
+  }
+
+  async createEntry(params: {
+    token: string;
+    data: EntryCreateOneInput;
+  }): Promise<Entry & {
+    _count: EntryCount
+  }> {
+    return await this.authService
+      .getUserWithDecodedToken(params.token)
+      .then(async dataAuth => {
+        return await this.prisma.entry.create({
+          include: { _count: true },
+          data: {
+            author: { connect: { id: dataAuth.auth.user.id } },
+            ...params.data
+          }
+        })
+      }).then(data => data)
+    // pubSub.publish("entryCreated", { entryCreated: newEntry });
   }
 }
