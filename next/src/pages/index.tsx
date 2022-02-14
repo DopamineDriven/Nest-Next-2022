@@ -1,12 +1,7 @@
-import { AuthDetailed } from "@/cache/__types__";
 import { CookieValueTypes } from "cookies-next/lib/types";
 import { Inspector } from "@/components/UI";
 import { ViewerQuery } from "@/graphql/queries/viewer.graphql";
 import { NormalizedCacheObject } from "@apollo/client";
-import {
-  LoginUserDocument,
-  useLoginUserMutation
-} from "@/graphql/mutations/login-user.graphql";
 import { useRouter } from "next/router";
 import cn from "classnames";
 import { TypeScript } from "@/components/Icons";
@@ -14,9 +9,11 @@ import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { UnwrapInputProps } from "@/types/mapped";
 import {
-  DeriveUserDetailsFromTokenDocument,
-  useDeriveUserDetailsFromTokenMutation
-} from "@/graphql/mutations/get-user-from-access-token.graphql";
+  signInUserDocument,
+  usesignInUserMutation,
+  AuthDetailed
+} from "@/graphql/generated/graphql";
+import { setCookies } from "cookies-next";
 
 const ReusableInput = ({
   ...props
@@ -52,46 +49,40 @@ export default function Index() {
     null
   );
 
-  const [authDetailedState, setAuthDetailedState] =
-    useState<AuthDetailed | null>(null);
   const [
-    lazyLogin,
-    {
-      data: loginData,
-      called: loginCalled,
-      error: loginError,
-      loading: logingLoading,
-      client: loginClient,
-      reset: loginReset
-    }
-  ] = useLoginUserMutation({
-    mutation: LoginUserDocument
+    signInMutation,
+    { loading: signInLoading, called: signinCalled }
+  ] = usesignInUserMutation({
+    mutation: signInUserDocument
   });
 
-  const [lazyDerivation, { data: dataDerivation }] =
-    useDeriveUserDetailsFromTokenMutation({
-      mutation: DeriveUserDetailsFromTokenDocument
-    });
+  const [authDetailedState, setAuthDetailedState] =
+    useState<AuthDetailed | null>(null);
 
   useEffect(() => {
     (async function watchSWR() {
-      accessTokenVal != null
-        ? await lazyDerivation({ variables: { token: accessTokenVal } })
+      authDetailedState != null
+        ? setCookies("nest-next-2022", authDetailedState.auth?.user, {
+          maxAge: new Date(
+            new Date(Date.now()).getMilliseconds() + 1000 * 60 * 60 * 24 * 30
+          ).getSeconds(),
+          secure: process.env.NODE_ENV === "production" ? true : false,
+          sameSite: "lax",
+          path: "/"
+        })
         : () => {};
     })();
-  }, [accessTokenVal, lazyDerivation]);
+  }, [authDetailedState]);
 
   const [emailState, setEmailState] = useState<string | null>(null);
   const [passwordState, setPasswordState] = useState<string | null>(null);
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const variables = new FormData(event.currentTarget);
     const emailElement = event.currentTarget.elements.namedItem("email");
     const passwordElement =
       event.currentTarget.elements.namedItem("password");
-    console.log(
-      emailElement ?? "no email element"
-    );
+    console.log(emailElement ?? "no email element");
     console.log(passwordElement ?? "no pw element");
 
     const { email, password } = Object.fromEntries(variables);
@@ -99,39 +90,19 @@ export default function Index() {
     console.log(password ?? "");
     setEmailState(email.toString());
     setPasswordState(password.toString());
-    const lazyLogger = () =>
-      lazyLogin({
-        variables: {
-          data: {
-            email: `${email}` ?? emailState,
-            password: `${password}` ?? passwordState
-          }
+    return await signInMutation({
+      variables: {
+        loginInput: {
+          email: `${email}` ?? emailState,
+          password: `${password}` ?? passwordState
         }
-      })
-        .then(data => {
-          data.data?.login.accessToken != null
-            ? setAccessTokenVal(data.data.login.accessToken)
-            : setAccessTokenVal(null);
-          return lazyDerivation({
-            variables: {
-              token: data.data?.login.accessToken
-                ? data.data.login.accessToken
-                : ""
-            }
-          }).then(data => {
-            return data.data
-              ?.userFromAccessTokenDecoded as unknown as AuthDetailed;
-          });
-        })
-        .then(promiseLikeAuthDetailed => {
-          return promiseLikeAuthDetailed as unknown as AuthDetailed;
-        });
-    return lazyLogger()
-      .then(data => {
-        setAuthDetailedState(data);
-        return data;
-      })
-      .finally((): void => {});
+      }
+    }).then(data => {
+      data.data?.signin != null
+        ? setAuthDetailedState(data.data.signin)
+        : setAccessTokenVal(null);
+      return data;
+    });
   }
 
   return (
@@ -163,7 +134,7 @@ export default function Index() {
               method='POST'
               onSubmit={handleSubmit}
               className='space-y-6'>
-              <fieldset disabled={logingLoading} aria-busy={logingLoading}>
+              <fieldset disabled={signInLoading} aria-busy={signInLoading}>
                 <div>
                   <label
                     htmlFor='email'
@@ -222,10 +193,10 @@ export default function Index() {
 
                 <div>
                   <button
-                    disabled={logingLoading}
+                    disabled={signInLoading}
                     type='submit'
                     className='w-2/3 mx-auto flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'>
-                    {logingLoading ? "Signing in..." : "Sign in"}
+                    {signInLoading ? "Signing in..." : "Sign in"}
                   </button>
                 </div>
               </fieldset>

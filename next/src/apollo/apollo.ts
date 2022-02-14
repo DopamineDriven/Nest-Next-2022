@@ -18,10 +18,10 @@ import {
   AuthDetailedKeySpecifier,
   AuthFieldPolicy,
   JwtDecodedFieldPolicy
-} from "@/graphql/mutations/login-user.graphql";
+} from "./helpers";
 import emittedIntrospection, {
   PossibleTypesResultData
-} from "@/graphql/queries/viewer.graphql";
+} from "./fragment-matcher";
 import {
   ViewerPartialFragment,
   ViewerPartialFragmentDoc

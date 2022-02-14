@@ -4,11 +4,10 @@
 #       - "authorization": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4NmE3NDY1My05MTg4LTQ2YTQtYjNiOS1lMTYwMzhjMTNjOGMiLCJpYXQiOjE2NDQ0NDEzNTYsImV4cCI6MTY0NDUyNzc1Nn0.2D7ZjaCEJNJzRh4K7dEXUkxuvh0uKJ4nZoiEdr_-INyy_Qw7kIQ_uNYriB92YxbryCfnZ788Q7TpkeDubVBsyA"
 schema: "schema.gql"
 documents:
-  - "./src/graphql/**/*.graphql"
-  - "!./src/graphql/graphql.schema.graphql"
-  - "!./src/swr/**/*.graphql"
-  - "!./src/swr/**/*.ts"
-  - "./src/graphql/**.graphql"
+  - "!./src/graphql/generated/**/*.graphql"
+  - "./src/graphql/queries/**/*.graphql"
+  - "./src/graphql/mutations/**/*.graphql"
+  - "./src/graphql/fragments/**/*.graphql"
 hooks:
   afterOneFileWrite:
     - prettier --write
@@ -21,27 +20,10 @@ config:
   withHooks: true
   withRefetchFn: true
 plugins:
-  - add:
-      content:
-        - "import graphqlTypeJson from 'graphql-type-json';"
-        - "import { DeepPartial } from 'utility-types';"
-        - "import { GraphQLJSON, GraphQLDateTime, GraphQLUUID, GraphQLPhoneNumber, GraphQLUnsignedFloat, GraphQLPositiveFloat, GraphQLNegativeFloat } from 'graphql-scalars';"
   - typescript-operations:
       dedupeFragments: true
-  - typescript-resolvers:
-      useIndexSignature: true
-      defaultMapper: DeepPartial<{T}>
-      optionalInfoArgument: true
-      makeResolverTypeCallable: true
-      noSchemaStitching: false
-      scalars:
-        Date: GraphQLDateTime
-        JSON: (GraphQLJson || GraphQLJSONObject)
-        Decimal: (GraphQLUnsignedFloat || GraphQLPositiveFloat || GraphQLNegativeFloat)
-        PhoneNumber: GraphQLPhoneNumber
-        ID: GraphQLUUID
     config:
-      maybeValue: "T extends PromiseLike<infer U> ? Promise<U | null> : T | null"
+      maybeValue: "T"
   - typescript-react-apollo:
       addDocBlocks: true
       reactApolloVersion: 3
@@ -49,16 +31,5 @@ plugins:
       withHooks: true
       experimentalFragmentVariables: true
       useTypeImports: true
-  - named-operations-object
-  - typescript-apollo-client-helpers:
-      generates: "./src/apollo/helpers.ts"
-      useTypeImports: true
-
-  - fragment-matcher:
-      generates:
-        - "./src/apollo/fragments.ts"
-      config:
-        useExplicitTyping: true
-        apolloClientVersion: 3
 cacheDir: "./src/.cache"
 TSConfigFile: "./tsconfig.json"
