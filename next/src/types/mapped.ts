@@ -11,17 +11,6 @@ import {
 } from "react";
 import { NextApiHandler } from "next";
 import { ImageProps } from "next/image";
-import {
-  JSONObjectResolver,
-  GraphQLDateTime,
-  GraphQLDate,
-  DateTimeResolver,
-  GraphQLUUID,
-  PhoneNumberResolver,
-  GraphQLPhoneNumber,
-  GraphQLJSONObject,
-  GraphQLUnsignedFloat
-} from "graphql-scalars";
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 // export type RecordContiional<T = unknown> = T extends {
 //   [index: keyof T]: T extends infer U ? U extends Array<{ [index: keyof U]: U }> | PromiseLike<T> | Awaited<U> ? T extends Promise<Array<({ [index: keyof T]: T })>>
@@ -49,20 +38,47 @@ export type ApolloRecursive<
   >
 > = RecursiveAmbivalent<ApolloClient<NormalizedCacheObject>>;
 export const ApolloClientProps = async ({
-  ...props
+  apolloProps: { ...props }
 }: {
-  normalizedCacheObj: ApolloRecursive<
-    | "extract"
-    | "__actionHookForDevTools"
-    | "addResolvers"
-    | "getResolvers"
-    | "setResolvers"
-    | "defaultOptions"
-  >;
-}) => ({ ...props.normalizedCacheObj });
+  apolloProps: RecursiveAmbivalent<ApolloClient<NormalizedCacheObject>>;
+}) => ({ ...props });
 
-// infer a Promise Wrapped Type
 export type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
+
+const ApolloClientUnwrapped = ({
+  __actionHookForDevTools,
+  __requestRaw,
+  addResolvers,
+  cache,
+  clearStore,
+  defaultOptions,
+  disableNetworkFetches,
+  extract,
+  getObservableQueries,
+  getResolvers,
+  link,
+  mutate,
+  onClearStore,
+  onResetStore,
+  query,
+  queryDeduplication,
+  reFetchObservableQueries,
+  readFragment,
+  readQuery,
+  refetchQueries,
+  resetStore,
+  restore,
+  setLink,
+  setLocalStateFragmentMatcher,
+  setResolvers,
+  stop,
+  subscribe,
+  typeDefs,
+  version,
+  watchQuery,
+  writeFragment,
+  writeQuery
+}: UnwrapPromise<ReturnType<typeof ApolloClientProps>>) => {};
 
 // <svg/> props
 export type SVGAttribs<T extends keyof SVGAttributes<SVGSVGElement>> = {

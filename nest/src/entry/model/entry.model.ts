@@ -1,25 +1,22 @@
-import {
-  ObjectType,
-  Field,
-  ID,
-  createUnionType
-} from "@nestjs/graphql";
+import { ObjectType, Field, ID, createUnionType } from "@nestjs/graphql";
 import { Comment } from "../../comment/model/comment.model";
 import { User } from "../../user/model/user.model";
 import { EntryCount } from "../../.generated/prisma-nestjs-graphql/entry/outputs/entry-count.output";
 import { Category } from "../../category/model/category.model";
-import { JSONObjectResolver } from "graphql-scalars";
+import { GraphQLJSONObject, JSONObjectResolver } from "graphql-scalars";
 import { Node } from "src/node/model/node.model";
 import { EntryConnection } from "./entry-connection.model";
 import { EntryOperations } from "../enums/entry-operations.enum";
 import { Type } from "@nestjs/common";
 import { Auth } from "src/auth/model";
+import * as Pr from "json-schema"
 import { JwtDecoded } from "src/auth/dto";
 import {
   IntersectionType,
   PartialType,
   PickType,
-  MappedType} from "@nestjs/mapped-types";
+  MappedType
+} from "@nestjs/mapped-types";
 import { Edge, Connection } from "@devoxa/prisma-relay-cursor-connection";
 import { Session } from "src/session/model/session.model";
 import { ReturnTypedNode } from "ts-morph";
@@ -38,10 +35,10 @@ export class Entry implements Node {
   published?: boolean;
 
   @Field(() => String, { nullable: false })
-  authorId!: string;
+  authorId?: string;
 
   @Field(() => [JSONObjectResolver], { nullable: true })
-  content!: Array<any>;
+  content!: Array<typeof GraphQLJSONObject>;
 
   @Field(() => Date, { nullable: false })
   createdAt!: Date;
@@ -50,7 +47,7 @@ export class Entry implements Node {
   updatedAt?: Date | null;
 
   @Field(() => [JSONObjectResolver], { nullable: true })
-  featuredImage?: Array<any>;
+  featuredImage?: Array<typeof GraphQLJSONObject>;
 
   @Field(() => [Category], { nullable: true })
   categories?: Array<Category>;
@@ -106,27 +103,25 @@ export function UnionType<A, B>(
   return targetOne || targetTwo;
 }
 export interface ClassType<T = any> {
-  new(...args: any[]): T;
+  new (...args: any[]): T;
 }
-// }
 // export type ArrayElement<ArrayType extends readonly unknown[]> =
 //   ArrayType[number];
 // export type Union<T extends any[]> = InstanceType<ArrayElement<T>>;
 
-export type EntryOpsUnion =
-  (AuthDetailedExtended | EntryConnectionExtended);
+export type EntryOpsUnion = AuthDetailedExtended | EntryConnectionExtended;
 export const EntryOperationsUnion = createUnionType<Type<EntryOpsUnion>[]>({
   name: "EntryOperationsUnion",
-  types: () => [AuthDetailedExtended, EntryConnectionExtended],
+  types: (): (typeof AuthDetailedExtended | typeof EntryConnectionExtended)[] => [AuthDetailedExtended, EntryConnectionExtended],
   resolveType: (
-    { operation }: EntryOpsUnion,
     {},
-    { fragments, returnType },
-    { name, astNode }
+    {},
+    { schema }
   ): typeof AuthDetailedExtended | typeof EntryConnectionExtended | undefined =>
-    name === AuthDetailedExtended.name
+    schema.getType("AuthDetailedExtended")?.name === AuthDetailedExtended.name
       ? AuthDetailedExtended
-      : name === EntryConnectionExtended.name
+      : schema.getType("EntryConnectionExtended")?.name ===
+        EntryConnectionExtended.name
       ? EntryConnectionExtended
       : undefined
 });
@@ -136,11 +131,11 @@ export class EntryOpsUnionInterface {
   @Field(() => EntryOperationsUnion)
   connect: EntryOpsUnion;
 }
-@ObjectType("EntryOperationsUnionOutput", {
-  implements: () => [EntryOpsUnionInterface]
-})
-export class EntryOperationsUnionOutput extends EntryOpsUnionInterface {
-  constructor() {
-    super();
-  }
-}
+// @ObjectType("EntryOperationsUnionOutput", {
+//   implements: () => [EntryOpsUnionInterface]
+// })
+// export class EntryOperationsUnionOutput extends EntryOpsUnionInterface {
+//   constructor() {
+//     super();
+//   }
+// }

@@ -5,6 +5,7 @@ import type {
   GetStaticPropsContext
 } from "next";
 import type { AddressInfo } from "net";
+import { JSONObjectResolver, JSONResolver, GraphQLBigInt } from 'graphql-scalars';
 import { IncomingHttpHeaders } from "http";
 export type Enumerable<T> = T | Array<T>;
 export type HarvestNetworkDataProps = {
@@ -41,3 +42,4 @@ export declare function HarvestNetworkInfo<
 export type HarvestNetworkReturnTypeUnwrapped = UnwrapPromise<
   ReturnType<typeof HarvestNetworkInfo extends PromiseLike<infer U> ? U : typeof HarvestNetworkInfo>
 >;
+

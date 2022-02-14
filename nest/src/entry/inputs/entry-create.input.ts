@@ -44,7 +44,8 @@ export class EntryCreateOneInput {
 
   @Field(() => CategoryCreateNestedManyWithoutEntriesInput, { nullable: true })
   categories?: CategoryCreateNestedManyWithoutEntriesInput;
-
+  @Field(() => UserCreateNestedOneWithoutEntriesInput, {nullable:false})
+  author!: UserCreateNestedOneWithoutEntriesInput;
 }
 
 @InputType("TitleReaddedToEntry")
