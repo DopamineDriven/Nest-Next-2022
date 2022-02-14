@@ -1,5 +1,6 @@
 import {
   DateResolver,
+  GraphQLJSONObject,
   JSONObjectResolver,
   JSONResolver,
   PhoneNumberResolver
@@ -54,14 +55,14 @@ export class Profile implements Node {
   country?: string | null;
 
   @Field(() => [JSONObjectResolver], {nullable:true})
-  bio!: Array<typeof GraphQLJSON>
+  bio!: Array<typeof JSONObjectResolver>
 
   @Field(() => [JSONObjectResolver], {nullable:true})
-  activiyFeed!: Array<typeof GraphQLJSON>
+  activiyFeed!: Array<typeof JSONObjectResolver>
 
   @Field(() => User, { nullable: false })
   user!: User;
 
   @Field(() => [JSONObjectResolver], {nullable:true})
-  recentActivity!: Array<typeof GraphQLJSON>
+  recentActivity!: Array<typeof JSONObjectResolver>
 }

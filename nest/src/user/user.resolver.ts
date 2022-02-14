@@ -9,16 +9,9 @@ import {
   UserEdge,
   UserNodes
 } from "./model/user-connection.model";
-import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
 import { ChangePasswordInput } from "./inputs/change-passsword.input";
 import {
-  findManyCursorConnection,
-  PrismaFindManyArguments
-} from "@devoxa/prisma-relay-cursor-connection";
-import { Type } from "@nestjs/common";
-import { Request } from "express";
-import * as JWT from "jsonwebtoken";
-import { JwtDecoded } from "../auth/dto";
+  findManyCursorConnection} from "@devoxa/prisma-relay-cursor-connection";
 import { AuthService } from "../auth/auth-jwt.service";
 import { PasswordService } from "../password";
 import { UserMeta } from "../common/decorators/user.decorator";
@@ -27,30 +20,15 @@ import { AuthDetailed } from "src/auth/model/auth-detailed.model";
 import { ManyUsersPaginatedArgs } from "./args/find-many-paginated.args";
 import { FindManyUsersPaginatedInput } from "./inputs/user-paginated-args.input";
 import {
-  Connection,
-  connectionFromArray,
-  Edge,
   fromGlobalId,
   toGlobalId
 } from "graphql-relay";
-import { EntryConnection } from "src/entry/model/entry-connection.model";
-import { UsersToEntriesPaginatedInput } from "./inputs/users-to-entries-paginated.input";
-import { UsersToEntriesOutput } from "./outputs/user-to-entries.output";
-import {
-  baseTypes,
-  BaseTypesConnection
-} from "./model/user-connection-union.model";
-import { FindManyProfilesPaginatedInput } from "src/profile/inputs/profile-paginated.input";
 import { FindManyEntriesPaginatedInput } from "src/entry/inputs/entry-paginated.input";
-import { Prisma } from "@prisma/client";
-import { UserCount } from "./outputs/user-count.output";
 import { FindManyMediaItemsInput } from "src/media/inputs/find-many-media-items-paginated.input";
-import { PickType } from "@nestjs/mapped-types";
-import { MediaItem } from "src/media/model/media.model";
 import { Entry } from "src/entry";
-import { MediaItemConnection } from "src/media/model/media-connection";
 import { ContentNodes } from "./outputs/content-nodes.output";
-import { PrismaClientValidationError } from "@prisma/client/runtime";
+import { EntryCreateWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-without-author.input";
+
 @Resolver(() => User)
 export class UserResolver {
   constructor(
@@ -63,10 +41,8 @@ export class UserResolver {
   @Query(() => AuthDetailed)
   @UseGuards(AuthGuard)
   async me(
-    @Context("token") ctx: ExecutionContext,
-    @UserMeta<User>() user: User
+    @Context("token") ctx: ExecutionContext
   ): Promise<AuthDetailed | null> {
-    console.log(user ?? null);
     console.log(ctx ? ctx : null);
     return await this.authService.getUserWithDecodedToken(
       ctx as unknown as string
@@ -260,5 +236,30 @@ export class UserResolver {
           return user;
         }
       });
+  }
+
+  @Mutation(() => Entry)
+  @UseGuards(AuthGuard)
+  async viewerCreateEntry(
+    @Context("token") ctx: ExecutionContext,
+    @Args("viewerEntryCreateInput", {
+      type: () => EntryCreateWithoutAuthorInput
+    })
+    viewerEntryCreateInput: EntryCreateWithoutAuthorInput
+  ) {
+    const getUserFromAccessToken =
+      await this.authService.getUserWithDecodedToken(ctx as unknown as string);
+    const getUpdate = await this.prismaService.user
+      .update({
+        data: { entries: { create: viewerEntryCreateInput } },
+        where: { id: getUserFromAccessToken.jwt.payload.userId },
+        include: {
+          entries: { include: { _count: true, author: true } },
+          _count: true
+        }
+      })
+      .entries()
+      .then(e => e[0]).catch((reason) => new Error(reason).message)
+    return getUpdate;
   }
 }

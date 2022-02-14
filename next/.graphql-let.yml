@@ -23,7 +23,6 @@ config:
 plugins:
   - add:
       content:
-        - "import {ResolverContext} from '@/apollo/resolver-context'"
         - "import graphqlTypeJson from 'graphql-type-json';"
         - "import { DeepPartial } from 'utility-types';"
         - "import { GraphQLJSON, GraphQLDateTime, GraphQLUUID, GraphQLPhoneNumber, GraphQLUnsignedFloat, GraphQLPositiveFloat, GraphQLNegativeFloat } from 'graphql-scalars';"
@@ -33,7 +32,6 @@ plugins:
       useIndexSignature: true
       defaultMapper: DeepPartial<{T}>
       optionalInfoArgument: true
-      contextType: ResolverContext
       makeResolverTypeCallable: true
       noSchemaStitching: false
       scalars:

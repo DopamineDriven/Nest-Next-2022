@@ -600,18 +600,6 @@ input EntryCreateNestedOneWithoutCommentsInput {
   create: EntryCreateWithoutCommentsInput
 }
 
-input EntryCreateOneInput {
-  categories: CategoryCreateNestedManyWithoutEntriesInput
-  categoryId: String
-  content: EntryCreatecontentInput
-  createdAt: DateTime
-  featuredImage: EntryCreatefeaturedImageInput
-  id: String
-  published: Boolean
-  title: String!
-  updatedAt: DateTime
-}
-
 input EntryCreateOrConnectWithoutAuthorInput {
   create: EntryCreateWithoutAuthorInput!
   where: EntryWhereUniqueInput!
@@ -735,6 +723,13 @@ enum EntryScalarFieldEnum {
   updatedAt
 }
 
+input EntryUncheckedCreateNestedManyWithoutAuthorInput {
+  connect: [EntryWhereUniqueInput!]
+  connectOrCreate: [EntryCreateOrConnectWithoutAuthorInput!]
+  create: [EntryCreateWithoutAuthorInput!]
+  createMany: EntryCreateManyAuthorInputEnvelope
+}
+
 input EntryWhereInput {
   AND: [EntryWhereInput!]
   NOT: [EntryWhereInput!]
@@ -846,6 +841,17 @@ input FindManyUsersPaginatedInput {
   skip: Int
   take: Int
   where: UserWhereInput
+}
+
+input FindViewerEntriesPaginatedInput {
+  cursor: EntryWhereUniqueInput
+  distinct: [EntryScalarFieldEnum!]
+  orderBy: [EntryOrderByWithRelationAndSearchRelevanceInput!]
+  pagination: PaginationArgsInput!
+  skip: Int
+  take: Int
+  unique: EntryWhereUniqueInput
+  where: ViewerEntriesWhereInput
 }
 
 input FloatNullableFilter {
@@ -1141,7 +1147,8 @@ enum MimeTypes {
 
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
-  createEntry(EntryInput: EntryCreateOneInput!): Entry!
+  createEntry(EntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput!): Entry!
+  createNewEntry(createNewEntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput!): Entry!
   createProfile(data: ProfileCreateInput!, userId: String!): Profile!
   getUserFromAccessToken(token: String!): User!
   login(data: LoginInput!): Token!
@@ -1152,6 +1159,7 @@ type Mutation {
   updateUserPassword(passwordInput: ChangePasswordInput!): User!
   userFromAccessTokenDecoded(token: String!): AuthDetailed!
   viewerAuthInfoFromContext: ViewerAuthInfo!
+  viewerCreateEntry(viewerEntryCreateInput: EntryCreateWithoutAuthorInput!): Entry!
 }
 
 input NestedBoolFilter {
@@ -1509,10 +1517,11 @@ type Query {
   node(id: ID!): Node
   profileByRelayId: Profile!
   profiles(profilesArgs: ProfilesInput!): ProfileConnection!
+  siftEntries(entryFindManyInput: FindManyEntriessPaginatedInput!): EntryConnection!
   userById(id: String!): User!
   userByRelayId(cursor: String!): User!
-  userPosts(userId: ID!): [Entry!]!
   viewer: ViewerDetailed!
+  viewerEntriesPaginated(viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput!): EntryConnection!
 }
 
 enum QueryMode {
@@ -2027,4 +2036,20 @@ type ViewerDetailed {
 
   """Identifies the date and time when the user was last updated."""
   updatedAt: DateTime
+}
+
+input ViewerEntriesWhereInput {
+  AND: [ViewerEntriesWhereInput!]
+  NOT: [ViewerEntriesWhereInput!]
+  OR: [ViewerEntriesWhereInput!]
+  categories: CategoryListRelationFilter
+  categoryId: StringNullableFilter
+  comments: CommentListRelationFilter
+  content: JsonNullableListFilter
+  createdAt: DateTimeFilter
+  featuredImage: JsonNullableListFilter
+  id: StringFilter
+  published: BoolFilter
+  title: StringFilter
+  updatedAt: DateTimeNullableFilter
 }

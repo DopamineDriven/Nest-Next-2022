@@ -7,7 +7,8 @@ import {
   Subscription,
   Context,
   InputType,
-  ArgsType
+  ArgsType,
+  OmitType
 } from "@nestjs/graphql";
 import {
   HostParam,
@@ -27,39 +28,23 @@ import { UserIdArgs } from "../user/args/user-id.args";
 import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
 import { EntryService } from "./entry.service";
 import { EntryConnection } from "./model/entry-connection.model";
-import { FindManyEntriesPaginatedInput } from "./inputs/entry-paginated.input";
+import {
+  FindManyEntriesPaginatedInput,
+  FindViewerEntriesPaginatedInput
+} from "./inputs/entry-paginated.input";
 import { EntryCreateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create.input";
 import {
   EntryCreateIntersectedTitle,
   EntryCreateOneInput
 } from "./inputs/entry-create.input";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
+import { EntryCount } from "src/.generated/prisma-nestjs-graphql/entry/outputs/entry-count.output";
+import { User } from "src/user/model/user.model";
+import { EntryCreateOrConnectWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-or-connect-without-author.input";
+import { EntryCreateWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-without-author.input";
+import { EntryUncheckedCreateNestedManyWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-unchecked-create-nested-many-without-author.input";
 const pubSub = new PubSub();
 
-
-/**
- *   @Subscription(() => Entry, {name: ENTRY_CREATED_KEY.toString()})
-  entryCreated() {
-    return this.pubSub.asyncIterator(ENTRY_CREATED_KEY.toString());
-  }
-
-  @UseGuards(GraphqlAuthGuard)
-  @Mutation(() => Entry)
-  async createEntry(
-    @Args("createInput", { type: () => EntryCreateInput })
-    data: EntryCreateInput
-  ) {
-    const newEntry = await this.prisma.entry.create({ data }).then((entry) => {
-      this.pubSub.publish(ENTRY_CREATED_KEY.toString(), { [ENTRY_CREATED]: { entry } })
-    })    @Inject("PUB_SUB") pubSub: PubSubEngine,
-    this.pubSub.publish("entryCreated", { entryCreated: newEntry });
-    return newEntry;
-  }
- */
-
-class TitleReadded {
-  public title: string;
-}
 @Resolver(() => Entry)
 export class EntryResolver {
   // public h = class IntersectedResult extends IntersectionType(
@@ -77,104 +62,64 @@ export class EntryResolver {
     return pubSub.asyncIterator("ENTRY_CREATED");
   }
 
-  // helper() {
-  //   return class IntersectedResult extends IntersectionType(
-  //     OmitType(EntryCreateOneInput, ["author", "title"] as const),
-  //     EntryCreateIntersectedTitle
-  //   ){}
-  // }
-  /**
- *
-  OmitType<T, K extends keyof T>(
-      classRef: Type<T>, keys: readonly K[], decorator?: ClassDecoratorFactory
-      ): Type<Omit<T, typeof keys[number]>>;
- */
   @Mutation(() => Entry)
   async createEntry(
     @Context("token") ctx: ExecutionContext,
-    @Args("EntryInput", { type: () => EntryCreateOneInput })
-    data: EntryCreateOneInput
-  ): Promise<Entry> {
-    return await this.entryService.createEntry({
-      token: ctx as unknown as string,
-      data: data
-    });
+    @Args("EntryInput", {
+      type: () => EntryUncheckedCreateNestedManyWithoutAuthorInput
+    })
+    data: EntryUncheckedCreateNestedManyWithoutAuthorInput
+  ) {
+    return await this.entryService
+      .newEntry(data, ctx as unknown as string)
+      .then(data => {
+        return data;
+      });
+  }
+
+  @Mutation(() => Entry)
+  async createNewEntry(
+    @Context("token") ctx: ExecutionContext,
+    @Args("createNewEntryInput", {
+      type: () => EntryUncheckedCreateNestedManyWithoutAuthorInput
+    })
+    createNewEntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput
+  ) {
+    return await this.entryService.createNewEntry(
+      createNewEntryInput,
+      ctx as unknown as string
+    );
+  }
+
+  @Query(() => EntryConnection)
+  async siftEntries(
+    @Args("entryFindManyInput", { type: () => FindManyEntriesPaginatedInput })
+    params: FindManyEntriesPaginatedInput
+  ) {
+    return await this.entryService.siftEntries(params);
   }
 
   @Query(() => EntryConnection)
   async listEntries(
     @Args("findManyEntriesPaginatedInput") params: FindManyEntriesPaginatedInput
   ) {
-    const edgingThoseNodes = await findManyCursorConnection(
-      args =>
-        this.prisma.entry.findMany({
-          include: { _count: true, author: true },
-          distinct: params.distinct,
-          take: params.take,
-          skip: params.skip,
-          where: params.where,
-          cursor: args.cursor,
-          orderBy: params.orderBy,
-          ...args
-        }),
-      () =>
-        this.prisma.entry.count({
-          distinct: params.distinct,
-          skip: params.skip,
-          where: params.where,
-          cursor: params.cursor
-        }),
-      {
-        first: params.pagination.first ?? 10,
-        last: params.pagination.last,
-        before: params.pagination.before,
-        after: params.pagination.after
-      },
-      {
-        getCursor: (record: { id: string }) => {
-          return record;
-        },
-        decodeCursor: (cursor: string) => fromGlobalId(cursor),
-        encodeCursor: (cursor: { id: string }) =>
-          toGlobalId(Entry.name, cursor.id)
-      }
-    );
-    return edgingThoseNodes;
+    return await this.entryService.siftEntries(params);
   }
-
-  // @Query(() => EntryOperationsUnionOutput)
-  // async viewerEntriesPaginated(
-  //   @Context("token") ctx: ExecutionContext,
-  //   @Args("viewerEntriesInput", { type: () => ViewerEntriesInput })
-  //   viewerEntriesInput: ViewerEntriesInput
-  // ): Promise<EntryOperationsUnionOutput> {
-  //   return await this.authService
-  //     .getUserWithDecodedToken(ctx as unknown as string)
-  //     .then(async data => {
-  //       const getEntriesPaginated = await this.listEntries({
-  //         ...viewerEntriesInput
-  //       });
-
-  //       const output = {
-  //         connect: {
-
-  //           accessToken: data.auth.accessToken,
-  //           refreshToken: data.auth.refreshToken,
-  //           session: data.auth.session,
-  //           user: data.auth?.user ? data.auth.user : null,
-  //           jwt: { ...data.jwt },
-  //           connection: { ...getEntriesPaginated }
-  //         }
-  //       }
-  //       return output as EntryOperationsUnionOutput;
-  //     })
-  // }
-
-  @Query(() => [Entry])
-  userPosts(@Args() id: UserIdArgs) {
-    return this.prisma.user
-      .findUnique({ where: { id: id.userId } })
-      .entries({ where: { published: true } });
+  @Query(() => EntryConnection)
+  @UseGuards(AuthGuard)
+  async viewerEntriesPaginated(
+    @Context("token") ctx: ExecutionContext,
+    @Args("viewerEntriesPaginatedInput", {
+      type: () => FindViewerEntriesPaginatedInput
+    })
+    viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput
+  ) {
+    return await this.entryService
+      .getViewerEntriesPaginated(
+        viewerEntriesPaginatedInput,
+        ctx as unknown as string
+      )
+      .then(entryConnection => entryConnection);
   }
 
   @ResolveField()
@@ -194,3 +139,49 @@ export class EntryResolver {
     });
   }
 }
+// @Query(() => EntryOperationsUnionOutput)
+// async viewerEntriesPaginated(
+//   @Context("token") ctx: ExecutionContext,
+//   @Args("viewerEntriesInput", { type: () => ViewerEntriesInput })
+//   viewerEntriesInput: ViewerEntriesInput
+// ): Promise<EntryOperationsUnionOutput> {
+//   return await this.authService
+//     .getUserWithDecodedToken(ctx as unknown as string)
+//     .then(async data => {
+//       const getEntriesPaginated = await this.listEntries({
+//         ...viewerEntriesInput
+//       });
+
+//       const output = {
+//         connect: {
+
+//           accessToken: data.auth.accessToken,
+//           refreshToken: data.auth.refreshToken,
+//           session: data.auth.session,
+//           user: data.auth?.user ? data.auth.user : null,
+//           jwt: { ...data.jwt },
+//           connection: { ...getEntriesPaginated }
+//         }
+//       }
+//       return output as EntryOperationsUnionOutput;
+//     })
+// }
+/**
+ *   @Subscription(() => Entry, {name: ENTRY_CREATED_KEY.toString()})
+  entryCreated() {
+    return this.pubSub.asyncIterator(ENTRY_CREATED_KEY.toString());
+  }
+
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => Entry)
+  async createEntry(
+    @Args("createInput", { type: () => EntryCreateInput })
+    data: EntryCreateInput
+  ) {
+    const newEntry = await this.prisma.entry.create({ data }).then((entry) => {
+      this.pubSub.publish(ENTRY_CREATED_KEY.toString(), { [ENTRY_CREATED]: { entry } })
+    })    @Inject("PUB_SUB") pubSub: PubSubEngine,
+    this.pubSub.publish("entryCreated", { entryCreated: newEntry });
+    return newEntry;
+  }
+ */

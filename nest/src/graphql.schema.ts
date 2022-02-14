@@ -636,18 +636,6 @@ export class EntryCreateNestedOneWithoutCommentsInput {
     create?: Nullable<EntryCreateWithoutCommentsInput>;
 }
 
-export class EntryCreateOneInput {
-    categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
-    categoryId?: Nullable<string>;
-    content?: Nullable<EntryCreatecontentInput>;
-    createdAt?: Nullable<DateTime>;
-    featuredImage?: Nullable<EntryCreatefeaturedImageInput>;
-    id?: Nullable<string>;
-    published?: Nullable<boolean>;
-    title: string;
-    updatedAt?: Nullable<DateTime>;
-}
-
 export class EntryCreateOrConnectWithoutAuthorInput {
     create: EntryCreateWithoutAuthorInput;
     where: EntryWhereUniqueInput;
@@ -745,6 +733,13 @@ export class EntryOrderByWithRelationAndSearchRelevanceInput {
 export class EntryRelationFilter {
     is?: Nullable<EntryWhereInput>;
     isNot?: Nullable<EntryWhereInput>;
+}
+
+export class EntryUncheckedCreateNestedManyWithoutAuthorInput {
+    connect?: Nullable<EntryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutAuthorInput[]>;
+    create?: Nullable<EntryCreateWithoutAuthorInput[]>;
+    createMany?: Nullable<EntryCreateManyAuthorInputEnvelope>;
 }
 
 export class EntryWhereInput {
@@ -858,6 +853,17 @@ export class FindManyUsersPaginatedInput {
     skip?: Nullable<number>;
     take?: Nullable<number>;
     where?: Nullable<UserWhereInput>;
+}
+
+export class FindViewerEntriesPaginatedInput {
+    cursor?: Nullable<EntryWhereUniqueInput>;
+    distinct?: Nullable<EntryScalarFieldEnum[]>;
+    orderBy?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    unique?: Nullable<EntryWhereUniqueInput>;
+    where?: Nullable<ViewerEntriesWhereInput>;
 }
 
 export class FloatNullableFilter {
@@ -1646,6 +1652,22 @@ export class UserWhereUniqueInput {
     id?: Nullable<string>;
 }
 
+export class ViewerEntriesWhereInput {
+    AND?: Nullable<ViewerEntriesWhereInput[]>;
+    NOT?: Nullable<ViewerEntriesWhereInput[]>;
+    OR?: Nullable<ViewerEntriesWhereInput[]>;
+    categories?: Nullable<CategoryListRelationFilter>;
+    categoryId?: Nullable<StringNullableFilter>;
+    comments?: Nullable<CommentListRelationFilter>;
+    content?: Nullable<JsonNullableListFilter>;
+    createdAt?: Nullable<DateTimeFilter>;
+    featuredImage?: Nullable<JsonNullableListFilter>;
+    id?: Nullable<StringFilter>;
+    published?: Nullable<BoolFilter>;
+    title?: Nullable<StringFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
+}
+
 export interface Node {
     id: string;
 }
@@ -1846,7 +1868,9 @@ export abstract class IMutation {
 
     abstract changePassword(changePasswordInput: ChangePasswordInput): User | Promise<User>;
 
-    abstract createEntry(EntryInput: EntryCreateOneInput): Entry | Promise<Entry>;
+    abstract createEntry(EntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput): Entry | Promise<Entry>;
+
+    abstract createNewEntry(createNewEntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput): Entry | Promise<Entry>;
 
     abstract createProfile(data: ProfileCreateInput, userId: string): Profile | Promise<Profile>;
 
@@ -1867,6 +1891,8 @@ export abstract class IMutation {
     abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
 
     abstract viewerAuthInfoFromContext(): ViewerAuthInfo | Promise<ViewerAuthInfo>;
+
+    abstract viewerCreateEntry(viewerEntryCreateInput: EntryCreateWithoutAuthorInput): Entry | Promise<Entry>;
 }
 
 export class PageInfo {
@@ -1942,13 +1968,15 @@ export abstract class IQuery {
 
     abstract profiles(profilesArgs: ProfilesInput): ProfileConnection | Promise<ProfileConnection>;
 
+    abstract siftEntries(entryFindManyInput: FindManyEntriessPaginatedInput): EntryConnection | Promise<EntryConnection>;
+
     abstract userById(id: string): User | Promise<User>;
 
     abstract userByRelayId(cursor: string): User | Promise<User>;
 
-    abstract userPosts(userId: string): Entry[] | Promise<Entry[]>;
-
     abstract viewer(): ViewerDetailed | Promise<ViewerDetailed>;
+
+    abstract viewerEntriesPaginated(viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput): EntryConnection | Promise<EntryConnection>;
 }
 
 export class Session {

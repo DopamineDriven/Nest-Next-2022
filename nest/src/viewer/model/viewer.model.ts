@@ -21,7 +21,10 @@ import { Constructor } from "src/common/types/helpers.type";
 import { Injectable } from "@nestjs/common";
 import { AuthService } from "../../auth/auth-jwt.service";
 import { PrismaService } from "../../prisma/prisma.service";
-
+import { GraphQLEmailAddress, GraphQLJSONObject } from "graphql-scalars";
+import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
+import { UserStatus } from "src/.generated/prisma-nestjs-graphql/prisma/enums/user-status.enum";
+type Nullable<T> = T | null;
 @ObjectType("ViewerEntity")
 export class ViewerEntity extends AuthDetailed implements Node {
   constructor() {
@@ -32,24 +35,39 @@ export class ViewerEntity extends AuthDetailed implements Node {
 }
 @ObjectType("Viewer")
 export class Viewer implements User {
+  @Field(() => Date, { defaultValue: new Date(Date.now()) })
   createdAt: Date;
+
+  @Field(() => GraphQLEmailAddress)
   email: string;
+
+  @Field(() => Date, { nullable: true })
   emailVerified: Date | null;
+
+  @Field(() => String, { nullable: true })
   firstName: string | null;
-  image: any[];
+
+  @Field(() => GraphQLJSONObject)
+  image: Array<any>
+
+  @Field(() => String, { nullable: true })
   lastName: string | null;
-  role: "SUPERADMIN" | "ADMIN" | "MAINTAINER" | "USER" | null;
-  status:
-    | "ONLINE"
-    | "OFFLINE"
-    | "SUSPENDED"
-    | "DELETED"
-    | "BANNED"
-    | "DEACTIVATED"
-    | null;
+
+  @Field(() => Role, { defaultValue: Role.USER })
+  role: keyof typeof Role
+
+  @Field(() => UserStatus, { nullable: true })
+  status: Nullable<keyof typeof UserStatus>
+
+  @Field(() => Date, { nullable: true })
   updatedAt: Date | null;
+
+  @Field(() => String)
   password: string;
+
+  @Field(() => ID)
   id: string;
+
   @Field(_type => String, { nullable: true })
   accessToken: string | null;
 }

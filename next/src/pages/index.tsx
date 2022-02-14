@@ -90,12 +90,9 @@ export default function Index() {
     const passwordElement =
       event.currentTarget.elements.namedItem("password");
     console.log(
-      JSON.stringify(
-        { emailElement: emailElement, passwordElement: passwordElement },
-        null,
-        2
-      )
+      emailElement ?? "no email element"
     );
+    console.log(passwordElement ?? "no pw element");
 
     const { email, password } = Object.fromEntries(variables);
     console.log(email ?? "");
@@ -155,7 +152,7 @@ export default function Index() {
           </Link>
         </p>
       </div>
-      <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
+      <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-4xl'>
         <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
           {authDetailedState !== null ? (
             <Inspector>
