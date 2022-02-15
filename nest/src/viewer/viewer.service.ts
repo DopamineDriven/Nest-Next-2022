@@ -65,30 +65,31 @@ export class ViewerService {
             password: viewer.password,
             role: "USER",
             status: "ONLINE",
-            image: [
-              {
-                id: viewer.mediaItems?.find(id => id)?.id,
-                uploadedAt: new Date(Date.now()).toUTCString()
-              },
-              {
-                fileLastModified: viewer.mediaItems
-                  ?.find(fileLastModified => fileLastModified)
-                  ?.fileLastModified?.toUTCString(),
-                quality: viewer.mediaItems?.find(quality => quality)?.quality,
-                filename: viewer.mediaItems?.find(filename => filename)?.name,
-                src: viewer.mediaItems?.find(src => src)?.src,
-                srcSet: viewer.mediaItems?.find(srcSet => srcSet)?.srcSet,
-                type:
-                  viewer.mediaItems?.find(type => type)?.type ?? MimeTypes.PNG,
-                size: viewer.mediaItems?.find(size => size)?.size,
-                width: viewer.mediaItems?.find(width => width)?.width,
-                height: viewer.mediaItems?.find(height => height)?.height
-              },
-              {
-                unique: `${viewer.id}_${viewer.mediaItems?.find(name => name)?.name
-                  }`
-              }
-            ],
+            image: viewer.image ?? "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
+            //   [
+            //   {
+            //     id: viewer.mediaItems?.find(id => id)?.id,
+            //     uploadedAt: new Date(Date.now()).toUTCString()
+            //   },
+            //   {
+            //     fileLastModified: viewer.mediaItems
+            //       ?.find(fileLastModified => fileLastModified)
+            //       ?.fileLastModified?.toUTCString(),
+            //     quality: viewer.mediaItems?.find(quality => quality)?.quality,
+            //     filename: viewer.mediaItems?.find(filename => filename)?.name,
+            //     src: viewer.mediaItems?.find(src => src)?.src,
+            //     srcSet: viewer.mediaItems?.find(srcSet => srcSet)?.srcSet,
+            //     type:
+            //       viewer.mediaItems?.find(type => type)?.type ?? MimeTypes.PNG,
+            //     size: viewer.mediaItems?.find(size => size)?.size,
+            //     width: viewer.mediaItems?.find(width => width)?.width,
+            //     height: viewer.mediaItems?.find(height => height)?.height
+            //   },
+            //   {
+            //     unique: `${viewer.id}_${viewer.mediaItems?.find(name => name)?.name
+            //       }`
+            //   }
+            // ],
             mediaItems: {
               create: {
                 fileLastModified: viewer.mediaItems

@@ -33,8 +33,8 @@ export class Profile implements Node {
   @Field(() => Pronouns, { nullable: true, defaultValue: "NOT_LISTED" })
   pronouns?: keyof typeof Pronouns | null;
 
-  @Field(() => [JSONObjectResolver], {nullable:true})
-  coverPhoto?: Array<any>
+  @Field(() => String, {nullable:true})
+  coverPhoto?: string
 
   @Field(() => Date, { nullable: true })
   lastSeen?: Date | null;

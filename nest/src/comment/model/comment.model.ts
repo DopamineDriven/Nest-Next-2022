@@ -2,8 +2,9 @@ import { CommentReactions } from "../../.generated/prisma-nestjs-graphql/prisma/
 import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { User } from "../../user/model/user.model";
 import { Entry } from "../../entry";
-import { GraphQLJSON, JSONObjectResolver } from "graphql-scalars";
+import { GraphQLJSON, JSONObjectResolver, JSONResolver } from "graphql-scalars";
 import { Node } from "src/node/model/node.model";
+import { Prisma } from "@prisma/client";
 
 @ObjectType("Comment")
 export class Comment implements Node {

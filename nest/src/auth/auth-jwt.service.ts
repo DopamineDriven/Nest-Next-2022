@@ -36,7 +36,7 @@ export class AuthService {
     private readonly configService: ConfigService
   ) {
   }
-  
+
   public maxAge=60*60*360; // 360 hours ~ 15 days
   setTokenCookie(res: Response, token: string) {
     const authConfig = this.configService.get<SecurityConfig>("security");
@@ -68,7 +68,8 @@ export class AuthService {
             ? "SUPERADMIN"
             : payload.email.includes("andrew.simpson.ross@gmail.com")
             ? "SUPERADMIN"
-            : "USER",
+              : "USER",
+          image: payload.image ?? "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
           firstName: payload.firstName,
           lastName: payload.lastName,
           status: "ONLINE",

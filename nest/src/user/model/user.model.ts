@@ -32,8 +32,8 @@ export class User implements Node {
   @Field(() => String, { nullable: false })
   email!: string;
 
-  @Field(() => [JSONObjectResolver])
-  image!: Array<any>
+  @Field(() => String, { nullable: true })
+  image: string | null;
 
   @Field(() => Role, { nullable: true, defaultValue: Role.USER })
   role: Nullable<keyof typeof Role>;

@@ -25,40 +25,27 @@ export default async function viewerValidate(
   } = req;
   console.log(res.req.headers);
   console.log(req.headers ?? "no forwarded");
-  // const apolloClient = initializeApollo({}, { req, res });
+  const apolloClient = initializeApollo({}, { req, res });
   try {
-    const nestSwaggerValidate: deriveUserDetailsFromTokenMutation["userFromAccessTokenDecoded"] =
-      await fetch(
-        `http://localhost:3000/auth/token/${token as string}`.trim(),
-        {
-          credentials: "include",
-          cache: "only-if-cached",
-          mode: "cors",
-          referrerPolicy: "origin-when-cross-origin",
-          body: JSON.stringify({
-            token: token as string
-          }),
-          method: "POST",
-          headers: {
-            authorization: `Bearer ${token as string}`
-          },
-          keepalive: true
-        }
-      )
-        .then(
-          res =>
-            res.json() as Promise<
-              deriveUserDetailsFromTokenMutation["userFromAccessTokenDecoded"]
-            >
-        )
-        .finally(() => Promise.resolve({}));
+    const nestSwaggerValidate = await apolloClient.mutate<
+      deriveUserDetailsFromTokenMutation,
+      deriveUserDetailsFromTokenMutationVariables
+      >({
+      variables: {token: token as string},
+      mutation: deriveUserDetailsFromTokenDocument,
+      context: { req, res, token: token as string },
+      refetchQueries: [{ query: ViewerDocument }],
+      errorPolicy: "all" as RequireOnlyOne<ErrorPolicy>
+    });
     const setAuthHeader = res.setHeader(
       "authorization",
-      `Bearer ${nestSwaggerValidate?.auth?.accessToken}`
+      `Bearer ${nestSwaggerValidate.data?.userFromAccessTokenDecoded?.auth?.accessToken}`
     );
-    if (nestSwaggerValidate != null && setAuthHeader) {
-      setCookies("nest-to-next-2022", nestSwaggerValidate, {
+    console.log(nestSwaggerValidate ?? "no data");
+    if (nestSwaggerValidate.data != null && setAuthHeader) {
+      setCookies("nest-to-next-2022", nestSwaggerValidate.data, {
         sameSite: "none",
+        domain: "http://localhost:3040",
         path: "/",
         maxAge:
           new Date(Date.now()).getMilliseconds() +
@@ -69,19 +56,15 @@ export default async function viewerValidate(
       });
 
       return nestSwaggerValidate
-        ? res.status(201).json({ authDetailed: nestSwaggerValidate })
+        ? res
+            .status(201)
+            .json({
+              authDetailed:
+                nestSwaggerValidate.data.userFromAccessTokenDecoded
+            })
         : console.error(`no data to send ${new Error("no data").message}`);
     }
   } catch (error) {
     throw new Error(`error in /api/viewer/viewer - ${error}`).message;
   }
 }
-    // const { data, errors } = await apolloClient.mutate<
-    //   deriveUserDetailsFromTokenMutation,
-    //   deriveUserDetailsFromTokenMutationVariables
-    // >({
-    //   mutation: deriveUserDetailsFromTokenDocument,
-    //   context: { req, res, token: token as string },
-    //   refetchQueries: [{ query: ViewerDocument }],
-    //   errorPolicy: "all" as RequireOnlyOne<ErrorPolicy>
-    // });

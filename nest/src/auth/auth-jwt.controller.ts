@@ -18,9 +18,7 @@ import {
   Response
 } from "express";
 import { JwtDecoded } from "./dto/jwt-decoded.dto";
-import {
-  ApiBearerAuth
-} from "@nestjs/swagger";
+import { ApiBearerAuth } from "@nestjs/swagger";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AuthDetailed } from "./model/auth-detailed.model";
 
@@ -100,23 +98,37 @@ export default class AuthJwtController {
   @Post("token/:token")
   async getUserFromDecodedAccessToken(
     @Param("token") token: string,
+    @Request() req: ExpressRequest,
     @Res({ passthrough: true }) res: Response
   ) {
-    const userFromToken = await this.authService.getUserWithDecodedToken(token);
-    if (userFromToken != null)
-      res.setHeader(
-        "authorization",
-        `Bearer ${userFromToken.auth.accessToken}`
+    try {
+      const userFromToken = await this.authService.getUserWithDecodedToken(
+        token
       );
-
-    res.cookie("nest-to-next-2022", userFromToken, {
-      sameSite: "none",
-      path: "/",
-      maxAge: new Date(Date.now()).getMilliseconds() + 30 * 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-      httpOnly: false,
-      encode: ((val: string) => encodeURIComponent(val))
-    });
-    return userFromToken;
+      const parseTokenFromIncomingReq =
+        req.headers.authorization?.split(/([ ])/)[1];
+      if (userFromToken != null || req.headers.authorization?.split(/([ ])/)[1])
+        res.setHeader(
+          "authorization",
+          `Bearer ${userFromToken.auth.accessToken}`
+        );
+      if (parseTokenFromIncomingReq)
+        res.setHeader("authorization", parseTokenFromIncomingReq);
+      return this.authService.setTokenCookie(
+        res,
+        (parseTokenFromIncomingReq as string) ?? userFromToken
+      );
+    } catch (err) {
+      throw new Error(`${err}`).message;
+    }
+    // res.cookie("nest-to-next-2022", userFromToken, {
+    //   sameSite: "none",
+    //   path: "/",
+    //   maxAge: new Date(Date.now()).getMilliseconds() + 30 * 24 * 60 * 60 * 1000,
+    //   secure: process.env.NODE_ENV === "production" ? true : false,
+    //   httpOnly: false,
+    //   encode: ((val: string) => encodeURIComponent(val))
+    // });
+    // return userFromToken;
   }
 }

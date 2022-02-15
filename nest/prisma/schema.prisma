@@ -67,7 +67,7 @@ model User {
   firstName     String?
   lastName      String?
   email         String       @unique
-  image         Json[]
+  image         String?      @default("https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif")
   role          Role?        @default(USER)
   status        UserStatus?  @default(OFFLINE)
   password      String       @default("")
@@ -90,7 +90,7 @@ model Profile {
   memberSince    DateTime  @default(now())
   gender         Gender?   @default(OTHER)
   pronouns       Pronouns? @default(NOT_LISTED)
-  coverPhoto     Json[]
+  coverPhoto     String?
   lastSeen       DateTime? @updatedAt
   dob            String?
   phoneNumber    String?

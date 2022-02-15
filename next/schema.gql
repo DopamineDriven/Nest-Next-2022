@@ -1150,7 +1150,6 @@ type Mutation {
   createEntry(EntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput!): Entry!
   createNewEntry(createNewEntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput!): Entry!
   createProfile(data: ProfileCreateInput!, userId: String!): Profile!
-  getUserFromAccessToken(token: String!): User!
   login(data: LoginInput!): Token!
   register(dataRegister: SignupInput!): AuthSansSession!
   registerNewUser(userCreateInput: UserCreateMutationInput!): AuthDetailed!
@@ -1158,7 +1157,6 @@ type Mutation {
   signup(data: SignupInput!): Token!
   updateUserPassword(passwordInput: ChangePasswordInput!): User!
   userFromAccessTokenDecoded(token: String!): AuthDetailed!
-  viewerAuthInfoFromContext: ViewerAuthInfo!
   viewerCreateEntry(viewerEntryCreateInput: EntryCreateWithoutAuthorInput!): Entry!
 }
 
@@ -1311,7 +1309,7 @@ type Profile {
   bio: [JSONObject!]
   city: String
   country: String
-  coverPhoto: [JSONObject!]
+  coverPhoto: String
   dob: String
   gender: Gender
   id: ID!
@@ -1337,7 +1335,7 @@ input ProfileCreateInput {
   bio: ProfileCreatebioInput
   city: String
   country: String
-  coverPhoto: ProfileCreatecoverPhotoInput
+  coverPhoto: String
   dob: String
   gender: Gender
   id: String
@@ -1366,7 +1364,7 @@ input ProfileCreateWithoutUserInput {
   bio: ProfileCreatebioInput
   city: String
   country: String
-  coverPhoto: ProfileCreatecoverPhotoInput
+  coverPhoto: String
   dob: String
   gender: Gender
   id: String
@@ -1386,10 +1384,6 @@ input ProfileCreatebioInput {
   set: [JSON!]!
 }
 
-input ProfileCreatecoverPhotoInput {
-  set: [JSON!]!
-}
-
 input ProfileCreaterecentActivityInput {
   set: [JSON!]!
 }
@@ -1402,6 +1396,7 @@ type ProfileEdge {
 enum ProfileOrderByRelevanceFieldEnum {
   city
   country
+  coverPhoto
   dob
   id
   occupation
@@ -1466,7 +1461,7 @@ input ProfileWhereInput {
   bio: JsonNullableListFilter
   city: StringNullableFilter
   country: StringNullableFilter
-  coverPhoto: JsonNullableListFilter
+  coverPhoto: StringNullableFilter
   dob: StringNullableFilter
   gender: EnumGenderNullableFilter
   id: StringFilter
@@ -1506,6 +1501,7 @@ type Query {
   contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!, findManyMediaItemsPaginated: FindManyMediaItemsInput, findManyUsersPaginatedInput: FindManyUsersPaginatedInput): ContentNodes!
   entryById(id: String!): Entry!
   findUniqueMediaItem(mediaItemId: String!): MediaItem!
+  getUserFromAccessToken(token: String!): User!
   getViewer: AuthDetailed!
   hello(name: String!): String!
   helloWorld: String!
@@ -1521,6 +1517,7 @@ type Query {
   userById(id: String!): User!
   userByRelayId(cursor: String!): User!
   viewer: ViewerDetailed!
+  viewerAuthInfoFromContext: ViewerAuthInfo!
   viewerEntriesPaginated(viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput!): EntryConnection!
 }
 
@@ -1641,6 +1638,7 @@ input SessionWhereUniqueInput {
 input SignupInput {
   email: String!
   firstName: String
+  image: String
   lastName: String
   password: String!
 }
@@ -1719,7 +1717,7 @@ type User {
   entries: [Entry!]
   firstName: String
   id: ID!
-  image: [JSONObject!]!
+  image: String
   lastName: String
   mediaItems: [MediaItem!]
   password: String!
@@ -1759,7 +1757,7 @@ input UserCreateMutationInput {
   entries: EntryCreateNestedManyWithoutAuthorInput
   firstName: String
   id: ID
-  image: UserCreateimageInput
+  image: String
   lastName: String
   mediaItems: MediaItemCreateNestedManyWithoutUserInput
   password: String
@@ -1824,7 +1822,7 @@ input UserCreateWithoutCategoriesInput {
   entries: EntryCreateNestedManyWithoutAuthorInput
   firstName: String
   id: String
-  image: UserCreateimageInput
+  image: String
   lastName: String
   mediaItems: MediaItemCreateNestedManyWithoutUserInput
   password: String
@@ -1845,7 +1843,7 @@ input UserCreateWithoutCommentsInput {
   entries: EntryCreateNestedManyWithoutAuthorInput
   firstName: String
   id: String
-  image: UserCreateimageInput
+  image: String
   lastName: String
   mediaItems: MediaItemCreateNestedManyWithoutUserInput
   password: String
@@ -1866,7 +1864,7 @@ input UserCreateWithoutEntriesInput {
   emailVerified: DateTime
   firstName: String
   id: String
-  image: UserCreateimageInput
+  image: String
   lastName: String
   mediaItems: MediaItemCreateNestedManyWithoutUserInput
   password: String
@@ -1888,7 +1886,7 @@ input UserCreateWithoutProfileInput {
   entries: EntryCreateNestedManyWithoutAuthorInput
   firstName: String
   id: String
-  image: UserCreateimageInput
+  image: String
   lastName: String
   mediaItems: MediaItemCreateNestedManyWithoutUserInput
   password: String
@@ -1896,10 +1894,6 @@ input UserCreateWithoutProfileInput {
   sessions: SessionCreateNestedManyWithoutUserInput
   status: UserStatus
   updatedAt: DateTime
-}
-
-input UserCreateimageInput {
-  set: [JSON!]!
 }
 
 type UserEdge {
@@ -1911,6 +1905,7 @@ enum UserOrderByRelevanceFieldEnum {
   email
   firstName
   id
+  image
   lastName
   password
 }
@@ -1986,7 +1981,7 @@ input UserWhereInput {
   entries: EntryListRelationFilter
   firstName: StringNullableFilter
   id: StringFilter
-  image: JsonNullableListFilter
+  image: StringNullableFilter
   lastName: StringNullableFilter
   mediaItems: MediaItemListRelationFilter
   password: StringFilter
@@ -2023,7 +2018,7 @@ type ViewerDetailed {
   entries: [Entry!]
   firstName: String
   id: ID!
-  image: [JSONObject!]!
+  image: String
   lastName: String
   mediaItems: [MediaItem!]
   password: String!
