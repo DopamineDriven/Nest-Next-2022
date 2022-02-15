@@ -1715,7 +1715,7 @@ export interface Node {
     id: string;
 }
 
-export class Account {
+export class Account implements Node {
     __typename?: 'Account';
     access_token?: Nullable<string>;
     expires_at?: Nullable<number>;
@@ -1769,7 +1769,7 @@ export class BaseTypesEdge {
     node: TypesUnion;
 }
 
-export class Category {
+export class Category implements Node {
     __typename?: 'Category';
     _count: CategoryCount;
     createdAt?: Nullable<DateTime>;
@@ -1787,7 +1787,7 @@ export class CategoryCount {
     entries: number;
 }
 
-export class Comment {
+export class Comment implements Node {
     __typename?: 'Comment';
     author: User;
     authorId: string;
@@ -1814,7 +1814,7 @@ export class CommentEdge {
     node: Comment;
 }
 
-export class Connection {
+export class Connection implements Node {
     __typename?: 'Connection';
     email: string;
     firstName?: Nullable<string>;
@@ -1832,7 +1832,7 @@ export class ContentNodes {
     contentNodes: BaseTypeNodes;
 }
 
-export class Entry {
+export class Entry implements Node {
     __typename?: 'Entry';
     _count: EntryCount;
     author: User;
@@ -1888,7 +1888,7 @@ export class JwtPayload {
     userId?: Nullable<string>;
 }
 
-export class MediaItem {
+export class MediaItem implements Node {
     __typename?: 'MediaItem';
     fileLastModified?: Nullable<DateTime>;
     height?: Nullable<number>;
@@ -1955,7 +1955,7 @@ export class PageInfo {
     startCursor?: Nullable<string>;
 }
 
-export class Profile {
+export class Profile implements Node {
     __typename?: 'Profile';
     activiyFeed?: Nullable<JSONObject[]>;
     bio?: Nullable<JSONObject[]>;
@@ -1991,6 +1991,8 @@ export class ProfileEdge {
 
 export abstract class IQuery {
     __typename?: 'IQuery';
+
+    abstract commentByRelayId(cursor: string): Comment | Promise<Comment>;
 
     abstract commentConnectionUnion(findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput, findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput): EntryCommentUnion[] | Promise<EntryCommentUnion[]>;
 
@@ -2039,7 +2041,7 @@ export abstract class IQuery {
     abstract viewerEntriesPaginated(viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput): EntryConnection | Promise<EntryConnection>;
 }
 
-export class Session {
+export class Session implements Node {
     __typename?: 'Session';
     accessToken?: Nullable<string>;
     alg?: Nullable<string>;
@@ -2070,7 +2072,7 @@ export class Token {
     refreshToken?: Nullable<string>;
 }
 
-export class User {
+export class User implements Node {
     __typename?: 'User';
     _count?: Nullable<UserCount>;
     accounts?: Nullable<Account[]>;
@@ -2125,7 +2127,7 @@ export class ViewerAuthInfo {
     viewerJwt: JwtDecoded;
 }
 
-export class ViewerDetailed {
+export class ViewerDetailed implements Node {
     __typename?: 'ViewerDetailed';
     _count?: Nullable<UserCount>;
     accessToken?: Nullable<string>;

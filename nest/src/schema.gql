@@ -2,7 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Account {
+type Account implements Node {
   access_token: String
   expires_at: Int
   id: ID!
@@ -172,7 +172,7 @@ input BoolFilter {
   not: NestedBoolFilter
 }
 
-type Category {
+type Category implements Node {
   _count: CategoryCount!
   createdAt: DateTime
   creator: User!
@@ -276,7 +276,7 @@ input ChangePasswordInput {
   oldPassword: String!
 }
 
-type Comment {
+type Comment implements Node {
   author: User!
   authorId: String!
   body: JSONObject
@@ -470,7 +470,7 @@ input CommentWhereUniqueInput {
   id: String
 }
 
-type Connection {
+type Connection implements Node {
   email: String!
   firstName: String
   id: ID!
@@ -579,7 +579,7 @@ input DateTimeNullableFilter {
   notIn: [DateTime!]
 }
 
-type Entry {
+type Entry implements Node {
   _count: EntryCount!
   author: User!
   authorId: String!
@@ -1000,7 +1000,7 @@ input LoginInput {
   password: String
 }
 
-type MediaItem {
+type MediaItem implements Node {
   fileLastModified: DateTime
   height: Float
   id: ID!
@@ -1365,7 +1365,7 @@ A field whose value conforms to the standard E.164 format as specified in: https
 """
 scalar PhoneNumber
 
-type Profile {
+type Profile implements Node {
   activiyFeed: [JSONObject!]
   bio: [JSONObject!]
   city: String
@@ -1559,6 +1559,7 @@ enum Pronouns {
 }
 
 type Query {
+  commentByRelayId(cursor: String!): Comment!
   commentConnectionUnion(findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput!, findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!): [EntryCommentUnion!]!
   contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!, findManyMediaItemsPaginated: FindManyMediaItemsInput, findManyUsersPaginatedInput: FindManyUsersPaginatedInput): ContentNodes!
   entryById(id: String!): Entry!
@@ -1596,7 +1597,7 @@ enum Role {
   USER
 }
 
-type Session {
+type Session implements Node {
   accessToken: String
   alg: String
   exp: Int
@@ -1766,7 +1767,7 @@ type Token {
 
 union TypesUnion = Entry | MediaItem | User
 
-type User {
+type User implements Node {
   _count: UserCount
   accounts: [Account!]
   categories: [Category!]
@@ -2066,7 +2067,7 @@ type ViewerAuthInfo {
   viewerJwt: JwtDecoded!
 }
 
-type ViewerDetailed {
+type ViewerDetailed implements Node {
   _count: UserCount
   accessToken: String
   accounts: [Account!]

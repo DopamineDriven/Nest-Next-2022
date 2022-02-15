@@ -16,7 +16,7 @@ import { Prisma } from "@prisma/client";
 import { Node } from "src/node/model/node.model";
 type Nullable<T> = T | null;
 
-@ObjectType("User")
+@ObjectType("User", { implements: () => Node })
 export class User implements Node {
   @Field(() => ID, {
     name: "id",
@@ -85,7 +85,7 @@ export class User implements Node {
   categories?: Array<Category>;
 
   @Field(() => [MediaItem], { nullable: true })
-  mediaItems?: Array<MediaItem> | null
+  mediaItems?: Array<MediaItem> | null;
 
   @Field(() => UserCount, {
     defaultValue: {

@@ -20,10 +20,11 @@ import {
 import { Edge, Connection } from "@devoxa/prisma-relay-cursor-connection";
 import { Session } from "src/session/model/session.model";
 import { ReturnTypedNode } from "ts-morph";
+import { Prisma } from "@prisma/client";
 
 //function IntersectionType<A, B>(target: Type<A>, source: Type<B>): MappedType<A & B>;
 
-@ObjectType("Entry")
+@ObjectType("Entry", {implements: () => Node})
 export class Entry implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
@@ -38,7 +39,7 @@ export class Entry implements Node {
   authorId?: string;
 
   @Field(() => [JSONObjectResolver], { nullable: true })
-  content!: Array<typeof GraphQLJSONObject>;
+  content!: Array<Prisma.JsonValue>;
 
   @Field(() => Date, { nullable: false })
   createdAt!: Date;
@@ -47,7 +48,7 @@ export class Entry implements Node {
   updatedAt?: Date | null;
 
   @Field(() => [JSONObjectResolver], { nullable: true })
-  featuredImage?: Array<typeof GraphQLJSONObject>;
+  featuredImage?: Array<Prisma.JsonValue>;
 
   @Field(() => [Category], { nullable: true })
   categories?: Array<Category>;

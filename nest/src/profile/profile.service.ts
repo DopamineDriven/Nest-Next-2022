@@ -158,7 +158,7 @@ export class ProfileService {
   }
 
   async relayFindUniqueProfile(params: { id: string }) {
-    const profile = await this.prisma.entry.findUnique({
+    const profile = await this.prisma.profile.findUnique({
       where: { id: fromGlobalId(params.id).id }
     });
     if (!profile) {

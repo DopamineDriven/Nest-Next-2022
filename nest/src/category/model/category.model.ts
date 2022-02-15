@@ -4,7 +4,7 @@ import { CategoryCount } from "../../.generated/prisma-nestjs-graphql/category/o
 import { Entry } from "../../entry/model/entry.model";
 import { Node } from "src/node/model/node.model";
 
-@ObjectType("Category")
+@ObjectType("Category", {implements: () => Node})
 export class Category implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;

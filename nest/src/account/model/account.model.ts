@@ -2,7 +2,7 @@ import { ObjectType, Field, ID, Int } from "@nestjs/graphql";
 import { User } from "../../user/model/user.model";
 import { Node } from "src/node/model/node.model";
 
-@ObjectType("Account")
+@ObjectType("Account", {implements: () => Node})
 export class Account implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;

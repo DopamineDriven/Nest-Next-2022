@@ -4,10 +4,15 @@ import { User } from "../../user/model/user.model";
 import { Entry } from "../../entry";
 import { GraphQLJSON, JSONObjectResolver, JSONResolver } from "graphql-scalars";
 import { Node } from "src/node/model/node.model";
-import { Prisma } from "@prisma/client";
+import { Prisma, Comment as CommentPrisma } from "@prisma/client";
 
-@ObjectType("Comment")
+@ObjectType("Comment", { implements: () => Node })
 export class Comment implements Node {
+  // abstract(): Node {
+  //   return {
+  //     id: this.id
+  //   }
+  // }
   @Field(() => ID, { nullable: false })
   id!: string;
 
@@ -18,7 +23,7 @@ export class Comment implements Node {
   entryId!: string;
 
   @Field(() => JSONObjectResolver, { nullable: true })
-  body?: any | null;
+  body?: Prisma.JsonValue | null;
 
   @Field(() => String, { nullable: true })
   position?: string | null;
