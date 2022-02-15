@@ -11,7 +11,8 @@ export interface ResolverContext {
   res?: ServerResponse;
 }
 // import { GraphQLLet } from ".graphql-let.yml";
-import { ApolloLink } from "@apollo/client";
+import { ApolloLink, FetchResult } from "@apollo/client";
+import { signInUserMutation } from "@/graphql/generated/graphql";
 
 const browser = typeof window !== "undefined";
 const envEndpoint =
@@ -88,21 +89,44 @@ export const errorLink = onError(({ graphQLErrors, networkError }) => {
       )
     );
 });
-export const crmSesh = new ApolloLink((operation, forward) => {
+export const nextSesh = new ApolloLink((operation, forward) => {
   return forward(operation).map(response => {
     // catches incoming session token to store in LS
     // check for session header & update session in LS accordingly
-    const context = operation.getContext();
-    const {
-      response: { headers }
-    } = context;
-    const session = headers.get("authorization");
-    if (session && browser) {
-      if (window.localStorage.getItem("crm-auth") !== session) {
-        browser && window.localStorage.removeItem("crm-auth");
-        window.localStorage.setItem("crm-auth", session);
+    // const context = operation.getContext();
+    // const jsonStringContext = JSON.stringify(context ?? "no context", null, 2)
+    // console.log(context ?? {});
+    const { data, context, errors, extensions } = response as FetchResult<
+      signInUserMutation,
+      Record<string, any>,
+      Record<string, any>
+    >;
+    console.log("context: " + context ?? "no context");
+    console.log("errors: " + errors ?? "no errors");
+    console.log("extensions: " + extensions ?? "no extensions");
+    const session = data?.signin;
+    if (session?.auth?.accessToken && browser) {
+      if (
+        window.localStorage.getItem("authorization") !==
+        session.auth.accessToken
+      ) {
+        browser && window.localStorage.removeItem("authorization");
+        window.localStorage.setItem(
+          "authorization",
+          session.auth.accessToken
+        );
       }
     }
+    const jsonString = JSON.stringify(
+      (response as unknown as FetchResult<
+        signInUserMutation | unknown,
+        Record<string, any>,
+        Record<string, any>
+      >) ?? "no res",
+      null,
+      2
+    );
+    console.log("response: " + jsonString ?? "no response");
     return response;
   });
 });

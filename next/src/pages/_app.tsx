@@ -20,6 +20,7 @@ import {
   NormalizedCacheObject
 } from "@apollo/client";
 import { useRouter } from "next/router";
+import useAuth, { AuthData, AuthProvider, ViewerState } from "../hooks/use-auth";
 import Router from "next/dist/server/router";
 import { NextPageContext } from "next";
 import { request } from "http";
@@ -29,11 +30,12 @@ import Link, { LinkProps } from "next/link";
 import NextNodeServer from "next/dist/server/next-server";
 import { BaseRouter } from "next/dist/shared/lib/router/router";
 import { error } from "console";
+import { Viewer, ViewerQuery, ViewerQueryVariables } from "@/graphql/generated/graphql";
 
 const Noop: FC<{}> = ({ children }) => <>{children}</>;
-const envVars = {
-  facebookId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID ?? ""
-};
+// const envVars = {
+//   facebookId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID ?? ""
+// };
 
 type LinkPropsMapped<T extends keyof LinkProps> = {
   [P in T]: LinkProps[P];
@@ -50,50 +52,60 @@ export default function NestNextApp<T extends AppProps>({
   const LayoutNoop = (Component as any).LayoutNoop || Noop;
   const apolloClient = useApollo(
     pageProps.initialApolloState ?? null,
-    {}
+    pageProps.resolverContext ?? {}
   ) as ApolloClient<NormalizedCacheObject>;
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const isProd = process.env.NODE_ENV === "production";
-  //   const handleRouteChange = <
-  //     T extends RouterPropsMapped<"events">,
-  //     P extends URL,
-  //     S extends LinkPropsMapped<"shallow">
-  //   >(
-  //     events: T,
-  //     url: P,
-  //     shallow: S
-  //   ) => {
-  //     !isProd
-  //       ? console.log(
-  //           `App is changing to ${url} ${
-  //             shallow ? "with" : "without"
-  //           } shallow routing with query: ${Object.values(router.query).join(", \n")}`
-  //         )
-  //       : () => {
-  //           events.events.emit("routeChangeError");
-  //         };
-  //   };
-  //   router.events.on(
-  //     "routeChangeStart",
-  //     (
-  //       events: RouterPropsMapped<"events">,
-  //       url: URL,
-  //       shallow: LinkPropsMapped<"shallow">
-  //     ) => handleRouteChange(events, url, shallow)
-  //   );
-  //   return () => {
-  //     router.events.off(
-  //       "routeChangeComplete",
-  //       (
-  //         events: RouterPropsMapped<"events">,
-  //         url: URL,
-  //         shallow: LinkPropsMapped<"shallow">
-  //       ) => handleRouteChange(events, url, shallow)
-  //     );
-  //   };
-  // }, [router.events, router.query]);
+  useEffect(() => {
+    const isProd = process.env.NODE_ENV === "production";
+    const handleRouteChange = <
+      T extends RouterPropsMapped<"events">,
+      P extends URL,
+      S extends LinkPropsMapped<"shallow">
+    >(
+      events: T,
+      url: P,
+      shallow: S
+    ) => {
+      !isProd
+        ? console.log(
+            `App is changing to ${url} ${
+              shallow ? "with" : "without"
+            } shallow routing with query: ${Object.values(
+              router.query
+            ).join(", \n")}`
+          )
+        : () => {
+            events.events.emit("routeChangeError");
+          };
+    };
+    router.events.on(
+      "routeChangeStart",
+      (
+        events: RouterPropsMapped<"events">,
+        url: URL,
+        shallow: LinkPropsMapped<"shallow">
+      ) => handleRouteChange(events, url, shallow)
+    );
+    return () => {
+      router.events.off(
+        "routeChangeComplete",
+        (
+          events: RouterPropsMapped<"events">,
+          url: URL,
+          shallow: LinkPropsMapped<"shallow">
+        ) => handleRouteChange(events, url, shallow)
+      );
+    };
+  }, [router.events, router.query]);
+
+  // const readCache = apolloClient.cache.readQuery<ViewerQuery, ViewerQueryVariables>({
+  //   query: Viewer,
+  //   returnPartialData: true
+  // });
+
+  // const objectManipulation: ViewerState['authDetailed'] = pageProps.authData?.viewer?.authDetailed ? pageProps.authData.viewer.authDetailed : undefined;
+  // const areEqual = objectManipulation === readCache?.me ? readCache?.me : objectManipulation
 
   useEffect(() => {
     // getCookie("nest-next-2022") ? router.replace(window.location.href, { auth: cookieAuth }) : document.cookie;
@@ -103,9 +115,11 @@ export default function NestNextApp<T extends AppProps>({
   return (
     <>
       <ApolloProvider client={apolloClient}>
-        <LayoutNoop pageProps={pageProps}>
-          <Component {...pageProps} />
-        </LayoutNoop>
+        <AuthProvider authData={pageProps.authData}>
+          <LayoutNoop pageProps={pageProps}>
+            <Component {...pageProps} />
+          </LayoutNoop>
+        </AuthProvider>
       </ApolloProvider>
     </>
   );

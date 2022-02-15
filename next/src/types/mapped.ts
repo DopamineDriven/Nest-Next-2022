@@ -15,6 +15,8 @@ import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 // export type RecordContiional<T = unknown> = T extends {
 //   [index: keyof T]: T extends infer U ? U extends Array<{ [index: keyof U]: U }> | PromiseLike<T> | Awaited<U> ? T extends Promise<Array<({ [index: keyof T]: T })>>
 // };
+
+export type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>);
 export type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
 };

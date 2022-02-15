@@ -2,13 +2,14 @@ import {
   ApolloClient,
   InMemoryCache,
   FieldMergeFunction,
+  Reference,
   NormalizedCacheObject
 } from "@apollo/client";
 import {
   createBatch,
   errorLink,
   ResolverContext,
-  crmSesh
+  nextSesh
 } from "./resolver-context";
 import { useMemo } from "react";
 import { relayStylePagination } from "@apollo/client/utilities";
@@ -17,6 +18,23 @@ import {
   AuthDetailedFieldPolicy,
   AuthDetailedKeySpecifier,
   AuthFieldPolicy,
+  ConnectionFieldPolicy,
+  EntryConnectionFieldPolicy,
+  UserConnectionFieldPolicy,
+  EntryConnectionKeySpecifier,
+  UserConnectionKeySpecifier,
+  ProfileConnectionFieldPolicy,
+  ProfileConnectionKeySpecifier,
+  MediaItemConnectionFieldPolicy,
+  MediaItemConnectionKeySpecifier,
+  EntryEdgeFieldPolicy,
+  EntryEdgeKeySpecifier,
+  UserEdgeFieldPolicy,
+  UserEdgeKeySpecifier,
+  ProfileEdgeFieldPolicy,
+  ProfileEdgeKeySpecifier,
+  MediaItemEdgeFieldPolicy,
+  MediaItemEdgeKeySpecifier,
   JwtDecodedFieldPolicy
 } from "./helpers";
 import emittedIntrospection, {
@@ -26,6 +44,7 @@ import {
   ViewerPartialFragment,
   ViewerPartialFragmentDoc
 } from "@/graphql/fragments/viewer-partial.graphql";
+import { UserConnectionPartial, UserConnectionPartialFragmentDoc } from "@/graphql/generated/graphql";
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
@@ -35,7 +54,7 @@ function createApolloClient(
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     name: "graphql-global",
-    link: crmSesh.concat(createBatch(context) || errorLink),
+    link: nextSesh.concat(createBatch(context) || errorLink),
     connectToDevTools: true,
     cache: new InMemoryCache({
       possibleTypes: emittedIntrospection.possibleTypes,
@@ -72,7 +91,7 @@ function createApolloClient(
         },
         Query: {
           fields: {
-            allEntries: relayStylePagination()
+            listUsers: relayStylePagination<UserConnectionKeySpecifier>()
           }
         }
       } as TypedTypePolicies
