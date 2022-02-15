@@ -1,12 +1,36 @@
 export type PossibleTypesResultData = {
   possibleTypes: {
-    Node: [];
+    EntryCommentUnion: ["CommentConnection", "EntryConnection"];
+    Node: [
+      "Account",
+      "Category",
+      "Comment",
+      "Connection",
+      "Entry",
+      "MediaItem",
+      "Profile",
+      "Session",
+      "User",
+      "ViewerDetailed"
+    ];
     TypesUnion: ["Entry", "MediaItem", "User"];
   };
 };
 const result: PossibleTypesResultData = {
   possibleTypes: {
-    Node: [],
+    EntryCommentUnion: ["CommentConnection", "EntryConnection"],
+    Node: [
+      "Account",
+      "Category",
+      "Comment",
+      "Connection",
+      "Entry",
+      "MediaItem",
+      "Profile",
+      "Session",
+      "User",
+      "ViewerDetailed"
+    ],
     TypesUnion: ["Entry", "MediaItem", "User"]
   }
 };

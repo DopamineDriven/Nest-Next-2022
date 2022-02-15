@@ -4,13 +4,21 @@
 # import JwtPayloadPartial from "../fragments/jwt-payload-partial.graphql";
 # import JwtDecodedPartial from "../fragments/jwt-decoded-partial.graphql";
 # import AuthPartial from "../fragments/auth-partial.graphql";
+# import CommentPartial from "../fragments/comment-partial.graphql";
+# import EntryPartial from "../fragments/entry-partial.graphql";
 
 query Viewer {
   me {
     auth {
-...AuthPartial
+      ...AuthPartial
       user {
         ...UserPartial
+      entries {
+        ...EntryPartial
+        comments {
+          ...CommentPartial
+        }
+      }
       }
       session {
         ...SessionPartial
