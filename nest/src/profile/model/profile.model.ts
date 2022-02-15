@@ -13,10 +13,10 @@ import { Country } from "..";
 import { JSONValue } from "src/common/types/json.type";
 import { isInputObjectType } from "graphql";
 import GraphQLJSON from "graphql-type-json";
-import { Prisma } from "@prisma/client";
+import { Prisma, Profile as PrismaProfile } from "@prisma/client";
 import { Node } from "src/node/model/node.model";
 
-@ObjectType("Profile")
+@ObjectType("Profile", {implements: () => Node})
 export class Profile implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
@@ -33,8 +33,8 @@ export class Profile implements Node {
   @Field(() => Pronouns, { nullable: true, defaultValue: "NOT_LISTED" })
   pronouns?: keyof typeof Pronouns | null;
 
-  @Field(() => [JSONObjectResolver], {nullable:true})
-  coverPhoto?: Array<any>
+  @Field(() => String, {nullable:true})
+  coverPhoto?: string
 
   @Field(() => Date, { nullable: true })
   lastSeen?: Date | null;
@@ -55,14 +55,14 @@ export class Profile implements Node {
   country?: string | null;
 
   @Field(() => [JSONObjectResolver], {nullable:true})
-  bio!: Array<typeof JSONObjectResolver>
+  bio!: Array<Prisma.JsonValue>
 
   @Field(() => [JSONObjectResolver], {nullable:true})
-  activiyFeed!: Array<typeof JSONObjectResolver>
+  activiyFeed!: Array<Prisma.JsonValue>
 
   @Field(() => User, { nullable: false })
-  user!: User;
+  user?: User;
 
   @Field(() => [JSONObjectResolver], {nullable:true})
-  recentActivity!: Array<typeof JSONObjectResolver>
+  recentActivity!: Array<Prisma.JsonValue>
 }

@@ -18,6 +18,8 @@ export class SignupInput {
   firstName?: string;
   @Field(_type => String, { nullable: true })
   lastName?: string;
+  @Field(_type => String, { nullable: true })
+  image: string | null;
   // @Field(() => ProfileCreateNestedOneWithoutUserInput, {nullable:true})
   // profile?: ProfileCreateNestedOneWithoutUserInput;
 }

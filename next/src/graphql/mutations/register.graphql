@@ -8,19 +8,29 @@
 # import ProfilePartial from "../fragments/profile-partial.graphql";
 # import MediaItemPartial from "../fragments/media-item-partial.graphql";
 
-mutation registerUser($userCreateInput: UserCreateMutationInput!) {
-  registerNewUser(userCreateInput: $userCreateInput) {
+mutation registerNewUser($userCreateMutationInput: UserCreateMutationInput!) {
+  registerNewUser(userCreateInput: $userCreateMutationInput) {
     auth {
+      ...AuthPartial
       user {
-        profile {
-          ...ProfilePartial
-        }
         mediaItems {
           ...MediaItemPartial
         }
+        entries {
+          ...EntryPartial
+        }
+        profile {
+          ...ProfilePartial
+        }
+        _count {
+          ...UserCountPartial
+        }
         ...UserPartial
       }
-      ...AuthPartial
+
+      session {
+        ...SessionPartial
+      }
     }
     jwt {
       header {

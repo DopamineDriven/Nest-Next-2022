@@ -86,37 +86,37 @@ export class AuthResolver {
             : "USER",
           status: "ONLINE",
           createdAt: new Date(Date.now()),
-          image: params.image?.set
-            ? { ...params.image.set }
-            : {
-                set: [
-                  {
-                    id: params.image?.set.find(id => id).id ?? v4(),
-                    uploadedAt: new Date(
-                      params.mediaItems?.create
-                        ? (params.mediaItems.create[0].uploadedAt as string)
-                        : (uploadDate as string)
-                    ).toUTCString()
-                  },
-                  {
-                    ariaLabel: "Accessibility label",
-                    caption: "default avatar",
-                    destination: "AVATAR",
-                    quality: 90,
-                    name: "g4apn65eo8acy988pfhb",
-                    src: "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
-                    srcSet: "",
-                    height: 141,
-                    width: 220,
-                    type: "GIF",
-                    size: ""
-                  },
-                  {
-                    unique: `${params.id}_${"g4apn65eo8acy988pfhb"}`
-                  }
-                ]
-              }
-        }
+          image: params.image,
+            // ? { ...params.image.set }
+            // : {
+            //     set: [
+            //       {
+            //         id: params.image?.set.find(id => id).id ?? v4(),
+            //         uploadedAt: new Date(
+            //           params.mediaItems?.create
+            //             ? (params.mediaItems.create[0].uploadedAt as string)
+            //             : (uploadDate as string)
+            //         ).toUTCString()
+            //       },
+            //       {
+            //         ariaLabel: "Accessibility label",
+            //         caption: "default avatar",
+            //         destination: "AVATAR",
+            //         quality: 90,
+            //         name: "g4apn65eo8acy988pfhb",
+            //         src: "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
+            //         srcSet: "",
+            //         height: 141,
+            //         width: 220,
+            //         type: "GIF",
+            //         size: ""
+            //       },
+            //       {
+            //         unique: `${params.id}_${"g4apn65eo8acy988pfhb"}`
+            //       }
+            //     ]
+            //   }
+        } as UserCreateMutationInput
       });
 
       const getTokes = this.auth.generateTokens({ userId: userCreate.id });
@@ -152,6 +152,7 @@ export class AuthResolver {
         emailVerified: new Date(Date.now()),
         email: dataRegister.email,
         firstName: dataRegister.firstName,
+        image: dataRegister.image ?? "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
         lastName: dataRegister.lastName,
         password: await this.passwordService.hashPassword(
           dataRegister.password
@@ -218,7 +219,7 @@ export class AuthResolver {
     return await this.auth.getUserWithDecodedToken(ctx as unknown as string);
   }
 
-  @Mutation(() => ViewerAuthInfo)
+  @Query(() => ViewerAuthInfo)
   @UseGuards(AuthGuard)
   async viewerAuthInfoFromContext(
     @Context("token") ctx: ExecutionContext
@@ -238,7 +239,7 @@ export class AuthResolver {
       });
   }
 
-  @Mutation(() => User)
+  @Query(() => User)
   async getUserFromAccessToken(
     @Args() { token }: TokenInput
   ): Promise<User | null> {

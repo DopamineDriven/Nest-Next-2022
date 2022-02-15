@@ -26,6 +26,13 @@ export enum AlgorithmType {
     RS512 = "RS512"
 }
 
+export enum CommentOrderByRelevanceFieldEnum {
+    authorId = "authorId",
+    entryId = "entryId",
+    id = "id",
+    position = "position"
+}
+
 export enum CommentReactions {
     ANGRY = "ANGRY",
     CARE = "CARE",
@@ -38,6 +45,17 @@ export enum CommentReactions {
     ROCKET = "ROCKET",
     TEARS = "TEARS",
     WOW = "WOW"
+}
+
+export enum CommentScalarFieldEnum {
+    authorId = "authorId",
+    body = "body",
+    createdAt = "createdAt",
+    entryId = "entryId",
+    id = "id",
+    position = "position",
+    reactions = "reactions",
+    updatedAt = "updatedAt"
 }
 
 export enum EntryOrderByRelevanceFieldEnum {
@@ -120,6 +138,7 @@ export enum MimeTypes {
 export enum ProfileOrderByRelevanceFieldEnum {
     city = "city",
     country = "country",
+    coverPhoto = "coverPhoto",
     dob = "dob",
     id = "id",
     occupation = "occupation",
@@ -174,6 +193,7 @@ export enum UserOrderByRelevanceFieldEnum {
     email = "email",
     firstName = "firstName",
     id = "id",
+    image = "image",
     lastName = "lastName",
     password = "password"
 }
@@ -482,6 +502,26 @@ export class CommentListRelationFilter {
 
 export class CommentOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
+}
+
+export class CommentOrderByRelevanceInput {
+    fields: CommentOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
+}
+
+export class CommentOrderByWithRelationAndSearchRelevanceInput {
+    _relevance?: Nullable<CommentOrderByRelevanceInput>;
+    author?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    authorId?: Nullable<SortOrder>;
+    body?: Nullable<SortOrder>;
+    createdAt?: Nullable<SortOrder>;
+    entry?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput>;
+    entryId?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    position?: Nullable<SortOrder>;
+    reactions?: Nullable<SortOrder>;
+    updatedAt?: Nullable<SortOrder>;
 }
 
 export class CommentWhereInput {
@@ -813,6 +853,16 @@ export class EnumUserStatusNullableFilter {
     in?: Nullable<UserStatus[]>;
     not?: Nullable<NestedEnumUserStatusNullableFilter>;
     notIn?: Nullable<UserStatus[]>;
+}
+
+export class FindManyCommentsPaginatedInput {
+    cursor?: Nullable<CommentWhereUniqueInput>;
+    distinct?: Nullable<CommentScalarFieldEnum[]>;
+    orderBy?: Nullable<CommentOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<CommentWhereInput>;
 }
 
 export class FindManyEntriessPaginatedInput {
@@ -1177,7 +1227,7 @@ export class ProfileCreateInput {
     bio?: Nullable<ProfileCreatebioInput>;
     city?: Nullable<string>;
     country?: Nullable<string>;
-    coverPhoto?: Nullable<ProfileCreatecoverPhotoInput>;
+    coverPhoto?: Nullable<string>;
     dob?: Nullable<string>;
     gender?: Nullable<Gender>;
     id?: Nullable<string>;
@@ -1206,7 +1256,7 @@ export class ProfileCreateWithoutUserInput {
     bio?: Nullable<ProfileCreatebioInput>;
     city?: Nullable<string>;
     country?: Nullable<string>;
-    coverPhoto?: Nullable<ProfileCreatecoverPhotoInput>;
+    coverPhoto?: Nullable<string>;
     dob?: Nullable<string>;
     gender?: Nullable<Gender>;
     id?: Nullable<string>;
@@ -1223,10 +1273,6 @@ export class ProfileCreateactiviyFeedInput {
 }
 
 export class ProfileCreatebioInput {
-    set: JSON[];
-}
-
-export class ProfileCreatecoverPhotoInput {
     set: JSON[];
 }
 
@@ -1273,7 +1319,7 @@ export class ProfileWhereInput {
     bio?: Nullable<JsonNullableListFilter>;
     city?: Nullable<StringNullableFilter>;
     country?: Nullable<StringNullableFilter>;
-    coverPhoto?: Nullable<JsonNullableListFilter>;
+    coverPhoto?: Nullable<StringNullableFilter>;
     dob?: Nullable<StringNullableFilter>;
     gender?: Nullable<EnumGenderNullableFilter>;
     id?: Nullable<StringFilter>;
@@ -1390,6 +1436,7 @@ export class SessionWhereUniqueInput {
 export class SignupInput {
     email: string;
     firstName?: Nullable<string>;
+    image?: Nullable<string>;
     lastName?: Nullable<string>;
     password: string;
 }
@@ -1445,7 +1492,7 @@ export class UserCreateMutationInput {
     entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
     firstName?: Nullable<string>;
     id?: Nullable<string>;
-    image?: Nullable<UserCreateimageInput>;
+    image?: Nullable<string>;
     lastName?: Nullable<string>;
     mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
     password?: Nullable<string>;
@@ -1510,7 +1557,7 @@ export class UserCreateWithoutCategoriesInput {
     entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
     firstName?: Nullable<string>;
     id?: Nullable<string>;
-    image?: Nullable<UserCreateimageInput>;
+    image?: Nullable<string>;
     lastName?: Nullable<string>;
     mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
     password?: Nullable<string>;
@@ -1531,7 +1578,7 @@ export class UserCreateWithoutCommentsInput {
     entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
     firstName?: Nullable<string>;
     id?: Nullable<string>;
-    image?: Nullable<UserCreateimageInput>;
+    image?: Nullable<string>;
     lastName?: Nullable<string>;
     mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
     password?: Nullable<string>;
@@ -1552,7 +1599,7 @@ export class UserCreateWithoutEntriesInput {
     emailVerified?: Nullable<DateTime>;
     firstName?: Nullable<string>;
     id?: Nullable<string>;
-    image?: Nullable<UserCreateimageInput>;
+    image?: Nullable<string>;
     lastName?: Nullable<string>;
     mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
     password?: Nullable<string>;
@@ -1574,7 +1621,7 @@ export class UserCreateWithoutProfileInput {
     entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
     firstName?: Nullable<string>;
     id?: Nullable<string>;
-    image?: Nullable<UserCreateimageInput>;
+    image?: Nullable<string>;
     lastName?: Nullable<string>;
     mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
     password?: Nullable<string>;
@@ -1582,10 +1629,6 @@ export class UserCreateWithoutProfileInput {
     sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
     status?: Nullable<UserStatus>;
     updatedAt?: Nullable<DateTime>;
-}
-
-export class UserCreateimageInput {
-    set: JSON[];
 }
 
 export class UserOrderByRelevanceInput {
@@ -1636,7 +1679,7 @@ export class UserWhereInput {
     entries?: Nullable<EntryListRelationFilter>;
     firstName?: Nullable<StringNullableFilter>;
     id?: Nullable<StringFilter>;
-    image?: Nullable<JsonNullableListFilter>;
+    image?: Nullable<StringNullableFilter>;
     lastName?: Nullable<StringNullableFilter>;
     mediaItems?: Nullable<MediaItemListRelationFilter>;
     password?: Nullable<StringFilter>;
@@ -1672,7 +1715,7 @@ export interface Node {
     id: string;
 }
 
-export class Account {
+export class Account implements Node {
     __typename?: 'Account';
     access_token?: Nullable<string>;
     expires_at?: Nullable<number>;
@@ -1726,7 +1769,7 @@ export class BaseTypesEdge {
     node: TypesUnion;
 }
 
-export class Category {
+export class Category implements Node {
     __typename?: 'Category';
     _count: CategoryCount;
     createdAt?: Nullable<DateTime>;
@@ -1744,7 +1787,7 @@ export class CategoryCount {
     entries: number;
 }
 
-export class Comment {
+export class Comment implements Node {
     __typename?: 'Comment';
     author: User;
     authorId: string;
@@ -1758,7 +1801,20 @@ export class Comment {
     updatedAt?: Nullable<DateTime>;
 }
 
-export class Connection {
+export class CommentConnection {
+    __typename?: 'CommentConnection';
+    edges: CommentEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
+}
+
+export class CommentEdge {
+    __typename?: 'CommentEdge';
+    cursor: string;
+    node: Comment;
+}
+
+export class Connection implements Node {
     __typename?: 'Connection';
     email: string;
     firstName?: Nullable<string>;
@@ -1776,7 +1832,7 @@ export class ContentNodes {
     contentNodes: BaseTypeNodes;
 }
 
-export class Entry {
+export class Entry implements Node {
     __typename?: 'Entry';
     _count: EntryCount;
     author: User;
@@ -1832,7 +1888,7 @@ export class JwtPayload {
     userId?: Nullable<string>;
 }
 
-export class MediaItem {
+export class MediaItem implements Node {
     __typename?: 'MediaItem';
     fileLastModified?: Nullable<DateTime>;
     height?: Nullable<number>;
@@ -1874,8 +1930,6 @@ export abstract class IMutation {
 
     abstract createProfile(data: ProfileCreateInput, userId: string): Profile | Promise<Profile>;
 
-    abstract getUserFromAccessToken(token: string): User | Promise<User>;
-
     abstract login(data: LoginInput): Token | Promise<Token>;
 
     abstract register(dataRegister: SignupInput): AuthSansSession | Promise<AuthSansSession>;
@@ -1890,8 +1944,6 @@ export abstract class IMutation {
 
     abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
 
-    abstract viewerAuthInfoFromContext(): ViewerAuthInfo | Promise<ViewerAuthInfo>;
-
     abstract viewerCreateEntry(viewerEntryCreateInput: EntryCreateWithoutAuthorInput): Entry | Promise<Entry>;
 }
 
@@ -1903,13 +1955,13 @@ export class PageInfo {
     startCursor?: Nullable<string>;
 }
 
-export class Profile {
+export class Profile implements Node {
     __typename?: 'Profile';
     activiyFeed?: Nullable<JSONObject[]>;
     bio?: Nullable<JSONObject[]>;
     city?: Nullable<string>;
     country?: Nullable<string>;
-    coverPhoto?: Nullable<JSONObject[]>;
+    coverPhoto?: Nullable<string>;
     dob?: Nullable<string>;
     gender?: Nullable<Gender>;
     id: string;
@@ -1940,17 +1992,25 @@ export class ProfileEdge {
 export abstract class IQuery {
     __typename?: 'IQuery';
 
+    abstract commentByRelayId(cursor: string): Comment | Promise<Comment>;
+
+    abstract commentConnectionUnion(findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput, findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput): EntryCommentUnion[] | Promise<EntryCommentUnion[]>;
+
     abstract contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput, findManyMediaItemsPaginated?: Nullable<FindManyMediaItemsInput>, findManyUsersPaginatedInput?: Nullable<FindManyUsersPaginatedInput>): ContentNodes | Promise<ContentNodes>;
 
     abstract entryById(id: string): Entry | Promise<Entry>;
 
     abstract findUniqueMediaItem(mediaItemId: string): MediaItem | Promise<MediaItem>;
 
+    abstract getUserFromAccessToken(token: string): User | Promise<User>;
+
     abstract getViewer(): AuthDetailed | Promise<AuthDetailed>;
 
     abstract hello(name: string): string | Promise<string>;
 
     abstract helloWorld(): string | Promise<string>;
+
+    abstract listComments(findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput): CommentConnection | Promise<CommentConnection>;
 
     abstract listEntries(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput): EntryConnection | Promise<EntryConnection>;
 
@@ -1976,10 +2036,12 @@ export abstract class IQuery {
 
     abstract viewer(): ViewerDetailed | Promise<ViewerDetailed>;
 
+    abstract viewerAuthInfoFromContext(): ViewerAuthInfo | Promise<ViewerAuthInfo>;
+
     abstract viewerEntriesPaginated(viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput): EntryConnection | Promise<EntryConnection>;
 }
 
-export class Session {
+export class Session implements Node {
     __typename?: 'Session';
     accessToken?: Nullable<string>;
     alg?: Nullable<string>;
@@ -2010,7 +2072,7 @@ export class Token {
     refreshToken?: Nullable<string>;
 }
 
-export class User {
+export class User implements Node {
     __typename?: 'User';
     _count?: Nullable<UserCount>;
     accounts?: Nullable<Account[]>;
@@ -2023,7 +2085,7 @@ export class User {
     entries?: Nullable<Entry[]>;
     firstName?: Nullable<string>;
     id: string;
-    image: JSONObject[];
+    image?: Nullable<string>;
     lastName?: Nullable<string>;
     mediaItems?: Nullable<MediaItem[]>;
     password: string;
@@ -2065,7 +2127,7 @@ export class ViewerAuthInfo {
     viewerJwt: JwtDecoded;
 }
 
-export class ViewerDetailed {
+export class ViewerDetailed implements Node {
     __typename?: 'ViewerDetailed';
     _count?: Nullable<UserCount>;
     accessToken?: Nullable<string>;
@@ -2079,7 +2141,7 @@ export class ViewerDetailed {
     entries?: Nullable<Entry[]>;
     firstName?: Nullable<string>;
     id: string;
-    image: JSONObject[];
+    image?: Nullable<string>;
     lastName?: Nullable<string>;
     mediaItems?: Nullable<MediaItem[]>;
     password: string;
@@ -2097,5 +2159,6 @@ export type DateTime = any;
 export type JSON = any;
 export type JSONObject = any;
 export type PhoneNumber = any;
+export type EntryCommentUnion = CommentConnection | EntryConnection;
 export type TypesUnion = Entry | MediaItem | User;
 type Nullable<T> = T | null;

@@ -45,8 +45,8 @@ export class UserCreateMutationInput {
     @Field(() => Date, {nullable:true})
     emailVerified?: Date | string;
 
-    @Field(() => UserCreateimageInput, {nullable:true})
-    image?: UserCreateimageInput;
+    @Field(() => String, {nullable:true})
+    image?: string;
 
     @Field(() => ProfileCreateNestedOneWithoutUserInput, {nullable:true})
     profile?: ProfileCreateNestedOneWithoutUserInput;

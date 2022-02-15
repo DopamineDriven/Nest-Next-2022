@@ -7,7 +7,7 @@ import type {
   NormalizedCache
 } from "@apollo/client";
 import { ResolverContext } from '@/apollo/resolver-context';
-import { AuthData } from "src/hooks/use-auth";
+import { AuthData } from "@/hooks/use-auth";
 declare module "next/app" {
   type AppProps<P = Record<string, unknown>> = {
         Component: NextComponentType<NextPageContext, any, P>;

@@ -37,7 +37,7 @@ Table User {
   firstName String
   lastName String
   email String [unique, not null]
-  image Json [not null]
+  image String [default: 'https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif']
   role Role [default: 'USER']
   status UserStatus [default: 'OFFLINE']
   password String [not null, default: '']
@@ -60,7 +60,7 @@ Table Profile {
   memberSince DateTime [default: `now()`, not null]
   gender Gender [default: 'OTHER']
   pronouns Pronouns [default: 'NOT_LISTED']
-  coverPhoto Json [not null]
+  coverPhoto String
   lastSeen DateTime
   dob String
   phoneNumber String

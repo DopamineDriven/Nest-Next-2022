@@ -1,9 +1,10 @@
 import { ObjectType, Field, ID } from "@nestjs/graphql";
-import { PhoneNumberResolver } from "graphql-scalars";
+import { PhoneNumberMock, PhoneNumberResolver, PhoneNumberTypeDefinition } from "graphql-scalars";
 import { User } from "../../user/model/user.model";
 import { Node } from "src/node/model/node.model";
+import { PhoneNumber } from "graphql-scalars/typeDefs";
 
-@ObjectType("Connection")
+@ObjectType("Connection", {implements: () => Node})
 export class Connection implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
@@ -21,7 +22,7 @@ export class Connection implements Node {
   email!: string;
 
   @Field(_type => PhoneNumberResolver, { nullable: true })
-  phoneNumber!: typeof PhoneNumberResolver | null;
+  phoneNumber!: typeof PhoneNumberTypeDefinition | null;
 
   @Field(_type => String, { nullable: true })
   ip!: string | null;

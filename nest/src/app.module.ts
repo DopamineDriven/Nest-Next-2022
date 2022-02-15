@@ -55,6 +55,7 @@ import { PubSub, PubSubOptions, PubSubEngine } from "graphql-subscriptions";
 import { ViewerModule } from "./viewer/viewer.module";
 import { ApolloConfigInput, GraphQLExecutor } from "apollo-server-types";
 import { ExpressGraphQLDriver } from "src/app/driver/express-graphql.driver";
+import { CommentModule } from "./comment/comment.module";
 import { GraphQLSchema } from "graphql";
 export type RecordContiional<T> =
   | Record<keyof T, T>
@@ -256,6 +257,7 @@ export type Context<T = unknown extends infer P ? P : unknown> = {
     EntryModule,
     NodeModule,
     MediaModule,
+    CommentModule,
     // UploadModule,
     ProfileModule
   ],

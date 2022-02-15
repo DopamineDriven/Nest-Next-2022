@@ -21,11 +21,13 @@ import { Constructor } from "src/common/types/helpers.type";
 import { Injectable } from "@nestjs/common";
 import { AuthService } from "../../auth/auth-jwt.service";
 import { PrismaService } from "../../prisma/prisma.service";
-import { GraphQLEmailAddress, GraphQLJSONObject } from "graphql-scalars";
+import { EmailAddressResolver, EmailAddressTypeDefinition, GraphQLEmailAddress, GraphQLJSONObject } from "graphql-scalars";
 import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
 import { UserStatus } from "src/.generated/prisma-nestjs-graphql/prisma/enums/user-status.enum";
+import { GraphQLEmailAddressConfig } from "graphql-scalars/scalars/EmailAddress";
+import { EmailAddress } from "graphql-scalars/typeDefs";
 type Nullable<T> = T | null;
-@ObjectType("ViewerEntity")
+@ObjectType("ViewerEntity", {implements: () => Node})
 export class ViewerEntity extends AuthDetailed implements Node {
   constructor() {
     super();
@@ -38,8 +40,8 @@ export class Viewer implements User {
   @Field(() => Date, { defaultValue: new Date(Date.now()) })
   createdAt: Date;
 
-  @Field(() => GraphQLEmailAddress)
-  email: string;
+  @Field(() => EmailAddressResolver)
+  email: typeof EmailAddress;
 
   @Field(() => Date, { nullable: true })
   emailVerified: Date | null;
@@ -47,8 +49,8 @@ export class Viewer implements User {
   @Field(() => String, { nullable: true })
   firstName: string | null;
 
-  @Field(() => GraphQLJSONObject)
-  image: Array<any>
+  @Field(() => String)
+  image: string;
 
   @Field(() => String, { nullable: true })
   lastName: string | null;

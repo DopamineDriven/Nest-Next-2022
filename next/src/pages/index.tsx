@@ -22,16 +22,33 @@ import {
   signInUserMutationVariables,
   namedOperations,
   Viewer,
-  ViewerQueryVariables,
-  deriveUserDetailsFromTokenMutation
+  ViewerQueryVariables
 } from "@/graphql/generated/graphql";
 import { setCookies } from "cookies-next";
 import { NextPage } from "next";
 import * as SuperJSON from "superjson";
 import { QueryDocumentKeys } from "graphql/language/visitor";
-import useSWR from "swr";
-import { authFetcher } from "@/lib/network/fetchers";
-import Image from "next/image";
+
+
+
+type userImageJsonField = {
+  id: string;
+  uploadedAt: string;
+  fileLastModified: string;
+  filename: string;
+  src: string;
+  srcSet: string;
+  type: MimeTypes;
+  size: string;
+  width: number;
+  quality: number;
+  height: number;
+  title: string;
+  ariaLabel: string;
+  caption: string;
+  destination: MediaItemDestination;
+  unique: string;
+}
 
 const ReusableInput = ({
   ...props
@@ -66,8 +83,7 @@ export default function Index() {
 
   const [
     signInMutation,
-    {
-      data: signInData,
+    { data: signInData,
       client: signInClient,
       loading: signInLoading,
       called: signinCalled,
@@ -88,19 +104,6 @@ export default function Index() {
 
   const [authDetailedState, setAuthDetailedState] =
     useState<AuthDetailed | null>(null);
-  const { data, error, mutate, isValidating } = useSWR<
-    deriveUserDetailsFromTokenMutation["userFromAccessTokenDecoded"]
-  >(
-    accessTokenVal != null ? `/api/viewer?token=${accessTokenVal}` : "",
-    authFetcher
-  );
-
-  const swrCallback = useCallback((authDetailed: AuthDetailed | null) => {
-    if (authDetailed?.auth?.accessToken && !isValidating) {
-
-      return setAccessTokenVal(authDetailed.auth.accessToken);
-    }
-  }, [isValidating]);
 
   useEffect(() => {
     (async function authIIFE() {
@@ -109,11 +112,15 @@ export default function Index() {
             const getLs = window.localStorage.getItem("authorization");
             if (getLs && getLs.length > 0)
               window.sessionStorage.setItem("authorization", getLs);
-            swrCallback(authDetailedState);
+            setAccessTokenVal(
+              authDetailedState.auth?.accessToken
+                ? authDetailedState.auth.accessToken
+                : ""
+            );
           }, 4000)
         : () => {};
     })();
-  }, [authDetailedState, router, swrCallback]);
+  }, [authDetailedState, router]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -171,7 +178,7 @@ export default function Index() {
       </div>
       <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-4xl'>
         <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
-          {authDetailedState !== null ? data !== null ? (
+          {authDetailedState !== null ? (
             <>
               <Inspector>
                 {JSON.stringify(accessTokenVal, null, 2)}
@@ -180,9 +187,7 @@ export default function Index() {
                 {JSON.stringify(authDetailedState, null, 2)}
               </Inspector>
             </>
-          ) : (<>
-              <Image alt="featuredImage" src={`${authDetailedState.auth?.user.image.find(src => src)?.toString()}`} width="200" height="150" quality="100" />
-          </>) : (
+          ) : (
             <form
               method='POST'
               onSubmit={handleSubmit}

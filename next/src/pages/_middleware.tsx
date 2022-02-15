@@ -2,12 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { INTERNALS } from "next/dist/server/web/spec-extension/request";
 import cors, { CorsOptions } from "@/lib/cors";
+import { WebNextResponse } from "next/dist/server/base-http";
 
 // (next: () => NextResponse)
 
 export default async function middleware(req: NextRequest) {
   req.cookies;
   console.log(JSON.stringify(req.cookies ?? {}, null, 2));
+  if (req.headers.get("authorization") && req.headers.get("authorization") != null) {
+    return WebNextResponse.prototype.setHeader("authorization", `Bearer ${(req.headers.get("authorization")?.split(/([ ])/)[1])?.trim()}`)
+  }
+  if (req.nextUrl.pathname === "/") {
+    const getCookieFromSignupOrloginMutations = JSON.parse(req.cookies['nest-to-next-2022' || "false"]);
+    console.log(getCookieFromSignupOrloginMutations ?? "no cookies at the edge");
+    return NextResponse.rewrite(`/${getCookieFromSignupOrloginMutations ? '/profile' : "/"}`);
+  }
   const response = NextResponse.next();
   response.headers.set("Referrer-Policy", "Origin-When-Cross-Origin");
   response.headers.set(
