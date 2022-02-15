@@ -51,8 +51,12 @@
       "@/components/*": [
         "src/components/*"
       ],
+      "@/context/*": ["src/context/*"],
       "@/graphql/*": [
         "src/graphql/*"
+      ],
+      "@/hooks/*": [
+        "src/hooks/*"
       ],
       "@/lib/*": [
         "src/lib/*"
@@ -68,9 +72,6 @@
       ],
       "@/styles/*": [
         "src/styles/*"
-      ],
-      "@/swr/*": [
-        "src/swr/*"
       ],
       "@/types/*": [
         "src/types/*"

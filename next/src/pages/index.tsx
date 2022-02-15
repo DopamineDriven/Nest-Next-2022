@@ -1,19 +1,25 @@
 import { CookieValueTypes } from "cookies-next/lib/types";
 import { Inspector } from "@/components/UI";
 import { ViewerQuery } from "@/graphql/queries/viewer.graphql";
-import { NormalizedCacheObject } from "@apollo/client";
+import { ApolloError, ApolloQueryResult, NormalizedCacheObject } from "@apollo/client";
 import { useRouter } from "next/router";
 import cn from "classnames";
 import { TypeScript } from "@/components/Icons";
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { UnwrapInputProps } from "@/types/mapped";
+import { useApollo } from "@/apollo/apollo";
 import {
   signInUserDocument,
   usesignInUserMutation,
-  AuthDetailed
+  signInUserMutation,
+  AuthDetailed,
+  signInUserMutationResult,
+  signInUserMutationVariables
 } from "@/graphql/generated/graphql";
 import { setCookies } from "cookies-next";
+import { NextPage } from "next";
+import * as SuperJSON from 'superjson'
 
 const ReusableInput = ({
   ...props
@@ -51,7 +57,7 @@ export default function Index() {
 
   const [
     signInMutation,
-    { loading: signInLoading, called: signinCalled }
+    { loading: signInLoading, called: signinCalled, reset: signInReset, error: signInError }
   ] = usesignInUserMutation({
     mutation: signInUserDocument
   });
@@ -59,20 +65,39 @@ export default function Index() {
   const [authDetailedState, setAuthDetailedState] =
     useState<AuthDetailed | null>(null);
 
+  // const sessionCb = useCallback((authDetailed: AuthDetailed) => {
+
+  //   const objectToSerialize = {
+  //     scaffold: {
+  //       user: authDetailed.auth?.user,
+  //       accessToken: authDetailed.auth?.accessToken,
+  //       refreshToken: authDetailed.auth?.refreshToken,
+  //       session: authDetailed.auth?.session,
+  //       jwt: authDetailed.jwt
+  //     },
+  //     timestamp: new Date(Date.now()),
+  //     id: /authDetailed/
+  //   }
+
+  //   const { json, meta } = SuperJSON.serialize(objectToSerialize as typeof objectToSerialize)
+  //   if (window.sessionStorage.getItem("superSession") != null) {
+
+  //   }
+  //   SuperJSON.default.stringify({user: authDetailedState ? authDetailedState as AuthDetailed : {}})
+  //   window.sessionStorage.setItem("superSession", SuperJSON.default.stringify({user: authDetailedState ? authDetailedState as AuthDetailed : {}}))
+  // }, [])
+
   useEffect(() => {
-    (async function watchSWR() {
+    (async function authIIFE() {
       authDetailedState != null
-        ? setCookies("nest-next-2022", authDetailedState.auth?.user, {
-          maxAge: new Date(
-            new Date(Date.now()).getMilliseconds() + 1000 * 60 * 60 * 24 * 30
-          ).getSeconds(),
-          secure: process.env.NODE_ENV === "production" ? true : false,
-          sameSite: "lax",
-          path: "/"
-        })
+        ? setTimeout(() => {
+          const getLs = window.localStorage.getItem("authorization");
+          if (getLs && getLs.length > 0) window.sessionStorage.setItem("authorization", getLs);
+          setAccessTokenVal(authDetailedState.auth?.accessToken ? authDetailedState.auth.accessToken : "");
+        }, 4000)
         : () => {};
     })();
-  }, [authDetailedState]);
+  }, [authDetailedState, router]);
 
   const [emailState, setEmailState] = useState<string | null>(null);
   const [passwordState, setPasswordState] = useState<string | null>(null);
@@ -90,19 +115,26 @@ export default function Index() {
     console.log(password ?? "");
     setEmailState(email.toString());
     setPasswordState(password.toString());
-    return await signInMutation({
-      variables: {
-        loginInput: {
-          email: `${email}` ?? emailState,
-          password: `${password}` ?? passwordState
+    try {
+      return await signInMutation({
+        variables: {
+          loginInput: {
+            email: `${email}` ?? emailState,
+            password: `${password}` ?? passwordState
+          }
         }
-      }
-    }).then(data => {
-      data.data?.signin != null
-        ? setAuthDetailedState(data.data.signin)
-        : setAccessTokenVal(null);
-      return data;
-    });
+      })
+        .then(async data => {
+          data.data?.signin != null
+            ? setAuthDetailedState(data.data.signin)
+            : setAccessTokenVal(null);
+          return data
+        })
+        .finally(() => Promise.resolve({}));
+    } catch (err) {
+      new ApolloError({...signInError});
+      throw new Error(`${err}`).message;
+    }
   }
 
   return (
@@ -126,10 +158,14 @@ export default function Index() {
       <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-4xl'>
         <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
           {authDetailedState !== null ? (
+            <>
+            <Inspector>
+              {JSON.stringify(accessTokenVal, null, 2)}
+            </Inspector>
             <Inspector>
               {JSON.stringify(authDetailedState, null, 2)}
             </Inspector>
-          ) : (
+          </>) : (
             <form
               method='POST'
               onSubmit={handleSubmit}

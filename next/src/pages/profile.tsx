@@ -123,6 +123,7 @@ export default function Profile<T extends typeof getServerSideProps>({
   }, [authHeaderReq, authHeaderRes, lazyDerivePayload]);
   useEffect(() => {
     if (typeof window !== "undefined") {
+
       async () => await callbackData();
     }
   }, [callbackData]);
