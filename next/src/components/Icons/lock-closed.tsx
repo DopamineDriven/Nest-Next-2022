@@ -1,4 +1,4 @@
-import { SVGAttribs } from "@/types/index";
+import { SVGAttribs } from "@/types/mapped";
 
 const LockClosedIcon = ({...props}: SVGAttribs<"className" | "aria-hidden">) => (
   <svg

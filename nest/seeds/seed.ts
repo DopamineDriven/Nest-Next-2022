@@ -236,9 +236,8 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
     .toUTCString();
   const coverImageId = faker.datatype.uuid();
   const coverImageFilename = `${seedFirstName}s-killer-cover`;
-  const coverImage = [
-    { id: coverImageId, uploadedAt: new Date(Date.now()).toUTCString() },
-    {
+  const coverImage = ([
+    { id: coverImageId, uploadedAt: new Date(Date.now()).toUTCString(),
       fileLastModified: coverImageFileLastModified,
       filename: coverImageFilename,
       src: faker.image.imageUrl(2500.0, 1750.25, "winter", true, true),
@@ -251,10 +250,11 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
       title: `${seedFirstName} ${seedSurname}'s Cover Image`,
       ariaLabel: "Accessibility label",
       caption: faker.lorem.sentence(5),
-      destination: MediaItemDestination.COVER_IMAGE
-    },
-    { unique: `${seedUserId}_${coverImageFilename}` }
-  ];
+      destination: MediaItemDestination.COVER_IMAGE,
+      unique: `${seedUserId}_${coverImageFilename}`
+    }
+  ].map(t => t));
+  coverImage[1]
   const userAvatarFileLastModified = faker.date
     .past(0.0221355, new Date(Date.now()))
     .toUTCString();

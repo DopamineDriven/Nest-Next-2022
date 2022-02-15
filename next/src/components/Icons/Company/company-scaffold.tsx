@@ -198,13 +198,13 @@ const Twitter = ({
 
 const TypeScript = ({
   ...props
-}: SVGAttribs<"className" | "aria-hidden">) => {
+}: SVGAttribs<"className" | "aria-hidden" | "fill">) => {
   return (
     <svg
       width='43.5'
       height='31.5'
       viewBox='0 0 87 63'
-      fill='none'
+      fill={(props.fill ?? "none").trim()}
       xmlns='http://www.w3.org/2000/svg'
       {...props}>
       <g filter='url(#filter0_d)'>
