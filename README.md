@@ -22,6 +22,7 @@
 - Nestjs Swagger ftw 
   - [Nest Next Swagger](http://localhost:3000/api)
 - GraphQL Relay
+- Pubsub
 - Prisma Codegen for Nestjs & Swagger scaffolds
 - GraphQL Codegen to pump out DTOs (data transfer objects) 
     - Resolvers, Operations, and TypeDefs generation as well
@@ -30,5 +31,17 @@
 - Redis global caching
 - tests with Jest & Supertest
 - Dockerconfigs & Dockerfiles
-  - Runs Postgres and Redis locally
-  - Runs Postgres, Redis, 
+  - Runs Postgres, Prisma, and Redis locally
+  - Runs Postgres, Prisma, Redis, and Nestjs in preview/prod environments
+    - Elastic Container Registry (AWS)
+    - GCP Cloudbuild a viable alternative (and many more)
+
+
+### Outlook -- Tentative 
+- Kafka and Kafdrop integration for Event-driven subscriptions
+  - Microservice fragmentation of singular codebase into many constituent nest environments
+  - A single http-gateway interacting with incoming and outgoing requests/responses
+  - the others connected via Kafka
+- Apollo Gateway/Federation while decentralizing into a Microservice-based, event-driven, architecture
+- Prisma considerations for multiple graphql endpoints
+- federation to weave schema from the endpoints of each microservice
