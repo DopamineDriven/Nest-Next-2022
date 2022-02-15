@@ -149,6 +149,26 @@ export type CommentFieldPolicy = {
   reactions?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type CommentConnectionKeySpecifier = (
+  | "edges"
+  | "pageInfo"
+  | "totalCount"
+  | CommentConnectionKeySpecifier
+)[];
+export type CommentConnectionFieldPolicy = {
+  edges?: FieldPolicy<any> | FieldReadFunction<any>;
+  pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalCount?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type CommentEdgeKeySpecifier = (
+  | "cursor"
+  | "node"
+  | CommentEdgeKeySpecifier
+)[];
+export type CommentEdgeFieldPolicy = {
+  cursor?: FieldPolicy<any> | FieldReadFunction<any>;
+  node?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type ConnectionKeySpecifier = (
   | "email"
   | "firstName"
@@ -328,7 +348,6 @@ export type MutationKeySpecifier = (
   | "createEntry"
   | "createNewEntry"
   | "createProfile"
-  | "getUserFromAccessToken"
   | "login"
   | "register"
   | "registerNewUser"
@@ -336,7 +355,6 @@ export type MutationKeySpecifier = (
   | "signup"
   | "updateUserPassword"
   | "userFromAccessTokenDecoded"
-  | "viewerAuthInfoFromContext"
   | "viewerCreateEntry"
   | MutationKeySpecifier
 )[];
@@ -345,7 +363,6 @@ export type MutationFieldPolicy = {
   createEntry?: FieldPolicy<any> | FieldReadFunction<any>;
   createNewEntry?: FieldPolicy<any> | FieldReadFunction<any>;
   createProfile?: FieldPolicy<any> | FieldReadFunction<any>;
-  getUserFromAccessToken?: FieldPolicy<any> | FieldReadFunction<any>;
   login?: FieldPolicy<any> | FieldReadFunction<any>;
   register?: FieldPolicy<any> | FieldReadFunction<any>;
   registerNewUser?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -353,7 +370,6 @@ export type MutationFieldPolicy = {
   signup?: FieldPolicy<any> | FieldReadFunction<any>;
   updateUserPassword?: FieldPolicy<any> | FieldReadFunction<any>;
   userFromAccessTokenDecoded?: FieldPolicy<any> | FieldReadFunction<any>;
-  viewerAuthInfoFromContext?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerCreateEntry?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type NodeKeySpecifier = ("id" | NodeKeySpecifier)[];
@@ -433,12 +449,16 @@ export type ProfileEdgeFieldPolicy = {
   node?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type QueryKeySpecifier = (
+  | "commentByRelayId"
+  | "commentConnectionUnion"
   | "contentNodesUnion"
   | "entryById"
   | "findUniqueMediaItem"
+  | "getUserFromAccessToken"
   | "getViewer"
   | "hello"
   | "helloWorld"
+  | "listComments"
   | "listEntries"
   | "listMediaItems"
   | "listProfiles"
@@ -451,16 +471,21 @@ export type QueryKeySpecifier = (
   | "userById"
   | "userByRelayId"
   | "viewer"
+  | "viewerAuthInfoFromContext"
   | "viewerEntriesPaginated"
   | QueryKeySpecifier
 )[];
 export type QueryFieldPolicy = {
+  commentByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
+  commentConnectionUnion?: FieldPolicy<any> | FieldReadFunction<any>;
   contentNodesUnion?: FieldPolicy<any> | FieldReadFunction<any>;
   entryById?: FieldPolicy<any> | FieldReadFunction<any>;
   findUniqueMediaItem?: FieldPolicy<any> | FieldReadFunction<any>;
+  getUserFromAccessToken?: FieldPolicy<any> | FieldReadFunction<any>;
   getViewer?: FieldPolicy<any> | FieldReadFunction<any>;
   hello?: FieldPolicy<any> | FieldReadFunction<any>;
   helloWorld?: FieldPolicy<any> | FieldReadFunction<any>;
+  listComments?: FieldPolicy<any> | FieldReadFunction<any>;
   listEntries?: FieldPolicy<any> | FieldReadFunction<any>;
   listMediaItems?: FieldPolicy<any> | FieldReadFunction<any>;
   listProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -473,6 +498,7 @@ export type QueryFieldPolicy = {
   userById?: FieldPolicy<any> | FieldReadFunction<any>;
   userByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
   viewer?: FieldPolicy<any> | FieldReadFunction<any>;
+  viewerAuthInfoFromContext?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerEntriesPaginated?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type SessionKeySpecifier = (
@@ -733,6 +759,20 @@ export type StrictTypedTypePolicies = {
       | CommentKeySpecifier
       | (() => undefined | CommentKeySpecifier);
     fields?: CommentFieldPolicy;
+  };
+  CommentConnection?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | CommentConnectionKeySpecifier
+      | (() => undefined | CommentConnectionKeySpecifier);
+    fields?: CommentConnectionFieldPolicy;
+  };
+  CommentEdge?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | CommentEdgeKeySpecifier
+      | (() => undefined | CommentEdgeKeySpecifier);
+    fields?: CommentEdgeFieldPolicy;
   };
   Connection?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:

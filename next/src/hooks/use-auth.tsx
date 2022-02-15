@@ -1,9 +1,5 @@
 import {
-  viewerAuthFromContextMutation,
-  UserPartialFragment,
-  TokenPartialFragment,
   useViewerQuery,
-  usederiveUserDetailsFromTokenMutation,
   Viewer,
   ViewerQuery
 } from "@/graphql/generated/graphql";
@@ -26,16 +22,16 @@ export const DEFAULT_STATE: AuthData = {
   error: undefined,
   loading: false,
   viewer: undefined
-}
+};
 
 const AuthContext = createContext<AuthData>(DEFAULT_STATE);
 
-export interface AuthProviderProps{
+export interface AuthProviderProps {
   children: ReactNode;
   authData?: AuthData | null;
-};
+}
 
-export function AuthProvider({children, authData}: AuthProviderProps) {
+export function AuthProvider({ children, authData }: AuthProviderProps) {
   const { data, loading, error } = useViewerQuery({ query: Viewer });
   const viewerDetailed = data?.me;
   const loggedIn = Boolean(viewerDetailed);
@@ -46,9 +42,14 @@ export function AuthProvider({children, authData}: AuthProviderProps) {
     error
   } as AuthData;
 
-  const valueEqualsData = (value === authData) ? authData : value;
-  return <AuthContext.Provider value={valueEqualsData}>{children}</AuthContext.Provider>
+  const valueEqualsData = value === authData ? authData : value;
+  return (
+    <AuthContext.Provider value={valueEqualsData}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
-const useAuth = () => useContext<AuthData>(AuthContext as Context<AuthData>)
+const useAuth = () =>
+  useContext<AuthData>(AuthContext as Context<AuthData>);
 
 export default useAuth;

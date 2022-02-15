@@ -1,11 +1,20 @@
 fragment CommentPartial on Comment {
-  authorId
+  __typename
   body
-  createdAt
   updatedAt
+  createdAt
   entryId
+  authorId
   id
   position
   reactions
+}
+fragment CommentEdgePartial on CommentEdge {
   __typename
+  cursor
+}
+
+fragment CommentConnectionPartial on CommentConnection {
+  __typename
+  totalCount
 }

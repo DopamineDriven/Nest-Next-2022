@@ -3,7 +3,7 @@
 # import JwtDecodedPartial from "../fragments/jwt-decoded-partial.graphql";
 # import ViewerAuthInfoPartial from "../fragments/viewer-auth-info-partial.graphql";
 
-mutation viewerAuthFromContext {
+query viewerAuthFromContext {
   viewerAuthInfoFromContext {
     viewerJwt {
       header {

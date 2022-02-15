@@ -2,7 +2,7 @@
 # import ProfileConnectionPartial from "../fragments/profile-partial.graphql";
 # import ProfileEdgePartial from "../fragments/profile-partial.graphql";
 # import PageInfoPartial from "../fragments/page-info-partial.graphql";
-# import UserPartial from "../fragments/user-partial.graphql"
+# import UserPartial from "../fragments/user-partial.graphql";
 
 query getProfiles($findManyProfiles: FindManyProfilesPaginatedInput!) {
   listProfiles(findManyProfilesPaginatedInput: $findManyProfiles) {

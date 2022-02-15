@@ -1,18 +1,20 @@
 # import PageInfoPartial from "../fragments/page-info-partial.graphql";
 # import MediaItemPartial from "../fragments/media-item-partial.graphql";
+# import MediaItemEdgePartial from "../fragments/media-item-partial.graphql";
+# import MediaItemConnectionPartial from "../fragments/media-item-partial.graphql";
 
-query getMediaItems(
+query allMediaItems(
   $findManyMediaItemsPaginated: FindManyMediaItemsInput!
 ) {
   listMediaItems(
     findManyMediaItemsPaginated: $findManyMediaItemsPaginated
   ) {
-    totalCount
+    ...MediaItemConnectionPartial
     pageInfo {
       ...PageInfoPartial
     }
     edges {
-      cursor
+      ...MediaItemEdgePartial
       node {
         ...MediaItemPartial
       }

@@ -1,0 +1,28 @@
+# import CommentConnectionPartial from "../fragments/comment-partial.graphql";
+# import CommentEdgePartial from "../fragments/comment-partial.graphql";
+# import CommentPartial from "../fragments/comment-partial.graphql";
+# import PageInfoPartial from "../fragments/page-info-partial.graphql";
+# import UserPartial from "../fragments/user-partial.graphql";
+# import EntryPartial from "../fragments/entry-partial.graphql";
+
+
+query getAllComments {
+  listComments(findManyCommentsPaginatedInput: { pagination: { first: 40 } }) {
+    ...CommentConnectionPartial
+    pageInfo {
+      ...PageInfoPartial
+    }
+    edges {
+      ...CommentEdgePartial
+      node {
+        ...CommentPartial
+        author {
+          ...UserPartial
+        }
+        entry {
+          ...EntryPartial
+        }
+      }
+    }
+  }
+}

@@ -5,7 +5,7 @@
 # import UserPartial from "../fragments/user-partial.graphql";
 # import MediaItemPartial from "../fragments/media-item-partial.graphql";
 # import ProfilePartial from "../fragments/profile-partial.graphql";
-# import UserCountPartial from "../fragments/user-count-partial.graphql;"
+# import UserCountPartial from "../fragments/user-count-partial.graphql";
 query allUsers($findManyUsersPaginatedInput: FindManyUsersPaginatedInput) {
   listUsers(findManyUsersPaginatedInput: $findManyUsersPaginatedInput) {
     ...UserConnectionPartial

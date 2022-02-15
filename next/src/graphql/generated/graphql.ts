@@ -53,7 +53,7 @@ export type Scalars = {
   PhoneNumber: typeof String;
 };
 
-export type Account = {
+export type Account = Node & {
   __typename?: "Account";
   access_token?: Maybe<FieldWrapper<Scalars["String"]>>;
   expires_at?: Maybe<FieldWrapper<Scalars["Int"]>>;
@@ -226,7 +226,7 @@ export type BoolFilter = {
   not?: InputMaybe<NestedBoolFilter>;
 };
 
-export type Category = {
+export type Category = Node & {
   __typename?: "Category";
   _count: FieldWrapper<CategoryCount>;
   createdAt?: Maybe<FieldWrapper<Scalars["DateTime"]>>;
@@ -336,7 +336,7 @@ export type ChangePasswordInput = {
   oldPassword: Scalars["String"];
 };
 
-export type Comment = {
+export type Comment = Node & {
   __typename?: "Comment";
   author: FieldWrapper<User>;
   authorId: FieldWrapper<Scalars["String"]>;
@@ -353,6 +353,13 @@ export type Comment = {
 export type CommentAuthorIdEntryIdCompoundUniqueInput = {
   authorId: Scalars["String"];
   entryId: Scalars["String"];
+};
+
+export type CommentConnection = {
+  __typename?: "CommentConnection";
+  edges: Array<FieldWrapper<CommentEdge>>;
+  pageInfo: FieldWrapper<PageInfo>;
+  totalCount: FieldWrapper<Scalars["Int"]>;
 };
 
 export type CommentCreateManyAuthorInput = {
@@ -441,6 +448,12 @@ export type CommentCreatereactionsInput = {
   set: Array<CommentReactions>;
 };
 
+export type CommentEdge = {
+  __typename?: "CommentEdge";
+  cursor: FieldWrapper<Scalars["String"]>;
+  node: FieldWrapper<Comment>;
+};
+
 export type CommentListRelationFilter = {
   every?: InputMaybe<CommentWhereInput>;
   none?: InputMaybe<CommentWhereInput>;
@@ -449,6 +462,33 @@ export type CommentListRelationFilter = {
 
 export type CommentOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
+};
+
+export enum CommentOrderByRelevanceFieldEnum {
+  authorId = "authorId",
+  entryId = "entryId",
+  id = "id",
+  position = "position"
+}
+
+export type CommentOrderByRelevanceInput = {
+  fields: Array<CommentOrderByRelevanceFieldEnum>;
+  search: Scalars["String"];
+  sort: SortOrder;
+};
+
+export type CommentOrderByWithRelationAndSearchRelevanceInput = {
+  _relevance?: InputMaybe<CommentOrderByRelevanceInput>;
+  author?: InputMaybe<UserOrderByWithRelationAndSearchRelevanceInput>;
+  authorId?: InputMaybe<SortOrder>;
+  body?: InputMaybe<SortOrder>;
+  createdAt?: InputMaybe<SortOrder>;
+  entry?: InputMaybe<EntryOrderByWithRelationAndSearchRelevanceInput>;
+  entryId?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  position?: InputMaybe<SortOrder>;
+  reactions?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
 };
 
 export enum CommentReactions {
@@ -463,6 +503,17 @@ export enum CommentReactions {
   ROCKET = "ROCKET",
   TEARS = "TEARS",
   WOW = "WOW"
+}
+
+export enum CommentScalarFieldEnum {
+  authorId = "authorId",
+  body = "body",
+  createdAt = "createdAt",
+  entryId = "entryId",
+  id = "id",
+  position = "position",
+  reactions = "reactions",
+  updatedAt = "updatedAt"
 }
 
 export type CommentWhereInput = {
@@ -486,7 +537,7 @@ export type CommentWhereUniqueInput = {
   id?: InputMaybe<Scalars["String"]>;
 };
 
-export type Connection = {
+export type Connection = Node & {
   __typename?: "Connection";
   email: FieldWrapper<Scalars["String"]>;
   firstName?: Maybe<FieldWrapper<Scalars["String"]>>;
@@ -594,7 +645,7 @@ export type DateTimeNullableFilter = {
   notIn?: InputMaybe<Array<Scalars["DateTime"]>>;
 };
 
-export type Entry = {
+export type Entry = Node & {
   __typename?: "Entry";
   _count: FieldWrapper<EntryCount>;
   author: FieldWrapper<User>;
@@ -610,6 +661,8 @@ export type Entry = {
   title?: Maybe<FieldWrapper<Scalars["String"]>>;
   updatedAt?: Maybe<FieldWrapper<Scalars["DateTime"]>>;
 };
+
+export type EntryCommentUnion = CommentConnection | EntryConnection;
 
 export type EntryConnection = {
   __typename?: "EntryConnection";
@@ -877,6 +930,18 @@ export type EnumUserStatusNullableFilter = {
   notIn?: InputMaybe<Array<UserStatus>>;
 };
 
+export type FindManyCommentsPaginatedInput = {
+  cursor?: InputMaybe<CommentWhereUniqueInput>;
+  distinct?: InputMaybe<Array<CommentScalarFieldEnum>>;
+  orderBy?: InputMaybe<
+    Array<CommentOrderByWithRelationAndSearchRelevanceInput>
+  >;
+  pagination: PaginationArgsInput;
+  skip?: InputMaybe<Scalars["Int"]>;
+  take?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<CommentWhereInput>;
+};
+
 export type FindManyEntriessPaginatedInput = {
   cursor?: InputMaybe<EntryWhereUniqueInput>;
   distinct?: InputMaybe<Array<EntryScalarFieldEnum>>;
@@ -1016,7 +1081,7 @@ export type LoginInput = {
   password?: InputMaybe<Scalars["String"]>;
 };
 
-export type MediaItem = {
+export type MediaItem = Node & {
   __typename?: "MediaItem";
   fileLastModified?: Maybe<FieldWrapper<Scalars["DateTime"]>>;
   height?: Maybe<FieldWrapper<Scalars["Float"]>>;
@@ -1233,7 +1298,6 @@ export type Mutation = {
   createEntry: FieldWrapper<Entry>;
   createNewEntry: FieldWrapper<Entry>;
   createProfile: FieldWrapper<Profile>;
-  getUserFromAccessToken: FieldWrapper<User>;
   login: FieldWrapper<Token>;
   register: FieldWrapper<AuthSansSession>;
   registerNewUser: FieldWrapper<AuthDetailed>;
@@ -1241,7 +1305,6 @@ export type Mutation = {
   signup: FieldWrapper<Token>;
   updateUserPassword: FieldWrapper<User>;
   userFromAccessTokenDecoded: FieldWrapper<AuthDetailed>;
-  viewerAuthInfoFromContext: FieldWrapper<ViewerAuthInfo>;
   viewerCreateEntry: FieldWrapper<Entry>;
 };
 
@@ -1260,10 +1323,6 @@ export type MutationcreateNewEntryArgs = {
 export type MutationcreateProfileArgs = {
   data: ProfileCreateInput;
   userId: Scalars["String"];
-};
-
-export type MutationgetUserFromAccessTokenArgs = {
-  token: Scalars["String"];
 };
 
 export type MutationloginArgs = {
@@ -1438,13 +1497,13 @@ export type PaginationArgsInput = {
   last?: InputMaybe<Scalars["Int"]>;
 };
 
-export type Profile = {
+export type Profile = Node & {
   __typename?: "Profile";
   activiyFeed?: Maybe<Array<FieldWrapper<Scalars["JSONObject"]>>>;
   bio?: Maybe<Array<FieldWrapper<Scalars["JSONObject"]>>>;
   city?: Maybe<FieldWrapper<Scalars["String"]>>;
   country?: Maybe<FieldWrapper<Scalars["String"]>>;
-  coverPhoto?: Maybe<Array<FieldWrapper<Scalars["JSONObject"]>>>;
+  coverPhoto?: Maybe<FieldWrapper<Scalars["String"]>>;
   dob?: Maybe<FieldWrapper<Scalars["String"]>>;
   gender?: Maybe<FieldWrapper<Gender>>;
   id: FieldWrapper<Scalars["ID"]>;
@@ -1471,7 +1530,7 @@ export type ProfileCreateInput = {
   bio?: InputMaybe<ProfileCreatebioInput>;
   city?: InputMaybe<Scalars["String"]>;
   country?: InputMaybe<Scalars["String"]>;
-  coverPhoto?: InputMaybe<ProfileCreatecoverPhotoInput>;
+  coverPhoto?: InputMaybe<Scalars["String"]>;
   dob?: InputMaybe<Scalars["String"]>;
   gender?: InputMaybe<Gender>;
   id?: InputMaybe<Scalars["String"]>;
@@ -1500,7 +1559,7 @@ export type ProfileCreateWithoutUserInput = {
   bio?: InputMaybe<ProfileCreatebioInput>;
   city?: InputMaybe<Scalars["String"]>;
   country?: InputMaybe<Scalars["String"]>;
-  coverPhoto?: InputMaybe<ProfileCreatecoverPhotoInput>;
+  coverPhoto?: InputMaybe<Scalars["String"]>;
   dob?: InputMaybe<Scalars["String"]>;
   gender?: InputMaybe<Gender>;
   id?: InputMaybe<Scalars["String"]>;
@@ -1520,10 +1579,6 @@ export type ProfileCreatebioInput = {
   set: Array<Scalars["JSON"]>;
 };
 
-export type ProfileCreatecoverPhotoInput = {
-  set: Array<Scalars["JSON"]>;
-};
-
 export type ProfileCreaterecentActivityInput = {
   set: Array<Scalars["JSON"]>;
 };
@@ -1537,6 +1592,7 @@ export type ProfileEdge = {
 export enum ProfileOrderByRelevanceFieldEnum {
   city = "city",
   country = "country",
+  coverPhoto = "coverPhoto",
   dob = "dob",
   id = "id",
   occupation = "occupation",
@@ -1601,7 +1657,7 @@ export type ProfileWhereInput = {
   bio?: InputMaybe<JsonNullableListFilter>;
   city?: InputMaybe<StringNullableFilter>;
   country?: InputMaybe<StringNullableFilter>;
-  coverPhoto?: InputMaybe<JsonNullableListFilter>;
+  coverPhoto?: InputMaybe<StringNullableFilter>;
   dob?: InputMaybe<StringNullableFilter>;
   gender?: InputMaybe<EnumGenderNullableFilter>;
   id?: InputMaybe<StringFilter>;
@@ -1639,12 +1695,16 @@ export enum Pronouns {
 
 export type Query = {
   __typename?: "Query";
+  commentByRelayId: FieldWrapper<Comment>;
+  commentConnectionUnion: Array<FieldWrapper<EntryCommentUnion>>;
   contentNodesUnion: FieldWrapper<ContentNodes>;
   entryById: FieldWrapper<Entry>;
   findUniqueMediaItem: FieldWrapper<MediaItem>;
+  getUserFromAccessToken: FieldWrapper<User>;
   getViewer: FieldWrapper<AuthDetailed>;
   hello: FieldWrapper<Scalars["String"]>;
   helloWorld: FieldWrapper<Scalars["String"]>;
+  listComments: FieldWrapper<CommentConnection>;
   listEntries: FieldWrapper<EntryConnection>;
   listMediaItems: FieldWrapper<MediaItemConnection>;
   listProfiles: FieldWrapper<ProfileConnection>;
@@ -1657,7 +1717,17 @@ export type Query = {
   userById: FieldWrapper<User>;
   userByRelayId: FieldWrapper<User>;
   viewer: FieldWrapper<ViewerDetailed>;
+  viewerAuthInfoFromContext: FieldWrapper<ViewerAuthInfo>;
   viewerEntriesPaginated: FieldWrapper<EntryConnection>;
+};
+
+export type QuerycommentByRelayIdArgs = {
+  cursor: Scalars["String"];
+};
+
+export type QuerycommentConnectionUnionArgs = {
+  findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput;
+  findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput;
 };
 
 export type QuerycontentNodesUnionArgs = {
@@ -1674,8 +1744,16 @@ export type QueryfindUniqueMediaItemArgs = {
   mediaItemId: Scalars["String"];
 };
 
+export type QuerygetUserFromAccessTokenArgs = {
+  token: Scalars["String"];
+};
+
 export type QueryhelloArgs = {
   name: Scalars["String"];
+};
+
+export type QuerylistCommentsArgs = {
+  findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput;
 };
 
 export type QuerylistEntriesArgs = {
@@ -1730,7 +1808,7 @@ export enum Role {
   USER = "USER"
 }
 
-export type Session = {
+export type Session = Node & {
   __typename?: "Session";
   accessToken?: Maybe<FieldWrapper<Scalars["String"]>>;
   alg?: Maybe<FieldWrapper<Scalars["String"]>>;
@@ -1838,6 +1916,7 @@ export type SessionWhereUniqueInput = {
 export type SignupInput = {
   email: Scalars["String"];
   firstName?: InputMaybe<Scalars["String"]>;
+  image?: InputMaybe<Scalars["String"]>;
   lastName?: InputMaybe<Scalars["String"]>;
   password: Scalars["String"];
 };
@@ -1903,7 +1982,7 @@ export type Token = {
 
 export type TypesUnion = Entry | MediaItem | User;
 
-export type User = {
+export type User = Node & {
   __typename?: "User";
   _count?: Maybe<FieldWrapper<UserCount>>;
   accounts?: Maybe<Array<FieldWrapper<Account>>>;
@@ -1917,7 +1996,7 @@ export type User = {
   entries?: Maybe<Array<FieldWrapper<Entry>>>;
   firstName?: Maybe<FieldWrapper<Scalars["String"]>>;
   id: FieldWrapper<Scalars["ID"]>;
-  image: Array<FieldWrapper<Scalars["JSONObject"]>>;
+  image?: Maybe<FieldWrapper<Scalars["String"]>>;
   lastName?: Maybe<FieldWrapper<Scalars["String"]>>;
   mediaItems?: Maybe<Array<FieldWrapper<MediaItem>>>;
   password: FieldWrapper<Scalars["String"]>;
@@ -1958,7 +2037,7 @@ export type UserCreateMutationInput = {
   entries?: InputMaybe<EntryCreateNestedManyWithoutAuthorInput>;
   firstName?: InputMaybe<Scalars["String"]>;
   id?: InputMaybe<Scalars["ID"]>;
-  image?: InputMaybe<UserCreateimageInput>;
+  image?: InputMaybe<Scalars["String"]>;
   lastName?: InputMaybe<Scalars["String"]>;
   mediaItems?: InputMaybe<MediaItemCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars["String"]>;
@@ -2023,7 +2102,7 @@ export type UserCreateWithoutCategoriesInput = {
   entries?: InputMaybe<EntryCreateNestedManyWithoutAuthorInput>;
   firstName?: InputMaybe<Scalars["String"]>;
   id?: InputMaybe<Scalars["String"]>;
-  image?: InputMaybe<UserCreateimageInput>;
+  image?: InputMaybe<Scalars["String"]>;
   lastName?: InputMaybe<Scalars["String"]>;
   mediaItems?: InputMaybe<MediaItemCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars["String"]>;
@@ -2044,7 +2123,7 @@ export type UserCreateWithoutCommentsInput = {
   entries?: InputMaybe<EntryCreateNestedManyWithoutAuthorInput>;
   firstName?: InputMaybe<Scalars["String"]>;
   id?: InputMaybe<Scalars["String"]>;
-  image?: InputMaybe<UserCreateimageInput>;
+  image?: InputMaybe<Scalars["String"]>;
   lastName?: InputMaybe<Scalars["String"]>;
   mediaItems?: InputMaybe<MediaItemCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars["String"]>;
@@ -2065,7 +2144,7 @@ export type UserCreateWithoutEntriesInput = {
   emailVerified?: InputMaybe<Scalars["DateTime"]>;
   firstName?: InputMaybe<Scalars["String"]>;
   id?: InputMaybe<Scalars["String"]>;
-  image?: InputMaybe<UserCreateimageInput>;
+  image?: InputMaybe<Scalars["String"]>;
   lastName?: InputMaybe<Scalars["String"]>;
   mediaItems?: InputMaybe<MediaItemCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars["String"]>;
@@ -2087,7 +2166,7 @@ export type UserCreateWithoutProfileInput = {
   entries?: InputMaybe<EntryCreateNestedManyWithoutAuthorInput>;
   firstName?: InputMaybe<Scalars["String"]>;
   id?: InputMaybe<Scalars["String"]>;
-  image?: InputMaybe<UserCreateimageInput>;
+  image?: InputMaybe<Scalars["String"]>;
   lastName?: InputMaybe<Scalars["String"]>;
   mediaItems?: InputMaybe<MediaItemCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars["String"]>;
@@ -2095,10 +2174,6 @@ export type UserCreateWithoutProfileInput = {
   sessions?: InputMaybe<SessionCreateNestedManyWithoutUserInput>;
   status?: InputMaybe<UserStatus>;
   updatedAt?: InputMaybe<Scalars["DateTime"]>;
-};
-
-export type UserCreateimageInput = {
-  set: Array<Scalars["JSON"]>;
 };
 
 export type UserEdge = {
@@ -2111,6 +2186,7 @@ export enum UserOrderByRelevanceFieldEnum {
   email = "email",
   firstName = "firstName",
   id = "id",
+  image = "image",
   lastName = "lastName",
   password = "password"
 }
@@ -2186,7 +2262,7 @@ export type UserWhereInput = {
   entries?: InputMaybe<EntryListRelationFilter>;
   firstName?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<StringFilter>;
-  image?: InputMaybe<JsonNullableListFilter>;
+  image?: InputMaybe<StringNullableFilter>;
   lastName?: InputMaybe<StringNullableFilter>;
   mediaItems?: InputMaybe<MediaItemListRelationFilter>;
   password?: InputMaybe<StringFilter>;
@@ -2209,7 +2285,7 @@ export type ViewerAuthInfo = {
   viewerJwt: FieldWrapper<JwtDecoded>;
 };
 
-export type ViewerDetailed = {
+export type ViewerDetailed = Node & {
   __typename?: "ViewerDetailed";
   _count?: Maybe<FieldWrapper<UserCount>>;
   accessToken?: Maybe<FieldWrapper<Scalars["String"]>>;
@@ -2224,7 +2300,7 @@ export type ViewerDetailed = {
   entries?: Maybe<Array<FieldWrapper<Entry>>>;
   firstName?: Maybe<FieldWrapper<Scalars["String"]>>;
   id: FieldWrapper<Scalars["ID"]>;
-  image: Array<FieldWrapper<Scalars["JSONObject"]>>;
+  image?: Maybe<FieldWrapper<Scalars["String"]>>;
   lastName?: Maybe<FieldWrapper<Scalars["String"]>>;
   mediaItems?: Maybe<Array<FieldWrapper<MediaItem>>>;
   password: FieldWrapper<Scalars["String"]>;
@@ -2301,15 +2377,27 @@ export const CategoryPartial = gql`
 `;
 export const CommentPartial = gql`
   fragment CommentPartial on Comment {
-    authorId
+    __typename
     body
-    createdAt
     updatedAt
+    createdAt
     entryId
+    authorId
     id
     position
     reactions
+  }
+`;
+export const CommentEdgePartial = gql`
+  fragment CommentEdgePartial on CommentEdge {
     __typename
+    cursor
+  }
+`;
+export const CommentConnectionPartial = gql`
+  fragment CommentConnectionPartial on CommentConnection {
+    __typename
+    totalCount
   }
 `;
 export const ConnectionPartial = gql`
@@ -2324,6 +2412,13 @@ export const ConnectionPartial = gql`
     lastName
     ownerId
     phoneNumber
+    __typename
+  }
+`;
+export const EntryCountPartial = gql`
+  fragment EntryCountPartial on EntryCount {
+    categories
+    comments
     __typename
   }
 `;
@@ -2528,6 +2623,14 @@ export const ViewerPartial = gql`
     __typename
   }
 `;
+export const changePassword = gql`
+  mutation changePassword($changePassword: ChangePasswordInput!) {
+    changePassword(changePasswordInput: $changePassword) {
+      ...UserPartial
+    }
+  }
+  ${UserPartial}
+`;
 export const createUser = gql`
   mutation createUser($createUserInput: SignupInput!) {
     signup(data: $createUserInput) {
@@ -2571,18 +2674,6 @@ export const deriveUserDetailsFromToken = gql`
   ${JwtPayloadPartial}
   ${JwtDecodedPartial}
 `;
-export const getUserFromTokenBasic = gql`
-  mutation getUserFromTokenBasic($userToken: String!) {
-    getUserFromAccessToken(token: $userToken) {
-      _count {
-        ...UserCountPartial
-      }
-      ...UserPartial
-    }
-  }
-  ${UserCountPartial}
-  ${UserPartial}
-`;
 export const loginUser = gql`
   mutation loginUser($data: LoginInput!) {
     login(data: $data) {
@@ -2591,20 +2682,31 @@ export const loginUser = gql`
   }
   ${TokenPartial}
 `;
-export const registerUser = gql`
-  mutation registerUser($userCreateInput: UserCreateMutationInput!) {
-    registerNewUser(userCreateInput: $userCreateInput) {
+export const registerNewUser = gql`
+  mutation registerNewUser(
+    $userCreateMutationInput: UserCreateMutationInput!
+  ) {
+    registerNewUser(userCreateInput: $userCreateMutationInput) {
       auth {
+        ...AuthPartial
         user {
-          profile {
-            ...ProfilePartial
-          }
           mediaItems {
             ...MediaItemPartial
           }
+          entries {
+            ...EntryPartial
+          }
+          profile {
+            ...ProfilePartial
+          }
+          _count {
+            ...UserCountPartial
+          }
           ...UserPartial
         }
-        ...AuthPartial
+        session {
+          ...SessionPartial
+        }
       }
       jwt {
         header {
@@ -2617,10 +2719,13 @@ export const registerUser = gql`
       }
     }
   }
-  ${ProfilePartial}
-  ${MediaItemPartial}
-  ${UserPartial}
   ${AuthPartial}
+  ${MediaItemPartial}
+  ${EntryPartial}
+  ${ProfilePartial}
+  ${UserCountPartial}
+  ${UserPartial}
+  ${SessionPartial}
   ${JwtHeadersPartial}
   ${JwtPayloadPartial}
   ${JwtDecodedPartial}
@@ -2660,25 +2765,57 @@ export const signInUser = gql`
   ${JwtPayloadPartial}
   ${JwtDecodedPartial}
 `;
-export const viewerAuthFromContext = gql`
-  mutation viewerAuthFromContext {
-    viewerAuthInfoFromContext {
-      viewerJwt {
-        header {
-          ...JwtHeadersPartial
-        }
-        payload {
-          ...JwtPayloadPartial
-        }
-        ...JwtDecodedPartial
-      }
-      ...ViewerAuthInfoPartial
+export const findUniqueCommentByRelayCursor = gql`
+  query findUniqueCommentByRelayCursor($commentCursor: String!) {
+    commentByRelayId(cursor: $commentCursor) {
+      ...CommentPartial
     }
   }
-  ${JwtHeadersPartial}
-  ${JwtPayloadPartial}
-  ${JwtDecodedPartial}
-  ${ViewerAuthInfoPartial}
+  ${CommentPartial}
+`;
+export const getCommentEntryConnection = gql`
+  query getCommentEntryConnection(
+    $entriesPaginatedInput: FindManyEntriessPaginatedInput!
+    $commentsPaginatedInput: FindManyCommentsPaginatedInput!
+  ) {
+    commentConnectionUnion(
+      findManyEntriesPaginatedInput: $entriesPaginatedInput
+      findManyCommentsPaginatedInput: $commentsPaginatedInput
+    ) {
+      __typename
+      ... on EntryConnection {
+        ...EntryConnectionPartial
+        pageInfo {
+          ...PageInfoPartial
+        }
+        edges {
+          ...EntryEdgePartial
+          node {
+            ...EntryPartial
+          }
+        }
+      }
+      ... on CommentConnection {
+        ...CommentConnectionPartial
+        pageInfo {
+          ...PageInfoPartial
+        }
+        edges {
+          ...CommentEdgePartial
+          node {
+            ...CommentPartial
+          }
+        }
+      }
+    }
+  }
+  ${EntryConnectionPartial}
+  ${PageInfoPartial}
+  ${EntryEdgePartial}
+  ${EntryPartial}
+  ${CommentConnectionPartial}
+  ${CommentEdgePartial}
+  ${CommentPartial}
 `;
 export const listEntries = gql`
   query listEntries(
@@ -2695,6 +2832,9 @@ export const listEntries = gql`
         ...EntryEdgePartial
         node {
           ...EntryPartial
+          _count {
+            ...EntryCountPartial
+          }
         }
       }
     }
@@ -2703,6 +2843,7 @@ export const listEntries = gql`
   ${PageInfoPartial}
   ${EntryEdgePartial}
   ${EntryPartial}
+  ${EntryCountPartial}
 `;
 export const getProfiles = gql`
   query getProfiles($findManyProfiles: FindManyProfilesPaginatedInput!) {
@@ -2728,34 +2869,86 @@ export const getProfiles = gql`
   ${ProfilePartial}
   ${UserPartial}
 `;
-export const getMediaItems = gql`
-  query getMediaItems(
+export const getAllComments = gql`
+  query getAllComments {
+    listComments(
+      findManyCommentsPaginatedInput: { pagination: { first: 40 } }
+    ) {
+      ...CommentConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...CommentEdgePartial
+        node {
+          ...CommentPartial
+          author {
+            ...UserPartial
+          }
+          entry {
+            ...EntryPartial
+          }
+        }
+      }
+    }
+  }
+  ${CommentConnectionPartial}
+  ${PageInfoPartial}
+  ${CommentEdgePartial}
+  ${CommentPartial}
+  ${UserPartial}
+  ${EntryPartial}
+`;
+export const allMediaItems = gql`
+  query allMediaItems(
     $findManyMediaItemsPaginated: FindManyMediaItemsInput!
   ) {
     listMediaItems(
       findManyMediaItemsPaginated: $findManyMediaItemsPaginated
     ) {
-      totalCount
+      ...MediaItemConnectionPartial
       pageInfo {
         ...PageInfoPartial
       }
       edges {
-        cursor
+        ...MediaItemEdgePartial
         node {
           ...MediaItemPartial
         }
       }
     }
   }
+  ${MediaItemConnectionPartial}
   ${PageInfoPartial}
+  ${MediaItemEdgePartial}
   ${MediaItemPartial}
 `;
 export const userByEncodedCursor = gql`
-  query userByEncodedCursor($cursor: String!) {
-    userByRelayId(cursor: $cursor) {
+  query userByEncodedCursor($userCursor: String!) {
+    userByRelayId(cursor: $userCursor) {
       ...UserPartial
     }
   }
+  ${UserPartial}
+`;
+export const userDecodedFromToken = gql`
+  query userDecodedFromToken($userFromToken: String!) {
+    getUserFromAccessToken(token: $userFromToken) {
+      _count {
+        ...UserCountPartial
+      }
+      sessions {
+        ...SessionPartial
+      }
+      profile {
+        ...ProfilePartial
+      }
+      ...UserPartial
+    }
+  }
+  ${UserCountPartial}
+  ${SessionPartial}
+  ${ProfilePartial}
   ${UserPartial}
 `;
 export const allUsers = gql`
@@ -2770,14 +2963,17 @@ export const allUsers = gql`
       edges {
         ...UserEdgePartial
         node {
-          entries {
-            ...EntryPartial
-          }
           profile {
             ...ProfilePartial
           }
           mediaItems {
             ...MediaItemPartial
+          }
+          entries {
+            ...EntryPartial
+          }
+          _count {
+            ...UserCountPartial
           }
           ...UserPartial
         }
@@ -2787,10 +2983,31 @@ export const allUsers = gql`
   ${UserConnectionPartial}
   ${PageInfoPartial}
   ${UserEdgePartial}
-  ${EntryPartial}
   ${ProfilePartial}
   ${MediaItemPartial}
+  ${EntryPartial}
+  ${UserCountPartial}
   ${UserPartial}
+`;
+export const viewerAuthFromContext = gql`
+  query viewerAuthFromContext {
+    viewerAuthInfoFromContext {
+      viewerJwt {
+        header {
+          ...JwtHeadersPartial
+        }
+        payload {
+          ...JwtPayloadPartial
+        }
+        ...JwtDecodedPartial
+      }
+      ...ViewerAuthInfoPartial
+    }
+  }
+  ${JwtHeadersPartial}
+  ${JwtPayloadPartial}
+  ${JwtDecodedPartial}
+  ${ViewerAuthInfoPartial}
 `;
 export const Viewer = gql`
   query Viewer {
@@ -2799,6 +3016,12 @@ export const Viewer = gql`
         ...AuthPartial
         user {
           ...UserPartial
+          entries {
+            ...EntryPartial
+            comments {
+              ...CommentPartial
+            }
+          }
         }
         session {
           ...SessionPartial
@@ -2818,6 +3041,8 @@ export const Viewer = gql`
   }
   ${AuthPartial}
   ${UserPartial}
+  ${EntryPartial}
+  ${CommentPartial}
   ${SessionPartial}
   ${JwtHeadersPartial}
   ${JwtPayloadPartial}
@@ -3038,6 +3263,7 @@ export type ResolversTypes = ResolversObject<{
   CommentAuthorIdEntryIdCompoundUniqueInput: ResolverTypeWrapper<
     DeepPartial<CommentAuthorIdEntryIdCompoundUniqueInput>
   >;
+  CommentConnection: ResolverTypeWrapper<DeepPartial<CommentConnection>>;
   CommentCreateManyAuthorInput: ResolverTypeWrapper<
     DeepPartial<CommentCreateManyAuthorInput>
   >;
@@ -3074,13 +3300,26 @@ export type ResolversTypes = ResolversObject<{
   CommentCreatereactionsInput: ResolverTypeWrapper<
     DeepPartial<CommentCreatereactionsInput>
   >;
+  CommentEdge: ResolverTypeWrapper<DeepPartial<CommentEdge>>;
   CommentListRelationFilter: ResolverTypeWrapper<
     DeepPartial<CommentListRelationFilter>
   >;
   CommentOrderByRelationAggregateInput: ResolverTypeWrapper<
     DeepPartial<CommentOrderByRelationAggregateInput>
   >;
+  CommentOrderByRelevanceFieldEnum: ResolverTypeWrapper<
+    DeepPartial<CommentOrderByRelevanceFieldEnum>
+  >;
+  CommentOrderByRelevanceInput: ResolverTypeWrapper<
+    DeepPartial<CommentOrderByRelevanceInput>
+  >;
+  CommentOrderByWithRelationAndSearchRelevanceInput: ResolverTypeWrapper<
+    DeepPartial<CommentOrderByWithRelationAndSearchRelevanceInput>
+  >;
   CommentReactions: ResolverTypeWrapper<DeepPartial<CommentReactions>>;
+  CommentScalarFieldEnum: ResolverTypeWrapper<
+    DeepPartial<CommentScalarFieldEnum>
+  >;
   CommentWhereInput: ResolverTypeWrapper<DeepPartial<CommentWhereInput>>;
   CommentWhereUniqueInput: ResolverTypeWrapper<
     DeepPartial<CommentWhereUniqueInput>
@@ -3120,6 +3359,9 @@ export type ResolversTypes = ResolversObject<{
     DeepPartial<DateTimeNullableFilter>
   >;
   Entry: ResolverTypeWrapper<DeepPartial<Entry>>;
+  EntryCommentUnion: DeepPartial<
+    ResolversTypes["CommentConnection"] | ResolversTypes["EntryConnection"]
+  >;
   EntryConnection: ResolverTypeWrapper<DeepPartial<EntryConnection>>;
   EntryCount: ResolverTypeWrapper<DeepPartial<EntryCount>>;
   EntryCreateManyAuthorInput: ResolverTypeWrapper<
@@ -3216,6 +3458,9 @@ export type ResolversTypes = ResolversObject<{
   >;
   EnumUserStatusNullableFilter: ResolverTypeWrapper<
     DeepPartial<EnumUserStatusNullableFilter>
+  >;
+  FindManyCommentsPaginatedInput: ResolverTypeWrapper<
+    DeepPartial<FindManyCommentsPaginatedInput>
   >;
   FindManyEntriessPaginatedInput: ResolverTypeWrapper<
     DeepPartial<FindManyEntriessPaginatedInput>
@@ -3337,7 +3582,17 @@ export type ResolversTypes = ResolversObject<{
   NestedStringNullableFilter: ResolverTypeWrapper<
     DeepPartial<NestedStringNullableFilter>
   >;
-  Node: never;
+  Node:
+    | ResolversTypes["Account"]
+    | ResolversTypes["Category"]
+    | ResolversTypes["Comment"]
+    | ResolversTypes["Connection"]
+    | ResolversTypes["Entry"]
+    | ResolversTypes["MediaItem"]
+    | ResolversTypes["Profile"]
+    | ResolversTypes["Session"]
+    | ResolversTypes["User"]
+    | ResolversTypes["ViewerDetailed"];
   PageInfo: ResolverTypeWrapper<DeepPartial<PageInfo>>;
   PaginationArgsInput: ResolverTypeWrapper<
     DeepPartial<PaginationArgsInput>
@@ -3360,9 +3615,6 @@ export type ResolversTypes = ResolversObject<{
   >;
   ProfileCreatebioInput: ResolverTypeWrapper<
     DeepPartial<ProfileCreatebioInput>
-  >;
-  ProfileCreatecoverPhotoInput: ResolverTypeWrapper<
-    DeepPartial<ProfileCreatecoverPhotoInput>
   >;
   ProfileCreaterecentActivityInput: ResolverTypeWrapper<
     DeepPartial<ProfileCreaterecentActivityInput>
@@ -3483,9 +3735,6 @@ export type ResolversTypes = ResolversObject<{
   UserCreateWithoutProfileInput: ResolverTypeWrapper<
     DeepPartial<UserCreateWithoutProfileInput>
   >;
-  UserCreateimageInput: ResolverTypeWrapper<
-    DeepPartial<UserCreateimageInput>
-  >;
   UserEdge: ResolverTypeWrapper<DeepPartial<UserEdge>>;
   UserOrderByRelevanceFieldEnum: ResolverTypeWrapper<
     DeepPartial<UserOrderByRelevanceFieldEnum>
@@ -3558,6 +3807,7 @@ export type ResolversParentTypes = ResolversObject<{
   ChangePasswordInput: DeepPartial<ChangePasswordInput>;
   Comment: DeepPartial<Comment>;
   CommentAuthorIdEntryIdCompoundUniqueInput: DeepPartial<CommentAuthorIdEntryIdCompoundUniqueInput>;
+  CommentConnection: DeepPartial<CommentConnection>;
   CommentCreateManyAuthorInput: DeepPartial<CommentCreateManyAuthorInput>;
   CommentCreateManyAuthorInputEnvelope: DeepPartial<CommentCreateManyAuthorInputEnvelope>;
   CommentCreateManyEntryInput: DeepPartial<CommentCreateManyEntryInput>;
@@ -3570,8 +3820,11 @@ export type ResolversParentTypes = ResolversObject<{
   CommentCreateWithoutAuthorInput: DeepPartial<CommentCreateWithoutAuthorInput>;
   CommentCreateWithoutEntryInput: DeepPartial<CommentCreateWithoutEntryInput>;
   CommentCreatereactionsInput: DeepPartial<CommentCreatereactionsInput>;
+  CommentEdge: DeepPartial<CommentEdge>;
   CommentListRelationFilter: DeepPartial<CommentListRelationFilter>;
   CommentOrderByRelationAggregateInput: DeepPartial<CommentOrderByRelationAggregateInput>;
+  CommentOrderByRelevanceInput: DeepPartial<CommentOrderByRelevanceInput>;
+  CommentOrderByWithRelationAndSearchRelevanceInput: DeepPartial<CommentOrderByWithRelationAndSearchRelevanceInput>;
   CommentWhereInput: DeepPartial<CommentWhereInput>;
   CommentWhereUniqueInput: DeepPartial<CommentWhereUniqueInput>;
   Connection: DeepPartial<Connection>;
@@ -3589,6 +3842,10 @@ export type ResolversParentTypes = ResolversObject<{
   DateTimeFilter: DeepPartial<DateTimeFilter>;
   DateTimeNullableFilter: DeepPartial<DateTimeNullableFilter>;
   Entry: DeepPartial<Entry>;
+  EntryCommentUnion: DeepPartial<
+    | ResolversParentTypes["CommentConnection"]
+    | ResolversParentTypes["EntryConnection"]
+  >;
   EntryConnection: DeepPartial<EntryConnection>;
   EntryCount: DeepPartial<EntryCount>;
   EntryCreateManyAuthorInput: DeepPartial<EntryCreateManyAuthorInput>;
@@ -3622,6 +3879,7 @@ export type ResolversParentTypes = ResolversObject<{
   EnumPronounsNullableFilter: DeepPartial<EnumPronounsNullableFilter>;
   EnumRoleNullableFilter: DeepPartial<EnumRoleNullableFilter>;
   EnumUserStatusNullableFilter: DeepPartial<EnumUserStatusNullableFilter>;
+  FindManyCommentsPaginatedInput: DeepPartial<FindManyCommentsPaginatedInput>;
   FindManyEntriessPaginatedInput: DeepPartial<FindManyEntriessPaginatedInput>;
   FindManyMediaItemsInput: DeepPartial<FindManyMediaItemsInput>;
   FindManyProfilesPaginatedInput: DeepPartial<FindManyProfilesPaginatedInput>;
@@ -3669,7 +3927,17 @@ export type ResolversParentTypes = ResolversObject<{
   NestedIntNullableFilter: DeepPartial<NestedIntNullableFilter>;
   NestedStringFilter: DeepPartial<NestedStringFilter>;
   NestedStringNullableFilter: DeepPartial<NestedStringNullableFilter>;
-  Node: never;
+  Node:
+    | ResolversParentTypes["Account"]
+    | ResolversParentTypes["Category"]
+    | ResolversParentTypes["Comment"]
+    | ResolversParentTypes["Connection"]
+    | ResolversParentTypes["Entry"]
+    | ResolversParentTypes["MediaItem"]
+    | ResolversParentTypes["Profile"]
+    | ResolversParentTypes["Session"]
+    | ResolversParentTypes["User"]
+    | ResolversParentTypes["ViewerDetailed"];
   PageInfo: DeepPartial<PageInfo>;
   PaginationArgsInput: DeepPartial<PaginationArgsInput>;
   PhoneNumber: DeepPartial<Scalars["PhoneNumber"]>;
@@ -3681,7 +3949,6 @@ export type ResolversParentTypes = ResolversObject<{
   ProfileCreateWithoutUserInput: DeepPartial<ProfileCreateWithoutUserInput>;
   ProfileCreateactiviyFeedInput: DeepPartial<ProfileCreateactiviyFeedInput>;
   ProfileCreatebioInput: DeepPartial<ProfileCreatebioInput>;
-  ProfileCreatecoverPhotoInput: DeepPartial<ProfileCreatecoverPhotoInput>;
   ProfileCreaterecentActivityInput: DeepPartial<ProfileCreaterecentActivityInput>;
   ProfileEdge: DeepPartial<ProfileEdge>;
   ProfileOrderByRelevanceInput: DeepPartial<ProfileOrderByRelevanceInput>;
@@ -3731,7 +3998,6 @@ export type ResolversParentTypes = ResolversObject<{
   UserCreateWithoutCommentsInput: DeepPartial<UserCreateWithoutCommentsInput>;
   UserCreateWithoutEntriesInput: DeepPartial<UserCreateWithoutEntriesInput>;
   UserCreateWithoutProfileInput: DeepPartial<UserCreateWithoutProfileInput>;
-  UserCreateimageInput: DeepPartial<UserCreateimageInput>;
   UserEdge: DeepPartial<UserEdge>;
   UserOrderByRelevanceInput: DeepPartial<UserOrderByRelevanceInput>;
   UserOrderByWithRelationAndSearchRelevanceInput: DeepPartial<UserOrderByWithRelationAndSearchRelevanceInput>;
@@ -3977,6 +4243,29 @@ export type CommentResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type CommentConnectionResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["CommentConnection"] = ResolversParentTypes["CommentConnection"]
+> = ResolversObject<{
+  edges?: Resolver<
+    Array<ResolversTypes["CommentEdge"]>,
+    ParentType,
+    ContextType
+  >;
+  pageInfo?: Resolver<ResolversTypes["PageInfo"], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CommentEdgeResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["CommentEdge"] = ResolversParentTypes["CommentEdge"]
+> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes["Comment"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type ConnectionResolvers<
   ContextType = ResolverContext,
   ParentType extends ResolversParentTypes["Connection"] = ResolversParentTypes["Connection"]
@@ -4080,6 +4369,17 @@ export type EntryResolvers<
     ContextType
   >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type EntryCommentUnionResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["EntryCommentUnion"] = ResolversParentTypes["EntryCommentUnion"]
+> = ResolversObject<{
+  __resolveType: TypeResolveFn<
+    "CommentConnection" | "EntryConnection",
+    ParentType,
+    ContextType
+  >;
 }>;
 
 export type EntryConnectionResolvers<
@@ -4273,12 +4573,6 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationcreateProfileArgs, "data" | "userId">
   >;
-  getUserFromAccessToken?: Resolver<
-    ResolversTypes["User"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationgetUserFromAccessTokenArgs, "token">
-  >;
   login?: Resolver<
     ResolversTypes["Token"],
     ParentType,
@@ -4321,11 +4615,6 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationuserFromAccessTokenDecodedArgs, "token">
   >;
-  viewerAuthInfoFromContext?: Resolver<
-    ResolversTypes["ViewerAuthInfo"],
-    ParentType,
-    ContextType
-  >;
   viewerCreateEntry?: Resolver<
     ResolversTypes["Entry"],
     ParentType,
@@ -4338,7 +4627,20 @@ export type NodeResolvers<
   ContextType = ResolverContext,
   ParentType extends ResolversParentTypes["Node"] = ResolversParentTypes["Node"]
 > = ResolversObject<{
-  __resolveType: TypeResolveFn<null, ParentType, ContextType>;
+  __resolveType: TypeResolveFn<
+    | "Account"
+    | "Category"
+    | "Comment"
+    | "Connection"
+    | "Entry"
+    | "MediaItem"
+    | "Profile"
+    | "Session"
+    | "User"
+    | "ViewerDetailed",
+    ParentType,
+    ContextType
+  >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
 }>;
 
@@ -4399,7 +4701,7 @@ export type ProfileResolvers<
     ContextType
   >;
   coverPhoto?: Resolver<
-    Maybe<Array<ResolversTypes["JSONObject"]>>,
+    Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
@@ -4477,6 +4779,21 @@ export type QueryResolvers<
   ContextType = ResolverContext,
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
+  commentByRelayId?: Resolver<
+    ResolversTypes["Comment"],
+    ParentType,
+    ContextType,
+    RequireFields<QuerycommentByRelayIdArgs, "cursor">
+  >;
+  commentConnectionUnion?: Resolver<
+    Array<ResolversTypes["EntryCommentUnion"]>,
+    ParentType,
+    ContextType,
+    RequireFields<
+      QuerycommentConnectionUnionArgs,
+      "findManyCommentsPaginatedInput" | "findManyEntriesPaginatedInput"
+    >
+  >;
   contentNodesUnion?: Resolver<
     ResolversTypes["ContentNodes"],
     ParentType,
@@ -4498,6 +4815,12 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryfindUniqueMediaItemArgs, "mediaItemId">
   >;
+  getUserFromAccessToken?: Resolver<
+    ResolversTypes["User"],
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetUserFromAccessTokenArgs, "token">
+  >;
   getViewer?: Resolver<
     ResolversTypes["AuthDetailed"],
     ParentType,
@@ -4510,6 +4833,12 @@ export type QueryResolvers<
     RequireFields<QueryhelloArgs, "name">
   >;
   helloWorld?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  listComments?: Resolver<
+    ResolversTypes["CommentConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<QuerylistCommentsArgs, "findManyCommentsPaginatedInput">
+  >;
   listEntries?: Resolver<
     ResolversTypes["EntryConnection"],
     ParentType,
@@ -4572,6 +4901,11 @@ export type QueryResolvers<
   >;
   viewer?: Resolver<
     ResolversTypes["ViewerDetailed"],
+    ParentType,
+    ContextType
+  >;
+  viewerAuthInfoFromContext?: Resolver<
+    ResolversTypes["ViewerAuthInfo"],
     ParentType,
     ContextType
   >;
@@ -4732,7 +5066,7 @@ export type UserResolvers<
   >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   image?: Resolver<
-    Array<ResolversTypes["JSONObject"]>,
+    Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
@@ -4883,7 +5217,7 @@ export type ViewerDetailedResolvers<
   >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   image?: Resolver<
-    Array<ResolversTypes["JSONObject"]>,
+    Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
@@ -4939,10 +5273,13 @@ export type Resolvers<ContextType = ResolverContext> = ResolversObject<{
   Category?: CategoryResolvers<ContextType>;
   CategoryCount?: CategoryCountResolvers<ContextType>;
   Comment?: CommentResolvers<ContextType>;
+  CommentConnection?: CommentConnectionResolvers<ContextType>;
+  CommentEdge?: CommentEdgeResolvers<ContextType>;
   Connection?: ConnectionResolvers<ContextType>;
   ContentNodes?: ContentNodesResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   Entry?: EntryResolvers<ContextType>;
+  EntryCommentUnion?: EntryCommentUnionResolvers<ContextType>;
   EntryConnection?: EntryConnectionResolvers<ContextType>;
   EntryCount?: EntryCountResolvers<ContextType>;
   EntryEdge?: EntryEdgeResolvers<ContextType>;
@@ -5017,14 +5354,24 @@ export type CategoryPartialFragment = {
 
 export type CommentPartialFragment = {
   __typename: "Comment";
-  authorId: string;
   body?: typeof GraphQLJSONObject | null;
-  createdAt: Date;
   updatedAt?: Date | null;
+  createdAt: Date;
   entryId: string;
+  authorId: string;
   id: string;
   position?: string | null;
   reactions?: Array<CommentReactions> | null;
+};
+
+export type CommentEdgePartialFragment = {
+  __typename: "CommentEdge";
+  cursor: string;
+};
+
+export type CommentConnectionPartialFragment = {
+  __typename: "CommentConnection";
+  totalCount: number;
 };
 
 export type ConnectionPartialFragment = {
@@ -5037,6 +5384,12 @@ export type ConnectionPartialFragment = {
   lastModified?: Date | null;
   ownerId: string;
   phoneNumber?: typeof String | null;
+};
+
+export type EntryCountPartialFragment = {
+  __typename: "EntryCount";
+  categories: number;
+  comments: number;
 };
 
 export type EntryPartialFragment = {
@@ -5127,7 +5480,7 @@ export type ProfilePartialFragment = {
   bio?: Array<typeof GraphQLJSONObject> | null;
   city?: string | null;
   country?: string | null;
-  coverPhoto?: Array<typeof GraphQLJSONObject> | null;
+  coverPhoto?: string | null;
   dob?: string | null;
   gender?: Gender | null;
   id: string;
@@ -5179,7 +5532,7 @@ export type UserPartialFragment = {
   email: string;
   emailVerified?: Date | null;
   id: string;
-  image: Array<typeof GraphQLJSONObject>;
+  image?: string | null;
   firstName?: string | null;
   lastName?: string | null;
   password: string;
@@ -5217,6 +5570,28 @@ export type ViewerPartialFragment = {
   role?: Role | null;
   status: UserStatus;
   updatedAt?: Date | null;
+};
+
+export type changePasswordMutationVariables = Exact<{
+  changePassword: ChangePasswordInput;
+}>;
+
+export type changePasswordMutation = {
+  __typename?: "Mutation";
+  changePassword: {
+    __typename: "User";
+    createdAt: Date;
+    email: string;
+    emailVerified?: Date | null;
+    id: string;
+    image?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    password: string;
+    role?: Role | null;
+    status: UserStatus;
+    updatedAt?: Date | null;
+  };
 };
 
 export type createUserMutationVariables = Exact<{
@@ -5265,7 +5640,7 @@ export type deriveUserDetailsFromTokenMutation = {
         email: string;
         emailVerified?: Date | null;
         id: string;
-        image: Array<typeof GraphQLJSONObject>;
+        image?: string | null;
         firstName?: string | null;
         lastName?: string | null;
         password: string;
@@ -5302,38 +5677,6 @@ export type deriveUserDetailsFromTokenMutation = {
   };
 };
 
-export type getUserFromTokenBasicMutationVariables = Exact<{
-  userToken: Scalars["String"];
-}>;
-
-export type getUserFromTokenBasicMutation = {
-  __typename?: "Mutation";
-  getUserFromAccessToken: {
-    __typename: "User";
-    createdAt: Date;
-    email: string;
-    emailVerified?: Date | null;
-    id: string;
-    image: Array<typeof GraphQLJSONObject>;
-    firstName?: string | null;
-    lastName?: string | null;
-    password: string;
-    role?: Role | null;
-    status: UserStatus;
-    updatedAt?: Date | null;
-    _count?: {
-      __typename: "UserCount";
-      accounts: number;
-      categories: number;
-      comments: number;
-      connections: number;
-      mediaItems: number;
-      entries: number;
-      sessions: number;
-    } | null;
-  };
-};
-
 export type loginUserMutationVariables = Exact<{
   data: LoginInput;
 }>;
@@ -5347,11 +5690,11 @@ export type loginUserMutation = {
   };
 };
 
-export type registerUserMutationVariables = Exact<{
-  userCreateInput: UserCreateMutationInput;
+export type registerNewUserMutationVariables = Exact<{
+  userCreateMutationInput: UserCreateMutationInput;
 }>;
 
-export type registerUserMutation = {
+export type registerNewUserMutation = {
   __typename?: "Mutation";
   registerNewUser: {
     __typename?: "AuthDetailed";
@@ -5365,31 +5708,13 @@ export type registerUserMutation = {
         email: string;
         emailVerified?: Date | null;
         id: string;
-        image: Array<typeof GraphQLJSONObject>;
+        image?: string | null;
         firstName?: string | null;
         lastName?: string | null;
         password: string;
         role?: Role | null;
         status: UserStatus;
         updatedAt?: Date | null;
-        profile?: {
-          __typename: "Profile";
-          activiyFeed?: Array<typeof GraphQLJSONObject> | null;
-          bio?: Array<typeof GraphQLJSONObject> | null;
-          city?: string | null;
-          country?: string | null;
-          coverPhoto?: Array<typeof GraphQLJSONObject> | null;
-          dob?: string | null;
-          gender?: Gender | null;
-          id: string;
-          lastSeen?: Date | null;
-          memberSince: Date;
-          occupation?: string | null;
-          phoneNumber?: string | null;
-          pronouns?: Pronouns | null;
-          recentActivity?: Array<typeof GraphQLJSONObject> | null;
-          userId: string;
-        } | null;
         mediaItems?: Array<{
           __typename: "MediaItem";
           id: string;
@@ -5404,7 +5729,60 @@ export type registerUserMutation = {
           userId: string;
           fileLastModified?: Date | null;
         }> | null;
+        entries?: Array<{
+          __typename: "Entry";
+          authorId: string;
+          content?: Array<typeof GraphQLJSONObject> | null;
+          createdAt: Date;
+          featuredImage?: Array<typeof GraphQLJSONObject> | null;
+          title?: string | null;
+          published?: boolean | null;
+          id: string;
+        }> | null;
+        profile?: {
+          __typename: "Profile";
+          activiyFeed?: Array<typeof GraphQLJSONObject> | null;
+          bio?: Array<typeof GraphQLJSONObject> | null;
+          city?: string | null;
+          country?: string | null;
+          coverPhoto?: string | null;
+          dob?: string | null;
+          gender?: Gender | null;
+          id: string;
+          lastSeen?: Date | null;
+          memberSince: Date;
+          occupation?: string | null;
+          phoneNumber?: string | null;
+          pronouns?: Pronouns | null;
+          recentActivity?: Array<typeof GraphQLJSONObject> | null;
+          userId: string;
+        } | null;
+        _count?: {
+          __typename: "UserCount";
+          accounts: number;
+          categories: number;
+          comments: number;
+          connections: number;
+          mediaItems: number;
+          entries: number;
+          sessions: number;
+        } | null;
       };
+      session?: {
+        __typename: "Session";
+        accessToken?: string | null;
+        alg?: string | null;
+        exp?: number | null;
+        iat?: number | null;
+        id: string;
+        lastVerified?: Date | null;
+        provider?: string | null;
+        refreshToken?: string | null;
+        scopes?: Array<string> | null;
+        signature?: string | null;
+        tokenState?: string | null;
+        userId: string;
+      } | null;
     } | null;
     jwt?: {
       __typename: "JwtDecoded";
@@ -5442,7 +5820,7 @@ export type signInUserMutation = {
         email: string;
         emailVerified?: Date | null;
         id: string;
-        image: Array<typeof GraphQLJSONObject>;
+        image?: string | null;
         firstName?: string | null;
         lastName?: string | null;
         password: string;
@@ -5494,32 +5872,85 @@ export type signInUserMutation = {
   };
 };
 
-export type viewerAuthFromContextMutationVariables = Exact<{
-  [key: string]: never;
+export type findUniqueCommentByRelayCursorQueryVariables = Exact<{
+  commentCursor: Scalars["String"];
 }>;
 
-export type viewerAuthFromContextMutation = {
-  __typename?: "Mutation";
-  viewerAuthInfoFromContext: {
-    __typename: "ViewerAuthInfo";
-    accessToken: string;
-    refreshToken: string;
-    viewerJwt: {
-      __typename: "JwtDecoded";
-      signature: string;
-      header: {
-        __typename: "JwtHeaders";
-        alg: AlgorithmType;
-        typ: string;
-      };
-      payload: {
-        __typename: "JwtPayload";
-        exp?: typeof GraphQLBigInt | null;
-        iat?: typeof GraphQLBigInt | null;
-        userId?: string | null;
-      };
-    };
+export type findUniqueCommentByRelayCursorQuery = {
+  __typename?: "Query";
+  commentByRelayId: {
+    __typename: "Comment";
+    body?: typeof GraphQLJSONObject | null;
+    updatedAt?: Date | null;
+    createdAt: Date;
+    entryId: string;
+    authorId: string;
+    id: string;
+    position?: string | null;
+    reactions?: Array<CommentReactions> | null;
   };
+};
+
+export type getCommentEntryConnectionQueryVariables = Exact<{
+  entriesPaginatedInput: FindManyEntriessPaginatedInput;
+  commentsPaginatedInput: FindManyCommentsPaginatedInput;
+}>;
+
+export type getCommentEntryConnectionQuery = {
+  __typename?: "Query";
+  commentConnectionUnion: Array<
+    | {
+        __typename: "CommentConnection";
+        totalCount: number;
+        pageInfo: {
+          __typename: "PageInfo";
+          startCursor?: string | null;
+          endCursor?: string | null;
+          hasNextPage: boolean;
+          hasPreviousPage: boolean;
+        };
+        edges: Array<{
+          __typename: "CommentEdge";
+          cursor: string;
+          node: {
+            __typename: "Comment";
+            body?: typeof GraphQLJSONObject | null;
+            updatedAt?: Date | null;
+            createdAt: Date;
+            entryId: string;
+            authorId: string;
+            id: string;
+            position?: string | null;
+            reactions?: Array<CommentReactions> | null;
+          };
+        }>;
+      }
+    | {
+        __typename: "EntryConnection";
+        totalCount: number;
+        pageInfo: {
+          __typename: "PageInfo";
+          startCursor?: string | null;
+          endCursor?: string | null;
+          hasNextPage: boolean;
+          hasPreviousPage: boolean;
+        };
+        edges: Array<{
+          __typename: "EntryEdge";
+          cursor: string;
+          node: {
+            __typename: "Entry";
+            authorId: string;
+            content?: Array<typeof GraphQLJSONObject> | null;
+            createdAt: Date;
+            featuredImage?: Array<typeof GraphQLJSONObject> | null;
+            title?: string | null;
+            published?: boolean | null;
+            id: string;
+          };
+        }>;
+      }
+  >;
 };
 
 export type listEntriesQueryVariables = Exact<{
@@ -5550,6 +5981,11 @@ export type listEntriesQuery = {
         title?: string | null;
         published?: boolean | null;
         id: string;
+        _count: {
+          __typename: "EntryCount";
+          categories: number;
+          comments: number;
+        };
       };
     }>;
   };
@@ -5580,7 +6016,7 @@ export type getProfilesQuery = {
         bio?: Array<typeof GraphQLJSONObject> | null;
         city?: string | null;
         country?: string | null;
-        coverPhoto?: Array<typeof GraphQLJSONObject> | null;
+        coverPhoto?: string | null;
         dob?: string | null;
         gender?: Gender | null;
         id: string;
@@ -5597,7 +6033,7 @@ export type getProfilesQuery = {
           email: string;
           emailVerified?: Date | null;
           id: string;
-          image: Array<typeof GraphQLJSONObject>;
+          image?: string | null;
           firstName?: string | null;
           lastName?: string | null;
           password: string;
@@ -5610,14 +6046,12 @@ export type getProfilesQuery = {
   };
 };
 
-export type getMediaItemsQueryVariables = Exact<{
-  findManyMediaItemsPaginated: FindManyMediaItemsInput;
-}>;
+export type getAllCommentsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type getMediaItemsQuery = {
+export type getAllCommentsQuery = {
   __typename?: "Query";
-  listMediaItems: {
-    __typename?: "MediaItemConnection";
+  listComments: {
+    __typename: "CommentConnection";
     totalCount: number;
     pageInfo: {
       __typename: "PageInfo";
@@ -5627,7 +6061,65 @@ export type getMediaItemsQuery = {
       hasPreviousPage: boolean;
     };
     edges: Array<{
-      __typename?: "MediaItemEdge";
+      __typename: "CommentEdge";
+      cursor: string;
+      node: {
+        __typename: "Comment";
+        body?: typeof GraphQLJSONObject | null;
+        updatedAt?: Date | null;
+        createdAt: Date;
+        entryId: string;
+        authorId: string;
+        id: string;
+        position?: string | null;
+        reactions?: Array<CommentReactions> | null;
+        author: {
+          __typename: "User";
+          createdAt: Date;
+          email: string;
+          emailVerified?: Date | null;
+          id: string;
+          image?: string | null;
+          firstName?: string | null;
+          lastName?: string | null;
+          password: string;
+          role?: Role | null;
+          status: UserStatus;
+          updatedAt?: Date | null;
+        };
+        entry: {
+          __typename: "Entry";
+          authorId: string;
+          content?: Array<typeof GraphQLJSONObject> | null;
+          createdAt: Date;
+          featuredImage?: Array<typeof GraphQLJSONObject> | null;
+          title?: string | null;
+          published?: boolean | null;
+          id: string;
+        };
+      };
+    }>;
+  };
+};
+
+export type allMediaItemsQueryVariables = Exact<{
+  findManyMediaItemsPaginated: FindManyMediaItemsInput;
+}>;
+
+export type allMediaItemsQuery = {
+  __typename?: "Query";
+  listMediaItems: {
+    __typename: "MediaItemConnection";
+    totalCount: number;
+    pageInfo: {
+      __typename: "PageInfo";
+      startCursor?: string | null;
+      endCursor?: string | null;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+    edges: Array<{
+      __typename: "MediaItemEdge";
       cursor: string;
       node: {
         __typename: "MediaItem";
@@ -5648,7 +6140,7 @@ export type getMediaItemsQuery = {
 };
 
 export type userByEncodedCursorQueryVariables = Exact<{
-  cursor: Scalars["String"];
+  userCursor: Scalars["String"];
 }>;
 
 export type userByEncodedCursorQuery = {
@@ -5659,13 +6151,78 @@ export type userByEncodedCursorQuery = {
     email: string;
     emailVerified?: Date | null;
     id: string;
-    image: Array<typeof GraphQLJSONObject>;
+    image?: string | null;
     firstName?: string | null;
     lastName?: string | null;
     password: string;
     role?: Role | null;
     status: UserStatus;
     updatedAt?: Date | null;
+  };
+};
+
+export type userDecodedFromTokenQueryVariables = Exact<{
+  userFromToken: Scalars["String"];
+}>;
+
+export type userDecodedFromTokenQuery = {
+  __typename?: "Query";
+  getUserFromAccessToken: {
+    __typename: "User";
+    createdAt: Date;
+    email: string;
+    emailVerified?: Date | null;
+    id: string;
+    image?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    password: string;
+    role?: Role | null;
+    status: UserStatus;
+    updatedAt?: Date | null;
+    _count?: {
+      __typename: "UserCount";
+      accounts: number;
+      categories: number;
+      comments: number;
+      connections: number;
+      mediaItems: number;
+      entries: number;
+      sessions: number;
+    } | null;
+    sessions?: Array<{
+      __typename: "Session";
+      accessToken?: string | null;
+      alg?: string | null;
+      exp?: number | null;
+      iat?: number | null;
+      id: string;
+      lastVerified?: Date | null;
+      provider?: string | null;
+      refreshToken?: string | null;
+      scopes?: Array<string> | null;
+      signature?: string | null;
+      tokenState?: string | null;
+      userId: string;
+    }> | null;
+    profile?: {
+      __typename: "Profile";
+      activiyFeed?: Array<typeof GraphQLJSONObject> | null;
+      bio?: Array<typeof GraphQLJSONObject> | null;
+      city?: string | null;
+      country?: string | null;
+      coverPhoto?: string | null;
+      dob?: string | null;
+      gender?: Gender | null;
+      id: string;
+      lastSeen?: Date | null;
+      memberSince: Date;
+      occupation?: string | null;
+      phoneNumber?: string | null;
+      pronouns?: Pronouns | null;
+      recentActivity?: Array<typeof GraphQLJSONObject> | null;
+      userId: string;
+    } | null;
   };
 };
 
@@ -5694,30 +6251,20 @@ export type allUsersQuery = {
         email: string;
         emailVerified?: Date | null;
         id: string;
-        image: Array<typeof GraphQLJSONObject>;
+        image?: string | null;
         firstName?: string | null;
         lastName?: string | null;
         password: string;
         role?: Role | null;
         status: UserStatus;
         updatedAt?: Date | null;
-        entries?: Array<{
-          __typename: "Entry";
-          authorId: string;
-          content?: Array<typeof GraphQLJSONObject> | null;
-          createdAt: Date;
-          featuredImage?: Array<typeof GraphQLJSONObject> | null;
-          title?: string | null;
-          published?: boolean | null;
-          id: string;
-        }> | null;
         profile?: {
           __typename: "Profile";
           activiyFeed?: Array<typeof GraphQLJSONObject> | null;
           bio?: Array<typeof GraphQLJSONObject> | null;
           city?: string | null;
           country?: string | null;
-          coverPhoto?: Array<typeof GraphQLJSONObject> | null;
+          coverPhoto?: string | null;
           dob?: string | null;
           gender?: Gender | null;
           id: string;
@@ -5743,8 +6290,56 @@ export type allUsersQuery = {
           userId: string;
           fileLastModified?: Date | null;
         }> | null;
+        entries?: Array<{
+          __typename: "Entry";
+          authorId: string;
+          content?: Array<typeof GraphQLJSONObject> | null;
+          createdAt: Date;
+          featuredImage?: Array<typeof GraphQLJSONObject> | null;
+          title?: string | null;
+          published?: boolean | null;
+          id: string;
+        }> | null;
+        _count?: {
+          __typename: "UserCount";
+          accounts: number;
+          categories: number;
+          comments: number;
+          connections: number;
+          mediaItems: number;
+          entries: number;
+          sessions: number;
+        } | null;
       };
     }>;
+  };
+};
+
+export type viewerAuthFromContextQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type viewerAuthFromContextQuery = {
+  __typename?: "Query";
+  viewerAuthInfoFromContext: {
+    __typename: "ViewerAuthInfo";
+    accessToken: string;
+    refreshToken: string;
+    viewerJwt: {
+      __typename: "JwtDecoded";
+      signature: string;
+      header: {
+        __typename: "JwtHeaders";
+        alg: AlgorithmType;
+        typ: string;
+      };
+      payload: {
+        __typename: "JwtPayload";
+        exp?: typeof GraphQLBigInt | null;
+        iat?: typeof GraphQLBigInt | null;
+        userId?: string | null;
+      };
+    };
   };
 };
 
@@ -5764,13 +6359,34 @@ export type ViewerQuery = {
         email: string;
         emailVerified?: Date | null;
         id: string;
-        image: Array<typeof GraphQLJSONObject>;
+        image?: string | null;
         firstName?: string | null;
         lastName?: string | null;
         password: string;
         role?: Role | null;
         status: UserStatus;
         updatedAt?: Date | null;
+        entries?: Array<{
+          __typename: "Entry";
+          authorId: string;
+          content?: Array<typeof GraphQLJSONObject> | null;
+          createdAt: Date;
+          featuredImage?: Array<typeof GraphQLJSONObject> | null;
+          title?: string | null;
+          published?: boolean | null;
+          id: string;
+          comments?: Array<{
+            __typename: "Comment";
+            body?: typeof GraphQLJSONObject | null;
+            updatedAt?: Date | null;
+            createdAt: Date;
+            entryId: string;
+            authorId: string;
+            id: string;
+            position?: string | null;
+            reactions?: Array<CommentReactions> | null;
+          }> | null;
+        }> | null;
       };
       session?: {
         __typename: "Session";
@@ -5853,15 +6469,27 @@ export const CategoryPartialFragmentDoc = gql`
 `;
 export const CommentPartialFragmentDoc = gql`
   fragment CommentPartial on Comment {
-    authorId
+    __typename
     body
-    createdAt
     updatedAt
+    createdAt
     entryId
+    authorId
     id
     position
     reactions
+  }
+`;
+export const CommentEdgePartialFragmentDoc = gql`
+  fragment CommentEdgePartial on CommentEdge {
     __typename
+    cursor
+  }
+`;
+export const CommentConnectionPartialFragmentDoc = gql`
+  fragment CommentConnectionPartial on CommentConnection {
+    __typename
+    totalCount
   }
 `;
 export const ConnectionPartialFragmentDoc = gql`
@@ -5876,6 +6504,13 @@ export const ConnectionPartialFragmentDoc = gql`
     lastName
     ownerId
     phoneNumber
+    __typename
+  }
+`;
+export const EntryCountPartialFragmentDoc = gql`
+  fragment EntryCountPartial on EntryCount {
+    categories
+    comments
     __typename
   }
 `;
@@ -6080,6 +6715,57 @@ export const ViewerPartialFragmentDoc = gql`
     __typename
   }
 `;
+export const changePasswordDocument = gql`
+  mutation changePassword($changePassword: ChangePasswordInput!) {
+    changePassword(changePasswordInput: $changePassword) {
+      ...UserPartial
+    }
+  }
+  ${UserPartialFragmentDoc}
+`;
+export type changePasswordMutationFn = Apollo.MutationFunction<
+  changePasswordMutation,
+  changePasswordMutationVariables
+>;
+
+/**
+ * __usechangePasswordMutation__
+ *
+ * To run a mutation, you first call `usechangePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usechangePasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changePasswordMutation, { data, loading, error }] = usechangePasswordMutation({
+ *   variables: {
+ *      changePassword: // value for 'changePassword'
+ *   },
+ * });
+ */
+export function usechangePasswordMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    changePasswordMutation,
+    changePasswordMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    changePasswordMutation,
+    changePasswordMutationVariables
+  >(changePasswordDocument, options);
+}
+export type changePasswordMutationHookResult = ReturnType<
+  typeof usechangePasswordMutation
+>;
+export type changePasswordMutationResult =
+  Apollo.MutationResult<changePasswordMutation>;
+export type changePasswordMutationOptions = Apollo.BaseMutationOptions<
+  changePasswordMutation,
+  changePasswordMutationVariables
+>;
 export const createUserDocument = gql`
   mutation createUser($createUserInput: SignupInput!) {
     signup(data: $createUserInput) {
@@ -6210,62 +6896,6 @@ export type deriveUserDetailsFromTokenMutationOptions =
     deriveUserDetailsFromTokenMutation,
     deriveUserDetailsFromTokenMutationVariables
   >;
-export const getUserFromTokenBasicDocument = gql`
-  mutation getUserFromTokenBasic($userToken: String!) {
-    getUserFromAccessToken(token: $userToken) {
-      _count {
-        ...UserCountPartial
-      }
-      ...UserPartial
-    }
-  }
-  ${UserCountPartialFragmentDoc}
-  ${UserPartialFragmentDoc}
-`;
-export type getUserFromTokenBasicMutationFn = Apollo.MutationFunction<
-  getUserFromTokenBasicMutation,
-  getUserFromTokenBasicMutationVariables
->;
-
-/**
- * __usegetUserFromTokenBasicMutation__
- *
- * To run a mutation, you first call `usegetUserFromTokenBasicMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usegetUserFromTokenBasicMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [getUserFromTokenBasicMutation, { data, loading, error }] = usegetUserFromTokenBasicMutation({
- *   variables: {
- *      userToken: // value for 'userToken'
- *   },
- * });
- */
-export function usegetUserFromTokenBasicMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    getUserFromTokenBasicMutation,
-    getUserFromTokenBasicMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    getUserFromTokenBasicMutation,
-    getUserFromTokenBasicMutationVariables
-  >(getUserFromTokenBasicDocument, options);
-}
-export type getUserFromTokenBasicMutationHookResult = ReturnType<
-  typeof usegetUserFromTokenBasicMutation
->;
-export type getUserFromTokenBasicMutationResult =
-  Apollo.MutationResult<getUserFromTokenBasicMutation>;
-export type getUserFromTokenBasicMutationOptions =
-  Apollo.BaseMutationOptions<
-    getUserFromTokenBasicMutation,
-    getUserFromTokenBasicMutationVariables
-  >;
 export const loginUserDocument = gql`
   mutation loginUser($data: LoginInput!) {
     login(data: $data) {
@@ -6317,20 +6947,31 @@ export type loginUserMutationOptions = Apollo.BaseMutationOptions<
   loginUserMutation,
   loginUserMutationVariables
 >;
-export const registerUserDocument = gql`
-  mutation registerUser($userCreateInput: UserCreateMutationInput!) {
-    registerNewUser(userCreateInput: $userCreateInput) {
+export const registerNewUserDocument = gql`
+  mutation registerNewUser(
+    $userCreateMutationInput: UserCreateMutationInput!
+  ) {
+    registerNewUser(userCreateInput: $userCreateMutationInput) {
       auth {
+        ...AuthPartial
         user {
-          profile {
-            ...ProfilePartial
-          }
           mediaItems {
             ...MediaItemPartial
           }
+          entries {
+            ...EntryPartial
+          }
+          profile {
+            ...ProfilePartial
+          }
+          _count {
+            ...UserCountPartial
+          }
           ...UserPartial
         }
-        ...AuthPartial
+        session {
+          ...SessionPartial
+        }
       }
       jwt {
         header {
@@ -6343,56 +6984,59 @@ export const registerUserDocument = gql`
       }
     }
   }
-  ${ProfilePartialFragmentDoc}
-  ${MediaItemPartialFragmentDoc}
-  ${UserPartialFragmentDoc}
   ${AuthPartialFragmentDoc}
+  ${MediaItemPartialFragmentDoc}
+  ${EntryPartialFragmentDoc}
+  ${ProfilePartialFragmentDoc}
+  ${UserCountPartialFragmentDoc}
+  ${UserPartialFragmentDoc}
+  ${SessionPartialFragmentDoc}
   ${JwtHeadersPartialFragmentDoc}
   ${JwtPayloadPartialFragmentDoc}
   ${JwtDecodedPartialFragmentDoc}
 `;
-export type registerUserMutationFn = Apollo.MutationFunction<
-  registerUserMutation,
-  registerUserMutationVariables
+export type registerNewUserMutationFn = Apollo.MutationFunction<
+  registerNewUserMutation,
+  registerNewUserMutationVariables
 >;
 
 /**
- * __useregisterUserMutation__
+ * __useregisterNewUserMutation__
  *
- * To run a mutation, you first call `useregisterUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useregisterUserMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useregisterNewUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useregisterNewUserMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [registerUserMutation, { data, loading, error }] = useregisterUserMutation({
+ * const [registerNewUserMutation, { data, loading, error }] = useregisterNewUserMutation({
  *   variables: {
- *      userCreateInput: // value for 'userCreateInput'
+ *      userCreateMutationInput: // value for 'userCreateMutationInput'
  *   },
  * });
  */
-export function useregisterUserMutation(
+export function useregisterNewUserMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    registerUserMutation,
-    registerUserMutationVariables
+    registerNewUserMutation,
+    registerNewUserMutationVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<
-    registerUserMutation,
-    registerUserMutationVariables
-  >(registerUserDocument, options);
+    registerNewUserMutation,
+    registerNewUserMutationVariables
+  >(registerNewUserDocument, options);
 }
-export type registerUserMutationHookResult = ReturnType<
-  typeof useregisterUserMutation
+export type registerNewUserMutationHookResult = ReturnType<
+  typeof useregisterNewUserMutation
 >;
-export type registerUserMutationResult =
-  Apollo.MutationResult<registerUserMutation>;
-export type registerUserMutationOptions = Apollo.BaseMutationOptions<
-  registerUserMutation,
-  registerUserMutationVariables
+export type registerNewUserMutationResult =
+  Apollo.MutationResult<registerNewUserMutation>;
+export type registerNewUserMutationOptions = Apollo.BaseMutationOptions<
+  registerNewUserMutation,
+  registerNewUserMutationVariables
 >;
 export const signInUserDocument = gql`
   mutation signInUser($loginInput: LoginInput!) {
@@ -6472,69 +7116,177 @@ export type signInUserMutationOptions = Apollo.BaseMutationOptions<
   signInUserMutation,
   signInUserMutationVariables
 >;
-export const viewerAuthFromContextDocument = gql`
-  mutation viewerAuthFromContext {
-    viewerAuthInfoFromContext {
-      viewerJwt {
-        header {
-          ...JwtHeadersPartial
-        }
-        payload {
-          ...JwtPayloadPartial
-        }
-        ...JwtDecodedPartial
-      }
-      ...ViewerAuthInfoPartial
+export const findUniqueCommentByRelayCursorDocument = gql`
+  query findUniqueCommentByRelayCursor($commentCursor: String!) {
+    commentByRelayId(cursor: $commentCursor) {
+      ...CommentPartial
     }
   }
-  ${JwtHeadersPartialFragmentDoc}
-  ${JwtPayloadPartialFragmentDoc}
-  ${JwtDecodedPartialFragmentDoc}
-  ${ViewerAuthInfoPartialFragmentDoc}
+  ${CommentPartialFragmentDoc}
 `;
-export type viewerAuthFromContextMutationFn = Apollo.MutationFunction<
-  viewerAuthFromContextMutation,
-  viewerAuthFromContextMutationVariables
->;
 
 /**
- * __useviewerAuthFromContextMutation__
+ * __usefindUniqueCommentByRelayCursorQuery__
  *
- * To run a mutation, you first call `useviewerAuthFromContextMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useviewerAuthFromContextMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
+ * To run a query within a React component, call `usefindUniqueCommentByRelayCursorQuery` and pass it any options that fit your needs.
+ * When your component renders, `usefindUniqueCommentByRelayCursorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
  *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const [viewerAuthFromContextMutation, { data, loading, error }] = useviewerAuthFromContextMutation({
+ * const { data, loading, error } = usefindUniqueCommentByRelayCursorQuery({
  *   variables: {
+ *      commentCursor: // value for 'commentCursor'
  *   },
  * });
  */
-export function useviewerAuthFromContextMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    viewerAuthFromContextMutation,
-    viewerAuthFromContextMutationVariables
+export function usefindUniqueCommentByRelayCursorQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    findUniqueCommentByRelayCursorQuery,
+    findUniqueCommentByRelayCursorQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    viewerAuthFromContextMutation,
-    viewerAuthFromContextMutationVariables
-  >(viewerAuthFromContextDocument, options);
+  return Apollo.useQuery<
+    findUniqueCommentByRelayCursorQuery,
+    findUniqueCommentByRelayCursorQueryVariables
+  >(findUniqueCommentByRelayCursorDocument, options);
 }
-export type viewerAuthFromContextMutationHookResult = ReturnType<
-  typeof useviewerAuthFromContextMutation
+export function usefindUniqueCommentByRelayCursorLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    findUniqueCommentByRelayCursorQuery,
+    findUniqueCommentByRelayCursorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    findUniqueCommentByRelayCursorQuery,
+    findUniqueCommentByRelayCursorQueryVariables
+  >(findUniqueCommentByRelayCursorDocument, options);
+}
+export type findUniqueCommentByRelayCursorQueryHookResult = ReturnType<
+  typeof usefindUniqueCommentByRelayCursorQuery
 >;
-export type viewerAuthFromContextMutationResult =
-  Apollo.MutationResult<viewerAuthFromContextMutation>;
-export type viewerAuthFromContextMutationOptions =
-  Apollo.BaseMutationOptions<
-    viewerAuthFromContextMutation,
-    viewerAuthFromContextMutationVariables
-  >;
+export type findUniqueCommentByRelayCursorLazyQueryHookResult = ReturnType<
+  typeof usefindUniqueCommentByRelayCursorLazyQuery
+>;
+export type findUniqueCommentByRelayCursorQueryResult = Apollo.QueryResult<
+  findUniqueCommentByRelayCursorQuery,
+  findUniqueCommentByRelayCursorQueryVariables
+>;
+export function refetchfindUniqueCommentByRelayCursorQuery(
+  variables: findUniqueCommentByRelayCursorQueryVariables
+) {
+  return {
+    query: findUniqueCommentByRelayCursorDocument,
+    variables: variables
+  };
+}
+export const getCommentEntryConnectionDocument = gql`
+  query getCommentEntryConnection(
+    $entriesPaginatedInput: FindManyEntriessPaginatedInput!
+    $commentsPaginatedInput: FindManyCommentsPaginatedInput!
+  ) {
+    commentConnectionUnion(
+      findManyEntriesPaginatedInput: $entriesPaginatedInput
+      findManyCommentsPaginatedInput: $commentsPaginatedInput
+    ) {
+      __typename
+      ... on EntryConnection {
+        ...EntryConnectionPartial
+        pageInfo {
+          ...PageInfoPartial
+        }
+        edges {
+          ...EntryEdgePartial
+          node {
+            ...EntryPartial
+          }
+        }
+      }
+      ... on CommentConnection {
+        ...CommentConnectionPartial
+        pageInfo {
+          ...PageInfoPartial
+        }
+        edges {
+          ...CommentEdgePartial
+          node {
+            ...CommentPartial
+          }
+        }
+      }
+    }
+  }
+  ${EntryConnectionPartialFragmentDoc}
+  ${PageInfoPartialFragmentDoc}
+  ${EntryEdgePartialFragmentDoc}
+  ${EntryPartialFragmentDoc}
+  ${CommentConnectionPartialFragmentDoc}
+  ${CommentEdgePartialFragmentDoc}
+  ${CommentPartialFragmentDoc}
+`;
+
+/**
+ * __usegetCommentEntryConnectionQuery__
+ *
+ * To run a query within a React component, call `usegetCommentEntryConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `usegetCommentEntryConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usegetCommentEntryConnectionQuery({
+ *   variables: {
+ *      entriesPaginatedInput: // value for 'entriesPaginatedInput'
+ *      commentsPaginatedInput: // value for 'commentsPaginatedInput'
+ *   },
+ * });
+ */
+export function usegetCommentEntryConnectionQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    getCommentEntryConnectionQuery,
+    getCommentEntryConnectionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    getCommentEntryConnectionQuery,
+    getCommentEntryConnectionQueryVariables
+  >(getCommentEntryConnectionDocument, options);
+}
+export function usegetCommentEntryConnectionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    getCommentEntryConnectionQuery,
+    getCommentEntryConnectionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    getCommentEntryConnectionQuery,
+    getCommentEntryConnectionQueryVariables
+  >(getCommentEntryConnectionDocument, options);
+}
+export type getCommentEntryConnectionQueryHookResult = ReturnType<
+  typeof usegetCommentEntryConnectionQuery
+>;
+export type getCommentEntryConnectionLazyQueryHookResult = ReturnType<
+  typeof usegetCommentEntryConnectionLazyQuery
+>;
+export type getCommentEntryConnectionQueryResult = Apollo.QueryResult<
+  getCommentEntryConnectionQuery,
+  getCommentEntryConnectionQueryVariables
+>;
+export function refetchgetCommentEntryConnectionQuery(
+  variables: getCommentEntryConnectionQueryVariables
+) {
+  return {
+    query: getCommentEntryConnectionDocument,
+    variables: variables
+  };
+}
 export const listEntriesDocument = gql`
   query listEntries(
     $findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!
@@ -6550,6 +7302,9 @@ export const listEntriesDocument = gql`
         ...EntryEdgePartial
         node {
           ...EntryPartial
+          _count {
+            ...EntryCountPartial
+          }
         }
       }
     }
@@ -6558,6 +7313,7 @@ export const listEntriesDocument = gql`
   ${PageInfoPartialFragmentDoc}
   ${EntryEdgePartialFragmentDoc}
   ${EntryPartialFragmentDoc}
+  ${EntryCountPartialFragmentDoc}
 `;
 
 /**
@@ -6695,87 +7451,174 @@ export function refetchgetProfilesQuery(
 ) {
   return { query: getProfilesDocument, variables: variables };
 }
-export const getMediaItemsDocument = gql`
-  query getMediaItems(
+export const getAllCommentsDocument = gql`
+  query getAllComments {
+    listComments(
+      findManyCommentsPaginatedInput: { pagination: { first: 40 } }
+    ) {
+      ...CommentConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...CommentEdgePartial
+        node {
+          ...CommentPartial
+          author {
+            ...UserPartial
+          }
+          entry {
+            ...EntryPartial
+          }
+        }
+      }
+    }
+  }
+  ${CommentConnectionPartialFragmentDoc}
+  ${PageInfoPartialFragmentDoc}
+  ${CommentEdgePartialFragmentDoc}
+  ${CommentPartialFragmentDoc}
+  ${UserPartialFragmentDoc}
+  ${EntryPartialFragmentDoc}
+`;
+
+/**
+ * __usegetAllCommentsQuery__
+ *
+ * To run a query within a React component, call `usegetAllCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usegetAllCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usegetAllCommentsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usegetAllCommentsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    getAllCommentsQuery,
+    getAllCommentsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    getAllCommentsQuery,
+    getAllCommentsQueryVariables
+  >(getAllCommentsDocument, options);
+}
+export function usegetAllCommentsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    getAllCommentsQuery,
+    getAllCommentsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    getAllCommentsQuery,
+    getAllCommentsQueryVariables
+  >(getAllCommentsDocument, options);
+}
+export type getAllCommentsQueryHookResult = ReturnType<
+  typeof usegetAllCommentsQuery
+>;
+export type getAllCommentsLazyQueryHookResult = ReturnType<
+  typeof usegetAllCommentsLazyQuery
+>;
+export type getAllCommentsQueryResult = Apollo.QueryResult<
+  getAllCommentsQuery,
+  getAllCommentsQueryVariables
+>;
+export function refetchgetAllCommentsQuery(
+  variables?: getAllCommentsQueryVariables
+) {
+  return { query: getAllCommentsDocument, variables: variables };
+}
+export const allMediaItemsDocument = gql`
+  query allMediaItems(
     $findManyMediaItemsPaginated: FindManyMediaItemsInput!
   ) {
     listMediaItems(
       findManyMediaItemsPaginated: $findManyMediaItemsPaginated
     ) {
-      totalCount
+      ...MediaItemConnectionPartial
       pageInfo {
         ...PageInfoPartial
       }
       edges {
-        cursor
+        ...MediaItemEdgePartial
         node {
           ...MediaItemPartial
         }
       }
     }
   }
+  ${MediaItemConnectionPartialFragmentDoc}
   ${PageInfoPartialFragmentDoc}
+  ${MediaItemEdgePartialFragmentDoc}
   ${MediaItemPartialFragmentDoc}
 `;
 
 /**
- * __usegetMediaItemsQuery__
+ * __useallMediaItemsQuery__
  *
- * To run a query within a React component, call `usegetMediaItemsQuery` and pass it any options that fit your needs.
- * When your component renders, `usegetMediaItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useallMediaItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useallMediaItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usegetMediaItemsQuery({
+ * const { data, loading, error } = useallMediaItemsQuery({
  *   variables: {
  *      findManyMediaItemsPaginated: // value for 'findManyMediaItemsPaginated'
  *   },
  * });
  */
-export function usegetMediaItemsQuery(
+export function useallMediaItemsQuery(
   baseOptions: Apollo.QueryHookOptions<
-    getMediaItemsQuery,
-    getMediaItemsQueryVariables
+    allMediaItemsQuery,
+    allMediaItemsQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<getMediaItemsQuery, getMediaItemsQueryVariables>(
-    getMediaItemsDocument,
+  return Apollo.useQuery<allMediaItemsQuery, allMediaItemsQueryVariables>(
+    allMediaItemsDocument,
     options
   );
 }
-export function usegetMediaItemsLazyQuery(
+export function useallMediaItemsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    getMediaItemsQuery,
-    getMediaItemsQueryVariables
+    allMediaItemsQuery,
+    allMediaItemsQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<
-    getMediaItemsQuery,
-    getMediaItemsQueryVariables
-  >(getMediaItemsDocument, options);
+    allMediaItemsQuery,
+    allMediaItemsQueryVariables
+  >(allMediaItemsDocument, options);
 }
-export type getMediaItemsQueryHookResult = ReturnType<
-  typeof usegetMediaItemsQuery
+export type allMediaItemsQueryHookResult = ReturnType<
+  typeof useallMediaItemsQuery
 >;
-export type getMediaItemsLazyQueryHookResult = ReturnType<
-  typeof usegetMediaItemsLazyQuery
+export type allMediaItemsLazyQueryHookResult = ReturnType<
+  typeof useallMediaItemsLazyQuery
 >;
-export type getMediaItemsQueryResult = Apollo.QueryResult<
-  getMediaItemsQuery,
-  getMediaItemsQueryVariables
+export type allMediaItemsQueryResult = Apollo.QueryResult<
+  allMediaItemsQuery,
+  allMediaItemsQueryVariables
 >;
-export function refetchgetMediaItemsQuery(
-  variables: getMediaItemsQueryVariables
+export function refetchallMediaItemsQuery(
+  variables: allMediaItemsQueryVariables
 ) {
-  return { query: getMediaItemsDocument, variables: variables };
+  return { query: allMediaItemsDocument, variables: variables };
 }
 export const userByEncodedCursorDocument = gql`
-  query userByEncodedCursor($cursor: String!) {
-    userByRelayId(cursor: $cursor) {
+  query userByEncodedCursor($userCursor: String!) {
+    userByRelayId(cursor: $userCursor) {
       ...UserPartial
     }
   }
@@ -6794,7 +7637,7 @@ export const userByEncodedCursorDocument = gql`
  * @example
  * const { data, loading, error } = useuserByEncodedCursorQuery({
  *   variables: {
- *      cursor: // value for 'cursor'
+ *      userCursor: // value for 'userCursor'
  *   },
  * });
  */
@@ -6837,6 +7680,82 @@ export function refetchuserByEncodedCursorQuery(
 ) {
   return { query: userByEncodedCursorDocument, variables: variables };
 }
+export const userDecodedFromTokenDocument = gql`
+  query userDecodedFromToken($userFromToken: String!) {
+    getUserFromAccessToken(token: $userFromToken) {
+      _count {
+        ...UserCountPartial
+      }
+      sessions {
+        ...SessionPartial
+      }
+      profile {
+        ...ProfilePartial
+      }
+      ...UserPartial
+    }
+  }
+  ${UserCountPartialFragmentDoc}
+  ${SessionPartialFragmentDoc}
+  ${ProfilePartialFragmentDoc}
+  ${UserPartialFragmentDoc}
+`;
+
+/**
+ * __useuserDecodedFromTokenQuery__
+ *
+ * To run a query within a React component, call `useuserDecodedFromTokenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useuserDecodedFromTokenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useuserDecodedFromTokenQuery({
+ *   variables: {
+ *      userFromToken: // value for 'userFromToken'
+ *   },
+ * });
+ */
+export function useuserDecodedFromTokenQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    userDecodedFromTokenQuery,
+    userDecodedFromTokenQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    userDecodedFromTokenQuery,
+    userDecodedFromTokenQueryVariables
+  >(userDecodedFromTokenDocument, options);
+}
+export function useuserDecodedFromTokenLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    userDecodedFromTokenQuery,
+    userDecodedFromTokenQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    userDecodedFromTokenQuery,
+    userDecodedFromTokenQueryVariables
+  >(userDecodedFromTokenDocument, options);
+}
+export type userDecodedFromTokenQueryHookResult = ReturnType<
+  typeof useuserDecodedFromTokenQuery
+>;
+export type userDecodedFromTokenLazyQueryHookResult = ReturnType<
+  typeof useuserDecodedFromTokenLazyQuery
+>;
+export type userDecodedFromTokenQueryResult = Apollo.QueryResult<
+  userDecodedFromTokenQuery,
+  userDecodedFromTokenQueryVariables
+>;
+export function refetchuserDecodedFromTokenQuery(
+  variables: userDecodedFromTokenQueryVariables
+) {
+  return { query: userDecodedFromTokenDocument, variables: variables };
+}
 export const allUsersDocument = gql`
   query allUsers(
     $findManyUsersPaginatedInput: FindManyUsersPaginatedInput
@@ -6849,14 +7768,17 @@ export const allUsersDocument = gql`
       edges {
         ...UserEdgePartial
         node {
-          entries {
-            ...EntryPartial
-          }
           profile {
             ...ProfilePartial
           }
           mediaItems {
             ...MediaItemPartial
+          }
+          entries {
+            ...EntryPartial
+          }
+          _count {
+            ...UserCountPartial
           }
           ...UserPartial
         }
@@ -6866,9 +7788,10 @@ export const allUsersDocument = gql`
   ${UserConnectionPartialFragmentDoc}
   ${PageInfoPartialFragmentDoc}
   ${UserEdgePartialFragmentDoc}
-  ${EntryPartialFragmentDoc}
   ${ProfilePartialFragmentDoc}
   ${MediaItemPartialFragmentDoc}
+  ${EntryPartialFragmentDoc}
+  ${UserCountPartialFragmentDoc}
   ${UserPartialFragmentDoc}
 `;
 
@@ -6923,6 +7846,81 @@ export type allUsersQueryResult = Apollo.QueryResult<
 export function refetchallUsersQuery(variables?: allUsersQueryVariables) {
   return { query: allUsersDocument, variables: variables };
 }
+export const viewerAuthFromContextDocument = gql`
+  query viewerAuthFromContext {
+    viewerAuthInfoFromContext {
+      viewerJwt {
+        header {
+          ...JwtHeadersPartial
+        }
+        payload {
+          ...JwtPayloadPartial
+        }
+        ...JwtDecodedPartial
+      }
+      ...ViewerAuthInfoPartial
+    }
+  }
+  ${JwtHeadersPartialFragmentDoc}
+  ${JwtPayloadPartialFragmentDoc}
+  ${JwtDecodedPartialFragmentDoc}
+  ${ViewerAuthInfoPartialFragmentDoc}
+`;
+
+/**
+ * __useviewerAuthFromContextQuery__
+ *
+ * To run a query within a React component, call `useviewerAuthFromContextQuery` and pass it any options that fit your needs.
+ * When your component renders, `useviewerAuthFromContextQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useviewerAuthFromContextQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useviewerAuthFromContextQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    viewerAuthFromContextQuery,
+    viewerAuthFromContextQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    viewerAuthFromContextQuery,
+    viewerAuthFromContextQueryVariables
+  >(viewerAuthFromContextDocument, options);
+}
+export function useviewerAuthFromContextLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    viewerAuthFromContextQuery,
+    viewerAuthFromContextQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    viewerAuthFromContextQuery,
+    viewerAuthFromContextQueryVariables
+  >(viewerAuthFromContextDocument, options);
+}
+export type viewerAuthFromContextQueryHookResult = ReturnType<
+  typeof useviewerAuthFromContextQuery
+>;
+export type viewerAuthFromContextLazyQueryHookResult = ReturnType<
+  typeof useviewerAuthFromContextLazyQuery
+>;
+export type viewerAuthFromContextQueryResult = Apollo.QueryResult<
+  viewerAuthFromContextQuery,
+  viewerAuthFromContextQueryVariables
+>;
+export function refetchviewerAuthFromContextQuery(
+  variables?: viewerAuthFromContextQueryVariables
+) {
+  return { query: viewerAuthFromContextDocument, variables: variables };
+}
 export const ViewerDocument = gql`
   query Viewer {
     me {
@@ -6930,6 +7928,12 @@ export const ViewerDocument = gql`
         ...AuthPartial
         user {
           ...UserPartial
+          entries {
+            ...EntryPartial
+            comments {
+              ...CommentPartial
+            }
+          }
         }
         session {
           ...SessionPartial
@@ -6949,6 +7953,8 @@ export const ViewerDocument = gql`
   }
   ${AuthPartialFragmentDoc}
   ${UserPartialFragmentDoc}
+  ${EntryPartialFragmentDoc}
+  ${CommentPartialFragmentDoc}
   ${SessionPartialFragmentDoc}
   ${JwtHeadersPartialFragmentDoc}
   ${JwtPayloadPartialFragmentDoc}
@@ -7004,21 +8010,25 @@ export function refetchViewerQuery(variables?: ViewerQueryVariables) {
 }
 export const namedOperations = {
   Query: {
+    findUniqueCommentByRelayCursor: "findUniqueCommentByRelayCursor",
+    getCommentEntryConnection: "getCommentEntryConnection",
     listEntries: "listEntries",
     getProfiles: "getProfiles",
-    getMediaItems: "getMediaItems",
+    getAllComments: "getAllComments",
+    allMediaItems: "allMediaItems",
     userByEncodedCursor: "userByEncodedCursor",
+    userDecodedFromToken: "userDecodedFromToken",
     allUsers: "allUsers",
+    viewerAuthFromContext: "viewerAuthFromContext",
     Viewer: "Viewer"
   },
   Mutation: {
+    changePassword: "changePassword",
     createUser: "createUser",
     deriveUserDetailsFromToken: "deriveUserDetailsFromToken",
-    getUserFromTokenBasic: "getUserFromTokenBasic",
     loginUser: "loginUser",
-    registerUser: "registerUser",
-    signInUser: "signInUser",
-    viewerAuthFromContext: "viewerAuthFromContext"
+    registerNewUser: "registerNewUser",
+    signInUser: "signInUser"
   },
   Fragment: {
     AccountPartial: "AccountPartial",
@@ -7026,7 +8036,10 @@ export const namedOperations = {
     AuthSansSessionPartial: "AuthSansSessionPartial",
     CategoryPartial: "CategoryPartial",
     CommentPartial: "CommentPartial",
+    CommentEdgePartial: "CommentEdgePartial",
+    CommentConnectionPartial: "CommentConnectionPartial",
     ConnectionPartial: "ConnectionPartial",
+    EntryCountPartial: "EntryCountPartial",
     EntryPartial: "EntryPartial",
     EntryConnectionPartial: "EntryConnectionPartial",
     EntryEdgePartial: "EntryEdgePartial",
