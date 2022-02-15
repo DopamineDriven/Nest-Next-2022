@@ -11,9 +11,9 @@ export interface ResolverContext {
   res?: ServerResponse;
 }
 // import { GraphQLLet } from ".graphql-let.yml";
-import { ApolloLink, FetchResult } from "@apollo/client";
+import { ApolloLink, FetchResult, RequestHandler } from "@apollo/client";
 import { signInUserMutation } from "@/graphql/generated/graphql";
-
+const x = (props: Resolvers<ResolverContext>) => ({ ...props });
 const browser = typeof window !== "undefined";
 const envEndpoint =
   process.env.NODE_ENV === "development"
@@ -32,17 +32,20 @@ export const enhancedFetch = async (
   return await fetch((url = uri), {
     ...init,
     headers: {
-      ...init.headers,
-      // @ts-ignore
-      authorization: `Bearer ${
-        req.cookies
-          ? req.cookies.includes("jwt")
-            ? (req.cookies as string[])
-            : ""
+    authorization: `Bearer ${
+      req.authorization?.split(/([ ])/)[1]
+        ? req.authorization.split(/([ ])/)[1]
+        : req.cookies
+        ? req.cookies.includes("jwt")
+          ? (req.cookies as string[])
           : ""
-      }`
-    },
+        : ""
+    }`,
+      ...init.headers,    },
     keepalive: true,
+    credentials: "include",
+    mode: "cors",
+    cache: "default",
     method: "POST"
   }).then(response => response);
 };
@@ -58,7 +61,7 @@ export function createBatch<T extends ResolverContext>(context?: T) {
       "Access-Control-Allow-Headers": ["access-control-allow-headers"],
       "Access-Control-Expose-Headers": "*, authorization",
       Authorization:
-        "Bearer " + context?.req?.headers.authorization?.split(/([ ])/)[0]
+        "Bearer " + context?.req?.headers.authorization?.split(/([ ])/)[1]
     },
     fetchOptions: {
       context: () => ({ ...context })
@@ -80,7 +83,7 @@ export const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError)
     console.log(
       JSON.stringify(
-        `[Network error]: Backend is unreachable... \n
+        `[Network error]: Nest is unreachable... \n
           [name]: ${networkError.name} \n
           [message]: ${networkError.message} \n
           [stack]: ${networkError.stack}`,
@@ -96,16 +99,22 @@ export const nextSesh = new ApolloLink((operation, forward) => {
     // const context = operation.getContext();
     // const jsonStringContext = JSON.stringify(context ?? "no context", null, 2)
     // console.log(context ?? {});
+
+    // const header = req?.headers.authorization?.split(/([ ])/)[1];
     const { data, context, errors, extensions } = response as FetchResult<
-      signInUserMutation,
+      Record<
+        string,
+        any extends signInUserMutation ? signInUserMutation : any
+      >,
       Record<string, any>,
       Record<string, any>
     >;
+
     console.log("context: " + context ?? "no context");
     console.log("errors: " + errors ?? "no errors");
     console.log("extensions: " + extensions ?? "no extensions");
     const session = data?.signin;
-    if (session?.auth?.accessToken && browser) {
+    if (session?.auth?.accessToken && !!browser) {
       if (
         window.localStorage.getItem("authorization") !==
         session.auth.accessToken
@@ -117,6 +126,13 @@ export const nextSesh = new ApolloLink((operation, forward) => {
         );
       }
     }
+    // if (data?.signin.auth?.accessToken) {
+
+    //   res?.setHeader("authorization", ("Bearer "+data.signin.auth.accessToken).trim())
+    // } else if (header != null) {
+    //   res?.setHeader("authorization", ("Bearer "+header).trim())
+
+    // }
     const jsonString = JSON.stringify(
       (response as unknown as FetchResult<
         signInUserMutation | unknown,
