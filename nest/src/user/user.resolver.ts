@@ -43,6 +43,7 @@ export class UserResolver {
   async me(
     @Context("token") ctx: ExecutionContext
   ): Promise<AuthDetailed | null> {
+    
     console.log(ctx ? ctx : null);
     return await this.authService.getUserWithDecodedToken(
       ctx as unknown as string

@@ -87,6 +87,91 @@ input AccountProviderProviderAccountIdCompoundUniqueInput {
   providerAccountId: String!
 }
 
+input AccountScalarWhereInput {
+  AND: [AccountScalarWhereInput!]
+  NOT: [AccountScalarWhereInput!]
+  OR: [AccountScalarWhereInput!]
+  access_token: StringNullableFilter
+  expires_at: IntNullableFilter
+  id: StringFilter
+  id_token: StringNullableFilter
+  oauth_token: StringNullableFilter
+  oauth_token_secret: StringNullableFilter
+  provider: StringFilter
+  providerAccountId: StringFilter
+  refresh_secret: StringNullableFilter
+  refresh_token: StringNullableFilter
+  scope: StringNullableFilter
+  session_state: StringNullableFilter
+  token_type: StringNullableFilter
+  type: StringFilter
+  userId: StringFilter
+}
+
+input AccountUpdateManyMutationInput {
+  access_token: NullableStringFieldUpdateOperationsInput
+  expires_at: NullableIntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  id_token: NullableStringFieldUpdateOperationsInput
+  oauth_token: NullableStringFieldUpdateOperationsInput
+  oauth_token_secret: NullableStringFieldUpdateOperationsInput
+  provider: StringFieldUpdateOperationsInput
+  providerAccountId: StringFieldUpdateOperationsInput
+  refresh_secret: NullableStringFieldUpdateOperationsInput
+  refresh_token: NullableStringFieldUpdateOperationsInput
+  scope: NullableStringFieldUpdateOperationsInput
+  session_state: NullableStringFieldUpdateOperationsInput
+  token_type: NullableStringFieldUpdateOperationsInput
+  type: StringFieldUpdateOperationsInput
+}
+
+input AccountUpdateManyWithWhereWithoutUserInput {
+  data: AccountUpdateManyMutationInput!
+  where: AccountScalarWhereInput!
+}
+
+input AccountUpdateManyWithoutUserInput {
+  connect: [AccountWhereUniqueInput!]
+  connectOrCreate: [AccountCreateOrConnectWithoutUserInput!]
+  create: [AccountCreateWithoutUserInput!]
+  createMany: AccountCreateManyUserInputEnvelope
+  delete: [AccountWhereUniqueInput!]
+  deleteMany: [AccountScalarWhereInput!]
+  disconnect: [AccountWhereUniqueInput!]
+  set: [AccountWhereUniqueInput!]
+  update: [AccountUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [AccountUpdateManyWithWhereWithoutUserInput!]
+  upsert: [AccountUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input AccountUpdateWithWhereUniqueWithoutUserInput {
+  data: AccountUpdateWithoutUserInput!
+  where: AccountWhereUniqueInput!
+}
+
+input AccountUpdateWithoutUserInput {
+  access_token: NullableStringFieldUpdateOperationsInput
+  expires_at: NullableIntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  id_token: NullableStringFieldUpdateOperationsInput
+  oauth_token: NullableStringFieldUpdateOperationsInput
+  oauth_token_secret: NullableStringFieldUpdateOperationsInput
+  provider: StringFieldUpdateOperationsInput
+  providerAccountId: StringFieldUpdateOperationsInput
+  refresh_secret: NullableStringFieldUpdateOperationsInput
+  refresh_token: NullableStringFieldUpdateOperationsInput
+  scope: NullableStringFieldUpdateOperationsInput
+  session_state: NullableStringFieldUpdateOperationsInput
+  token_type: NullableStringFieldUpdateOperationsInput
+  type: StringFieldUpdateOperationsInput
+}
+
+input AccountUpsertWithWhereUniqueWithoutUserInput {
+  create: AccountCreateWithoutUserInput!
+  update: AccountUpdateWithoutUserInput!
+  where: AccountWhereUniqueInput!
+}
+
 input AccountWhereInput {
   AND: [AccountWhereInput!]
   NOT: [AccountWhereInput!]
@@ -166,6 +251,10 @@ type BaseTypesEdge {
 The `BigInt` scalar type represents non-fractional signed whole numeric values.
 """
 scalar BigInt
+
+input BoolFieldUpdateOperationsInput {
+  set: Boolean
+}
 
 input BoolFilter {
   equals: Boolean
@@ -250,6 +339,103 @@ input CategoryListRelationFilter {
 
 input CategoryOrderByRelationAggregateInput {
   _count: SortOrder
+}
+
+input CategoryScalarWhereInput {
+  AND: [CategoryScalarWhereInput!]
+  NOT: [CategoryScalarWhereInput!]
+  OR: [CategoryScalarWhereInput!]
+  createdAt: DateTimeNullableFilter
+  creatorId: StringFilter
+  entryId: StringNullableFilter
+  id: StringFilter
+  name: StringFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input CategoryUpdateManyMutationInput {
+  createdAt: NullableDateTimeFieldUpdateOperationsInput
+  entryId: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input CategoryUpdateManyWithWhereWithoutCreatorInput {
+  data: CategoryUpdateManyMutationInput!
+  where: CategoryScalarWhereInput!
+}
+
+input CategoryUpdateManyWithWhereWithoutEntriesInput {
+  data: CategoryUpdateManyMutationInput!
+  where: CategoryScalarWhereInput!
+}
+
+input CategoryUpdateManyWithoutCreatorInput {
+  connect: [CategoryWhereUniqueInput!]
+  connectOrCreate: [CategoryCreateOrConnectWithoutCreatorInput!]
+  create: [CategoryCreateWithoutCreatorInput!]
+  createMany: CategoryCreateManyCreatorInputEnvelope
+  delete: [CategoryWhereUniqueInput!]
+  deleteMany: [CategoryScalarWhereInput!]
+  disconnect: [CategoryWhereUniqueInput!]
+  set: [CategoryWhereUniqueInput!]
+  update: [CategoryUpdateWithWhereUniqueWithoutCreatorInput!]
+  updateMany: [CategoryUpdateManyWithWhereWithoutCreatorInput!]
+  upsert: [CategoryUpsertWithWhereUniqueWithoutCreatorInput!]
+}
+
+input CategoryUpdateManyWithoutEntriesInput {
+  connect: [CategoryWhereUniqueInput!]
+  connectOrCreate: [CategoryCreateOrConnectWithoutEntriesInput!]
+  create: [CategoryCreateWithoutEntriesInput!]
+  delete: [CategoryWhereUniqueInput!]
+  deleteMany: [CategoryScalarWhereInput!]
+  disconnect: [CategoryWhereUniqueInput!]
+  set: [CategoryWhereUniqueInput!]
+  update: [CategoryUpdateWithWhereUniqueWithoutEntriesInput!]
+  updateMany: [CategoryUpdateManyWithWhereWithoutEntriesInput!]
+  upsert: [CategoryUpsertWithWhereUniqueWithoutEntriesInput!]
+}
+
+input CategoryUpdateWithWhereUniqueWithoutCreatorInput {
+  data: CategoryUpdateWithoutCreatorInput!
+  where: CategoryWhereUniqueInput!
+}
+
+input CategoryUpdateWithWhereUniqueWithoutEntriesInput {
+  data: CategoryUpdateWithoutEntriesInput!
+  where: CategoryWhereUniqueInput!
+}
+
+input CategoryUpdateWithoutCreatorInput {
+  createdAt: NullableDateTimeFieldUpdateOperationsInput
+  entries: EntryUpdateManyWithoutCategoriesInput
+  entryId: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input CategoryUpdateWithoutEntriesInput {
+  createdAt: NullableDateTimeFieldUpdateOperationsInput
+  creator: UserUpdateOneRequiredWithoutCategoriesInput
+  entryId: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input CategoryUpsertWithWhereUniqueWithoutCreatorInput {
+  create: CategoryCreateWithoutCreatorInput!
+  update: CategoryUpdateWithoutCreatorInput!
+  where: CategoryWhereUniqueInput!
+}
+
+input CategoryUpsertWithWhereUniqueWithoutEntriesInput {
+  create: CategoryCreateWithoutEntriesInput!
+  update: CategoryUpdateWithoutEntriesInput!
+  where: CategoryWhereUniqueInput!
 }
 
 input CategoryWhereInput {
@@ -449,6 +635,114 @@ enum CommentScalarFieldEnum {
   updatedAt
 }
 
+input CommentScalarWhereInput {
+  AND: [CommentScalarWhereInput!]
+  NOT: [CommentScalarWhereInput!]
+  OR: [CommentScalarWhereInput!]
+  authorId: StringFilter
+  body: JsonNullableFilter
+  createdAt: DateTimeFilter
+  entryId: StringFilter
+  id: StringFilter
+  position: StringNullableFilter
+  reactions: EnumCommentReactionsNullableListFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input CommentUpdateManyMutationInput {
+  body: JSON
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  position: NullableStringFieldUpdateOperationsInput
+  reactions: CommentUpdatereactionsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input CommentUpdateManyWithWhereWithoutAuthorInput {
+  data: CommentUpdateManyMutationInput!
+  where: CommentScalarWhereInput!
+}
+
+input CommentUpdateManyWithWhereWithoutEntryInput {
+  data: CommentUpdateManyMutationInput!
+  where: CommentScalarWhereInput!
+}
+
+input CommentUpdateManyWithoutAuthorInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutAuthorInput!]
+  create: [CommentCreateWithoutAuthorInput!]
+  createMany: CommentCreateManyAuthorInputEnvelope
+  delete: [CommentWhereUniqueInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutAuthorInput!]
+  updateMany: [CommentUpdateManyWithWhereWithoutAuthorInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutAuthorInput!]
+}
+
+input CommentUpdateManyWithoutEntryInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutEntryInput!]
+  create: [CommentCreateWithoutEntryInput!]
+  createMany: CommentCreateManyEntryInputEnvelope
+  delete: [CommentWhereUniqueInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutEntryInput!]
+  updateMany: [CommentUpdateManyWithWhereWithoutEntryInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutEntryInput!]
+}
+
+input CommentUpdateWithWhereUniqueWithoutAuthorInput {
+  data: CommentUpdateWithoutAuthorInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentUpdateWithWhereUniqueWithoutEntryInput {
+  data: CommentUpdateWithoutEntryInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentUpdateWithoutAuthorInput {
+  body: JSON
+  createdAt: DateTimeFieldUpdateOperationsInput
+  entry: EntryUpdateOneRequiredWithoutCommentsInput
+  id: StringFieldUpdateOperationsInput
+  position: NullableStringFieldUpdateOperationsInput
+  reactions: CommentUpdatereactionsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input CommentUpdateWithoutEntryInput {
+  author: UserUpdateOneRequiredWithoutCommentsInput
+  body: JSON
+  createdAt: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  position: NullableStringFieldUpdateOperationsInput
+  reactions: CommentUpdatereactionsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input CommentUpdatereactionsInput {
+  push: [CommentReactions!]
+  set: [CommentReactions!]
+}
+
+input CommentUpsertWithWhereUniqueWithoutAuthorInput {
+  create: CommentCreateWithoutAuthorInput!
+  update: CommentUpdateWithoutAuthorInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutEntryInput {
+  create: CommentCreateWithoutEntryInput!
+  update: CommentUpdateWithoutEntryInput!
+  where: CommentWhereUniqueInput!
+}
+
 input CommentWhereInput {
   AND: [CommentWhereInput!]
   NOT: [CommentWhereInput!]
@@ -529,6 +823,70 @@ input ConnectionOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
+input ConnectionScalarWhereInput {
+  AND: [ConnectionScalarWhereInput!]
+  NOT: [ConnectionScalarWhereInput!]
+  OR: [ConnectionScalarWhereInput!]
+  email: StringFilter
+  firstName: StringNullableFilter
+  id: StringFilter
+  ip: StringNullableFilter
+  lastModified: DateTimeNullableFilter
+  lastName: StringNullableFilter
+  ownerId: StringFilter
+  phoneNumber: StringNullableFilter
+}
+
+input ConnectionUpdateManyMutationInput {
+  email: StringFieldUpdateOperationsInput
+  firstName: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  ip: NullableStringFieldUpdateOperationsInput
+  lastModified: NullableDateTimeFieldUpdateOperationsInput
+  lastName: NullableStringFieldUpdateOperationsInput
+  phoneNumber: NullableStringFieldUpdateOperationsInput
+}
+
+input ConnectionUpdateManyWithWhereWithoutOwnerInput {
+  data: ConnectionUpdateManyMutationInput!
+  where: ConnectionScalarWhereInput!
+}
+
+input ConnectionUpdateManyWithoutOwnerInput {
+  connect: [ConnectionWhereUniqueInput!]
+  connectOrCreate: [ConnectionCreateOrConnectWithoutOwnerInput!]
+  create: [ConnectionCreateWithoutOwnerInput!]
+  createMany: ConnectionCreateManyOwnerInputEnvelope
+  delete: [ConnectionWhereUniqueInput!]
+  deleteMany: [ConnectionScalarWhereInput!]
+  disconnect: [ConnectionWhereUniqueInput!]
+  set: [ConnectionWhereUniqueInput!]
+  update: [ConnectionUpdateWithWhereUniqueWithoutOwnerInput!]
+  updateMany: [ConnectionUpdateManyWithWhereWithoutOwnerInput!]
+  upsert: [ConnectionUpsertWithWhereUniqueWithoutOwnerInput!]
+}
+
+input ConnectionUpdateWithWhereUniqueWithoutOwnerInput {
+  data: ConnectionUpdateWithoutOwnerInput!
+  where: ConnectionWhereUniqueInput!
+}
+
+input ConnectionUpdateWithoutOwnerInput {
+  email: StringFieldUpdateOperationsInput
+  firstName: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  ip: NullableStringFieldUpdateOperationsInput
+  lastModified: NullableDateTimeFieldUpdateOperationsInput
+  lastName: NullableStringFieldUpdateOperationsInput
+  phoneNumber: NullableStringFieldUpdateOperationsInput
+}
+
+input ConnectionUpsertWithWhereUniqueWithoutOwnerInput {
+  create: ConnectionCreateWithoutOwnerInput!
+  update: ConnectionUpdateWithoutOwnerInput!
+  where: ConnectionWhereUniqueInput!
+}
+
 input ConnectionWhereInput {
   AND: [ConnectionWhereInput!]
   NOT: [ConnectionWhereInput!]
@@ -556,6 +914,10 @@ type ContentNodes {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input DateTimeFieldUpdateOperationsInput {
+  set: DateTime
+}
 
 input DateTimeFilter {
   equals: DateTime
@@ -774,11 +1136,158 @@ enum EntryScalarFieldEnum {
   updatedAt
 }
 
+input EntryScalarWhereInput {
+  AND: [EntryScalarWhereInput!]
+  NOT: [EntryScalarWhereInput!]
+  OR: [EntryScalarWhereInput!]
+  authorId: StringFilter
+  categoryId: StringNullableFilter
+  content: JsonNullableListFilter
+  createdAt: DateTimeFilter
+  featuredImage: JsonNullableListFilter
+  id: StringFilter
+  published: BoolFilter
+  title: StringFilter
+  updatedAt: DateTimeNullableFilter
+}
+
 input EntryUncheckedCreateNestedManyWithoutAuthorInput {
   connect: [EntryWhereUniqueInput!]
   connectOrCreate: [EntryCreateOrConnectWithoutAuthorInput!]
   create: [EntryCreateWithoutAuthorInput!]
   createMany: EntryCreateManyAuthorInputEnvelope
+}
+
+input EntryUpdateManyMutationInput {
+  categoryId: NullableStringFieldUpdateOperationsInput
+  content: EntryUpdatecontentInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  featuredImage: EntryUpdatefeaturedImageInput
+  id: StringFieldUpdateOperationsInput
+  published: BoolFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input EntryUpdateManyWithWhereWithoutAuthorInput {
+  data: EntryUpdateManyMutationInput!
+  where: EntryScalarWhereInput!
+}
+
+input EntryUpdateManyWithWhereWithoutCategoriesInput {
+  data: EntryUpdateManyMutationInput!
+  where: EntryScalarWhereInput!
+}
+
+input EntryUpdateManyWithoutAuthorInput {
+  connect: [EntryWhereUniqueInput!]
+  connectOrCreate: [EntryCreateOrConnectWithoutAuthorInput!]
+  create: [EntryCreateWithoutAuthorInput!]
+  createMany: EntryCreateManyAuthorInputEnvelope
+  delete: [EntryWhereUniqueInput!]
+  deleteMany: [EntryScalarWhereInput!]
+  disconnect: [EntryWhereUniqueInput!]
+  set: [EntryWhereUniqueInput!]
+  update: [EntryUpdateWithWhereUniqueWithoutAuthorInput!]
+  updateMany: [EntryUpdateManyWithWhereWithoutAuthorInput!]
+  upsert: [EntryUpsertWithWhereUniqueWithoutAuthorInput!]
+}
+
+input EntryUpdateManyWithoutCategoriesInput {
+  connect: [EntryWhereUniqueInput!]
+  connectOrCreate: [EntryCreateOrConnectWithoutCategoriesInput!]
+  create: [EntryCreateWithoutCategoriesInput!]
+  delete: [EntryWhereUniqueInput!]
+  deleteMany: [EntryScalarWhereInput!]
+  disconnect: [EntryWhereUniqueInput!]
+  set: [EntryWhereUniqueInput!]
+  update: [EntryUpdateWithWhereUniqueWithoutCategoriesInput!]
+  updateMany: [EntryUpdateManyWithWhereWithoutCategoriesInput!]
+  upsert: [EntryUpsertWithWhereUniqueWithoutCategoriesInput!]
+}
+
+input EntryUpdateOneRequiredWithoutCommentsInput {
+  connect: EntryWhereUniqueInput
+  connectOrCreate: EntryCreateOrConnectWithoutCommentsInput
+  create: EntryCreateWithoutCommentsInput
+  update: EntryUpdateWithoutCommentsInput
+  upsert: EntryUpsertWithoutCommentsInput
+}
+
+input EntryUpdateWithWhereUniqueWithoutAuthorInput {
+  data: EntryUpdateWithoutAuthorInput!
+  where: EntryWhereUniqueInput!
+}
+
+input EntryUpdateWithWhereUniqueWithoutCategoriesInput {
+  data: EntryUpdateWithoutCategoriesInput!
+  where: EntryWhereUniqueInput!
+}
+
+input EntryUpdateWithoutAuthorInput {
+  categories: CategoryUpdateManyWithoutEntriesInput
+  categoryId: NullableStringFieldUpdateOperationsInput
+  comments: CommentUpdateManyWithoutEntryInput
+  content: EntryUpdatecontentInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  featuredImage: EntryUpdatefeaturedImageInput
+  id: StringFieldUpdateOperationsInput
+  published: BoolFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input EntryUpdateWithoutCategoriesInput {
+  author: UserUpdateOneRequiredWithoutEntriesInput
+  categoryId: NullableStringFieldUpdateOperationsInput
+  comments: CommentUpdateManyWithoutEntryInput
+  content: EntryUpdatecontentInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  featuredImage: EntryUpdatefeaturedImageInput
+  id: StringFieldUpdateOperationsInput
+  published: BoolFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input EntryUpdateWithoutCommentsInput {
+  author: UserUpdateOneRequiredWithoutEntriesInput
+  categories: CategoryUpdateManyWithoutEntriesInput
+  categoryId: NullableStringFieldUpdateOperationsInput
+  content: EntryUpdatecontentInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  featuredImage: EntryUpdatefeaturedImageInput
+  id: StringFieldUpdateOperationsInput
+  published: BoolFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input EntryUpdatecontentInput {
+  push: [JSON!]
+  set: [JSON!]
+}
+
+input EntryUpdatefeaturedImageInput {
+  push: [JSON!]
+  set: [JSON!]
+}
+
+input EntryUpsertWithWhereUniqueWithoutAuthorInput {
+  create: EntryCreateWithoutAuthorInput!
+  update: EntryUpdateWithoutAuthorInput!
+  where: EntryWhereUniqueInput!
+}
+
+input EntryUpsertWithWhereUniqueWithoutCategoriesInput {
+  create: EntryCreateWithoutCategoriesInput!
+  update: EntryUpdateWithoutCategoriesInput!
+  where: EntryWhereUniqueInput!
+}
+
+input EntryUpsertWithoutCommentsInput {
+  create: EntryCreateWithoutCommentsInput!
+  update: EntryUpdateWithoutCommentsInput!
 }
 
 input EntryWhereInput {
@@ -1166,6 +1675,97 @@ enum MediaItemScalarFieldEnum {
   width
 }
 
+input MediaItemScalarWhereInput {
+  AND: [MediaItemScalarWhereInput!]
+  NOT: [MediaItemScalarWhereInput!]
+  OR: [MediaItemScalarWhereInput!]
+  ariaLabel: StringNullableFilter
+  caption: StringNullableFilter
+  destination: EnumMediaItemDestinationNullableFilter
+  fileLastModified: DateTimeNullableFilter
+  height: FloatNullableFilter
+  id: StringFilter
+  name: StringNullableFilter
+  quality: IntNullableFilter
+  size: StringNullableFilter
+  src: StringNullableFilter
+  srcSet: StringNullableFilter
+  title: StringNullableFilter
+  type: EnumMimeTypesNullableFilter
+  updatedAt: DateTimeNullableFilter
+  uploadedAt: DateTimeFilter
+  userId: StringFilter
+  width: FloatNullableFilter
+}
+
+input MediaItemUpdateManyMutationInput {
+  ariaLabel: NullableStringFieldUpdateOperationsInput
+  caption: NullableStringFieldUpdateOperationsInput
+  destination: NullableEnumMediaItemDestinationFieldUpdateOperationsInput
+  fileLastModified: NullableDateTimeFieldUpdateOperationsInput
+  height: NullableFloatFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  name: NullableStringFieldUpdateOperationsInput
+  quality: NullableIntFieldUpdateOperationsInput
+  size: NullableStringFieldUpdateOperationsInput
+  src: NullableStringFieldUpdateOperationsInput
+  srcSet: NullableStringFieldUpdateOperationsInput
+  title: NullableStringFieldUpdateOperationsInput
+  type: NullableEnumMimeTypesFieldUpdateOperationsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+  uploadedAt: DateTimeFieldUpdateOperationsInput
+  width: NullableFloatFieldUpdateOperationsInput
+}
+
+input MediaItemUpdateManyWithWhereWithoutUserInput {
+  data: MediaItemUpdateManyMutationInput!
+  where: MediaItemScalarWhereInput!
+}
+
+input MediaItemUpdateManyWithoutUserInput {
+  connect: [MediaItemWhereUniqueInput!]
+  connectOrCreate: [MediaItemCreateOrConnectWithoutUserInput!]
+  create: [MediaItemCreateWithoutUserInput!]
+  createMany: MediaItemCreateManyUserInputEnvelope
+  delete: [MediaItemWhereUniqueInput!]
+  deleteMany: [MediaItemScalarWhereInput!]
+  disconnect: [MediaItemWhereUniqueInput!]
+  set: [MediaItemWhereUniqueInput!]
+  update: [MediaItemUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [MediaItemUpdateManyWithWhereWithoutUserInput!]
+  upsert: [MediaItemUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input MediaItemUpdateWithWhereUniqueWithoutUserInput {
+  data: MediaItemUpdateWithoutUserInput!
+  where: MediaItemWhereUniqueInput!
+}
+
+input MediaItemUpdateWithoutUserInput {
+  ariaLabel: NullableStringFieldUpdateOperationsInput
+  caption: NullableStringFieldUpdateOperationsInput
+  destination: NullableEnumMediaItemDestinationFieldUpdateOperationsInput
+  fileLastModified: NullableDateTimeFieldUpdateOperationsInput
+  height: NullableFloatFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  name: NullableStringFieldUpdateOperationsInput
+  quality: NullableIntFieldUpdateOperationsInput
+  size: NullableStringFieldUpdateOperationsInput
+  src: NullableStringFieldUpdateOperationsInput
+  srcSet: NullableStringFieldUpdateOperationsInput
+  title: NullableStringFieldUpdateOperationsInput
+  type: NullableEnumMimeTypesFieldUpdateOperationsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+  uploadedAt: DateTimeFieldUpdateOperationsInput
+  width: NullableFloatFieldUpdateOperationsInput
+}
+
+input MediaItemUpsertWithWhereUniqueWithoutUserInput {
+  create: MediaItemCreateWithoutUserInput!
+  update: MediaItemUpdateWithoutUserInput!
+  where: MediaItemWhereUniqueInput!
+}
+
 input MediaItemWhereInput {
   AND: [MediaItemWhereInput!]
   NOT: [MediaItemWhereInput!]
@@ -1217,6 +1817,7 @@ type Mutation {
   signin(userloginInput: LoginInput!): AuthDetailed!
   signup(data: SignupInput!): Token!
   updateUserPassword(passwordInput: ChangePasswordInput!): User!
+  upsertComment(commentUpsertInput: CommentUpsertWithWhereUniqueWithoutAuthorInput!): [Comment!]!
   userFromAccessTokenDecoded(token: String!): AuthDetailed!
   viewerCreateEntry(viewerEntryCreateInput: EntryCreateWithoutAuthorInput!): Entry!
 }
@@ -1344,6 +1945,54 @@ input NestedStringNullableFilter {
 
 interface Node {
   id: ID!
+}
+
+input NullableDateTimeFieldUpdateOperationsInput {
+  set: DateTime
+}
+
+input NullableEnumGenderFieldUpdateOperationsInput {
+  set: Gender
+}
+
+input NullableEnumMediaItemDestinationFieldUpdateOperationsInput {
+  set: MediaItemDestination
+}
+
+input NullableEnumMimeTypesFieldUpdateOperationsInput {
+  set: MimeTypes
+}
+
+input NullableEnumPronounsFieldUpdateOperationsInput {
+  set: Pronouns
+}
+
+input NullableEnumRoleFieldUpdateOperationsInput {
+  set: Role
+}
+
+input NullableEnumUserStatusFieldUpdateOperationsInput {
+  set: UserStatus
+}
+
+input NullableFloatFieldUpdateOperationsInput {
+  decrement: Float
+  divide: Float
+  increment: Float
+  multiply: Float
+  set: Float
+}
+
+input NullableIntFieldUpdateOperationsInput {
+  decrement: Int
+  divide: Int
+  increment: Int
+  multiply: Int
+  set: Int
+}
+
+input NullableStringFieldUpdateOperationsInput {
+  set: String
 }
 
 type PageInfo {
@@ -1514,6 +2163,53 @@ enum ProfileScalarFieldEnum {
   userId
 }
 
+input ProfileUpdateOneWithoutUserInput {
+  connect: ProfileWhereUniqueInput
+  connectOrCreate: ProfileCreateOrConnectWithoutUserInput
+  create: ProfileCreateWithoutUserInput
+  delete: Boolean
+  disconnect: Boolean
+  update: ProfileUpdateWithoutUserInput
+  upsert: ProfileUpsertWithoutUserInput
+}
+
+input ProfileUpdateWithoutUserInput {
+  activiyFeed: ProfileUpdateactiviyFeedInput
+  bio: ProfileUpdatebioInput
+  city: NullableStringFieldUpdateOperationsInput
+  country: NullableStringFieldUpdateOperationsInput
+  coverPhoto: NullableStringFieldUpdateOperationsInput
+  dob: NullableStringFieldUpdateOperationsInput
+  gender: NullableEnumGenderFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  lastSeen: NullableDateTimeFieldUpdateOperationsInput
+  memberSince: DateTimeFieldUpdateOperationsInput
+  occupation: NullableStringFieldUpdateOperationsInput
+  phoneNumber: NullableStringFieldUpdateOperationsInput
+  pronouns: NullableEnumPronounsFieldUpdateOperationsInput
+  recentActivity: ProfileUpdaterecentActivityInput
+}
+
+input ProfileUpdateactiviyFeedInput {
+  push: [JSON!]
+  set: [JSON!]
+}
+
+input ProfileUpdatebioInput {
+  push: [JSON!]
+  set: [JSON!]
+}
+
+input ProfileUpdaterecentActivityInput {
+  push: [JSON!]
+  set: [JSON!]
+}
+
+input ProfileUpsertWithoutUserInput {
+  create: ProfileCreateWithoutUserInput!
+  update: ProfileUpdateWithoutUserInput!
+}
+
 input ProfileWhereInput {
   AND: [ProfileWhereInput!]
   NOT: [ProfileWhereInput!]
@@ -1676,6 +2372,87 @@ input SessionOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
+input SessionScalarWhereInput {
+  AND: [SessionScalarWhereInput!]
+  NOT: [SessionScalarWhereInput!]
+  OR: [SessionScalarWhereInput!]
+  accessToken: StringNullableFilter
+  alg: StringNullableFilter
+  exp: IntNullableFilter
+  iat: IntNullableFilter
+  id: StringFilter
+  lastVerified: DateTimeNullableFilter
+  provider: StringNullableFilter
+  refreshToken: StringNullableFilter
+  scopes: StringNullableListFilter
+  signature: StringNullableFilter
+  tokenState: StringNullableFilter
+  userId: StringFilter
+}
+
+input SessionUpdateManyMutationInput {
+  accessToken: NullableStringFieldUpdateOperationsInput
+  alg: NullableStringFieldUpdateOperationsInput
+  exp: NullableIntFieldUpdateOperationsInput
+  iat: NullableIntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  lastVerified: NullableDateTimeFieldUpdateOperationsInput
+  provider: NullableStringFieldUpdateOperationsInput
+  refreshToken: NullableStringFieldUpdateOperationsInput
+  scopes: SessionUpdatescopesInput
+  signature: NullableStringFieldUpdateOperationsInput
+  tokenState: NullableStringFieldUpdateOperationsInput
+}
+
+input SessionUpdateManyWithWhereWithoutUserInput {
+  data: SessionUpdateManyMutationInput!
+  where: SessionScalarWhereInput!
+}
+
+input SessionUpdateManyWithoutUserInput {
+  connect: [SessionWhereUniqueInput!]
+  connectOrCreate: [SessionCreateOrConnectWithoutUserInput!]
+  create: [SessionCreateWithoutUserInput!]
+  createMany: SessionCreateManyUserInputEnvelope
+  delete: [SessionWhereUniqueInput!]
+  deleteMany: [SessionScalarWhereInput!]
+  disconnect: [SessionWhereUniqueInput!]
+  set: [SessionWhereUniqueInput!]
+  update: [SessionUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [SessionUpdateManyWithWhereWithoutUserInput!]
+  upsert: [SessionUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input SessionUpdateWithWhereUniqueWithoutUserInput {
+  data: SessionUpdateWithoutUserInput!
+  where: SessionWhereUniqueInput!
+}
+
+input SessionUpdateWithoutUserInput {
+  accessToken: NullableStringFieldUpdateOperationsInput
+  alg: NullableStringFieldUpdateOperationsInput
+  exp: NullableIntFieldUpdateOperationsInput
+  iat: NullableIntFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  lastVerified: NullableDateTimeFieldUpdateOperationsInput
+  provider: NullableStringFieldUpdateOperationsInput
+  refreshToken: NullableStringFieldUpdateOperationsInput
+  scopes: SessionUpdatescopesInput
+  signature: NullableStringFieldUpdateOperationsInput
+  tokenState: NullableStringFieldUpdateOperationsInput
+}
+
+input SessionUpdatescopesInput {
+  push: [String!]
+  set: [String!]
+}
+
+input SessionUpsertWithWhereUniqueWithoutUserInput {
+  create: SessionCreateWithoutUserInput!
+  update: SessionUpdateWithoutUserInput!
+  where: SessionWhereUniqueInput!
+}
+
 input SessionWhereInput {
   AND: [SessionWhereInput!]
   NOT: [SessionWhereInput!]
@@ -1710,6 +2487,10 @@ input SignupInput {
 enum SortOrder {
   asc
   desc
+}
+
+input StringFieldUpdateOperationsInput {
+  set: String
 }
 
 input StringFilter {
@@ -2029,6 +2810,108 @@ enum UserStatus {
   OFFLINE
   ONLINE
   SUSPENDED
+}
+
+input UserUpdateOneRequiredWithoutCategoriesInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutCategoriesInput
+  create: UserCreateWithoutCategoriesInput
+  update: UserUpdateWithoutCategoriesInput
+  upsert: UserUpsertWithoutCategoriesInput
+}
+
+input UserUpdateOneRequiredWithoutCommentsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutCommentsInput
+  create: UserCreateWithoutCommentsInput
+  update: UserUpdateWithoutCommentsInput
+  upsert: UserUpsertWithoutCommentsInput
+}
+
+input UserUpdateOneRequiredWithoutEntriesInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutEntriesInput
+  create: UserCreateWithoutEntriesInput
+  update: UserUpdateWithoutEntriesInput
+  upsert: UserUpsertWithoutEntriesInput
+}
+
+input UserUpdateWithoutCategoriesInput {
+  accounts: AccountUpdateManyWithoutUserInput
+  comments: CommentUpdateManyWithoutAuthorInput
+  connections: ConnectionUpdateManyWithoutOwnerInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  entries: EntryUpdateManyWithoutAuthorInput
+  firstName: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  lastName: NullableStringFieldUpdateOperationsInput
+  mediaItems: MediaItemUpdateManyWithoutUserInput
+  password: StringFieldUpdateOperationsInput
+  profile: ProfileUpdateOneWithoutUserInput
+  role: NullableEnumRoleFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserInput
+  status: NullableEnumUserStatusFieldUpdateOperationsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutCommentsInput {
+  accounts: AccountUpdateManyWithoutUserInput
+  categories: CategoryUpdateManyWithoutCreatorInput
+  connections: ConnectionUpdateManyWithoutOwnerInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  entries: EntryUpdateManyWithoutAuthorInput
+  firstName: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  lastName: NullableStringFieldUpdateOperationsInput
+  mediaItems: MediaItemUpdateManyWithoutUserInput
+  password: StringFieldUpdateOperationsInput
+  profile: ProfileUpdateOneWithoutUserInput
+  role: NullableEnumRoleFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserInput
+  status: NullableEnumUserStatusFieldUpdateOperationsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutEntriesInput {
+  accounts: AccountUpdateManyWithoutUserInput
+  categories: CategoryUpdateManyWithoutCreatorInput
+  comments: CommentUpdateManyWithoutAuthorInput
+  connections: ConnectionUpdateManyWithoutOwnerInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  emailVerified: NullableDateTimeFieldUpdateOperationsInput
+  firstName: NullableStringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  image: NullableStringFieldUpdateOperationsInput
+  lastName: NullableStringFieldUpdateOperationsInput
+  mediaItems: MediaItemUpdateManyWithoutUserInput
+  password: StringFieldUpdateOperationsInput
+  profile: ProfileUpdateOneWithoutUserInput
+  role: NullableEnumRoleFieldUpdateOperationsInput
+  sessions: SessionUpdateManyWithoutUserInput
+  status: NullableEnumUserStatusFieldUpdateOperationsInput
+  updatedAt: NullableDateTimeFieldUpdateOperationsInput
+}
+
+input UserUpsertWithoutCategoriesInput {
+  create: UserCreateWithoutCategoriesInput!
+  update: UserUpdateWithoutCategoriesInput!
+}
+
+input UserUpsertWithoutCommentsInput {
+  create: UserCreateWithoutCommentsInput!
+  update: UserUpdateWithoutCommentsInput!
+}
+
+input UserUpsertWithoutEntriesInput {
+  create: UserCreateWithoutEntriesInput!
+  update: UserUpdateWithoutEntriesInput!
 }
 
 input UserWhereInput {

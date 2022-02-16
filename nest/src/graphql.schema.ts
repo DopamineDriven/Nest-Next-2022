@@ -287,6 +287,91 @@ export class AccountProviderProviderAccountIdCompoundUniqueInput {
     providerAccountId: string;
 }
 
+export class AccountScalarWhereInput {
+    AND?: Nullable<AccountScalarWhereInput[]>;
+    NOT?: Nullable<AccountScalarWhereInput[]>;
+    OR?: Nullable<AccountScalarWhereInput[]>;
+    access_token?: Nullable<StringNullableFilter>;
+    expires_at?: Nullable<IntNullableFilter>;
+    id?: Nullable<StringFilter>;
+    id_token?: Nullable<StringNullableFilter>;
+    oauth_token?: Nullable<StringNullableFilter>;
+    oauth_token_secret?: Nullable<StringNullableFilter>;
+    provider?: Nullable<StringFilter>;
+    providerAccountId?: Nullable<StringFilter>;
+    refresh_secret?: Nullable<StringNullableFilter>;
+    refresh_token?: Nullable<StringNullableFilter>;
+    scope?: Nullable<StringNullableFilter>;
+    session_state?: Nullable<StringNullableFilter>;
+    token_type?: Nullable<StringNullableFilter>;
+    type?: Nullable<StringFilter>;
+    userId?: Nullable<StringFilter>;
+}
+
+export class AccountUpdateManyMutationInput {
+    access_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    expires_at?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    id_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    oauth_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    oauth_token_secret?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    provider?: Nullable<StringFieldUpdateOperationsInput>;
+    providerAccountId?: Nullable<StringFieldUpdateOperationsInput>;
+    refresh_secret?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    refresh_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    scope?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    session_state?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    token_type?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    type?: Nullable<StringFieldUpdateOperationsInput>;
+}
+
+export class AccountUpdateManyWithWhereWithoutUserInput {
+    data: AccountUpdateManyMutationInput;
+    where: AccountScalarWhereInput;
+}
+
+export class AccountUpdateManyWithoutUserInput {
+    connect?: Nullable<AccountWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<AccountCreateOrConnectWithoutUserInput[]>;
+    create?: Nullable<AccountCreateWithoutUserInput[]>;
+    createMany?: Nullable<AccountCreateManyUserInputEnvelope>;
+    delete?: Nullable<AccountWhereUniqueInput[]>;
+    deleteMany?: Nullable<AccountScalarWhereInput[]>;
+    disconnect?: Nullable<AccountWhereUniqueInput[]>;
+    set?: Nullable<AccountWhereUniqueInput[]>;
+    update?: Nullable<AccountUpdateWithWhereUniqueWithoutUserInput[]>;
+    updateMany?: Nullable<AccountUpdateManyWithWhereWithoutUserInput[]>;
+    upsert?: Nullable<AccountUpsertWithWhereUniqueWithoutUserInput[]>;
+}
+
+export class AccountUpdateWithWhereUniqueWithoutUserInput {
+    data: AccountUpdateWithoutUserInput;
+    where: AccountWhereUniqueInput;
+}
+
+export class AccountUpdateWithoutUserInput {
+    access_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    expires_at?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    id_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    oauth_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    oauth_token_secret?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    provider?: Nullable<StringFieldUpdateOperationsInput>;
+    providerAccountId?: Nullable<StringFieldUpdateOperationsInput>;
+    refresh_secret?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    refresh_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    scope?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    session_state?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    token_type?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    type?: Nullable<StringFieldUpdateOperationsInput>;
+}
+
+export class AccountUpsertWithWhereUniqueWithoutUserInput {
+    create: AccountCreateWithoutUserInput;
+    update: AccountUpdateWithoutUserInput;
+    where: AccountWhereUniqueInput;
+}
+
 export class AccountWhereInput {
     AND?: Nullable<AccountWhereInput[]>;
     NOT?: Nullable<AccountWhereInput[]>;
@@ -312,6 +397,10 @@ export class AccountWhereInput {
 export class AccountWhereUniqueInput {
     id?: Nullable<string>;
     provider_providerAccountId?: Nullable<AccountProviderProviderAccountIdCompoundUniqueInput>;
+}
+
+export class BoolFieldUpdateOperationsInput {
+    set?: Nullable<boolean>;
 }
 
 export class BoolFilter {
@@ -381,6 +470,103 @@ export class CategoryListRelationFilter {
 
 export class CategoryOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
+}
+
+export class CategoryScalarWhereInput {
+    AND?: Nullable<CategoryScalarWhereInput[]>;
+    NOT?: Nullable<CategoryScalarWhereInput[]>;
+    OR?: Nullable<CategoryScalarWhereInput[]>;
+    createdAt?: Nullable<DateTimeNullableFilter>;
+    creatorId?: Nullable<StringFilter>;
+    entryId?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    name?: Nullable<StringFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
+}
+
+export class CategoryUpdateManyMutationInput {
+    createdAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    entryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    name?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class CategoryUpdateManyWithWhereWithoutCreatorInput {
+    data: CategoryUpdateManyMutationInput;
+    where: CategoryScalarWhereInput;
+}
+
+export class CategoryUpdateManyWithWhereWithoutEntriesInput {
+    data: CategoryUpdateManyMutationInput;
+    where: CategoryScalarWhereInput;
+}
+
+export class CategoryUpdateManyWithoutCreatorInput {
+    connect?: Nullable<CategoryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CategoryCreateOrConnectWithoutCreatorInput[]>;
+    create?: Nullable<CategoryCreateWithoutCreatorInput[]>;
+    createMany?: Nullable<CategoryCreateManyCreatorInputEnvelope>;
+    delete?: Nullable<CategoryWhereUniqueInput[]>;
+    deleteMany?: Nullable<CategoryScalarWhereInput[]>;
+    disconnect?: Nullable<CategoryWhereUniqueInput[]>;
+    set?: Nullable<CategoryWhereUniqueInput[]>;
+    update?: Nullable<CategoryUpdateWithWhereUniqueWithoutCreatorInput[]>;
+    updateMany?: Nullable<CategoryUpdateManyWithWhereWithoutCreatorInput[]>;
+    upsert?: Nullable<CategoryUpsertWithWhereUniqueWithoutCreatorInput[]>;
+}
+
+export class CategoryUpdateManyWithoutEntriesInput {
+    connect?: Nullable<CategoryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CategoryCreateOrConnectWithoutEntriesInput[]>;
+    create?: Nullable<CategoryCreateWithoutEntriesInput[]>;
+    delete?: Nullable<CategoryWhereUniqueInput[]>;
+    deleteMany?: Nullable<CategoryScalarWhereInput[]>;
+    disconnect?: Nullable<CategoryWhereUniqueInput[]>;
+    set?: Nullable<CategoryWhereUniqueInput[]>;
+    update?: Nullable<CategoryUpdateWithWhereUniqueWithoutEntriesInput[]>;
+    updateMany?: Nullable<CategoryUpdateManyWithWhereWithoutEntriesInput[]>;
+    upsert?: Nullable<CategoryUpsertWithWhereUniqueWithoutEntriesInput[]>;
+}
+
+export class CategoryUpdateWithWhereUniqueWithoutCreatorInput {
+    data: CategoryUpdateWithoutCreatorInput;
+    where: CategoryWhereUniqueInput;
+}
+
+export class CategoryUpdateWithWhereUniqueWithoutEntriesInput {
+    data: CategoryUpdateWithoutEntriesInput;
+    where: CategoryWhereUniqueInput;
+}
+
+export class CategoryUpdateWithoutCreatorInput {
+    createdAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    entries?: Nullable<EntryUpdateManyWithoutCategoriesInput>;
+    entryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    name?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class CategoryUpdateWithoutEntriesInput {
+    createdAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    creator?: Nullable<UserUpdateOneRequiredWithoutCategoriesInput>;
+    entryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    name?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class CategoryUpsertWithWhereUniqueWithoutCreatorInput {
+    create: CategoryCreateWithoutCreatorInput;
+    update: CategoryUpdateWithoutCreatorInput;
+    where: CategoryWhereUniqueInput;
+}
+
+export class CategoryUpsertWithWhereUniqueWithoutEntriesInput {
+    create: CategoryCreateWithoutEntriesInput;
+    update: CategoryUpdateWithoutEntriesInput;
+    where: CategoryWhereUniqueInput;
 }
 
 export class CategoryWhereInput {
@@ -524,6 +710,114 @@ export class CommentOrderByWithRelationAndSearchRelevanceInput {
     updatedAt?: Nullable<SortOrder>;
 }
 
+export class CommentScalarWhereInput {
+    AND?: Nullable<CommentScalarWhereInput[]>;
+    NOT?: Nullable<CommentScalarWhereInput[]>;
+    OR?: Nullable<CommentScalarWhereInput[]>;
+    authorId?: Nullable<StringFilter>;
+    body?: Nullable<JsonNullableFilter>;
+    createdAt?: Nullable<DateTimeFilter>;
+    entryId?: Nullable<StringFilter>;
+    id?: Nullable<StringFilter>;
+    position?: Nullable<StringNullableFilter>;
+    reactions?: Nullable<EnumCommentReactionsNullableListFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
+}
+
+export class CommentUpdateManyMutationInput {
+    body?: Nullable<JSON>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    position?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    reactions?: Nullable<CommentUpdatereactionsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class CommentUpdateManyWithWhereWithoutAuthorInput {
+    data: CommentUpdateManyMutationInput;
+    where: CommentScalarWhereInput;
+}
+
+export class CommentUpdateManyWithWhereWithoutEntryInput {
+    data: CommentUpdateManyMutationInput;
+    where: CommentScalarWhereInput;
+}
+
+export class CommentUpdateManyWithoutAuthorInput {
+    connect?: Nullable<CommentWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CommentCreateOrConnectWithoutAuthorInput[]>;
+    create?: Nullable<CommentCreateWithoutAuthorInput[]>;
+    createMany?: Nullable<CommentCreateManyAuthorInputEnvelope>;
+    delete?: Nullable<CommentWhereUniqueInput[]>;
+    deleteMany?: Nullable<CommentScalarWhereInput[]>;
+    disconnect?: Nullable<CommentWhereUniqueInput[]>;
+    set?: Nullable<CommentWhereUniqueInput[]>;
+    update?: Nullable<CommentUpdateWithWhereUniqueWithoutAuthorInput[]>;
+    updateMany?: Nullable<CommentUpdateManyWithWhereWithoutAuthorInput[]>;
+    upsert?: Nullable<CommentUpsertWithWhereUniqueWithoutAuthorInput[]>;
+}
+
+export class CommentUpdateManyWithoutEntryInput {
+    connect?: Nullable<CommentWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CommentCreateOrConnectWithoutEntryInput[]>;
+    create?: Nullable<CommentCreateWithoutEntryInput[]>;
+    createMany?: Nullable<CommentCreateManyEntryInputEnvelope>;
+    delete?: Nullable<CommentWhereUniqueInput[]>;
+    deleteMany?: Nullable<CommentScalarWhereInput[]>;
+    disconnect?: Nullable<CommentWhereUniqueInput[]>;
+    set?: Nullable<CommentWhereUniqueInput[]>;
+    update?: Nullable<CommentUpdateWithWhereUniqueWithoutEntryInput[]>;
+    updateMany?: Nullable<CommentUpdateManyWithWhereWithoutEntryInput[]>;
+    upsert?: Nullable<CommentUpsertWithWhereUniqueWithoutEntryInput[]>;
+}
+
+export class CommentUpdateWithWhereUniqueWithoutAuthorInput {
+    data: CommentUpdateWithoutAuthorInput;
+    where: CommentWhereUniqueInput;
+}
+
+export class CommentUpdateWithWhereUniqueWithoutEntryInput {
+    data: CommentUpdateWithoutEntryInput;
+    where: CommentWhereUniqueInput;
+}
+
+export class CommentUpdateWithoutAuthorInput {
+    body?: Nullable<JSON>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    entry?: Nullable<EntryUpdateOneRequiredWithoutCommentsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    position?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    reactions?: Nullable<CommentUpdatereactionsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class CommentUpdateWithoutEntryInput {
+    author?: Nullable<UserUpdateOneRequiredWithoutCommentsInput>;
+    body?: Nullable<JSON>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    position?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    reactions?: Nullable<CommentUpdatereactionsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class CommentUpdatereactionsInput {
+    push?: Nullable<CommentReactions[]>;
+    set?: Nullable<CommentReactions[]>;
+}
+
+export class CommentUpsertWithWhereUniqueWithoutAuthorInput {
+    create: CommentCreateWithoutAuthorInput;
+    update: CommentUpdateWithoutAuthorInput;
+    where: CommentWhereUniqueInput;
+}
+
+export class CommentUpsertWithWhereUniqueWithoutEntryInput {
+    create: CommentCreateWithoutEntryInput;
+    update: CommentUpdateWithoutEntryInput;
+    where: CommentWhereUniqueInput;
+}
+
 export class CommentWhereInput {
     AND?: Nullable<CommentWhereInput[]>;
     NOT?: Nullable<CommentWhereInput[]>;
@@ -592,6 +886,70 @@ export class ConnectionOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
 }
 
+export class ConnectionScalarWhereInput {
+    AND?: Nullable<ConnectionScalarWhereInput[]>;
+    NOT?: Nullable<ConnectionScalarWhereInput[]>;
+    OR?: Nullable<ConnectionScalarWhereInput[]>;
+    email?: Nullable<StringFilter>;
+    firstName?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    ip?: Nullable<StringNullableFilter>;
+    lastModified?: Nullable<DateTimeNullableFilter>;
+    lastName?: Nullable<StringNullableFilter>;
+    ownerId?: Nullable<StringFilter>;
+    phoneNumber?: Nullable<StringNullableFilter>;
+}
+
+export class ConnectionUpdateManyMutationInput {
+    email?: Nullable<StringFieldUpdateOperationsInput>;
+    firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    ip?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    lastModified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    phoneNumber?: Nullable<NullableStringFieldUpdateOperationsInput>;
+}
+
+export class ConnectionUpdateManyWithWhereWithoutOwnerInput {
+    data: ConnectionUpdateManyMutationInput;
+    where: ConnectionScalarWhereInput;
+}
+
+export class ConnectionUpdateManyWithoutOwnerInput {
+    connect?: Nullable<ConnectionWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<ConnectionCreateOrConnectWithoutOwnerInput[]>;
+    create?: Nullable<ConnectionCreateWithoutOwnerInput[]>;
+    createMany?: Nullable<ConnectionCreateManyOwnerInputEnvelope>;
+    delete?: Nullable<ConnectionWhereUniqueInput[]>;
+    deleteMany?: Nullable<ConnectionScalarWhereInput[]>;
+    disconnect?: Nullable<ConnectionWhereUniqueInput[]>;
+    set?: Nullable<ConnectionWhereUniqueInput[]>;
+    update?: Nullable<ConnectionUpdateWithWhereUniqueWithoutOwnerInput[]>;
+    updateMany?: Nullable<ConnectionUpdateManyWithWhereWithoutOwnerInput[]>;
+    upsert?: Nullable<ConnectionUpsertWithWhereUniqueWithoutOwnerInput[]>;
+}
+
+export class ConnectionUpdateWithWhereUniqueWithoutOwnerInput {
+    data: ConnectionUpdateWithoutOwnerInput;
+    where: ConnectionWhereUniqueInput;
+}
+
+export class ConnectionUpdateWithoutOwnerInput {
+    email?: Nullable<StringFieldUpdateOperationsInput>;
+    firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    ip?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    lastModified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    phoneNumber?: Nullable<NullableStringFieldUpdateOperationsInput>;
+}
+
+export class ConnectionUpsertWithWhereUniqueWithoutOwnerInput {
+    create: ConnectionCreateWithoutOwnerInput;
+    update: ConnectionUpdateWithoutOwnerInput;
+    where: ConnectionWhereUniqueInput;
+}
+
 export class ConnectionWhereInput {
     AND?: Nullable<ConnectionWhereInput[]>;
     NOT?: Nullable<ConnectionWhereInput[]>;
@@ -609,6 +967,10 @@ export class ConnectionWhereInput {
 
 export class ConnectionWhereUniqueInput {
     id?: Nullable<string>;
+}
+
+export class DateTimeFieldUpdateOperationsInput {
+    set?: Nullable<DateTime>;
 }
 
 export class DateTimeFilter {
@@ -775,11 +1137,158 @@ export class EntryRelationFilter {
     isNot?: Nullable<EntryWhereInput>;
 }
 
+export class EntryScalarWhereInput {
+    AND?: Nullable<EntryScalarWhereInput[]>;
+    NOT?: Nullable<EntryScalarWhereInput[]>;
+    OR?: Nullable<EntryScalarWhereInput[]>;
+    authorId?: Nullable<StringFilter>;
+    categoryId?: Nullable<StringNullableFilter>;
+    content?: Nullable<JsonNullableListFilter>;
+    createdAt?: Nullable<DateTimeFilter>;
+    featuredImage?: Nullable<JsonNullableListFilter>;
+    id?: Nullable<StringFilter>;
+    published?: Nullable<BoolFilter>;
+    title?: Nullable<StringFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
+}
+
 export class EntryUncheckedCreateNestedManyWithoutAuthorInput {
     connect?: Nullable<EntryWhereUniqueInput[]>;
     connectOrCreate?: Nullable<EntryCreateOrConnectWithoutAuthorInput[]>;
     create?: Nullable<EntryCreateWithoutAuthorInput[]>;
     createMany?: Nullable<EntryCreateManyAuthorInputEnvelope>;
+}
+
+export class EntryUpdateManyMutationInput {
+    categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    content?: Nullable<EntryUpdatecontentInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    featuredImage?: Nullable<EntryUpdatefeaturedImageInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    published?: Nullable<BoolFieldUpdateOperationsInput>;
+    title?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class EntryUpdateManyWithWhereWithoutAuthorInput {
+    data: EntryUpdateManyMutationInput;
+    where: EntryScalarWhereInput;
+}
+
+export class EntryUpdateManyWithWhereWithoutCategoriesInput {
+    data: EntryUpdateManyMutationInput;
+    where: EntryScalarWhereInput;
+}
+
+export class EntryUpdateManyWithoutAuthorInput {
+    connect?: Nullable<EntryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutAuthorInput[]>;
+    create?: Nullable<EntryCreateWithoutAuthorInput[]>;
+    createMany?: Nullable<EntryCreateManyAuthorInputEnvelope>;
+    delete?: Nullable<EntryWhereUniqueInput[]>;
+    deleteMany?: Nullable<EntryScalarWhereInput[]>;
+    disconnect?: Nullable<EntryWhereUniqueInput[]>;
+    set?: Nullable<EntryWhereUniqueInput[]>;
+    update?: Nullable<EntryUpdateWithWhereUniqueWithoutAuthorInput[]>;
+    updateMany?: Nullable<EntryUpdateManyWithWhereWithoutAuthorInput[]>;
+    upsert?: Nullable<EntryUpsertWithWhereUniqueWithoutAuthorInput[]>;
+}
+
+export class EntryUpdateManyWithoutCategoriesInput {
+    connect?: Nullable<EntryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCategoriesInput[]>;
+    create?: Nullable<EntryCreateWithoutCategoriesInput[]>;
+    delete?: Nullable<EntryWhereUniqueInput[]>;
+    deleteMany?: Nullable<EntryScalarWhereInput[]>;
+    disconnect?: Nullable<EntryWhereUniqueInput[]>;
+    set?: Nullable<EntryWhereUniqueInput[]>;
+    update?: Nullable<EntryUpdateWithWhereUniqueWithoutCategoriesInput[]>;
+    updateMany?: Nullable<EntryUpdateManyWithWhereWithoutCategoriesInput[]>;
+    upsert?: Nullable<EntryUpsertWithWhereUniqueWithoutCategoriesInput[]>;
+}
+
+export class EntryUpdateOneRequiredWithoutCommentsInput {
+    connect?: Nullable<EntryWhereUniqueInput>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCommentsInput>;
+    create?: Nullable<EntryCreateWithoutCommentsInput>;
+    update?: Nullable<EntryUpdateWithoutCommentsInput>;
+    upsert?: Nullable<EntryUpsertWithoutCommentsInput>;
+}
+
+export class EntryUpdateWithWhereUniqueWithoutAuthorInput {
+    data: EntryUpdateWithoutAuthorInput;
+    where: EntryWhereUniqueInput;
+}
+
+export class EntryUpdateWithWhereUniqueWithoutCategoriesInput {
+    data: EntryUpdateWithoutCategoriesInput;
+    where: EntryWhereUniqueInput;
+}
+
+export class EntryUpdateWithoutAuthorInput {
+    categories?: Nullable<CategoryUpdateManyWithoutEntriesInput>;
+    categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    comments?: Nullable<CommentUpdateManyWithoutEntryInput>;
+    content?: Nullable<EntryUpdatecontentInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    featuredImage?: Nullable<EntryUpdatefeaturedImageInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    published?: Nullable<BoolFieldUpdateOperationsInput>;
+    title?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class EntryUpdateWithoutCategoriesInput {
+    author?: Nullable<UserUpdateOneRequiredWithoutEntriesInput>;
+    categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    comments?: Nullable<CommentUpdateManyWithoutEntryInput>;
+    content?: Nullable<EntryUpdatecontentInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    featuredImage?: Nullable<EntryUpdatefeaturedImageInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    published?: Nullable<BoolFieldUpdateOperationsInput>;
+    title?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class EntryUpdateWithoutCommentsInput {
+    author?: Nullable<UserUpdateOneRequiredWithoutEntriesInput>;
+    categories?: Nullable<CategoryUpdateManyWithoutEntriesInput>;
+    categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    content?: Nullable<EntryUpdatecontentInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    featuredImage?: Nullable<EntryUpdatefeaturedImageInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    published?: Nullable<BoolFieldUpdateOperationsInput>;
+    title?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class EntryUpdatecontentInput {
+    push?: Nullable<JSON[]>;
+    set?: Nullable<JSON[]>;
+}
+
+export class EntryUpdatefeaturedImageInput {
+    push?: Nullable<JSON[]>;
+    set?: Nullable<JSON[]>;
+}
+
+export class EntryUpsertWithWhereUniqueWithoutAuthorInput {
+    create: EntryCreateWithoutAuthorInput;
+    update: EntryUpdateWithoutAuthorInput;
+    where: EntryWhereUniqueInput;
+}
+
+export class EntryUpsertWithWhereUniqueWithoutCategoriesInput {
+    create: EntryCreateWithoutCategoriesInput;
+    update: EntryUpdateWithoutCategoriesInput;
+    where: EntryWhereUniqueInput;
+}
+
+export class EntryUpsertWithoutCommentsInput {
+    create: EntryCreateWithoutCommentsInput;
+    update: EntryUpdateWithoutCommentsInput;
 }
 
 export class EntryWhereInput {
@@ -1065,6 +1574,97 @@ export class MediaItemOrderByWithRelationAndSearchRelevanceInput {
     width?: Nullable<SortOrder>;
 }
 
+export class MediaItemScalarWhereInput {
+    AND?: Nullable<MediaItemScalarWhereInput[]>;
+    NOT?: Nullable<MediaItemScalarWhereInput[]>;
+    OR?: Nullable<MediaItemScalarWhereInput[]>;
+    ariaLabel?: Nullable<StringNullableFilter>;
+    caption?: Nullable<StringNullableFilter>;
+    destination?: Nullable<EnumMediaItemDestinationNullableFilter>;
+    fileLastModified?: Nullable<DateTimeNullableFilter>;
+    height?: Nullable<FloatNullableFilter>;
+    id?: Nullable<StringFilter>;
+    name?: Nullable<StringNullableFilter>;
+    quality?: Nullable<IntNullableFilter>;
+    size?: Nullable<StringNullableFilter>;
+    src?: Nullable<StringNullableFilter>;
+    srcSet?: Nullable<StringNullableFilter>;
+    title?: Nullable<StringNullableFilter>;
+    type?: Nullable<EnumMimeTypesNullableFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
+    uploadedAt?: Nullable<DateTimeFilter>;
+    userId?: Nullable<StringFilter>;
+    width?: Nullable<FloatNullableFilter>;
+}
+
+export class MediaItemUpdateManyMutationInput {
+    ariaLabel?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    caption?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    destination?: Nullable<NullableEnumMediaItemDestinationFieldUpdateOperationsInput>;
+    fileLastModified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    height?: Nullable<NullableFloatFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    name?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    quality?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    size?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    src?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    srcSet?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    title?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    type?: Nullable<NullableEnumMimeTypesFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    uploadedAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    width?: Nullable<NullableFloatFieldUpdateOperationsInput>;
+}
+
+export class MediaItemUpdateManyWithWhereWithoutUserInput {
+    data: MediaItemUpdateManyMutationInput;
+    where: MediaItemScalarWhereInput;
+}
+
+export class MediaItemUpdateManyWithoutUserInput {
+    connect?: Nullable<MediaItemWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<MediaItemCreateOrConnectWithoutUserInput[]>;
+    create?: Nullable<MediaItemCreateWithoutUserInput[]>;
+    createMany?: Nullable<MediaItemCreateManyUserInputEnvelope>;
+    delete?: Nullable<MediaItemWhereUniqueInput[]>;
+    deleteMany?: Nullable<MediaItemScalarWhereInput[]>;
+    disconnect?: Nullable<MediaItemWhereUniqueInput[]>;
+    set?: Nullable<MediaItemWhereUniqueInput[]>;
+    update?: Nullable<MediaItemUpdateWithWhereUniqueWithoutUserInput[]>;
+    updateMany?: Nullable<MediaItemUpdateManyWithWhereWithoutUserInput[]>;
+    upsert?: Nullable<MediaItemUpsertWithWhereUniqueWithoutUserInput[]>;
+}
+
+export class MediaItemUpdateWithWhereUniqueWithoutUserInput {
+    data: MediaItemUpdateWithoutUserInput;
+    where: MediaItemWhereUniqueInput;
+}
+
+export class MediaItemUpdateWithoutUserInput {
+    ariaLabel?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    caption?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    destination?: Nullable<NullableEnumMediaItemDestinationFieldUpdateOperationsInput>;
+    fileLastModified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    height?: Nullable<NullableFloatFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    name?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    quality?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    size?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    src?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    srcSet?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    title?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    type?: Nullable<NullableEnumMimeTypesFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    uploadedAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    width?: Nullable<NullableFloatFieldUpdateOperationsInput>;
+}
+
+export class MediaItemUpsertWithWhereUniqueWithoutUserInput {
+    create: MediaItemCreateWithoutUserInput;
+    update: MediaItemUpdateWithoutUserInput;
+    where: MediaItemWhereUniqueInput;
+}
+
 export class MediaItemWhereInput {
     AND?: Nullable<MediaItemWhereInput[]>;
     NOT?: Nullable<MediaItemWhereInput[]>;
@@ -1215,6 +1815,54 @@ export class NestedStringNullableFilter {
     startsWith?: Nullable<string>;
 }
 
+export class NullableDateTimeFieldUpdateOperationsInput {
+    set?: Nullable<DateTime>;
+}
+
+export class NullableEnumGenderFieldUpdateOperationsInput {
+    set?: Nullable<Gender>;
+}
+
+export class NullableEnumMediaItemDestinationFieldUpdateOperationsInput {
+    set?: Nullable<MediaItemDestination>;
+}
+
+export class NullableEnumMimeTypesFieldUpdateOperationsInput {
+    set?: Nullable<MimeTypes>;
+}
+
+export class NullableEnumPronounsFieldUpdateOperationsInput {
+    set?: Nullable<Pronouns>;
+}
+
+export class NullableEnumRoleFieldUpdateOperationsInput {
+    set?: Nullable<Role>;
+}
+
+export class NullableEnumUserStatusFieldUpdateOperationsInput {
+    set?: Nullable<UserStatus>;
+}
+
+export class NullableFloatFieldUpdateOperationsInput {
+    decrement?: Nullable<number>;
+    divide?: Nullable<number>;
+    increment?: Nullable<number>;
+    multiply?: Nullable<number>;
+    set?: Nullable<number>;
+}
+
+export class NullableIntFieldUpdateOperationsInput {
+    decrement?: Nullable<number>;
+    divide?: Nullable<number>;
+    increment?: Nullable<number>;
+    multiply?: Nullable<number>;
+    set?: Nullable<number>;
+}
+
+export class NullableStringFieldUpdateOperationsInput {
+    set?: Nullable<string>;
+}
+
 export class PaginationArgsInput {
     after?: Nullable<string>;
     before?: Nullable<string>;
@@ -1309,6 +1957,53 @@ export class ProfileOrderByWithRelationAndSearchRelevanceInput {
 export class ProfileRelationFilter {
     is?: Nullable<ProfileWhereInput>;
     isNot?: Nullable<ProfileWhereInput>;
+}
+
+export class ProfileUpdateOneWithoutUserInput {
+    connect?: Nullable<ProfileWhereUniqueInput>;
+    connectOrCreate?: Nullable<ProfileCreateOrConnectWithoutUserInput>;
+    create?: Nullable<ProfileCreateWithoutUserInput>;
+    delete?: Nullable<boolean>;
+    disconnect?: Nullable<boolean>;
+    update?: Nullable<ProfileUpdateWithoutUserInput>;
+    upsert?: Nullable<ProfileUpsertWithoutUserInput>;
+}
+
+export class ProfileUpdateWithoutUserInput {
+    activiyFeed?: Nullable<ProfileUpdateactiviyFeedInput>;
+    bio?: Nullable<ProfileUpdatebioInput>;
+    city?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    country?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    coverPhoto?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    dob?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    gender?: Nullable<NullableEnumGenderFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    lastSeen?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    memberSince?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    occupation?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    phoneNumber?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    pronouns?: Nullable<NullableEnumPronounsFieldUpdateOperationsInput>;
+    recentActivity?: Nullable<ProfileUpdaterecentActivityInput>;
+}
+
+export class ProfileUpdateactiviyFeedInput {
+    push?: Nullable<JSON[]>;
+    set?: Nullable<JSON[]>;
+}
+
+export class ProfileUpdatebioInput {
+    push?: Nullable<JSON[]>;
+    set?: Nullable<JSON[]>;
+}
+
+export class ProfileUpdaterecentActivityInput {
+    push?: Nullable<JSON[]>;
+    set?: Nullable<JSON[]>;
+}
+
+export class ProfileUpsertWithoutUserInput {
+    create: ProfileCreateWithoutUserInput;
+    update: ProfileUpdateWithoutUserInput;
 }
 
 export class ProfileWhereInput {
@@ -1410,6 +2105,87 @@ export class SessionOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
 }
 
+export class SessionScalarWhereInput {
+    AND?: Nullable<SessionScalarWhereInput[]>;
+    NOT?: Nullable<SessionScalarWhereInput[]>;
+    OR?: Nullable<SessionScalarWhereInput[]>;
+    accessToken?: Nullable<StringNullableFilter>;
+    alg?: Nullable<StringNullableFilter>;
+    exp?: Nullable<IntNullableFilter>;
+    iat?: Nullable<IntNullableFilter>;
+    id?: Nullable<StringFilter>;
+    lastVerified?: Nullable<DateTimeNullableFilter>;
+    provider?: Nullable<StringNullableFilter>;
+    refreshToken?: Nullable<StringNullableFilter>;
+    scopes?: Nullable<StringNullableListFilter>;
+    signature?: Nullable<StringNullableFilter>;
+    tokenState?: Nullable<StringNullableFilter>;
+    userId?: Nullable<StringFilter>;
+}
+
+export class SessionUpdateManyMutationInput {
+    accessToken?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    alg?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    exp?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    iat?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    lastVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    provider?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    refreshToken?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    scopes?: Nullable<SessionUpdatescopesInput>;
+    signature?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    tokenState?: Nullable<NullableStringFieldUpdateOperationsInput>;
+}
+
+export class SessionUpdateManyWithWhereWithoutUserInput {
+    data: SessionUpdateManyMutationInput;
+    where: SessionScalarWhereInput;
+}
+
+export class SessionUpdateManyWithoutUserInput {
+    connect?: Nullable<SessionWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<SessionCreateOrConnectWithoutUserInput[]>;
+    create?: Nullable<SessionCreateWithoutUserInput[]>;
+    createMany?: Nullable<SessionCreateManyUserInputEnvelope>;
+    delete?: Nullable<SessionWhereUniqueInput[]>;
+    deleteMany?: Nullable<SessionScalarWhereInput[]>;
+    disconnect?: Nullable<SessionWhereUniqueInput[]>;
+    set?: Nullable<SessionWhereUniqueInput[]>;
+    update?: Nullable<SessionUpdateWithWhereUniqueWithoutUserInput[]>;
+    updateMany?: Nullable<SessionUpdateManyWithWhereWithoutUserInput[]>;
+    upsert?: Nullable<SessionUpsertWithWhereUniqueWithoutUserInput[]>;
+}
+
+export class SessionUpdateWithWhereUniqueWithoutUserInput {
+    data: SessionUpdateWithoutUserInput;
+    where: SessionWhereUniqueInput;
+}
+
+export class SessionUpdateWithoutUserInput {
+    accessToken?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    alg?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    exp?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    iat?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    lastVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    provider?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    refreshToken?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    scopes?: Nullable<SessionUpdatescopesInput>;
+    signature?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    tokenState?: Nullable<NullableStringFieldUpdateOperationsInput>;
+}
+
+export class SessionUpdatescopesInput {
+    push?: Nullable<string[]>;
+    set?: Nullable<string[]>;
+}
+
+export class SessionUpsertWithWhereUniqueWithoutUserInput {
+    create: SessionCreateWithoutUserInput;
+    update: SessionUpdateWithoutUserInput;
+    where: SessionWhereUniqueInput;
+}
+
 export class SessionWhereInput {
     AND?: Nullable<SessionWhereInput[]>;
     NOT?: Nullable<SessionWhereInput[]>;
@@ -1439,6 +2215,10 @@ export class SignupInput {
     image?: Nullable<string>;
     lastName?: Nullable<string>;
     password: string;
+}
+
+export class StringFieldUpdateOperationsInput {
+    set?: Nullable<string>;
 }
 
 export class StringFilter {
@@ -1663,6 +2443,108 @@ export class UserOrderByWithRelationAndSearchRelevanceInput {
 export class UserRelationFilter {
     is?: Nullable<UserWhereInput>;
     isNot?: Nullable<UserWhereInput>;
+}
+
+export class UserUpdateOneRequiredWithoutCategoriesInput {
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutCategoriesInput>;
+    create?: Nullable<UserCreateWithoutCategoriesInput>;
+    update?: Nullable<UserUpdateWithoutCategoriesInput>;
+    upsert?: Nullable<UserUpsertWithoutCategoriesInput>;
+}
+
+export class UserUpdateOneRequiredWithoutCommentsInput {
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutCommentsInput>;
+    create?: Nullable<UserCreateWithoutCommentsInput>;
+    update?: Nullable<UserUpdateWithoutCommentsInput>;
+    upsert?: Nullable<UserUpsertWithoutCommentsInput>;
+}
+
+export class UserUpdateOneRequiredWithoutEntriesInput {
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutEntriesInput>;
+    create?: Nullable<UserCreateWithoutEntriesInput>;
+    update?: Nullable<UserUpdateWithoutEntriesInput>;
+    upsert?: Nullable<UserUpsertWithoutEntriesInput>;
+}
+
+export class UserUpdateWithoutCategoriesInput {
+    accounts?: Nullable<AccountUpdateManyWithoutUserInput>;
+    comments?: Nullable<CommentUpdateManyWithoutAuthorInput>;
+    connections?: Nullable<ConnectionUpdateManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    email?: Nullable<StringFieldUpdateOperationsInput>;
+    emailVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    entries?: Nullable<EntryUpdateManyWithoutAuthorInput>;
+    firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    image?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    mediaItems?: Nullable<MediaItemUpdateManyWithoutUserInput>;
+    password?: Nullable<StringFieldUpdateOperationsInput>;
+    profile?: Nullable<ProfileUpdateOneWithoutUserInput>;
+    role?: Nullable<NullableEnumRoleFieldUpdateOperationsInput>;
+    sessions?: Nullable<SessionUpdateManyWithoutUserInput>;
+    status?: Nullable<NullableEnumUserStatusFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class UserUpdateWithoutCommentsInput {
+    accounts?: Nullable<AccountUpdateManyWithoutUserInput>;
+    categories?: Nullable<CategoryUpdateManyWithoutCreatorInput>;
+    connections?: Nullable<ConnectionUpdateManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    email?: Nullable<StringFieldUpdateOperationsInput>;
+    emailVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    entries?: Nullable<EntryUpdateManyWithoutAuthorInput>;
+    firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    image?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    mediaItems?: Nullable<MediaItemUpdateManyWithoutUserInput>;
+    password?: Nullable<StringFieldUpdateOperationsInput>;
+    profile?: Nullable<ProfileUpdateOneWithoutUserInput>;
+    role?: Nullable<NullableEnumRoleFieldUpdateOperationsInput>;
+    sessions?: Nullable<SessionUpdateManyWithoutUserInput>;
+    status?: Nullable<NullableEnumUserStatusFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class UserUpdateWithoutEntriesInput {
+    accounts?: Nullable<AccountUpdateManyWithoutUserInput>;
+    categories?: Nullable<CategoryUpdateManyWithoutCreatorInput>;
+    comments?: Nullable<CommentUpdateManyWithoutAuthorInput>;
+    connections?: Nullable<ConnectionUpdateManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    email?: Nullable<StringFieldUpdateOperationsInput>;
+    emailVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    image?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    mediaItems?: Nullable<MediaItemUpdateManyWithoutUserInput>;
+    password?: Nullable<StringFieldUpdateOperationsInput>;
+    profile?: Nullable<ProfileUpdateOneWithoutUserInput>;
+    role?: Nullable<NullableEnumRoleFieldUpdateOperationsInput>;
+    sessions?: Nullable<SessionUpdateManyWithoutUserInput>;
+    status?: Nullable<NullableEnumUserStatusFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+}
+
+export class UserUpsertWithoutCategoriesInput {
+    create: UserCreateWithoutCategoriesInput;
+    update: UserUpdateWithoutCategoriesInput;
+}
+
+export class UserUpsertWithoutCommentsInput {
+    create: UserCreateWithoutCommentsInput;
+    update: UserUpdateWithoutCommentsInput;
+}
+
+export class UserUpsertWithoutEntriesInput {
+    create: UserCreateWithoutEntriesInput;
+    update: UserUpdateWithoutEntriesInput;
 }
 
 export class UserWhereInput {
@@ -1941,6 +2823,8 @@ export abstract class IMutation {
     abstract signup(data: SignupInput): Token | Promise<Token>;
 
     abstract updateUserPassword(passwordInput: ChangePasswordInput): User | Promise<User>;
+
+    abstract upsertComment(commentUpsertInput: CommentUpsertWithWhereUniqueWithoutAuthorInput): Comment[] | Promise<Comment[]>;
 
     abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
 
