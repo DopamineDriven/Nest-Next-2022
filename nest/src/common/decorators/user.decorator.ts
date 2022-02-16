@@ -31,12 +31,12 @@ export const UserMeta = createParamDecorator(
       ? U
       : T extends User
       ? User
-      : unknown
+      : T
   >(
     data: T,
     ctx: ExecutionContext
   ) => {
-    GqlExecutionContext.create(ctx).getRoot<T>();
+    GqlExecutionContext.create(ctx).getRoot<typeof data>();
   }
 );
 // user.decorator.ts

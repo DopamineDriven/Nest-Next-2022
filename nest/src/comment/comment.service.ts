@@ -113,9 +113,9 @@ export class EntryCommentUnionobj
 @Injectable()
 export class CommentService {
   constructor(
-    @Inject(PrismaService) private readonly prismaService: PrismaService,
-    @Inject(AuthService) private readonly authService: AuthService,
-    @Inject(EntryService) private readonly entryService: EntryService,
+    @Inject(PrismaService) private prismaService: PrismaService,
+    @Inject(AuthService) private authService: AuthService,
+    @Inject(EntryService) private entryService: EntryService,
     private readonly paginationService: PaginationService
   ) {}
   async siftComments(params: FindManyCommentsPaginatedInput) {

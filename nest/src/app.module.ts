@@ -23,7 +23,7 @@ import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
 import { PrismaModule } from "./prisma/prisma.module";
 import { loadSchema, loadSchemaSync } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
-import { PasswordModule } from "./password/password.module";
+import { PasswordModule } from "./auth/password.module";
 import { AuthModule } from "./auth/auth-jwt.module";
 import { UserModule } from "./user/user.module";
 import { PaginationModule } from "./pagination/pagination.module";
@@ -58,17 +58,19 @@ import { ExpressGraphQLDriver } from "src/app/driver/express-graphql.driver";
 import { CommentModule } from "./comment/comment.module";
 import { GraphQLSchema } from "graphql";
 import { GqlConfigService } from "./gql-config.service";
+import { JwtModule, JwtService } from "@nestjs/jwt";
+import {Request} from "express-serve-static-core"
 export type RecordContiional<T> =
   | Record<keyof T, T>
   | Array<T>
   | PromiseLike<T>
   | T;
 
-export type Context<T = unknown extends infer P ? P : unknown> = {
+export type Context = {
   req: ExpressContext["req"];
   res: ExpressContext["res"];
   token: string | null;
-  extras?: T extends infer U ? U : T;
+  viewerId: string | null;
 };
 
 @Module({
@@ -161,6 +163,7 @@ export type Context<T = unknown extends infer P ? P : unknown> = {
     }),
     ConfigModule.forRoot({
       isGlobal: true,
+      expandVariables: true,
       cache: true,
       load: [config],
       envFilePath: "./.env"
@@ -168,11 +171,12 @@ export type Context<T = unknown extends infer P ? P : unknown> = {
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       useClass: GqlConfigService,
-      imports: [AuthModule, ConfigModule]
+      imports: [AuthModule, ConfigModule],
+      inject: [ConfigService, AuthService]
     }),
     PrismaModule,
-    PasswordModule,
     AuthModule,
+    PasswordModule,
     UserModule,
     PaginationModule,
     EntryModule,

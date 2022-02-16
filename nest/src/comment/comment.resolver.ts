@@ -36,8 +36,8 @@ import { AuthGuard } from "src/common/guards/gql-context.guard";
 @Resolver(() => Comment)
 export class CommentResolver {
   constructor(
-    @Inject(PrismaService) private readonly prismaService: PrismaService,
-    @Inject(CommentService) private readonly commentService: CommentService,
+    @Inject(PrismaService) private  prismaService: PrismaService,
+    @Inject(CommentService) private commentService: CommentService,
     @Inject(AuthService) private readonly authService: AuthService
   ) {}
 

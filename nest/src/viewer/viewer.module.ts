@@ -1,9 +1,8 @@
 import { Module } from "@nestjs/common";
 import { ViewerService } from "./viewer.service";
-import { PasswordModule } from "../password/password.module";
+import { PasswordModule } from "../auth/password.module";
 import { PaginationModule } from "../pagination/pagination.module";
 import { PrismaModule } from "../prisma/prisma.module";
-import { PasswordService } from "../password";
 import { AuthModule } from "../auth/auth-jwt.module";
 import { ViewerResolver } from "./viewer.resolver";
 

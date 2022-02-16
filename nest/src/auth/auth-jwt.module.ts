@@ -5,11 +5,12 @@ import { PassportModule } from "@nestjs/passport";
 import { AuthJwtStrategy } from "./auth-jwt.strategy";
 import { ConfigService } from "@nestjs/config";
 import { SecurityConfig } from "../common/config/config-interfaces.config";
-import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
+import { GraphqlAuthGuard } from "./gql-auth.guard";
 import { AuthService } from "./auth-jwt.service";
-import { PasswordModule } from "../password/password.module";
 import { PrismaModule } from "../prisma/prisma.module";
 import AuthJwtController from "./auth-jwt.controller";
+import { PasswordService } from "./password.service";
+import { PasswordModule } from "./password.module";
 
 @Module({
   imports: [
@@ -37,6 +38,6 @@ import AuthJwtController from "./auth-jwt.controller";
     GraphqlAuthGuard
   ],
   controllers: [AuthJwtController],
-  exports: [GraphqlAuthGuard, AuthService, JwtModule]
+  exports: [GraphqlAuthGuard, AuthService]
 })
 export class AuthModule {}

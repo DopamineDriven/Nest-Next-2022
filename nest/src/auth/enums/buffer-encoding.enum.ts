@@ -26,7 +26,6 @@ export const BufferScaffold = (
 registerEnumType<typeof BufferEncodingOptions>(BufferEncodingOptions, {
   name: "BufferEncodingOptions"
 } as EnumOptions<typeof BufferEncodingOptions>);
-
 // export const CryptoScaffold = () => {
 //   return crypto.createHash("")
 // };

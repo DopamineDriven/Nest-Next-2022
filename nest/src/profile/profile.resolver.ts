@@ -12,7 +12,7 @@ import {
 } from "@nestjs/graphql";
 import { Profile } from "../profile/model/profile.model";
 import { PubSub } from "graphql-subscriptions";
-import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
+import { GraphqlAuthGuard } from "../auth/gql-auth.guard";
 import { ProfileCreateOrConnectWithoutUserInput } from "../.generated/prisma-nestjs-graphql/profile/inputs/profile-create-or-connect-without-user.input";
 import { ProfileOrderByWithRelationAndSearchRelevanceInput } from "../.generated/prisma-nestjs-graphql/profile/inputs/profile-order-by-with-relation-and-search-relevance.input";
 import { ProfileConnection, ProfileEdge } from "./model/profile-connection.model";

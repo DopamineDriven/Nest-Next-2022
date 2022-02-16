@@ -86,10 +86,3 @@ export class PasswordService {
     return compareSync(validateInput.password, validateInput.encryptedPassword);
   }
 }
-/**
- *     T = string extends infer U
-      ? U
-      : any extends WithImplicitCoercion<infer C>
-      ? WithImplicitCoercion<C>
-      : WithImplicitCoercion<any>
- */

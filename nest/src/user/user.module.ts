@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserResolver } from "./user.resolver";
-import { PasswordModule } from "../password/password.module";
+import { PasswordModule } from "../auth/password.module";
 import { PaginationModule } from "../pagination/pagination.module";
 import { PrismaModule } from "../prisma/prisma.module";
-import { PasswordService } from "../password";
+import { PasswordService } from "../auth/password.service";
 import { AuthModule } from "../auth/auth-jwt.module";
 
 @Module({

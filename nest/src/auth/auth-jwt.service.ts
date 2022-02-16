@@ -1,5 +1,5 @@
 import { PrismaService } from "../prisma/prisma.service";
-import { PasswordService } from "../password";
+import { PasswordService } from "./password.service";
 import {
   Injectable,
   NotFoundException,
@@ -34,25 +34,27 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly passwordService: PasswordService,
     private readonly configService: ConfigService
-  ) {
-  }
+  ) {}
 
-  public maxAge=60*60*360; // 360 hours ~ 15 days
+  public maxAge = 60 * 60 * 360; // 360 hours ~ 15 days
   setTokenCookie(res: Response, token: string) {
     const authConfig = this.configService.get<SecurityConfig>("security");
-    const cookie = serialize(authConfig?.secret ? authConfig.secret : `${process.env.JWT_SECRET ?? ""}`, token, {
-      maxAge: this.maxAge, // 360 hours ~ 15 days
-      expires: new Date(Date.now() + this.maxAge * 1000),
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-      path: "/",
-      sameSite: "lax"
-    });
+    const cookie = serialize(
+      authConfig?.secret
+        ? authConfig.secret
+        : `${process.env.JWT_SECRET ?? ""}`,
+      token,
+      {
+        maxAge: this.maxAge, // 360 hours ~ 15 days
+        expires: new Date(Date.now() + this.maxAge * 1000),
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        path: "/",
+        sameSite: "lax"
+      }
+    );
     return res.setHeader("Set-Cookie", cookie);
   }
-
-
-
 
   async createUser(payload: SignupInput): Promise<Token> {
     const hashedPassword = await this.passwordService.hashPassword(
@@ -68,8 +70,10 @@ export class AuthService {
             ? "SUPERADMIN"
             : payload.email.includes("andrew.simpson.ross@gmail.com")
             ? "SUPERADMIN"
-              : "USER",
-          image: payload.image ?? "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
+            : "USER",
+          image:
+            payload.image ??
+            "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
           firstName: payload.firstName,
           lastName: payload.lastName,
           status: "ONLINE",
@@ -187,12 +191,13 @@ export class AuthService {
         jwt: id
       }));
   }
-  async signIn({ email, password }: LoginInput, getUser?: {accessToken: string}): Promise<AuthDetailed> {
+  async signIn(
+    { email, password }: LoginInput,
+    getUser?: { accessToken: string }
+  ): Promise<AuthDetailed> {
     if (!email || email === new NotFoundException(`email`).message) {
       throw new NotFoundException(`No user found for email: ${email}`);
     }
-
-
 
     const hash = await this.passwordService.hashPassword(password);
     const passwordValid = await this.passwordService.validatePassword({
@@ -201,7 +206,9 @@ export class AuthService {
     });
 
     if (passwordValid == false) {
-      throw new PrismaClientValidationError("Invalid password"+process.exitCode);
+      throw new PrismaClientValidationError(
+        "Invalid password" + process.exitCode
+      );
     }
 
     const userInfoo = await this.prismaService.user
@@ -287,7 +294,10 @@ export class AuthService {
 
   async validateUser(userId: string | null) {
     return await this.prismaService.user.findUnique({
-      include: { _count: true, mediaItems: true },
+      include: {
+        _count: true,
+        mediaItems: true
+      },
       where: { id: userId ? userId : "" }
     });
   }
@@ -372,7 +382,8 @@ export class AuthService {
             updatedAt: new Date(Date.now())
           }
         });
-      }).then(user => user)
+      })
+      .then(user => user);
   }
 
   async refreshToken(id: string) {
@@ -396,117 +407,117 @@ export class AuthService {
     }
   }
 }
-  // async PrismaViewer(
-  //   prisma: PrismaService["user"] = this.prismaService.user,
-  //   authService: AuthService
-  // ): Promise<void>{
-  //   const createViewer = Object.assign(prisma, {
-  //     async signUpViewer<T extends Viewer>(viewer: T) {
-  //       const signupViewer: Viewer = await prisma.create({
-  //         include: { _count: true, mediaItems: true },
-  //         data: {
-  //           email: viewer.email,
-  //           firstName: viewer.firstName,
-  //           lastName: viewer.lastName,
-  //           createdAt: new Date(Date.now()),
-  //           password: viewer.password,
-  //           role: "USER",
-  //           status: "ONLINE",
-  //           image: [
-  //             {
-  //               id: viewer.mediaItems?.find(id => id)?.id,
-  //               uploadedAt: new Date(Date.now()).toUTCString()
-  //             },
-  //             {
-  //               fileLastModified: viewer.mediaItems
-  //                 ?.find(fileLastModified => fileLastModified)
-  //                 ?.fileLastModified?.toUTCString(),
-  //               quality: viewer.mediaItems?.find(quality => quality)?.quality,
-  //               filename: viewer.mediaItems?.find(filename => filename)?.name,
-  //               src: viewer.mediaItems?.find(src => src)?.src,
-  //               srcSet: viewer.mediaItems?.find(srcSet => srcSet)?.srcSet,
-  //               type:
-  //                 viewer.mediaItems?.find(type => type)?.type ?? MimeTypes.PNG,
-  //               size: viewer.mediaItems?.find(size => size)?.size,
-  //               width: viewer.mediaItems?.find(width => width)?.width,
-  //               height: viewer.mediaItems?.find(height => height)?.height
-  //             },
-  //             {
-  //               unique: `${viewer.id}_${viewer.mediaItems?.find(name => name)?.name
-  //                 }`
-  //             }
-  //           ],
-  //           mediaItems: {
-  //             create: {
-  //               fileLastModified: viewer.mediaItems
-  //                 ?.find(fileLastModified => fileLastModified)
-  //                 ?.fileLastModified?.toUTCString(),
-  //               quality: viewer.mediaItems?.find(quality => quality)?.quality,
-  //               name: viewer.mediaItems?.find(filename => filename)?.name,
-  //               src:
-  //                 viewer.mediaItems?.find(src => src)?.src != null
-  //                   ? viewer.mediaItems.find(src => src)?.src
-  //                   : "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
-  //               srcSet: viewer.mediaItems?.find(srcSet => srcSet)?.srcSet,
-  //               type:
-  //                 viewer.mediaItems?.find(type => type)?.type != null
-  //                   ? viewer.mediaItems.find(type => type)?.type
-  //                   : "GIF",
-  //               size: viewer.mediaItems?.find(size => size)?.size,
-  //               width: viewer.mediaItems?.find(width => width)?.width,
-  //               height: viewer.mediaItems?.find(height => height)?.height
-  //             }
-  //           },
-  //           profile: {
-  //             create: {
-  //               lastSeen: new Date(Date.now()),
-  //               memberSince: new Date(Date.now()),
-  //               recentActivity: [
-  //                 {
-  //                   signedUp: `Created an account on ${new Date(Date.now())
-  //                     .toUTCString()
-  //                     .split(/([T])/)} 🎉`
-  //                 }
-  //               ]
-  //             }
-  //           }
-  //         }
-  //       }).then((user) => ({
-  //         viewer: { accessToken: authService.generateTokens({ userId: user.id }).accessToken, ...user },
-  //       }).viewer).finally(() => Promise.resolve({})).then((viewer) => viewer);
+// async PrismaViewer(
+//   prisma: PrismaService["user"] = this.prismaService.user,
+//   authService: AuthService
+// ): Promise<void>{
+//   const createViewer = Object.assign(prisma, {
+//     async signUpViewer<T extends Viewer>(viewer: T) {
+//       const signupViewer: Viewer = await prisma.create({
+//         include: { _count: true, mediaItems: true },
+//         data: {
+//           email: viewer.email,
+//           firstName: viewer.firstName,
+//           lastName: viewer.lastName,
+//           createdAt: new Date(Date.now()),
+//           password: viewer.password,
+//           role: "USER",
+//           status: "ONLINE",
+//           image: [
+//             {
+//               id: viewer.mediaItems?.find(id => id)?.id,
+//               uploadedAt: new Date(Date.now()).toUTCString()
+//             },
+//             {
+//               fileLastModified: viewer.mediaItems
+//                 ?.find(fileLastModified => fileLastModified)
+//                 ?.fileLastModified?.toUTCString(),
+//               quality: viewer.mediaItems?.find(quality => quality)?.quality,
+//               filename: viewer.mediaItems?.find(filename => filename)?.name,
+//               src: viewer.mediaItems?.find(src => src)?.src,
+//               srcSet: viewer.mediaItems?.find(srcSet => srcSet)?.srcSet,
+//               type:
+//                 viewer.mediaItems?.find(type => type)?.type ?? MimeTypes.PNG,
+//               size: viewer.mediaItems?.find(size => size)?.size,
+//               width: viewer.mediaItems?.find(width => width)?.width,
+//               height: viewer.mediaItems?.find(height => height)?.height
+//             },
+//             {
+//               unique: `${viewer.id}_${viewer.mediaItems?.find(name => name)?.name
+//                 }`
+//             }
+//           ],
+//           mediaItems: {
+//             create: {
+//               fileLastModified: viewer.mediaItems
+//                 ?.find(fileLastModified => fileLastModified)
+//                 ?.fileLastModified?.toUTCString(),
+//               quality: viewer.mediaItems?.find(quality => quality)?.quality,
+//               name: viewer.mediaItems?.find(filename => filename)?.name,
+//               src:
+//                 viewer.mediaItems?.find(src => src)?.src != null
+//                   ? viewer.mediaItems.find(src => src)?.src
+//                   : "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
+//               srcSet: viewer.mediaItems?.find(srcSet => srcSet)?.srcSet,
+//               type:
+//                 viewer.mediaItems?.find(type => type)?.type != null
+//                   ? viewer.mediaItems.find(type => type)?.type
+//                   : "GIF",
+//               size: viewer.mediaItems?.find(size => size)?.size,
+//               width: viewer.mediaItems?.find(width => width)?.width,
+//               height: viewer.mediaItems?.find(height => height)?.height
+//             }
+//           },
+//           profile: {
+//             create: {
+//               lastSeen: new Date(Date.now()),
+//               memberSince: new Date(Date.now()),
+//               recentActivity: [
+//                 {
+//                   signedUp: `Created an account on ${new Date(Date.now())
+//                     .toUTCString()
+//                     .split(/([T])/)} 🎉`
+//                 }
+//               ]
+//             }
+//           }
+//         }
+//       }).then((user) => ({
+//         viewer: { accessToken: authService.generateTokens({ userId: user.id }).accessToken, ...user },
+//       }).viewer).finally(() => Promise.resolve({})).then((viewer) => viewer);
 
-  //       return { viewerCreated: (createViewer), signUpViewer: signupViewer };
-  //     }
+//       return { viewerCreated: (createViewer), signUpViewer: signupViewer };
+//     }
 
-  //   });
-  //   // const signInViewer = (email: string, password: string) =>
-  //   //   authService.signIn({ email, password });
-  //   // const getViewerAccesssToken = (context: string) =>
-  //   //   authService.generateTokens({ userId: context });
-  //   // return Object.assign(prisma, {
-  //   //   async getViewer(data: GetViewer) {
+//   });
+//   // const signInViewer = (email: string, password: string) =>
+//   //   authService.signIn({ email, password });
+//   // const getViewerAccesssToken = (context: string) =>
+//   //   authService.generateTokens({ userId: context });
+//   // return Object.assign(prisma, {
+//   //   async getViewer(data: GetViewer) {
 
-  //   //     const viewer = await authService.getUserFromToken(
-  //   //       data.accessToken ? data.accessToken : ""
-  //   //     );
-  //   //     const findPrismaViewer = await prisma.findFirst({
-  //   //       include: { _count: true, mediaItems: true },
-  //   //       where: {
-  //   //         OR: [
-  //   //           { id: viewer?.id ? viewer.id : "" },
-  //   //           {
-  //   //             email: viewer?.email ? viewer.email : ""
-  //   //           }
-  //   //         ]
-  //   //       }
-  //   //     })
-  //   //     return findPrismaViewer
-  //   //       ? ({
-  //   //           accessToken: getViewerAccesssToken(findPrismaViewer.id)
-  //   //             .accessToken,
-  //   //           ...findPrismaViewer
-  //   //         } as Viewer)
-  //   //       : findPrismaViewer;
-  //   //   }
-  //   // });
-  // }
+//   //     const viewer = await authService.getUserFromToken(
+//   //       data.accessToken ? data.accessToken : ""
+//   //     );
+//   //     const findPrismaViewer = await prisma.findFirst({
+//   //       include: { _count: true, mediaItems: true },
+//   //       where: {
+//   //         OR: [
+//   //           { id: viewer?.id ? viewer.id : "" },
+//   //           {
+//   //             email: viewer?.email ? viewer.email : ""
+//   //           }
+//   //         ]
+//   //       }
+//   //     })
+//   //     return findPrismaViewer
+//   //       ? ({
+//   //           accessToken: getViewerAccesssToken(findPrismaViewer.id)
+//   //             .accessToken,
+//   //           ...findPrismaViewer
+//   //         } as Viewer)
+//   //       : findPrismaViewer;
+//   //   }
+//   // });
+// }
