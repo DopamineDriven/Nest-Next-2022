@@ -28,7 +28,7 @@ export type ParsedUrlQuery<
 // export class ViewerContextIntersection {}
 
 @Injectable()
-export class GqlConfigService implements GqlOptionsFactory {
+export class GqlConfigService<T extends Context> implements GqlOptionsFactory {
   constructor(
     private configService: ConfigService,
     @Inject<typeof AuthService>(AuthService)
@@ -61,8 +61,7 @@ export class GqlConfigService implements GqlOptionsFactory {
       cors: false,
 
       fieldResolverEnhancers: ["guards"],
-      context: async ({ req, res }: Context) => {
-        const token = req.header("authorization")?.split(/([ ])/)[1] ?? null;
+      context: ({ req, res, token = req.headers.authorization?.split(/([ ])/)[2] ?? null }: T): any => {
         // const viewerContext = await this.authService.getUserWithDecodedToken(
         //   `${token}`
         // );
@@ -91,14 +90,14 @@ export class GqlConfigService implements GqlOptionsFactory {
           token: token as string | null
           // viewer: viewerContext as AuthDetailed
         };
-        token !== null && token.length > 0
-          ? res.setHeader("authorization", `Bearer ${token}`)
+        token != null && token.length > 0
+          ? console.log("token:", token)
           : console.log("no auth token to parse");
-        if (ctx.token !== null && ctx.token.length > 0) {
+        if (token != null && token.length > 0) {
           res.setHeader("authorization", `Bearer ${token}`);
-          return ctx;
+          return {...ctx};
         } else {
-          return ctx;
+          return {...ctx};
         }
       }
     };

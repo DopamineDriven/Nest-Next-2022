@@ -3,6 +3,24 @@ export const clearData = async <
 >(
   prisma: T
 ) => {
+  const runTransaction = await prisma.$transaction([
+    prisma.verificationToken.deleteMany({}),
+    prisma.mediaItem.deleteMany({}),
+    prisma.comment.deleteMany({}),
+    prisma.connection.deleteMany({}),
+    prisma.category.deleteMany({}),
+    prisma.entry.deleteMany({}),
+    prisma.account.deleteMany({}),
+    prisma.profile.deleteMany({}),
+    prisma.session.deleteMany({})
+  ]).then((batch) => {
+    return prisma.user.deleteMany({}).then((data) => {
+      return {
+        data,
+        ...batch
+      }
+    })
+  })
   const users = await prisma.user.deleteMany({});
   const accounts = await prisma.account.deleteMany({});
   const entries = await prisma.entry.deleteMany({});

@@ -168,7 +168,8 @@ export type Context<T = unknown extends infer P ? P : unknown> = {
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       useClass: GqlConfigService,
-      imports: [AuthModule, ConfigModule]
+      imports: [AuthModule, ConfigModule],
+      inject: [ConfigService, AuthService]
     }),
     PrismaModule,
     PasswordModule,
