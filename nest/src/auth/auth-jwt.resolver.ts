@@ -21,7 +21,7 @@ import { User } from "../user/model/user.model";
 import { AuthDetailed } from "./model/auth-detailed.model";
 import { PrismaService } from "../prisma";
 import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
-import { PasswordService } from "src/password";
+import { PasswordService } from "./password.service";
 import { CacheScope } from "apollo-server-types";
 import { Viewer, PrismaViewer } from "./model/auth.model";
 import { UserMeta } from "src/common/decorators/user.decorator";

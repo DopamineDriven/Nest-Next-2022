@@ -16,6 +16,7 @@ import { Context } from "src/app.module";
 import { AuthDetailed } from "./auth/model/auth-detailed.model";
 import { Auth } from "./auth/model/auth.model";
 import { JwtDecoded } from "./auth/dto/jwt-decoded.dto";
+import { JwtService } from "@nestjs/jwt";
 
 export type ParsedUrlQuery<
   T extends string,
@@ -34,9 +35,17 @@ export class GqlConfigService<T extends Context> implements GqlOptionsFactory {
     @Inject<typeof AuthService>(AuthService)
     private readonly authService: AuthService
   ) {}
+  async userIdFromContext(accessToken: string) {
+    return (
+      (await this.authService.getUserWithDecodedToken(
+        accessToken
+      )) as AuthDetailed
+    ).jwt.payload.userId;
+  }
   createGqlOptions(): ApolloDriverConfig {
     const graphqlConfig = this.configService.get<GraphqlConfig>("graphql");
     const apolloConfig = this.configService.get<ApolloConfig>("apollo");
+
     return {
       // schema options
       autoSchemaFile: graphqlConfig?.schemaDestination || "./src/schema.gql",
@@ -61,7 +70,11 @@ export class GqlConfigService<T extends Context> implements GqlOptionsFactory {
       cors: false,
 
       fieldResolverEnhancers: ["guards"],
-      context: ({ req, res, token = req.headers.authorization?.split(/([ ])/)[2] ?? null }: T): any => {
+      context: async ({
+        req,
+        res,
+        token = req.headers.authorization?.split(/([ ])/)[2] ?? null
+      }: T): Promise<any> => {
         // const viewerContext = await this.authService.getUserWithDecodedToken(
         //   `${token}`
         // );
@@ -74,30 +87,24 @@ export class GqlConfigService<T extends Context> implements GqlOptionsFactory {
         //     refreshToken: viewerContext.auth.refreshToken
         //   }
         // };
-        // const ViewerWithToken = {
-        //   viewerIdAndTokens: {
-        //     hashedPwForCronAccessTokenFactory: user.password,
-        //     viewerEmail: user.email,
-        //     viewerId: tokensAndJwt.jwt.payload.userId,
-        //     accessToken: tokensAndJwt.accessToken,
-        //     refreshToken: tokensAndJwt.refreshToken,
-        //     signature: tokensAndJwt.jwt.signature
-        //   }
-        // };
+        const viewerId = await this.userIdFromContext(token ?? "");
         const ctx = {
           req,
           res,
-          token: token as string | null
+          token: token as string | null,
+          viewerId: viewerId as string | null
           // viewer: viewerContext as AuthDetailed
         };
-        token != null && token.length > 0
-          ? console.log("token:", token)
-          : console.log("no auth token to parse");
+        // token != null && token.length > 0
+        //   ? userId != null
+        //     ? console.log("token : " + token + "\r viewerId: " + userId)
+        //     : console.log("token: " + token + "userId: no userId")
+        //   : console.log("no userId or token to parse");
         if (token != null && token.length > 0) {
-          res.setHeader("authorization", `Bearer ${token}`);
-          return {...ctx};
+          res.set({ authorization: `Bearer ${token}`, "X-Viewer-Id": viewerId });
+          return { ...ctx };
         } else {
-          return {...ctx};
+          return { ...ctx };
         }
       }
     };

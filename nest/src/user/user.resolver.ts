@@ -1,5 +1,11 @@
 import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
-import { Args, Context, GqlContextType, Resolver } from "@nestjs/graphql";
+import {
+  Args,
+  Context,
+  GqlContextType,
+  GqlExecutionContext,
+  Resolver
+} from "@nestjs/graphql";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "./model/user.model";
 import { UserService } from "./user.service";
@@ -10,41 +16,38 @@ import {
   UserNodes
 } from "./model/user-connection.model";
 import { ChangePasswordInput } from "./inputs/change-passsword.input";
-import {
-  findManyCursorConnection} from "@devoxa/prisma-relay-cursor-connection";
+import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { AuthService } from "../auth/auth-jwt.service";
-import { PasswordService } from "../password";
 import { UserMeta } from "../common/decorators/user.decorator";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { AuthDetailed } from "src/auth/model/auth-detailed.model";
 import { ManyUsersPaginatedArgs } from "./args/find-many-paginated.args";
 import { FindManyUsersPaginatedInput } from "./inputs/user-paginated-args.input";
-import {
-  fromGlobalId,
-  toGlobalId
-} from "graphql-relay";
+import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { FindManyEntriesPaginatedInput } from "src/entry/inputs/entry-paginated.input";
 import { FindManyMediaItemsInput } from "src/media/inputs/find-many-media-items-paginated.input";
 import { Entry } from "src/entry";
 import { ContentNodes } from "./outputs/content-nodes.output";
 import { EntryCreateWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-without-author.input";
+import { ExecutionContextHost } from "@nestjs/core/helpers/execution-context-host";
+import { pipe } from "rxjs";
+import { APP_PIPE } from "@nestjs/core";
 
 @Resolver(() => User)
 export class UserResolver {
   constructor(
     @Inject(PrismaService) private prismaService: PrismaService,
-    private readonly authService: AuthService,
-    private readonly userService: UserService,
-    private readonly passwordService: PasswordService
+    private authService: AuthService,
+    private userService: UserService
   ) {}
 
   @Query(() => AuthDetailed)
   @UseGuards(AuthGuard)
   async me(
+    @UserMeta() user: User,
     @Context("token") ctx: ExecutionContext
   ): Promise<AuthDetailed | null> {
-    
-    console.log(ctx ? ctx : null);
+    console.log({ userFromDecorator: { ...user } ?? "no user" });
     return await this.authService.getUserWithDecodedToken(
       ctx as unknown as string
     );
@@ -242,25 +245,25 @@ export class UserResolver {
   @Mutation(() => Entry)
   @UseGuards(AuthGuard)
   async viewerCreateEntry(
-    @Context("token") ctx: ExecutionContext,
+    @Context("viewerId") ctx: ExecutionContext,
     @Args("viewerEntryCreateInput", {
       type: () => EntryCreateWithoutAuthorInput
     })
     viewerEntryCreateInput: EntryCreateWithoutAuthorInput
   ) {
-    const getUserFromAccessToken =
-      await this.authService.getUserWithDecodedToken(ctx as unknown as string);
+    const validateUser = await this.authService.validateUser(ctx as unknown as string);
+
     const getUpdate = await this.prismaService.user
       .update({
-        data: { entries: { create: viewerEntryCreateInput } },
-        where: { id: getUserFromAccessToken.jwt.payload.userId },
+        data: { entries: { create: viewerEntryCreateInput, connect: {authorId: ctx as unknown as string} } },
+        where: { id: ctx as unknown as string },
         include: {
           entries: { include: { _count: true, author: true } },
           _count: true
         }
       })
       .entries()
-      .then(e => e[0]).catch((reason) => new Error(reason).message)
+      .then(e => e[0]);
     return getUpdate;
   }
 }

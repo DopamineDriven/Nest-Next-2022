@@ -8,7 +8,8 @@ import {
   Context,
   InputType,
   ArgsType,
-  OmitType
+  OmitType,
+  Parent
 } from "@nestjs/graphql";
 import {
   HostParam,
@@ -25,7 +26,6 @@ import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection
 import { PrismaService } from "../prisma/prisma.service";
 import { PubSub, PubSubEngine, PubSubOptions } from "graphql-subscriptions";
 import { UserIdArgs } from "../user/args/user-id.args";
-import { GraphqlAuthGuard } from "../common/guards/graphql-auth.guard";
 import { EntryService } from "./entry.service";
 import { EntryConnection } from "./model/entry-connection.model";
 import {
@@ -52,9 +52,9 @@ export class EntryResolver {
   //       EntryCreateIntersectedTitle
   //     ){}
   constructor(
-    @Inject(PrismaService) private readonly prisma: PrismaService,
-    @Inject(AuthService) private readonly authService: AuthService,
-    @Inject(EntryService) private readonly entryService: EntryService
+    @Inject(PrismaService) private prisma: PrismaService,
+    @Inject(AuthService) private authService: AuthService,
+    @Inject(EntryService) private entryService: EntryService
   ) {}
 
   @Subscription(() => Entry)
@@ -122,15 +122,15 @@ export class EntryResolver {
       .then(entryConnection => entryConnection);
   }
 
-  @ResolveField()
-  async author(@HostParam() entry: Entry) {
-    return await this.prisma.entry
-      .findUnique({
-        where: { id: entry.id },
-        include: { author: true }
-      })
-      .author();
-  }
+  // @ResolveField()
+  // async author(@HostParam() entry: Entry) {
+  //   return await this.prisma.entry
+  //     .findUnique({
+  //       where: { id: entry.id },
+  //       include: { author: true }
+  //     })
+  //     .author();
+  // }
 
   @Query(() => Entry)
   async entryById(@Args("id") id: string) {
@@ -138,6 +138,11 @@ export class EntryResolver {
       where: { id: id }
     });
   }
+
+  @ResolveField(() => User, {name: "author"})
+    async author(@Parent() entry: Entry) {
+      return this.prisma.entry.findUnique({ where: { id: entry.id } }).author();
+    }
 }
 // @Query(() => EntryOperationsUnionOutput)
 // async viewerEntriesPaginated(

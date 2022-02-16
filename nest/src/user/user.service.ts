@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException, Inject } from "@nestjs/common";
-import { PasswordService } from "../password/password.service";
+import { PasswordService } from "../auth/password.service";
 import { Prisma } from "@prisma/client";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { UserConnection } from "./model/user-connection.model";
@@ -294,12 +294,31 @@ export class UserService {
     );
   }
 
-  updateUser(data: Prisma.UserUncheckedUpdateInput, email: string) {
-    return this.prismaService.user.update({
-      where: { email: email },
-      data: { ...data }
-    });
+  async updateUser(data: Prisma.UserUncheckedUpdateInput, id: string) {
+    return await this.prismaService.user
+      .update({
+        where: { id: id },
+
+        include: {
+          entries: true,
+          comments: true,
+          profile: true,
+          categories: true,
+          mediaItems: true,
+          _count: true,
+          sessions: true,
+          connections: true
+        },
+        data: { ...data }
+      })
+      .then(data => data);
   }
+
+//   async createEntry(data: Prisma.EntryCreateInput, viewerId: string | undefined) {
+//     const getUser = await this.authService.validateUser(viewerId ?? "");
+//     const { rest, author } = { author:{...data.author}, rest: { ...data }}
+//     const updateData = await this.prismaService.entry.create({ data: data, include: {author: true}})
+// }
 
   create(data: Prisma.UserCreateInput, account: Prisma.AccountCreateInput) {
     return this.prismaService.user.create({

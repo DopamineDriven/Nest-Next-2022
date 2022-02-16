@@ -1,5 +1,5 @@
 import { PrismaService } from "../prisma/prisma.service";
-import { PasswordService } from "../password";
+import { PasswordService } from "./password.service";
 import {
   Injectable,
   NotFoundException,
