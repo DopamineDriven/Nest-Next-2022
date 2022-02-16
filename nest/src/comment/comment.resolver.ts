@@ -9,7 +9,7 @@ import {
   ResolveFieldOptions,
   MiddlewareContext
 } from "@nestjs/graphql";
-import { Inject, UseGuards } from "@nestjs/common";
+import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
 import { EntryService } from "src/entry/entry.service";
 import { Comment } from "./model/comment.model";
 import {
@@ -30,6 +30,8 @@ import {
 } from "src/entry/model/entry-connection.model";
 import { FindManyEntriesPaginatedInput } from "src/entry/inputs/entry-paginated.input";
 import { FieldResolverMetadata } from "@nestjs/graphql/dist/schema-builder/metadata";
+import { CommentUpsertWithWhereUniqueWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/comment/inputs/comment-upsert-with-where-unique-without-author.input";
+import { AuthGuard } from "src/common/guards/gql-context.guard";
 
 @Resolver(() => Comment)
 export class CommentResolver {
@@ -52,7 +54,6 @@ export class CommentResolver {
   // })
   // async resolveUnionField({ typeOptions, kind, schemaName, target, objectTypeFn }: FieldResolverMetadata) {
   //   objectTypeFn(EntryConnection.name === target.name && schemaName === EntryConnection.name ? typeOptions?.defaultValue === EntryConnection : typeOptions?.defaultValue: ({unionField= CommentConnection }))
-
 
   // }
 
@@ -81,5 +82,20 @@ export class CommentResolver {
     @Args("cursor", { type: () => String }) cursor: string
   ) {
     return await this.commentService.relayFindUniqueComment({ id: cursor });
+  }
+
+  @Mutation(() => [Comment])
+  @UseGuards(AuthGuard)
+  async upsertComment(
+    @Args("commentUpsertInput", {
+      type: () => CommentUpsertWithWhereUniqueWithoutAuthorInput
+    })
+    params: CommentUpsertWithWhereUniqueWithoutAuthorInput,
+    @Context("token") ctx: ExecutionContext
+  ) {
+    return await this.commentService.createOrUpdateComment(
+      params,
+      ctx as unknown as string
+    );
   }
 }

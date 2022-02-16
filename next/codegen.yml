@@ -1,7 +1,11 @@
 overwrite: true
 generates:
   ./src/graphql/generated/graphql.schema.graphql:
-    schema: "http://localhost:3000/graphql"
+    schema:
+      ${NEST_GQL_ENDPOINT}:
+        headers:
+          authorization: ${NEXT_TOKEN_CODEGEN}
+
     documents: "./src/graphql/**/*.graphql"
     hooks:
       afterOneFileWrite:
@@ -13,7 +17,10 @@ generates:
       commentDescriptions: true
       includeDirectives: true
   ./src/graphql/generated/introspection.schema.json:
-    schema: "http://localhost:3000/graphql"
+    schema:
+      ${NEST_GQL_ENDPOINT}:
+        headers:
+          authorization: ${NEXT_TOKEN_CODEGEN}
     documents: "./src/graphql/**/*.graphql"
     hooks:
       afterOneFileWrite:
@@ -21,7 +28,10 @@ generates:
     plugins:
       - introspection
   ./src/graphql/generated/resolver-types.ts:
-    schema: "http://localhost:3000/graphql"
+    schema:
+      ${NEST_GQL_ENDPOINT}:
+        headers:
+          authorization: ${NEXT_TOKEN_CODEGEN}
     documents: "./src/graphql/**/*.graphql"
     hooks:
       afterOneFileWrite:
@@ -32,7 +42,10 @@ generates:
     config:
       useIndexSignature: true
   ./src/graphql/generated/graphql.ts:
-    schema: "http://localhost:3000/graphql"
+    schema:
+      ${NEST_GQL_ENDPOINT}:
+        headers:
+          authorization: ${NEXT_TOKEN_CODEGEN}
     documents: "./src/graphql/**/*.graphql"
     hooks:
       afterOneFileWrite:
@@ -88,7 +101,10 @@ generates:
       namingConvention: keep
       addDocBlocks: true
   ./src/apollo/fragment-matcher.ts:
-    schema: "http://localhost:3000/graphql"
+    schema:
+      ${NEST_GQL_ENDPOINT}:
+        headers:
+          authorization: ${NEXT_TOKEN_CODEGEN}
     documents: "./src/graphql/**/*.graphql"
     hooks:
       afterOneFileWrite:
@@ -99,7 +115,10 @@ generates:
       useExplicitTyping: true
       apolloClientVersion: 3
   ./src/apollo/helpers.ts:
-    schema: "http://localhost:3000/graphql"
+    schema:
+      ${NEST_GQL_ENDPOINT}:
+        headers:
+          authorization: ${NEXT_TOKEN_CODEGEN}
     documents: "./src/graphql/**/*.graphql"
     hooks:
       afterOneFileWrite:

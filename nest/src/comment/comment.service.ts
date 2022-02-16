@@ -37,7 +37,7 @@ import {
 import { ResolveTypeFactory } from "@nestjs/graphql/dist/schema-builder/factories/resolve-type.factory";
 import { Entry } from "src/entry";
 import { info } from "console";
-
+import { CommentUpsertWithWhereUniqueWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/comment/inputs/comment-upsert-with-where-unique-without-author.input";
 
 type ResolveTypeFn<TSource = any, TContext = any> = (
   ...args: Parameters<GraphQLTypeResolver<TSource, TContext>>
@@ -54,10 +54,10 @@ export const createEntryCommentUnion = createUnionType<
     { schema, fieldName },
     { resolveType, name }
   ) => {
-    return name.includes("Entry")
-      ? name === EntryConnection.name && id in EntryConnection
-      : name.includes("Comment")
-      ? name === CommentConnection.name && id in CommentConnection
+    return name === EntryConnection.name && id in EntryConnection
+      ? typeof EntryConnection
+      : name === CommentConnection.name && id in CommentConnection
+      ? typeof CommentConnection
       : null;
   }
 });
@@ -70,7 +70,9 @@ export interface CommentUnionType<T = EntryCommentUnionType> {
     TContext extends GqlExecutionContext
   >(
     { id }: TSource,
-    { getInfo }: TContext
+    { getInfo }: TContext,
+    { returnType }: GraphQLResolveInfo,
+    { resolveType }: GraphQLAbstractType
   ): // { getArgByIndex, getClass, getInfo, getHandler, getContext, getType, setType, getRoot }: TContext,
   // { returnType, schema, variableValues, fieldName, parentType, fragments, fieldNodes }: GraphQLResolveInfo,
   // { inspect, toJSON, toString, resolveType, name, toConfig, astNode }: GraphQLAbstractType
@@ -90,7 +92,7 @@ export abstract class EntryCommentUnion<
   unionField: T[];
 }
 
-@ObjectType("EntryCommentUnionobj",{ implements: () => [EntryCommentUnion] })
+@ObjectType("EntryCommentUnionobj", { implements: () => [EntryCommentUnion] })
 export class EntryCommentUnionobj
   implements EntryCommentUnion<Type<NonNullable<EntryCommentUnionType>>>
 {
@@ -182,5 +184,41 @@ export class CommentService {
       throw new Error("could not find comment with id " + params.id);
     }
     return comment;
+  }
+
+  async createOrUpdateComment(
+    params: CommentUpsertWithWhereUniqueWithoutAuthorInput,
+    token: string
+  ): Promise<Comment[]> {
+    const getUser = await this.authService.getUserWithDecodedToken(token);
+
+    return (await this.prismaService.user.upsert({
+      where: { id: getUser.jwt.payload.userId },
+      include: {
+        _count: true,
+        entries: true,
+        profile: true,
+        mediaItems: true,
+        sessions: true,
+        comments: true,
+        categories: true
+      },
+      create: {
+        comments: {
+          create: params.create,
+          connect: params.where,
+          connectOrCreate: { create: params.create, where: params.where }
+        },
+        id: getUser.auth.user.id,
+        email: getUser.auth.user.email
+      },
+      update: {
+        comments: {
+          set: { authorId_entryId: params.where.authorId_entryId },
+          create: params.create,
+          connectOrCreate: { create: params.create, where: params.where }
+        }
+      }
+    })) as unknown as Comment[];
   }
 }

@@ -1,6 +1,6 @@
 # Next
 
-#### Nextjs Module Augmentation -- `@/types/next.d.ts`
+### Nextjs Module Augmentation -- `@/types/next.d.ts`
   
 ```ts
 import type { NextComponentType, NextPageContext } from "next";
@@ -103,7 +103,7 @@ import { SVGAttribs } from '@/types/mapped';
 
 export const TypeScript = ({
   ...props
-}: SVGAttribs<"className" | "aria-hidden" | "fill">) => {
+}: SVGAttribs<"className" | "aria-hidden" | "height" | "width" | "onMouseOver" | "fill">) => {
   return (
     <svg
       width='43.5'
@@ -165,6 +165,7 @@ export const TypeScript = ({
 (parameter) props: {
     className?: string | undefined;
     height?: string | number | undefined;
+    fill?: string | undefined;
     width?: string | number | undefined;
     "aria-hidden"?: Booleanish | undefined;
     onMouseOver?: MouseEventHandler<SVGSVGElement> | undefined;

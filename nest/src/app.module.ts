@@ -57,6 +57,7 @@ import { ApolloConfigInput, GraphQLExecutor } from "apollo-server-types";
 import { ExpressGraphQLDriver } from "src/app/driver/express-graphql.driver";
 import { CommentModule } from "./comment/comment.module";
 import { GraphQLSchema } from "graphql";
+import { GqlConfigService } from "./gql-config.service";
 export type RecordContiional<T> =
   | Record<keyof T, T>
   | Array<T>
@@ -164,90 +165,10 @@ export type Context<T = unknown extends infer P ? P : unknown> = {
       load: [config],
       envFilePath: "./.env"
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      apollo: { key: process.env.APOLLO_KEY ? process.env.APOLLO_KEY : "" },
-      autoTransformHttpErrors: true,
-      buildSchemaOptions: { dateScalarMode: "isoDate" },
-      installSubscriptionHandlers: true,
-      definitions: {
-        path: "src/graphql.schema.ts",
-        outputAs: "class",
-        emitTypenameField: true
-      },
-      sortSchema: true,
-      debug: true,
-      introspection: true,
-      autoSchemaFile: "src/schema.gql",
-      cors: false,
-
-      fieldResolverEnhancers: ["guards"],
-      context: <T extends AuthService>({ req, res }: Context<T>): any => {
-        const token = req.header("authorization")?.split(" ")[1] ?? null;
-        const ctx = {
-          req,
-          res,
-          token: token as string | null
-        };
-
-        token != null && token.length > 0
-          ? res.setHeader("authorization", `Bearer ${token}`)
-          : console.log("no auth token to parse");
-        if (ctx.token != null && ctx.token.length > 0) {
-          res.setHeader("authorization", `Bearer ${token}`);
-
-          return { ...ctx };
-        } else {
-          return { ...ctx };
-        }
-      }
-
-      // useFactory: async (configService: ConfigService) => {
-      //   const rootSchema = await loadSchema("./src/schema.gql", {
-      //     loaders: [new GraphQLFileLoader()],
-      //     sort: true,
-      //     experimentalFragmentVariables: true,
-      //     commentDescriptions: true
-      //   });
-      //   const graphqlConfig = configService.get<GraphqlConfig>("graphql");
-      //   const apolloConfig = configService.get<ApolloConfig>("apollo");
-      //   return {schema: rootSchema,
-      //     // driver: ApolloDriver,
-      //     fieldResolverEnhancers: ["guards"],
-      //     installSubscriptionHandlers: true,
-      //     cors: false,
-      //     buildSchemaOptions: {
-      //       dateScalarMode: "isoDate",
-      //       numberScalarMode: "integer"
-      //     },
-      //     sortSchema: graphqlConfig?.sortSchema
-      //       ? graphqlConfig.sortSchema
-      //       : true,
-      //     autoSchemaFile: "src/schema.gql",
-      //     definitions: {
-      //       path: "src/graphql.schema.ts" || graphqlConfig?.schemaDestination,
-      //       outputAs: "class",
-      //       emitTypenameField: true
-      //     },
-      //     typeDefs: [
-      //       join(process.cwd(), "/node_modules/.prisma/client/index.d.ts")
-      //     ],
-      //     apollo: {
-      //       key: apolloConfig?.key ? apolloConfig.key : ""
-      //     },
-      //     playground: {
-      //       settings: {
-      //         "general.betaUpdates": true,
-      //         "tracing.hideTracingResponse": false,
-      //         "schema.polling.interval": 5000
-      //       }
-      //     },
-      //     debug: graphqlConfig?.debug
-      //       ? graphqlConfig.debug
-      //       : process.env.NODE_ENV !== "production"
-      //       ? true
-      //       : false,
-      // },
+      useClass: GqlConfigService,
+      imports: [AuthModule, ConfigModule]
     }),
     PrismaModule,
     PasswordModule,

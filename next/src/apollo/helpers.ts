@@ -354,6 +354,7 @@ export type MutationKeySpecifier = (
   | "signin"
   | "signup"
   | "updateUserPassword"
+  | "upsertComment"
   | "userFromAccessTokenDecoded"
   | "viewerCreateEntry"
   | MutationKeySpecifier
@@ -369,6 +370,7 @@ export type MutationFieldPolicy = {
   signin?: FieldPolicy<any> | FieldReadFunction<any>;
   signup?: FieldPolicy<any> | FieldReadFunction<any>;
   updateUserPassword?: FieldPolicy<any> | FieldReadFunction<any>;
+  upsertComment?: FieldPolicy<any> | FieldReadFunction<any>;
   userFromAccessTokenDecoded?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerCreateEntry?: FieldPolicy<any> | FieldReadFunction<any>;
 };
