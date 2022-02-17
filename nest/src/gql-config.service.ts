@@ -17,7 +17,11 @@ import { AuthDetailed } from "./auth/model/auth-detailed.model";
 import { Auth } from "./auth/model/auth.model";
 import { JwtDecoded } from "./auth/dto/jwt-decoded.dto";
 import { JwtService } from "@nestjs/jwt";
-
+import {
+  ApolloServerPluginLandingPageLocalDefault,
+  ApolloServerPluginInlineTrace
+} from "apollo-server-core";
+import { join } from "path";
 export type ParsedUrlQuery<
   T extends string,
   N extends NodeJS.Dict<T | T[keyof T]>
@@ -29,7 +33,7 @@ export type ParsedUrlQuery<
 // export class ViewerContextIntersection {}
 
 @Injectable()
-export class GqlConfigService<T extends Context> implements GqlOptionsFactory {
+export class GqlConfigService implements GqlOptionsFactory {
   constructor(
     private configService: ConfigService,
     @Inject<typeof AuthService>(AuthService)
@@ -57,7 +61,7 @@ export class GqlConfigService<T extends Context> implements GqlOptionsFactory {
       },
       autoTransformHttpErrors: true,
       buildSchemaOptions: { dateScalarMode: "isoDate" },
-
+      typeDefs: "./node_modules/.prisma/client/index.d.ts",
       definitions: {
         path: "src/graphql.schema.ts",
         outputAs: "class",
@@ -65,16 +69,20 @@ export class GqlConfigService<T extends Context> implements GqlOptionsFactory {
         // additionalHeader: request.headers.authorization
         // customScalarTypeMapping: {} TODO
       },
+      playground: true,
       debug: true,
       introspection: true,
       cors: false,
-
+      // plugins: [
+      //   ApolloServerPluginLandingPageLocalDefault(),
+      //   ApolloServerPluginInlineTrace()
+      // ],
       fieldResolverEnhancers: ["guards"],
       context: async ({
         req,
         res,
         token = req.headers.authorization?.split(/([ ])/)[2] ?? null
-      }: T): Promise<any> => {
+      }: Context): Promise<any> => {
         // const viewerContext = await this.authService.getUserWithDecodedToken(
         //   `${token}`
         // );
@@ -100,11 +108,14 @@ export class GqlConfigService<T extends Context> implements GqlOptionsFactory {
         //     ? console.log("token : " + token + "\r viewerId: " + userId)
         //     : console.log("token: " + token + "userId: no userId")
         //   : console.log("no userId or token to parse");
-        if (token != null && token.length > 0) {
-          res.set({ authorization: `Bearer ${token}`, "X-Viewer-Id": viewerId });
-          return { ...ctx };
+        if (token != null && token.substring(0).length > 10) {
+          res.set({
+            authorization: `Bearer ${token}`,
+            "X-Viewer-Id": viewerId
+          });
+          return {req, res, token, viewerId };
         } else {
-          return { ...ctx };
+          return { req, res, token: null, viewerId: null };
         }
       }
     };

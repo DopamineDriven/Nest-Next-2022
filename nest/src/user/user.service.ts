@@ -30,9 +30,9 @@ type Enumerable<T> = T | Array<T>;
 @Injectable()
 export class UserService {
   constructor(
-    @Inject(PrismaService) private readonly prismaService: PrismaService,
+    @Inject(PrismaService) private prismaService: PrismaService,
     private readonly passwordService: PasswordService,
-    private readonly authService: AuthService
+    private  authService: AuthService
   ) {}
   async user(params: {
     userWhereUniqueInput: XOR<
@@ -56,6 +56,15 @@ export class UserService {
       .then();
   }
 
+  excludeStringNullableField<StringNullableFilter, Key extends keyof StringNullableFilter>(
+    stringNullableFilter: StringNullableFilter,
+    ...keys: Key[]
+  ): Omit<StringNullableFilter, Key> {
+    for (const key of keys) {
+      delete stringNullableFilter[key];
+    }
+    return stringNullableFilter;
+  }
   async usersPaginated(params: ManyUsersPaginatedArgs) {
     const { paginationArgs } = params;
 
@@ -66,7 +75,7 @@ export class UserService {
     const { first, last, before, after } =
       paginationArgs as unknown as PaginationArgs;
     const roles = params.roles as unknown as EnumRoleNullableFilter;
-    const emailFilter = this.prismaService.excludeStringNullableField(
+    const emailFilter = this.excludeStringNullableField(
       params.emailFilter
     );
     const orderByRelevance =

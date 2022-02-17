@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 export class PrismaService extends PrismaClient implements OnModuleInit {
   constructor() {
     super({
-      log: ["error", "warn"],
+      log: ["error", "query", "info", "warn"],
       errorFormat: "pretty"
     });
   }
@@ -20,13 +20,4 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     });
   }
 
-  excludeStringNullableField<StringNullableFilter, Key extends keyof StringNullableFilter>(
-    stringNullableFilter: StringNullableFilter,
-    ...keys: Key[]
-  ): Omit<StringNullableFilter, Key> {
-    for (const key of keys) {
-      delete stringNullableFilter[key];
-    }
-    return stringNullableFilter;
-  }
 }
