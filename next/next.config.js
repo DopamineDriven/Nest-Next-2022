@@ -109,7 +109,7 @@ module.exports = withSuperjson()({
     defaultLocale: "en-US",
     domains: [
       {
-        domain: "crm.getcortina.com",
+        domain: "andrewross.com",
         defaultLocale: "en-US"
       }
     ]

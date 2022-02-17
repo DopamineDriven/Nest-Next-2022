@@ -34,8 +34,8 @@ export class ViewerEntriesWhereInput {
   published?: BoolFilter;
 
 
-  @Field(() => JsonNullableListFilter, {nullable:true})
-  content?: JsonNullableListFilter;
+  @Field(() => StringNullableFilter, {nullable:true})
+  content?: StringNullableFilter;
 
   @Field(() => DateTimeFilter, {nullable:true})
   createdAt?: DateTimeFilter;
@@ -43,8 +43,8 @@ export class ViewerEntriesWhereInput {
   @Field(() => DateTimeNullableFilter, {nullable:true})
   updatedAt?: DateTimeNullableFilter;
 
-  @Field(() => JsonNullableListFilter, {nullable:true})
-  featuredImage?: JsonNullableListFilter;
+  @Field(() => StringNullableFilter, {nullable:true})
+  featuredImage?: StringNullableFilter;
 
   @Field(() => CategoryListRelationFilter, {nullable:true})
   categories?: CategoryListRelationFilter;

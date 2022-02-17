@@ -3,26 +3,16 @@ import { PasswordService } from "../auth/password.service";
 import { Prisma } from "@prisma/client";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { UserConnection } from "./model/user-connection.model";
-// import { UserConnection } from "../../Entities/Pagination/user-connection.entity";
 import { PrismaService } from "../prisma/prisma.service";
 import { ChangePasswordInput } from "./inputs/change-passsword.input";
-import {
-  PaginationService,
-  PaginationArgs
-} from "../pagination/pagination.service";
-import { UserOrder } from "./inputs/user-order.input";
+import { PaginationArgs } from "../pagination/pagination.service";
 import { XOR } from "../common/types/helpers.type";
-import { UserWhereInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where.input";
-import { UserWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-where-unique.input";
-import { UserUncheckedUpdateInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-unchecked-update.input";
-import { AuthService } from "../auth/auth-jwt.service";
 import { ManyUsersPaginatedArgs } from "./args/find-many-paginated.args";
 import { EnumRoleNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-role-nullable-filter.input";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { StringNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/string-nullable-filter.input";
 import { EnumUserStatusNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-user-status-nullable-filter.input";
 import { UserOrderByWithRelationAndSearchRelevanceInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-order-by-with-relation-and-search-relevance.input";
-import { StringFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/string-filter.input";
 import { User } from "./model/user.model";
 import { FindManyUsersPaginatedInput } from "./inputs/user-paginated-args.input";
 
@@ -30,9 +20,9 @@ type Enumerable<T> = T | Array<T>;
 @Injectable()
 export class UserService {
   constructor(
-    @Inject(PrismaService) private readonly prismaService: PrismaService,
-    private readonly passwordService: PasswordService,
-    private readonly authService: AuthService
+    @Inject(PrismaService) private prismaService: PrismaService,
+    private readonly passwordService: PasswordService
+
   ) {}
   async user(params: {
     userWhereUniqueInput: XOR<
@@ -56,53 +46,56 @@ export class UserService {
       .then();
   }
 
-  async usersPaginated(params: ManyUsersPaginatedArgs) {
-    const { paginationArgs } = params;
-
-    const firstNameFilter = params as StringNullableFilter;
-    const lastNameFilter = params.lastNameFilter as StringNullableFilter;
-    const userStatus =
-      params.userStatus as unknown as EnumUserStatusNullableFilter;
-    const { first, last, before, after } =
-      paginationArgs as unknown as PaginationArgs;
-    const roles = params.roles as unknown as EnumRoleNullableFilter;
-    const emailFilter = this.prismaService.excludeStringNullableField(
-      params.emailFilter
-    );
-    const orderByRelevance =
-      params.orderByRelevance as Enumerable<UserOrderByWithRelationAndSearchRelevanceInput>;
-
+  excludeStringNullableField<
+    StringNullableFilter,
+    Key extends keyof StringNullableFilter
+  >(
+    stringNullableFilter: StringNullableFilter,
+    ...keys: Key[]
+  ): Omit<StringNullableFilter, Key> {
+    for (const key of keys) {
+      delete stringNullableFilter[key];
+    }
+    return stringNullableFilter;
+  }
+  async usersPaginated(params: FindManyUsersPaginatedInput) {
     return await findManyCursorConnection(
       args =>
         this.prismaService.user.findMany({
           include: {
             _count: true,
             entries: true,
+            accounts: true,
             profile: true,
-            sessions: true
+            mediaItems: true,
+            sessions: true,
+            connections: true,
+            comments: true,
+            categories: true
           },
-          where: {
-            role: roles,
-            email: emailFilter,
-            firstName: firstNameFilter,
-            lastName: lastNameFilter,
-            status: userStatus
-          },
-          orderBy: orderByRelevance,
+          distinct: params.distinct,
+          take: params.take,
+          skip: params.skip,
+          where: params.where,
+          cursor: args.cursor,
+          orderBy: params.orderBy,
           ...args
         }),
       () =>
         this.prismaService.user.count({
-          orderBy: orderByRelevance,
-          where: {
-            role: roles,
-            email: emailFilter,
-            firstName: firstNameFilter,
-            lastName: lastNameFilter,
-            status: userStatus
-          }
+          orderBy: params.orderBy,
+          take: params.take,
+          distinct: params.distinct,
+          skip: params.skip,
+          where: params.where,
+          cursor: params.cursor
         }),
-      { first, last, before, after },
+      {
+        first: params.pagination.first ?? 10,
+        last: params.pagination.last,
+        before: params.pagination.before,
+        after: params.pagination.after
+      },
       {
         getCursor: (record: { id: string }) => {
           return record;
@@ -314,11 +307,11 @@ export class UserService {
       .then(data => data);
   }
 
-//   async createEntry(data: Prisma.EntryCreateInput, viewerId: string | undefined) {
-//     const getUser = await this.authService.validateUser(viewerId ?? "");
-//     const { rest, author } = { author:{...data.author}, rest: { ...data }}
-//     const updateData = await this.prismaService.entry.create({ data: data, include: {author: true}})
-// }
+  //   async createEntry(data: Prisma.EntryCreateInput, viewerId: string | undefined) {
+  //     const getUser = await this.authService.validateUser(viewerId ?? "");
+  //     const { rest, author } = { author:{...data.author}, rest: { ...data }}
+  //     const updateData = await this.prismaService.entry.create({ data: data, include: {author: true}})
+  // }
 
   create(data: Prisma.UserCreateInput, account: Prisma.AccountCreateInput) {
     return this.prismaService.user.create({
@@ -328,11 +321,11 @@ export class UserService {
 
   async changePassword(passwordInput: {
     changePasswordInput: ChangePasswordInput;
-    accessToken: string;
+    id: string;
   }) {
-    const getUser = await this.authService.getUserFromToken(
-      passwordInput.accessToken
-    );
+    const getUser = await this.prismaService.user.findUnique({
+      where: { id: passwordInput.id }
+    });
 
     const { newPassword, oldPassword } = passwordInput.changePasswordInput;
 

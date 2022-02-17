@@ -1,8 +1,6 @@
 import {
   ApolloClient,
   InMemoryCache,
-  FieldMergeFunction,
-  Reference,
   NormalizedCacheObject
 } from "@apollo/client";
 import {
@@ -17,34 +15,10 @@ import {
   TypedTypePolicies,
   AuthDetailedFieldPolicy,
   AuthDetailedKeySpecifier,
-  AuthFieldPolicy,
-  ConnectionFieldPolicy,
-  EntryConnectionFieldPolicy,
-  UserConnectionFieldPolicy,
-  EntryConnectionKeySpecifier,
   UserConnectionKeySpecifier,
-  ProfileConnectionFieldPolicy,
-  ProfileConnectionKeySpecifier,
-  MediaItemConnectionFieldPolicy,
-  MediaItemConnectionKeySpecifier,
-  EntryEdgeFieldPolicy,
-  EntryEdgeKeySpecifier,
-  UserEdgeFieldPolicy,
-  UserEdgeKeySpecifier,
-  ProfileEdgeFieldPolicy,
-  ProfileEdgeKeySpecifier,
-  MediaItemEdgeFieldPolicy,
-  MediaItemEdgeKeySpecifier,
   JwtDecodedFieldPolicy
 } from "./helpers";
-import emittedIntrospection, {
-  PossibleTypesResultData
-} from "./fragment-matcher";
-import {
-  ViewerPartialFragment,
-  ViewerPartialFragmentDoc
-} from "@/graphql/fragments/viewer-partial.graphql";
-import { UserConnectionPartial, UserConnectionPartialFragmentDoc } from "@/graphql/generated/graphql";
+import emittedIntrospection from "./fragment-matcher";
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 

@@ -54,7 +54,7 @@ import {
 import { PubSub, PubSubOptions, PubSubEngine } from "graphql-subscriptions";
 import { ViewerModule } from "./viewer/viewer.module";
 import { ApolloConfigInput, GraphQLExecutor } from "apollo-server-types";
-import { ExpressGraphQLDriver } from "src/app/driver/express-graphql.driver";
+// import { ExpressGraphQLDriver } from "src/app/driver/express-graphql.driver";
 import { CommentModule } from "./comment/comment.module";
 import { GraphQLSchema } from "graphql";
 import { GqlConfigService } from "./gql-config.service";
@@ -196,7 +196,9 @@ export type Context = {
     }
   ]
 })
-export class AppModule {}
+export class AppModule { }
+
+
 // export class AppModule<
 //   T extends Context<T[keyof T]>,
 //   K extends Record<keyof K, K> extends infer U

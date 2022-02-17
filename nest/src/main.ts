@@ -1,4 +1,9 @@
-import { AbstractHttpAdapter, HttpAdapterHost, NestContainer, NestFactory } from "@nestjs/core";
+import {
+  AbstractHttpAdapter,
+  HttpAdapterHost,
+  NestContainer,
+  NestFactory
+} from "@nestjs/core";
 import { AppModule, Context } from "./app.module";
 import {
   CanActivate,
@@ -23,7 +28,7 @@ import {
   SecurityConfig,
   SwaggerConfig
 } from "./common/config/config-interfaces.config";
-import { json, urlencoded } from 'body-parser';
+import { json, urlencoded } from "body-parser";
 import * as cookieParser from "cookie-parser";
 import { loadSchema, loadSchemaSync } from "@graphql-tools/load";
 
@@ -37,11 +42,11 @@ import {
 } from "@nestjs/microservices";
 import { PrismaModel } from "./.generated/prisma-class-generator";
 import { AuthGuard } from "./common/guards/gql-context.guard";
-import { graphqlUploadExpress } from 'graphql-upload';
+import { graphqlUploadExpress } from "graphql-upload";
 import multer from "multer";
 import { Application } from "express";
-import { ExpressAdapter } from "@nestjs/platform-express"
-import * as bodyParser from "body-parser"
+import { ExpressAdapter } from "@nestjs/platform-express";
+import * as bodyParser from "body-parser";
 import { graphqlHTTP } from "express-graphql";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { GraphQLModule } from "@nestjs/graphql";
@@ -117,28 +122,22 @@ async function bootstrap() {
     sort: true,
     inheritResolversFromInterfaces: true,
     experimentalFragmentVariables: true,
-    commentDescriptions: true,
+    commentDescriptions: true
   });
 
   const app = await NestFactory.create(AppModule, { ...options });
-  // app.use(json({ limit: '50mb' }));
-  // // app.use(multer({dest: "./src/uploads"}))
-  // app.use(urlencoded({ limit: '50mb', extended: true }));
-  app.use(bodyParser.json({ limit: '50mb' }))
+  app.use(bodyParser.json({ limit: "50mb" }));
   app.use(
     bodyParser.urlencoded({
-      limit: '50mb',
+      limit: "50mb",
       extended: true,
       parameterLimit: 50000
     })
-  )
-
-
+  );
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.use(cookieParser());
 
-
-
-  app.getHttpServer();
+  const { httpAdapter } = app.get(HttpAdapterHost);
   app.use(morgan("tiny", { stream: logStream }));
   const configService = app.get(ConfigService);
   const nestConfig = configService.get<NestConfig>("nest");
@@ -163,6 +162,7 @@ async function bootstrap() {
     const docOptions: SwaggerDocumentOptions = {
       operationIdFactory: (controllerKey: string, methodKey: string) =>
         methodKey,
+
       extraModels: [
         PrismaModel.Account,
         PrismaModel.Category,
@@ -186,39 +186,33 @@ async function bootstrap() {
     };
     SwaggerModule.setup("api", app, document, customOptions);
   }
-  const prismaService: PrismaService = app.get<PrismaService>(PrismaService);
+  const prismaService = app.get<PrismaService>(PrismaService);
 
-  // const microServiceRedis = app.connectMicroservice<MicroserviceOptions>({
-  //   transport: Transport.REDIS,
-  //   options: {
-  //     retry_unfulfilled_commands: process.env.NODE_ENV !== "production" ? true : false,
-  //     connect_timeout: 10000,
-  //     max_attempts: 10,
-  //     password: redisConfig?.password
-  //       ? redisConfig.password
-  //       : process.env.REDIS_PASSWORD ?? "",
-  //     url: redisConfig?.url ? redisConfig.url : process.env.REDIS_URL ?? "",
-  //     host: redisConfig?.host ? redisConfig.host : "",
-  //     port: redisConfig?.port ? redisConfig.port : 6379
-  //   }
-  // });
-  // await app.startAllMicroservices();
-  // app.getHttpAdapter().use(ExpressGraphQLDriver.prototype.start);
-  app.useGlobalPipes(new ValidationPipe())
   prismaService.enableShutdownHooks(app);
-  //  await app.create().useGlobalGuards(new AuthGuard())
-  // useGlobalPipes({ transform: new PipesContextCreator(new NestContainer().addModule({ PrismaModule }, { UserModule }, { AuthModule }).addInjectable(PrismaService)})
   await app
     .listen(process.env.PORT ?? nestConfig?.port ?? 3000)
     .then(async () => {
       console.log(
         `[GraphQL Playground]: ${await app.getUrl()}/graphql  \n[Swagger Api]: ${await app.getUrl()}/api`
       );
-    })
-  // if (module.hot) {
-  //   module.hot.accept()
-  //   module.hot.dispose(() => app.close())
-  // }
+    });
 }
 
 bootstrap();
+
+// const microServiceRedis = app.connectMicroservice<MicroserviceOptions>({
+//   transport: Transport.REDIS,
+//   options: {
+//     retry_unfulfilled_commands: process.env.NODE_ENV !== "production" ? true : false,
+//     connect_timeout: 10000,
+//     max_attempts: 10,
+//     password: redisConfig?.password
+//       ? redisConfig.password
+//       : process.env.REDIS_PASSWORD ?? "",
+//     url: redisConfig?.url ? redisConfig.url : process.env.REDIS_URL ?? "",
+//     host: redisConfig?.host ? redisConfig.host : "",
+//     port: redisConfig?.port ? redisConfig.port : 6379
+//   }
+// });
+// await app.startAllMicroservices();
+// app.getHttpAdapter().use(ExpressGraphQLDriver.prototype.start);

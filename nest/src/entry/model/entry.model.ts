@@ -3,24 +3,17 @@ import { Comment } from "../../comment/model/comment.model";
 import { User } from "../../user/model/user.model";
 import { EntryCount } from "../../.generated/prisma-nestjs-graphql/entry/outputs/entry-count.output";
 import { Category } from "../../category/model/category.model";
-import { GraphQLJSONObject, JSONObjectResolver } from "graphql-scalars";
 import { Node } from "src/node/model/node.model";
 import { EntryConnection } from "./entry-connection.model";
 import { EntryOperations } from "../enums/entry-operations.enum";
 import { Type } from "@nestjs/common";
 import { Auth } from "src/auth/model";
-import * as Pr from "json-schema"
 import { JwtDecoded } from "src/auth/dto";
 import {
-  IntersectionType,
-  PartialType,
-  PickType,
   MappedType
 } from "@nestjs/mapped-types";
 import { Edge, Connection } from "@devoxa/prisma-relay-cursor-connection";
 import { Session } from "src/session/model/session.model";
-import { ReturnTypedNode } from "ts-morph";
-import { Prisma } from "@prisma/client";
 
 //function IntersectionType<A, B>(target: Type<A>, source: Type<B>): MappedType<A & B>;
 
@@ -38,8 +31,8 @@ export class Entry implements Node {
   @Field(() => String, { nullable: false })
   authorId?: string;
 
-  @Field(() => [JSONObjectResolver], { nullable: true })
-  content!: Array<Prisma.JsonValue>;
+  @Field(() => String, { nullable: true })
+  content?: string
 
   @Field(() => Date, { nullable: false })
   createdAt!: Date;
@@ -47,8 +40,8 @@ export class Entry implements Node {
   @Field(() => Date, { nullable: true })
   updatedAt?: Date | null;
 
-  @Field(() => [JSONObjectResolver], { nullable: true })
-  featuredImage?: Array<Prisma.JsonValue>;
+  @Field(() => String, { nullable: true })
+  featuredImage?: string;
 
   @Field(() => [Category], { nullable: true })
   categories?: Array<Category>;

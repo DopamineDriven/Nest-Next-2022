@@ -1,86 +1,3 @@
-// import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
-// import { loadSchema } from "@graphql-tools/load";
-// import {
-//   forwardRef,
-//   Inject,
-//   Injectable,
-//   Scope,
-//   ShutdownSignal
-// } from "@nestjs/common";
-// import {
-//   AbstractGraphQLDriver,
-//   GqlModuleOptions,
-//   GraphQLFactory,
-//   MiddlewareContext
-// } from "@nestjs/graphql";
-// import {
-//   getGraphQLParams,
-//   GraphQLParams,
-//   Options,
-//   RequestInfo,
-//   OptionsData,
-//   graphqlHTTP
-// } from "express-graphql";
-// import { Context } from "src/app.module";
-// import { makeExecutableSchema } from "@graphql-tools/schema";
-// import { PrismaService } from "src/prisma/prisma.service";
-// import { GraphQLSchema } from "graphql";
-// import { MiddlewareBuilder } from "@nestjs/core";
-
-// export class ExpressGraphQLDriver extends AbstractGraphQLDriver {
-//   async start(options: GqlModuleOptions<any>): Promise<void> {
-//     options = await this.graphQlFactory.mergeWithSchema(options);
-//     // @ts-ignore
-//     const rootSchema = await loadSchema("src/schema.gql", {
-//       loaders: [new GraphQLFileLoader()],
-//       sort: true,
-//       inheritResolversFromInterfaces: true,
-//       experimentalFragmentVariables: true,
-//       commentDescriptions: true,
-//     });
-//     this.httpAdapterHost.httpAdapter.all(
-//       "/graphql",
-//       graphqlHTTP({
-//         context: ({ req, res }: Context): any => {
-//           const token = req.header("authorization")?.split(" ")[1] ?? null;
-//           const ctx = {
-//             req,
-//             res,
-//             token: token as string | null
-//           };
-//           token != null && token.length > 0
-//             ? res.setHeader("authorization", `Bearer ${token}`)
-//             : console.log("no auth token to parse");
-//           if (ctx.token != null && ctx.token.length > 0) {
-//             res.setHeader("authorization", `Bearer ${token}`);
-//             res.setHeader("Accept", "application/json");
-
-//             return { ...ctx };
-//           } else {
-//             return { ...ctx };
-//           }
-//         },
-//         pretty: true,
-//         schema: rootSchema,
-//         graphiql: {
-//           headerEditorEnabled: true
-//         }
-//       })
-//     );
-//   }
-
-//   //@ts-ignore
-//   async stop();
-// }
-
-/**
- * declare type Request = IncomingMessage & {
-    url: string;
-};
-declare type Response = ServerResponse & {
-    json?: (data: unknown) => void;
-};
- */
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { AbstractGraphQLDriver, GqlModuleOptions } from "@nestjs/graphql";
@@ -94,21 +11,35 @@ import {
   getGraphQLParams,
   graphqlHTTP
 } from "express-graphql";
+import { RequestHandler } from "express-serve-static-core";
 import { PrismaService } from "src/prisma";
-import { IncomingMessage, ServerResponse } from "http";
+import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from "http";
+import { __TypeKind } from "graphql";
 
 export interface ExpressGraphQLRequest extends IncomingMessage {
   url: string;
+  headers: IncomingHttpHeaders;
 }
 
 export interface ExpressGraphQLResponse extends ServerResponse {
-  json?: (data: unknown extends infer U ? U : unknown) => void;
+  json?: (data: any) => void;
 }
 
-export class ExpressGraphQLDriver<
-  T extends PrismaService
-> extends AbstractGraphQLDriver {
-  async start(options: GqlModuleOptions<any>): Promise<void> {
+export interface ExpressGraphQLCtx {
+  request: Request;
+  response: ExpressGraphQLResponse;
+  token: string;
+  userId: string;
+  params?: GraphQLParams;
+}
+
+export class ExpressGraphQLDriver extends AbstractGraphQLDriver {
+  constructor() {
+    super();
+  }
+  async start(
+    options: GqlModuleOptions<ExpressGraphQLDriver>
+  ): Promise<void> {
     options = await this.graphQlFactory.mergeWithSchema(options);
     //     // @ts-ignore
     const rootSchema = await loadSchema("src/schema.gql", {
@@ -120,62 +51,48 @@ export class ExpressGraphQLDriver<
     });
     const { httpAdapter } = this.httpAdapterHost;
     const optionsData: OptionsData = {
-      context:  async (request: Request, response: Response, prismaService: T, params?: GraphQLParams) => {
-        const token = request.headers.get("authorization")?.split(/([ ])/)[1] ?? null;
+      context: async (
+        request: ExpressGraphQLRequest,
+        response: ExpressGraphQLResponse,
+        params?: GraphQLParams
+      ): Promise<{ request: ExpressGraphQLRequest; response: ExpressGraphQLResponse; params: GraphQLParams | undefined; token: string | null; }> => {
+        const token = request.headers.authorization?.split(/([ ])/)[2] ?? null;
         const ctx = {
-          prismaService,
           request,
           response,
           params,
           token: token as string | null
         };
 
-
         token != null && token.length > 0
-          ? response.headers.set("authorization", `Bearer ${token}`)
+          ? response.setHeader("authorization", `Bearer ${token}`)
           : console.log("no auth token to parse");
         if (ctx.token != null && ctx.token.length > 0) {
-          response.headers.set("authorization", `Bearer ${token}`);
+          response.setHeader("authorization", `Bearer ${token}`);
+
           return { ...ctx };
         } else {
           return { ...ctx };
         }
       },
-      
+      pretty: true,
+      schema: options?.schema ? options.schema : rootSchema,
       graphiql: {
         headerEditorEnabled: true
-      },
-      schema: options?.schema ? options.schema : rootSchema,
+      }
     }
-    httpAdapter.use(
-      "/graphql",
-      graphqlHTTP({
-        context: async (request: Request, response: Response, params?: GraphQLParams)  =>  async ({ req, res }: Context, prismaService: T) => {
-          const token = req.header("authorization")?.split(" ")[1] ?? null;
-          const ctx = {
-            prismaService,
-            req,
-            res,
-            token: token as string | null
-          };
 
-          token != null && token.length > 0
-            ? res.setHeader("authorization", `Bearer ${token}`)
-            : console.log("no auth token to parse");
-          if (ctx.token != null && ctx.token.length > 0) {
-            res.setHeader("authorization", `Bearer ${token}`);
-
-            return { ...ctx };
-          } else {
-            return { ...ctx };
-          }
-        },
-        pretty: true,
-
-        schema: options?.schema ? options.schema : rootSchema,
-        graphiql: true
-      })
-    );
+    //   token != null && token.length > 0
+    //     ? response.headers.set("authorization", `Bearer ${token}`)
+    //     : console.log("no auth token to parse");
+    //   if (ctx.token != null && ctx.token.length > 0) {
+    //     response.headers.set("authorization", `Bearer ${token}`);
+    //     return { ...ctx };
+    //   } else {
+    //     return { ...ctx };
+    //   }
+    // },
+    httpAdapter.use("/graphql", graphqlHTTP(optionsData));
   }
 
   async stop() {

@@ -7,17 +7,9 @@ import {
   PaginationArgs
 } from "../pagination/pagination.service";
 import { ProfileConnection } from "./model/profile-connection.model";
-import { NullableEnumGenderFieldUpdateOperationsInput } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/nullable-enum-gender-field-update-operations.input";
-import { EnumGenderNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-gender-nullable-filter.input";
-import { EnumPronounsNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-pronouns-nullable-filter.input";
-import { ProfileOrderByWithRelationAndSearchRelevanceInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-order-by-with-relation-and-search-relevance.input";
-import { PrismaClientUnknownRequestError } from "@prisma/client/runtime";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
-import { StringNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/string-nullable-filter.input";
-import { JsonNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/json-nullable-filter.input";
 import { ProfilesInput } from "./inputs/profiles.input";
 import { ProfileCreateInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-create.input";
-import { User } from "../user/model/user.model";
 @Injectable()
 export class ProfileService {
   constructor(
@@ -68,7 +60,7 @@ export class ProfileService {
     const userToProfileCreate = await this.prisma.user
       .findFirst({
         where: { id: userId },
-        include: {_count: true, mediaItems: true,profile: true}
+        include: {_count: true, mediaItems: true,profile: true, entries: true}
       })
       .then(async dataUser => {
         const createUserProfile = await this.prisma.profile.create({
@@ -78,17 +70,17 @@ export class ProfileService {
             memberSince: dataUser?.createdAt
               ? dataUser.createdAt
               : new Date(Date.now()),
-            bio: { set: data.bio?.set },
-            city: data.city,
-            country: data.country,
-            gender: data.gender,
-            pronouns: data.pronouns,
-            dob: data.dob,
+            bio: data?.bio,
+            city: data?.city,
+            country: data?.country,
+            gender: data?.gender,
+            pronouns: data?.pronouns,
+            dob: data?.dob,
             phoneNumber: data.phoneNumber,
-            occupation: data.occupation,
-            activiyFeed: [{ profileCreated: "profileCreated" }],
-            coverPhoto: data.coverPhoto,
-            recentActivity: [{ recentActivity: "On the radar" }]
+            occupation: data?.occupation,
+            activiyFeed: data?.activiyFeed,
+            coverPhoto: data?.coverPhoto,
+            recentActivity: data?.recentActivity
           },
           include: {
             user: { include: { mediaItems: true, _count: true } }
@@ -129,7 +121,7 @@ export class ProfileService {
                 gender: genderFilter ? genderFilter : undefined,
                 pronouns: pronounsFilter ? pronounsFilter : undefined,
                 dob: dobFilter ? dobFilter : undefined,
-                bio: bioFilter ? bioFilter : { array_contains: "" }
+                bio: bioFilter ? bioFilter : undefined
               },
               orderBy: orderBy?._relevance?.fields ? { ...orderBy } : undefined,
               ...args

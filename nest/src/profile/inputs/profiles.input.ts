@@ -26,6 +26,6 @@ export class ProfilesInput {
   @Field(() => StringNullableFilter, { nullable: true })
   dobFilter?: StringNullableFilter | undefined;
 
-  @Field(() => JsonNullableFilter, { nullable: true })
-  bioFilter?: JsonNullableFilter | undefined;
+  @Field(() => StringNullableFilter, { nullable: true })
+  bioFilter?: StringNullableFilter | undefined;
 }

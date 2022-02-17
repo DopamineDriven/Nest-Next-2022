@@ -36,11 +36,11 @@ export class EntryCreateOneInput {
   @Field(() => String, { nullable: true })
   categoryId?: string;
 
-  @Field(() => EntryCreatecontentInput, { nullable: true })
-  content?: EntryCreatecontentInput;
+  @Field(() =>String, { nullable: true })
+  content?: string;
 
-  @Field(() => EntryCreatefeaturedImageInput, { nullable: true })
-  featuredImage?: EntryCreatefeaturedImageInput;
+  @Field(() => String, { nullable: true })
+  featuredImage?: string
 
   @Field(() => CategoryCreateNestedManyWithoutEntriesInput, { nullable: true })
   categories?: CategoryCreateNestedManyWithoutEntriesInput;

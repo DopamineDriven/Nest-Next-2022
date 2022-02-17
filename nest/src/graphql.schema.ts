@@ -28,6 +28,7 @@ export enum AlgorithmType {
 
 export enum CommentOrderByRelevanceFieldEnum {
     authorId = "authorId",
+    body = "body",
     entryId = "entryId",
     id = "id",
     position = "position"
@@ -61,6 +62,8 @@ export enum CommentScalarFieldEnum {
 export enum EntryOrderByRelevanceFieldEnum {
     authorId = "authorId",
     categoryId = "categoryId",
+    content = "content",
+    featuredImage = "featuredImage",
     id = "id",
     title = "title"
 }
@@ -136,6 +139,8 @@ export enum MimeTypes {
 }
 
 export enum ProfileOrderByRelevanceFieldEnum {
+    activiyFeed = "activiyFeed",
+    bio = "bio",
     city = "city",
     country = "country",
     coverPhoto = "coverPhoto",
@@ -143,6 +148,7 @@ export enum ProfileOrderByRelevanceFieldEnum {
     id = "id",
     occupation = "occupation",
     phoneNumber = "phoneNumber",
+    recentActivity = "recentActivity",
     userId = "userId"
 }
 
@@ -599,7 +605,7 @@ export class CommentAuthorIdEntryIdCompoundUniqueInput {
 }
 
 export class CommentCreateManyAuthorInput {
-    body?: Nullable<JSON>;
+    body?: Nullable<string>;
     createdAt?: Nullable<DateTime>;
     entryId: string;
     id?: Nullable<string>;
@@ -615,7 +621,7 @@ export class CommentCreateManyAuthorInputEnvelope {
 
 export class CommentCreateManyEntryInput {
     authorId: string;
-    body?: Nullable<JSON>;
+    body?: Nullable<string>;
     createdAt?: Nullable<DateTime>;
     id?: Nullable<string>;
     position?: Nullable<string>;
@@ -657,7 +663,7 @@ export class CommentCreateOrConnectWithoutEntryInput {
 }
 
 export class CommentCreateWithoutAuthorInput {
-    body?: Nullable<JSON>;
+    body?: Nullable<string>;
     createdAt?: Nullable<DateTime>;
     entry: EntryCreateNestedOneWithoutCommentsInput;
     id?: Nullable<string>;
@@ -668,7 +674,7 @@ export class CommentCreateWithoutAuthorInput {
 
 export class CommentCreateWithoutEntryInput {
     author: UserCreateNestedOneWithoutCommentsInput;
-    body?: Nullable<JSON>;
+    body?: Nullable<string>;
     createdAt?: Nullable<DateTime>;
     id?: Nullable<string>;
     position?: Nullable<string>;
@@ -715,7 +721,7 @@ export class CommentScalarWhereInput {
     NOT?: Nullable<CommentScalarWhereInput[]>;
     OR?: Nullable<CommentScalarWhereInput[]>;
     authorId?: Nullable<StringFilter>;
-    body?: Nullable<JsonNullableFilter>;
+    body?: Nullable<StringNullableFilter>;
     createdAt?: Nullable<DateTimeFilter>;
     entryId?: Nullable<StringFilter>;
     id?: Nullable<StringFilter>;
@@ -725,7 +731,7 @@ export class CommentScalarWhereInput {
 }
 
 export class CommentUpdateManyMutationInput {
-    body?: Nullable<JSON>;
+    body?: Nullable<NullableStringFieldUpdateOperationsInput>;
     createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
     id?: Nullable<StringFieldUpdateOperationsInput>;
     position?: Nullable<NullableStringFieldUpdateOperationsInput>;
@@ -782,7 +788,7 @@ export class CommentUpdateWithWhereUniqueWithoutEntryInput {
 }
 
 export class CommentUpdateWithoutAuthorInput {
-    body?: Nullable<JSON>;
+    body?: Nullable<NullableStringFieldUpdateOperationsInput>;
     createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
     entry?: Nullable<EntryUpdateOneRequiredWithoutCommentsInput>;
     id?: Nullable<StringFieldUpdateOperationsInput>;
@@ -793,7 +799,7 @@ export class CommentUpdateWithoutAuthorInput {
 
 export class CommentUpdateWithoutEntryInput {
     author?: Nullable<UserUpdateOneRequiredWithoutCommentsInput>;
-    body?: Nullable<JSON>;
+    body?: Nullable<NullableStringFieldUpdateOperationsInput>;
     createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
     id?: Nullable<StringFieldUpdateOperationsInput>;
     position?: Nullable<NullableStringFieldUpdateOperationsInput>;
@@ -824,7 +830,7 @@ export class CommentWhereInput {
     OR?: Nullable<CommentWhereInput[]>;
     author?: Nullable<UserRelationFilter>;
     authorId?: Nullable<StringFilter>;
-    body?: Nullable<JsonNullableFilter>;
+    body?: Nullable<StringNullableFilter>;
     createdAt?: Nullable<DateTimeFilter>;
     entry?: Nullable<EntryRelationFilter>;
     entryId?: Nullable<StringFilter>;
@@ -997,9 +1003,9 @@ export class DateTimeNullableFilter {
 
 export class EntryCreateManyAuthorInput {
     categoryId?: Nullable<string>;
-    content?: Nullable<EntryCreateManycontentInput>;
+    content?: Nullable<string>;
     createdAt?: Nullable<DateTime>;
-    featuredImage?: Nullable<EntryCreateManyfeaturedImageInput>;
+    featuredImage?: Nullable<string>;
     id?: Nullable<string>;
     published?: Nullable<boolean>;
     title: string;
@@ -1009,14 +1015,6 @@ export class EntryCreateManyAuthorInput {
 export class EntryCreateManyAuthorInputEnvelope {
     data: EntryCreateManyAuthorInput[];
     skipDuplicates?: Nullable<boolean>;
-}
-
-export class EntryCreateManycontentInput {
-    set: JSON[];
-}
-
-export class EntryCreateManyfeaturedImageInput {
-    set: JSON[];
 }
 
 export class EntryCreateNestedManyWithoutAuthorInput {
@@ -1057,9 +1055,9 @@ export class EntryCreateWithoutAuthorInput {
     categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
     categoryId?: Nullable<string>;
     comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
-    content?: Nullable<EntryCreatecontentInput>;
+    content?: Nullable<string>;
     createdAt?: Nullable<DateTime>;
-    featuredImage?: Nullable<EntryCreatefeaturedImageInput>;
+    featuredImage?: Nullable<string>;
     id?: Nullable<string>;
     published?: Nullable<boolean>;
     title: string;
@@ -1070,9 +1068,9 @@ export class EntryCreateWithoutCategoriesInput {
     author: UserCreateNestedOneWithoutEntriesInput;
     categoryId?: Nullable<string>;
     comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
-    content?: Nullable<EntryCreatecontentInput>;
+    content?: Nullable<string>;
     createdAt?: Nullable<DateTime>;
-    featuredImage?: Nullable<EntryCreatefeaturedImageInput>;
+    featuredImage?: Nullable<string>;
     id?: Nullable<string>;
     published?: Nullable<boolean>;
     title: string;
@@ -1083,21 +1081,13 @@ export class EntryCreateWithoutCommentsInput {
     author: UserCreateNestedOneWithoutEntriesInput;
     categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
     categoryId?: Nullable<string>;
-    content?: Nullable<EntryCreatecontentInput>;
+    content?: Nullable<string>;
     createdAt?: Nullable<DateTime>;
-    featuredImage?: Nullable<EntryCreatefeaturedImageInput>;
+    featuredImage?: Nullable<string>;
     id?: Nullable<string>;
     published?: Nullable<boolean>;
     title: string;
     updatedAt?: Nullable<DateTime>;
-}
-
-export class EntryCreatecontentInput {
-    set: JSON[];
-}
-
-export class EntryCreatefeaturedImageInput {
-    set: JSON[];
 }
 
 export class EntryListRelationFilter {
@@ -1143,9 +1133,9 @@ export class EntryScalarWhereInput {
     OR?: Nullable<EntryScalarWhereInput[]>;
     authorId?: Nullable<StringFilter>;
     categoryId?: Nullable<StringNullableFilter>;
-    content?: Nullable<JsonNullableListFilter>;
+    content?: Nullable<StringNullableFilter>;
     createdAt?: Nullable<DateTimeFilter>;
-    featuredImage?: Nullable<JsonNullableListFilter>;
+    featuredImage?: Nullable<StringNullableFilter>;
     id?: Nullable<StringFilter>;
     published?: Nullable<BoolFilter>;
     title?: Nullable<StringFilter>;
@@ -1161,9 +1151,9 @@ export class EntryUncheckedCreateNestedManyWithoutAuthorInput {
 
 export class EntryUpdateManyMutationInput {
     categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
-    content?: Nullable<EntryUpdatecontentInput>;
+    content?: Nullable<NullableStringFieldUpdateOperationsInput>;
     createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-    featuredImage?: Nullable<EntryUpdatefeaturedImageInput>;
+    featuredImage?: Nullable<NullableStringFieldUpdateOperationsInput>;
     id?: Nullable<StringFieldUpdateOperationsInput>;
     published?: Nullable<BoolFieldUpdateOperationsInput>;
     title?: Nullable<StringFieldUpdateOperationsInput>;
@@ -1229,9 +1219,9 @@ export class EntryUpdateWithoutAuthorInput {
     categories?: Nullable<CategoryUpdateManyWithoutEntriesInput>;
     categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
     comments?: Nullable<CommentUpdateManyWithoutEntryInput>;
-    content?: Nullable<EntryUpdatecontentInput>;
+    content?: Nullable<NullableStringFieldUpdateOperationsInput>;
     createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-    featuredImage?: Nullable<EntryUpdatefeaturedImageInput>;
+    featuredImage?: Nullable<NullableStringFieldUpdateOperationsInput>;
     id?: Nullable<StringFieldUpdateOperationsInput>;
     published?: Nullable<BoolFieldUpdateOperationsInput>;
     title?: Nullable<StringFieldUpdateOperationsInput>;
@@ -1242,9 +1232,9 @@ export class EntryUpdateWithoutCategoriesInput {
     author?: Nullable<UserUpdateOneRequiredWithoutEntriesInput>;
     categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
     comments?: Nullable<CommentUpdateManyWithoutEntryInput>;
-    content?: Nullable<EntryUpdatecontentInput>;
+    content?: Nullable<NullableStringFieldUpdateOperationsInput>;
     createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-    featuredImage?: Nullable<EntryUpdatefeaturedImageInput>;
+    featuredImage?: Nullable<NullableStringFieldUpdateOperationsInput>;
     id?: Nullable<StringFieldUpdateOperationsInput>;
     published?: Nullable<BoolFieldUpdateOperationsInput>;
     title?: Nullable<StringFieldUpdateOperationsInput>;
@@ -1255,23 +1245,13 @@ export class EntryUpdateWithoutCommentsInput {
     author?: Nullable<UserUpdateOneRequiredWithoutEntriesInput>;
     categories?: Nullable<CategoryUpdateManyWithoutEntriesInput>;
     categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
-    content?: Nullable<EntryUpdatecontentInput>;
+    content?: Nullable<NullableStringFieldUpdateOperationsInput>;
     createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-    featuredImage?: Nullable<EntryUpdatefeaturedImageInput>;
+    featuredImage?: Nullable<NullableStringFieldUpdateOperationsInput>;
     id?: Nullable<StringFieldUpdateOperationsInput>;
     published?: Nullable<BoolFieldUpdateOperationsInput>;
     title?: Nullable<StringFieldUpdateOperationsInput>;
     updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-}
-
-export class EntryUpdatecontentInput {
-    push?: Nullable<JSON[]>;
-    set?: Nullable<JSON[]>;
-}
-
-export class EntryUpdatefeaturedImageInput {
-    push?: Nullable<JSON[]>;
-    set?: Nullable<JSON[]>;
 }
 
 export class EntryUpsertWithWhereUniqueWithoutAuthorInput {
@@ -1300,9 +1280,9 @@ export class EntryWhereInput {
     categories?: Nullable<CategoryListRelationFilter>;
     categoryId?: Nullable<StringNullableFilter>;
     comments?: Nullable<CommentListRelationFilter>;
-    content?: Nullable<JsonNullableListFilter>;
+    content?: Nullable<StringNullableFilter>;
     createdAt?: Nullable<DateTimeFilter>;
-    featuredImage?: Nullable<JsonNullableListFilter>;
+    featuredImage?: Nullable<StringNullableFilter>;
     id?: Nullable<StringFilter>;
     published?: Nullable<BoolFilter>;
     title?: Nullable<StringFilter>;
@@ -1407,7 +1387,7 @@ export class FindManyProfilesPaginatedInput {
 export class FindManyUsersPaginatedInput {
     cursor?: Nullable<UserWhereUniqueInput>;
     distinct?: Nullable<UserScalarFieldEnum[]>;
-    orderBy?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput[]>;
+    orderBy: UserOrderByWithRelationAndSearchRelevanceInput[];
     pagination?: Nullable<PaginationArgsInput>;
     skip?: Nullable<number>;
     take?: Nullable<number>;
@@ -1445,30 +1425,6 @@ export class IntNullableFilter {
     lte?: Nullable<number>;
     not?: Nullable<NestedIntNullableFilter>;
     notIn?: Nullable<number[]>;
-}
-
-export class JsonNullableFilter {
-    array_contains?: Nullable<JSON>;
-    array_ends_with?: Nullable<JSON>;
-    array_starts_with?: Nullable<JSON>;
-    equals?: Nullable<JSON>;
-    gt?: Nullable<JSON>;
-    gte?: Nullable<JSON>;
-    lt?: Nullable<JSON>;
-    lte?: Nullable<JSON>;
-    not?: Nullable<JSON>;
-    path?: Nullable<string[]>;
-    string_contains?: Nullable<string>;
-    string_ends_with?: Nullable<string>;
-    string_starts_with?: Nullable<string>;
-}
-
-export class JsonNullableListFilter {
-    equals?: Nullable<JSON[]>;
-    has?: Nullable<JSON>;
-    hasEvery?: Nullable<JSON[]>;
-    hasSome?: Nullable<JSON[]>;
-    isEmpty?: Nullable<boolean>;
 }
 
 export class LoginInput {
@@ -1871,8 +1827,8 @@ export class PaginationArgsInput {
 }
 
 export class ProfileCreateInput {
-    activiyFeed?: Nullable<ProfileCreateactiviyFeedInput>;
-    bio?: Nullable<ProfileCreatebioInput>;
+    activiyFeed?: Nullable<string>;
+    bio?: Nullable<string>;
     city?: Nullable<string>;
     country?: Nullable<string>;
     coverPhoto?: Nullable<string>;
@@ -1884,7 +1840,7 @@ export class ProfileCreateInput {
     occupation?: Nullable<string>;
     phoneNumber?: Nullable<string>;
     pronouns?: Nullable<Pronouns>;
-    recentActivity?: Nullable<ProfileCreaterecentActivityInput>;
+    recentActivity?: Nullable<string>;
     user: UserCreateNestedOneWithoutProfileInput;
 }
 
@@ -1900,8 +1856,8 @@ export class ProfileCreateOrConnectWithoutUserInput {
 }
 
 export class ProfileCreateWithoutUserInput {
-    activiyFeed?: Nullable<ProfileCreateactiviyFeedInput>;
-    bio?: Nullable<ProfileCreatebioInput>;
+    activiyFeed?: Nullable<string>;
+    bio?: Nullable<string>;
     city?: Nullable<string>;
     country?: Nullable<string>;
     coverPhoto?: Nullable<string>;
@@ -1913,19 +1869,7 @@ export class ProfileCreateWithoutUserInput {
     occupation?: Nullable<string>;
     phoneNumber?: Nullable<string>;
     pronouns?: Nullable<Pronouns>;
-    recentActivity?: Nullable<ProfileCreaterecentActivityInput>;
-}
-
-export class ProfileCreateactiviyFeedInput {
-    set: JSON[];
-}
-
-export class ProfileCreatebioInput {
-    set: JSON[];
-}
-
-export class ProfileCreaterecentActivityInput {
-    set: JSON[];
+    recentActivity?: Nullable<string>;
 }
 
 export class ProfileOrderByRelevanceInput {
@@ -1970,8 +1914,8 @@ export class ProfileUpdateOneWithoutUserInput {
 }
 
 export class ProfileUpdateWithoutUserInput {
-    activiyFeed?: Nullable<ProfileUpdateactiviyFeedInput>;
-    bio?: Nullable<ProfileUpdatebioInput>;
+    activiyFeed?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    bio?: Nullable<NullableStringFieldUpdateOperationsInput>;
     city?: Nullable<NullableStringFieldUpdateOperationsInput>;
     country?: Nullable<NullableStringFieldUpdateOperationsInput>;
     coverPhoto?: Nullable<NullableStringFieldUpdateOperationsInput>;
@@ -1983,22 +1927,7 @@ export class ProfileUpdateWithoutUserInput {
     occupation?: Nullable<NullableStringFieldUpdateOperationsInput>;
     phoneNumber?: Nullable<NullableStringFieldUpdateOperationsInput>;
     pronouns?: Nullable<NullableEnumPronounsFieldUpdateOperationsInput>;
-    recentActivity?: Nullable<ProfileUpdaterecentActivityInput>;
-}
-
-export class ProfileUpdateactiviyFeedInput {
-    push?: Nullable<JSON[]>;
-    set?: Nullable<JSON[]>;
-}
-
-export class ProfileUpdatebioInput {
-    push?: Nullable<JSON[]>;
-    set?: Nullable<JSON[]>;
-}
-
-export class ProfileUpdaterecentActivityInput {
-    push?: Nullable<JSON[]>;
-    set?: Nullable<JSON[]>;
+    recentActivity?: Nullable<NullableStringFieldUpdateOperationsInput>;
 }
 
 export class ProfileUpsertWithoutUserInput {
@@ -2010,8 +1939,8 @@ export class ProfileWhereInput {
     AND?: Nullable<ProfileWhereInput[]>;
     NOT?: Nullable<ProfileWhereInput[]>;
     OR?: Nullable<ProfileWhereInput[]>;
-    activiyFeed?: Nullable<JsonNullableListFilter>;
-    bio?: Nullable<JsonNullableListFilter>;
+    activiyFeed?: Nullable<StringNullableFilter>;
+    bio?: Nullable<StringNullableFilter>;
     city?: Nullable<StringNullableFilter>;
     country?: Nullable<StringNullableFilter>;
     coverPhoto?: Nullable<StringNullableFilter>;
@@ -2023,7 +1952,7 @@ export class ProfileWhereInput {
     occupation?: Nullable<StringNullableFilter>;
     phoneNumber?: Nullable<StringNullableFilter>;
     pronouns?: Nullable<EnumPronounsNullableFilter>;
-    recentActivity?: Nullable<JsonNullableListFilter>;
+    recentActivity?: Nullable<StringNullableFilter>;
     user?: Nullable<UserRelationFilter>;
     userId?: Nullable<StringFilter>;
 }
@@ -2034,7 +1963,7 @@ export class ProfileWhereUniqueInput {
 }
 
 export class ProfilesInput {
-    bioFilter?: Nullable<JsonNullableFilter>;
+    bioFilter?: Nullable<StringNullableFilter>;
     dobFilter?: Nullable<StringNullableFilter>;
     genderFilter?: Nullable<EnumGenderNullableFilter>;
     orderBy?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput>;
@@ -2584,9 +2513,9 @@ export class ViewerEntriesWhereInput {
     categories?: Nullable<CategoryListRelationFilter>;
     categoryId?: Nullable<StringNullableFilter>;
     comments?: Nullable<CommentListRelationFilter>;
-    content?: Nullable<JsonNullableListFilter>;
+    content?: Nullable<StringNullableFilter>;
     createdAt?: Nullable<DateTimeFilter>;
-    featuredImage?: Nullable<JsonNullableListFilter>;
+    featuredImage?: Nullable<StringNullableFilter>;
     id?: Nullable<StringFilter>;
     published?: Nullable<BoolFilter>;
     title?: Nullable<StringFilter>;
@@ -2673,7 +2602,7 @@ export class Comment implements Node {
     __typename?: 'Comment';
     author: User;
     authorId: string;
-    body?: Nullable<JSONObject>;
+    body?: Nullable<string>;
     createdAt: DateTime;
     entry: Entry;
     entryId: string;
@@ -2722,9 +2651,9 @@ export class Entry implements Node {
     categories?: Nullable<Category[]>;
     categoryId?: Nullable<string>;
     comments?: Nullable<Comment[]>;
-    content?: Nullable<JSONObject[]>;
+    content?: Nullable<string>;
     createdAt: DateTime;
-    featuredImage?: Nullable<JSONObject[]>;
+    featuredImage?: Nullable<string>;
     id: string;
     published?: Nullable<boolean>;
     title?: Nullable<string>;
@@ -2828,7 +2757,7 @@ export abstract class IMutation {
 
     abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
 
-    abstract viewerCreateEntry(viewerEntryCreateInput: EntryCreateWithoutAuthorInput): Entry | Promise<Entry>;
+    abstract viewerCreateEntry(viewerEntryCreateInput: EntryUpdateManyWithWhereWithoutAuthorInput): Entry[] | Promise<Entry[]>;
 }
 
 export class PageInfo {
@@ -2841,8 +2770,8 @@ export class PageInfo {
 
 export class Profile implements Node {
     __typename?: 'Profile';
-    activiyFeed?: Nullable<JSONObject[]>;
-    bio?: Nullable<JSONObject[]>;
+    activiyFeed?: Nullable<string>;
+    bio?: Nullable<string>;
     city?: Nullable<string>;
     country?: Nullable<string>;
     coverPhoto?: Nullable<string>;
@@ -2854,7 +2783,7 @@ export class Profile implements Node {
     occupation?: Nullable<string>;
     phoneNumber?: Nullable<string>;
     pronouns?: Nullable<Pronouns>;
-    recentActivity?: Nullable<JSONObject[]>;
+    recentActivity?: Nullable<string>;
     user: User;
     userId: string;
     userInProfile: User;
@@ -3040,8 +2969,6 @@ export class ViewerDetailed implements Node {
 
 export type BigInt = any;
 export type DateTime = any;
-export type JSON = any;
-export type JSONObject = any;
 export type PhoneNumber = any;
 export type EntryCommentUnion = CommentConnection | EntryConnection;
 export type TypesUnion = Entry | MediaItem | User;
