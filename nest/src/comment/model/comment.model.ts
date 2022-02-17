@@ -22,8 +22,8 @@ export class Comment implements Node {
   @Field(() => String, { nullable: false })
   entryId!: string;
 
-  @Field(() => JSONObjectResolver, { nullable: true })
-  body?: Prisma.JsonValue | null;
+  @Field(() => String, { nullable: true })
+  body?: string | null;
 
   @Field(() => String, { nullable: true })
   position?: string | null;

@@ -1,37 +1,24 @@
 import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
-import {
-  Args,
-  Context,
-  GqlContextType,
-  GqlExecutionContext,
-  Resolver
-} from "@nestjs/graphql";
+import { Args, Context, Resolver } from "@nestjs/graphql";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "./model/user.model";
 import { UserService } from "./user.service";
 import { Query, Mutation } from "@nestjs/graphql";
-import {
-  UserConnection,
-  UserEdge,
-  UserNodes
-} from "./model/user-connection.model";
+import { UserConnection } from "./model/user-connection.model";
 import { ChangePasswordInput } from "./inputs/change-passsword.input";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { AuthService } from "../auth/auth-jwt.service";
 import { UserMeta } from "../common/decorators/user.decorator";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { AuthDetailed } from "src/auth/model/auth-detailed.model";
-import { ManyUsersPaginatedArgs } from "./args/find-many-paginated.args";
 import { FindManyUsersPaginatedInput } from "./inputs/user-paginated-args.input";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { FindManyEntriesPaginatedInput } from "src/entry/inputs/entry-paginated.input";
 import { FindManyMediaItemsInput } from "src/media/inputs/find-many-media-items-paginated.input";
 import { Entry } from "src/entry";
 import { ContentNodes } from "./outputs/content-nodes.output";
-import { EntryCreateWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-without-author.input";
-import { ExecutionContextHost } from "@nestjs/core/helpers/execution-context-host";
-import { pipe } from "rxjs";
-import { APP_PIPE } from "@nestjs/core";
+import { EntryUpdateManyWithWhereWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-update-many-with-where-without-author.input";
+import { GraphqlAuthGuard } from "src/auth/gql-auth.guard";
 
 @Resolver(() => User)
 export class UserResolver {
@@ -41,13 +28,14 @@ export class UserResolver {
     private userService: UserService
   ) {}
 
+  @UseGuards(GraphqlAuthGuard)
   @Query(() => AuthDetailed)
-  @UseGuards(AuthGuard)
   async me(
     @UserMeta() user: User,
     @Context("token") ctx: ExecutionContext
   ): Promise<AuthDetailed | null> {
     console.log({ userFromDecorator: { ...user } ?? "no user" });
+
     return await this.authService.getUserWithDecodedToken(
       ctx as unknown as string
     );
@@ -213,57 +201,53 @@ export class UserResolver {
       id: cursor
     });
   }
-
+  @UseGuards(GraphqlAuthGuard)
   @Mutation(() => User)
-  @UseGuards(AuthGuard)
   async changePassword(
-    @Context("token") ctx: ExecutionContext,
+    @Context("viewerId") ctx: ExecutionContext,
     @Args("changePasswordInput") changePasswordInput: ChangePasswordInput
   ) {
-    return await this.authService
-      .getUserFromToken(ctx as unknown as string)
+    return await this.userService
+      .changePassword({
+        changePasswordInput: changePasswordInput,
+        id: ctx as unknown as string
+      })
       .then(async data => {
         const changePW = await this.userService.changePassword({
           changePasswordInput: {
             newPassword: changePasswordInput.newPassword,
             oldPassword: changePasswordInput.oldPassword
           },
-          accessToken: ctx as unknown as string
+          id: ctx as unknown as string
         });
         if (changePW != null) {
           return changePW;
-        } else {
-          const { user, mediaItems } = {
-            mediaItems: { ...data?.mediaItems },
-            user: { ...data }
-          };
-          return user;
         }
+        return changePW;
       });
   }
-
-  @Mutation(() => Entry)
-  @UseGuards(AuthGuard)
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => [Entry])
   async viewerCreateEntry(
     @Context("viewerId") ctx: ExecutionContext,
     @Args("viewerEntryCreateInput", {
-      type: () => EntryCreateWithoutAuthorInput
+      type: () => EntryUpdateManyWithWhereWithoutAuthorInput
     })
-    viewerEntryCreateInput: EntryCreateWithoutAuthorInput
+    viewerEntryCreateInput: EntryUpdateManyWithWhereWithoutAuthorInput
   ) {
-    const validateUser = await this.authService.validateUser(ctx as unknown as string);
-
     const getUpdate = await this.prismaService.user
       .update({
-        data: { entries: { create: viewerEntryCreateInput, connect: {authorId: ctx as unknown as string} } },
+        data: {
+          entries: { updateMany: viewerEntryCreateInput }
+        },
         where: { id: ctx as unknown as string },
         include: {
           entries: { include: { _count: true, author: true } },
           _count: true
         }
       })
-      .entries()
-      .then(e => e[0]);
+      .entries();
+
     return getUpdate;
   }
 }

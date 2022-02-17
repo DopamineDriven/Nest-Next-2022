@@ -6,42 +6,21 @@ import {
   ResolveField,
   Subscription,
   Context,
-  InputType,
-  ArgsType,
-  OmitType,
   Parent
 } from "@nestjs/graphql";
-import {
-  HostParam,
-  Inject,
-  UseGuards,
-  ExecutionContext,
-  Type
-} from "@nestjs/common";
+import { Inject, UseGuards, ExecutionContext } from "@nestjs/common";
 import { AuthService } from "src/auth/auth-jwt.service";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { Entry } from "./model/entry.model";
-import { Edge, Connection } from "graphql-relay";
-import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { PrismaService } from "../prisma/prisma.service";
-import { PubSub, PubSubEngine, PubSubOptions } from "graphql-subscriptions";
-import { UserIdArgs } from "../user/args/user-id.args";
+import { PubSub } from "graphql-subscriptions";
 import { EntryService } from "./entry.service";
 import { EntryConnection } from "./model/entry-connection.model";
 import {
   FindManyEntriesPaginatedInput,
   FindViewerEntriesPaginatedInput
 } from "./inputs/entry-paginated.input";
-import { EntryCreateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create.input";
-import {
-  EntryCreateIntersectedTitle,
-  EntryCreateOneInput
-} from "./inputs/entry-create.input";
-import { fromGlobalId, toGlobalId } from "graphql-relay";
-import { EntryCount } from "src/.generated/prisma-nestjs-graphql/entry/outputs/entry-count.output";
 import { User } from "src/user/model/user.model";
-import { EntryCreateOrConnectWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-or-connect-without-author.input";
-import { EntryCreateWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-without-author.input";
 import { EntryUncheckedCreateNestedManyWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-unchecked-create-nested-many-without-author.input";
 const pubSub = new PubSub();
 
@@ -139,10 +118,10 @@ export class EntryResolver {
     });
   }
 
-  @ResolveField(() => User, {name: "author"})
-    async author(@Parent() entry: Entry) {
-      return this.prisma.entry.findUnique({ where: { id: entry.id } }).author();
-    }
+  @ResolveField(() => User, { name: "author" })
+  async author(@Parent() entry: Entry) {
+    return this.prisma.entry.findUnique({ where: { id: entry.id } }).author();
+  }
 }
 // @Query(() => EntryOperationsUnionOutput)
 // async viewerEntriesPaginated(

@@ -33,8 +33,8 @@ export const enhancedFetch = async (
     ...init,
     headers: {
     authorization: `Bearer ${
-      req.authorization?.split(/([ ])/)[1]
-        ? req.authorization.split(/([ ])/)[1]
+      req.authorization?.split(/([ ])/)[2]
+        ? req.authorization.split(/([ ])/)[2]
         : req.cookies
         ? req.cookies.includes("jwt")
           ? (req.cookies as string[])
@@ -61,7 +61,7 @@ export function createBatch<T extends ResolverContext>(context?: T) {
       "Access-Control-Allow-Headers": ["access-control-allow-headers"],
       "Access-Control-Expose-Headers": "*, authorization",
       Authorization:
-        "Bearer " + context?.req?.headers.authorization?.split(/([ ])/)[1]
+        "Bearer " + context?.req?.headers.authorization?.split(/([ ])/)[2]
     },
     fetchOptions: {
       context: () => ({ ...context })
@@ -94,7 +94,7 @@ export const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 export const nextSesh = new ApolloLink((operation, forward) => {
   return forward(operation).map(response => {
-    // catches incoming session token to store in LS
+    // parses incoming session token to store in LS
     // check for session header & update session in LS accordingly
     // const context = operation.getContext();
     // const jsonStringContext = JSON.stringify(context ?? "no context", null, 2)
@@ -102,18 +102,15 @@ export const nextSesh = new ApolloLink((operation, forward) => {
 
     // const header = req?.headers.authorization?.split(/([ ])/)[1];
     const { data, context, errors, extensions } = response as FetchResult<
-      Record<
-        string,
-        any extends signInUserMutation ? signInUserMutation : any
-      >,
-      Record<string, any>,
-      Record<string, any>
-    >;
+    signInUserMutation | unknown,
+    Record<string, any>,
+    Record<string, any>
+  >;
 
     console.log("context: " + context ?? "no context");
     console.log("errors: " + errors ?? "no errors");
     console.log("extensions: " + extensions ?? "no extensions");
-    const session = data?.signin;
+    const session = (data as signInUserMutation).signin;
     if (session?.auth?.accessToken && !!browser) {
       if (
         window.localStorage.getItem("authorization") !==

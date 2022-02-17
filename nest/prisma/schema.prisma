@@ -32,7 +32,6 @@ generator prismaClassGenerator {
   useSwagger             = "true"
   separateRelationFields = "true"
   makeIndexFile          = "true"
-
 }
 
 datasource db {
@@ -97,10 +96,10 @@ model Profile {
   occupation     String?
   city           String?
   country        String?
-  bio            Json[]
-  activiyFeed    Json[]
+  bio            String?
+  activiyFeed    String?
   user           User      @relation("UserProfile", fields: [userId], references: [id], onDelete: Cascade)
-  recentActivity Json[]
+  recentActivity String?
 }
 
 model Session {
@@ -123,7 +122,7 @@ model Comment {
   id        String             @id @default(uuid())
   authorId  String
   entryId   String
-  body      Json?
+  body      String?
   position  String?
   createdAt DateTime           @default(now())
   updatedAt DateTime?          @updatedAt
@@ -150,10 +149,10 @@ model Entry {
   title         String
   published     Boolean    @default(false)
   authorId      String     @unique
-  content       Json[]
+  content       String?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime?  @updatedAt
-  featuredImage Json[]
+  featuredImage String?
   categories    Category[] @relation("CategoryToEntry", fields: [categoryId], references: [id])
   author        User       @relation("Author", fields: [authorId], references: [id], onDelete: Cascade)
   comments      Comment[]  @relation("EntryComments")

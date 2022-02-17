@@ -29,10 +29,6 @@ export type Scalars = {
   BigInt: any;
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: any;
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-  JSON: any;
-  /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-  JSONObject: any;
   /** A field whose value conforms to the standard E.164 format as specified in: https://en.wikipedia.org/wiki/E.164. Basically this is +17895551234. */
   PhoneNumber: any;
 };
@@ -262,7 +258,9 @@ export enum AlgorithmType {
 
 export type Auth = {
   __typename?: "Auth";
+  /** JWT access token */
   accessToken?: Maybe<Scalars["String"]>;
+  /** JWT refresh token */
   refreshToken?: Maybe<Scalars["String"]>;
   session?: Maybe<Session>;
   user: User;
@@ -276,7 +274,9 @@ export type AuthDetailed = {
 
 export type AuthSansSession = {
   __typename?: "AuthSansSession";
+  /** JWT access token */
   accessToken?: Maybe<Scalars["String"]>;
+  /** JWT refresh token */
   refreshToken?: Maybe<Scalars["String"]>;
   user?: Maybe<User>;
 };
@@ -530,7 +530,7 @@ export type Comment = Node & {
   __typename?: "Comment";
   author: User;
   authorId: Scalars["String"];
-  body?: Maybe<Scalars["JSONObject"]>;
+  body?: Maybe<Scalars["String"]>;
   createdAt: Scalars["DateTime"];
   entry: Entry;
   entryId: Scalars["String"];
@@ -553,7 +553,7 @@ export type CommentConnection = {
 };
 
 export type CommentCreateManyAuthorInput = {
-  body?: InputMaybe<Scalars["JSON"]>;
+  body?: InputMaybe<Scalars["String"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]>;
   entryId: Scalars["String"];
   id?: InputMaybe<Scalars["String"]>;
@@ -569,7 +569,7 @@ export type CommentCreateManyAuthorInputEnvelope = {
 
 export type CommentCreateManyEntryInput = {
   authorId: Scalars["String"];
-  body?: InputMaybe<Scalars["JSON"]>;
+  body?: InputMaybe<Scalars["String"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]>;
   id?: InputMaybe<Scalars["String"]>;
   position?: InputMaybe<Scalars["String"]>;
@@ -615,7 +615,7 @@ export type CommentCreateOrConnectWithoutEntryInput = {
 };
 
 export type CommentCreateWithoutAuthorInput = {
-  body?: InputMaybe<Scalars["JSON"]>;
+  body?: InputMaybe<Scalars["String"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]>;
   entry: EntryCreateNestedOneWithoutCommentsInput;
   id?: InputMaybe<Scalars["String"]>;
@@ -626,7 +626,7 @@ export type CommentCreateWithoutAuthorInput = {
 
 export type CommentCreateWithoutEntryInput = {
   author: UserCreateNestedOneWithoutCommentsInput;
-  body?: InputMaybe<Scalars["JSON"]>;
+  body?: InputMaybe<Scalars["String"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]>;
   id?: InputMaybe<Scalars["String"]>;
   position?: InputMaybe<Scalars["String"]>;
@@ -656,6 +656,7 @@ export type CommentOrderByRelationAggregateInput = {
 
 export enum CommentOrderByRelevanceFieldEnum {
   AuthorId = "authorId",
+  Body = "body",
   EntryId = "entryId",
   Id = "id",
   Position = "position"
@@ -711,7 +712,7 @@ export type CommentScalarWhereInput = {
   NOT?: InputMaybe<Array<CommentScalarWhereInput>>;
   OR?: InputMaybe<Array<CommentScalarWhereInput>>;
   authorId?: InputMaybe<StringFilter>;
-  body?: InputMaybe<JsonNullableFilter>;
+  body?: InputMaybe<StringNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   entryId?: InputMaybe<StringFilter>;
   id?: InputMaybe<StringFilter>;
@@ -721,7 +722,7 @@ export type CommentScalarWhereInput = {
 };
 
 export type CommentUpdateManyMutationInput = {
-  body?: InputMaybe<Scalars["JSON"]>;
+  body?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
   position?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -794,7 +795,7 @@ export type CommentUpdateWithWhereUniqueWithoutEntryInput = {
 };
 
 export type CommentUpdateWithoutAuthorInput = {
-  body?: InputMaybe<Scalars["JSON"]>;
+  body?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   entry?: InputMaybe<EntryUpdateOneRequiredWithoutCommentsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -805,7 +806,7 @@ export type CommentUpdateWithoutAuthorInput = {
 
 export type CommentUpdateWithoutEntryInput = {
   author?: InputMaybe<UserUpdateOneRequiredWithoutCommentsInput>;
-  body?: InputMaybe<Scalars["JSON"]>;
+  body?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
   position?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -836,7 +837,7 @@ export type CommentWhereInput = {
   OR?: InputMaybe<Array<CommentWhereInput>>;
   author?: InputMaybe<UserRelationFilter>;
   authorId?: InputMaybe<StringFilter>;
-  body?: InputMaybe<JsonNullableFilter>;
+  body?: InputMaybe<StringNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   entry?: InputMaybe<EntryRelationFilter>;
   entryId?: InputMaybe<StringFilter>;
@@ -1043,9 +1044,9 @@ export type Entry = Node & {
   categories?: Maybe<Array<Category>>;
   categoryId?: Maybe<Scalars["String"]>;
   comments?: Maybe<Array<Comment>>;
-  content?: Maybe<Array<Scalars["JSONObject"]>>;
+  content?: Maybe<Scalars["String"]>;
   createdAt: Scalars["DateTime"];
-  featuredImage?: Maybe<Array<Scalars["JSONObject"]>>;
+  featuredImage?: Maybe<Scalars["String"]>;
   id: Scalars["ID"];
   published?: Maybe<Scalars["Boolean"]>;
   title?: Maybe<Scalars["String"]>;
@@ -1069,9 +1070,9 @@ export type EntryCount = {
 
 export type EntryCreateManyAuthorInput = {
   categoryId?: InputMaybe<Scalars["String"]>;
-  content?: InputMaybe<EntryCreateManycontentInput>;
+  content?: InputMaybe<Scalars["String"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]>;
-  featuredImage?: InputMaybe<EntryCreateManyfeaturedImageInput>;
+  featuredImage?: InputMaybe<Scalars["String"]>;
   id?: InputMaybe<Scalars["String"]>;
   published?: InputMaybe<Scalars["Boolean"]>;
   title: Scalars["String"];
@@ -1081,14 +1082,6 @@ export type EntryCreateManyAuthorInput = {
 export type EntryCreateManyAuthorInputEnvelope = {
   data: Array<EntryCreateManyAuthorInput>;
   skipDuplicates?: InputMaybe<Scalars["Boolean"]>;
-};
-
-export type EntryCreateManycontentInput = {
-  set: Array<Scalars["JSON"]>;
-};
-
-export type EntryCreateManyfeaturedImageInput = {
-  set: Array<Scalars["JSON"]>;
 };
 
 export type EntryCreateNestedManyWithoutAuthorInput = {
@@ -1133,9 +1126,9 @@ export type EntryCreateWithoutAuthorInput = {
   categories?: InputMaybe<CategoryCreateNestedManyWithoutEntriesInput>;
   categoryId?: InputMaybe<Scalars["String"]>;
   comments?: InputMaybe<CommentCreateNestedManyWithoutEntryInput>;
-  content?: InputMaybe<EntryCreatecontentInput>;
+  content?: InputMaybe<Scalars["String"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]>;
-  featuredImage?: InputMaybe<EntryCreatefeaturedImageInput>;
+  featuredImage?: InputMaybe<Scalars["String"]>;
   id?: InputMaybe<Scalars["String"]>;
   published?: InputMaybe<Scalars["Boolean"]>;
   title: Scalars["String"];
@@ -1146,9 +1139,9 @@ export type EntryCreateWithoutCategoriesInput = {
   author: UserCreateNestedOneWithoutEntriesInput;
   categoryId?: InputMaybe<Scalars["String"]>;
   comments?: InputMaybe<CommentCreateNestedManyWithoutEntryInput>;
-  content?: InputMaybe<EntryCreatecontentInput>;
+  content?: InputMaybe<Scalars["String"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]>;
-  featuredImage?: InputMaybe<EntryCreatefeaturedImageInput>;
+  featuredImage?: InputMaybe<Scalars["String"]>;
   id?: InputMaybe<Scalars["String"]>;
   published?: InputMaybe<Scalars["Boolean"]>;
   title: Scalars["String"];
@@ -1159,21 +1152,13 @@ export type EntryCreateWithoutCommentsInput = {
   author: UserCreateNestedOneWithoutEntriesInput;
   categories?: InputMaybe<CategoryCreateNestedManyWithoutEntriesInput>;
   categoryId?: InputMaybe<Scalars["String"]>;
-  content?: InputMaybe<EntryCreatecontentInput>;
+  content?: InputMaybe<Scalars["String"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]>;
-  featuredImage?: InputMaybe<EntryCreatefeaturedImageInput>;
+  featuredImage?: InputMaybe<Scalars["String"]>;
   id?: InputMaybe<Scalars["String"]>;
   published?: InputMaybe<Scalars["Boolean"]>;
   title: Scalars["String"];
   updatedAt?: InputMaybe<Scalars["DateTime"]>;
-};
-
-export type EntryCreatecontentInput = {
-  set: Array<Scalars["JSON"]>;
-};
-
-export type EntryCreatefeaturedImageInput = {
-  set: Array<Scalars["JSON"]>;
 };
 
 export type EntryEdge = {
@@ -1195,6 +1180,8 @@ export type EntryOrderByRelationAggregateInput = {
 export enum EntryOrderByRelevanceFieldEnum {
   AuthorId = "authorId",
   CategoryId = "categoryId",
+  Content = "content",
+  FeaturedImage = "featuredImage",
   Id = "id",
   Title = "title"
 }
@@ -1244,9 +1231,9 @@ export type EntryScalarWhereInput = {
   OR?: InputMaybe<Array<EntryScalarWhereInput>>;
   authorId?: InputMaybe<StringFilter>;
   categoryId?: InputMaybe<StringNullableFilter>;
-  content?: InputMaybe<JsonNullableListFilter>;
+  content?: InputMaybe<StringNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
-  featuredImage?: InputMaybe<JsonNullableListFilter>;
+  featuredImage?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<StringFilter>;
   published?: InputMaybe<BoolFilter>;
   title?: InputMaybe<StringFilter>;
@@ -1264,9 +1251,9 @@ export type EntryUncheckedCreateNestedManyWithoutAuthorInput = {
 
 export type EntryUpdateManyMutationInput = {
   categoryId?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  content?: InputMaybe<EntryUpdatecontentInput>;
+  content?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  featuredImage?: InputMaybe<EntryUpdatefeaturedImageInput>;
+  featuredImage?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
   published?: InputMaybe<BoolFieldUpdateOperationsInput>;
   title?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -1344,9 +1331,9 @@ export type EntryUpdateWithoutAuthorInput = {
   categories?: InputMaybe<CategoryUpdateManyWithoutEntriesInput>;
   categoryId?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   comments?: InputMaybe<CommentUpdateManyWithoutEntryInput>;
-  content?: InputMaybe<EntryUpdatecontentInput>;
+  content?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  featuredImage?: InputMaybe<EntryUpdatefeaturedImageInput>;
+  featuredImage?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
   published?: InputMaybe<BoolFieldUpdateOperationsInput>;
   title?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -1357,9 +1344,9 @@ export type EntryUpdateWithoutCategoriesInput = {
   author?: InputMaybe<UserUpdateOneRequiredWithoutEntriesInput>;
   categoryId?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   comments?: InputMaybe<CommentUpdateManyWithoutEntryInput>;
-  content?: InputMaybe<EntryUpdatecontentInput>;
+  content?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  featuredImage?: InputMaybe<EntryUpdatefeaturedImageInput>;
+  featuredImage?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
   published?: InputMaybe<BoolFieldUpdateOperationsInput>;
   title?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -1370,23 +1357,13 @@ export type EntryUpdateWithoutCommentsInput = {
   author?: InputMaybe<UserUpdateOneRequiredWithoutEntriesInput>;
   categories?: InputMaybe<CategoryUpdateManyWithoutEntriesInput>;
   categoryId?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  content?: InputMaybe<EntryUpdatecontentInput>;
+  content?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  featuredImage?: InputMaybe<EntryUpdatefeaturedImageInput>;
+  featuredImage?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   id?: InputMaybe<StringFieldUpdateOperationsInput>;
   published?: InputMaybe<BoolFieldUpdateOperationsInput>;
   title?: InputMaybe<StringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type EntryUpdatecontentInput = {
-  push?: InputMaybe<Array<Scalars["JSON"]>>;
-  set?: InputMaybe<Array<Scalars["JSON"]>>;
-};
-
-export type EntryUpdatefeaturedImageInput = {
-  push?: InputMaybe<Array<Scalars["JSON"]>>;
-  set?: InputMaybe<Array<Scalars["JSON"]>>;
 };
 
 export type EntryUpsertWithWhereUniqueWithoutAuthorInput = {
@@ -1415,9 +1392,9 @@ export type EntryWhereInput = {
   categories?: InputMaybe<CategoryListRelationFilter>;
   categoryId?: InputMaybe<StringNullableFilter>;
   comments?: InputMaybe<CommentListRelationFilter>;
-  content?: InputMaybe<JsonNullableListFilter>;
+  content?: InputMaybe<StringNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
-  featuredImage?: InputMaybe<JsonNullableListFilter>;
+  featuredImage?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<StringFilter>;
   published?: InputMaybe<BoolFilter>;
   title?: InputMaybe<StringFilter>;
@@ -1530,9 +1507,7 @@ export type FindManyProfilesPaginatedInput = {
 export type FindManyUsersPaginatedInput = {
   cursor?: InputMaybe<UserWhereUniqueInput>;
   distinct?: InputMaybe<Array<UserScalarFieldEnum>>;
-  orderBy?: InputMaybe<
-    Array<UserOrderByWithRelationAndSearchRelevanceInput>
-  >;
+  orderBy: Array<UserOrderByWithRelationAndSearchRelevanceInput>;
   pagination?: InputMaybe<PaginationArgsInput>;
   skip?: InputMaybe<Scalars["Int"]>;
   take?: InputMaybe<Scalars["Int"]>;
@@ -1579,30 +1554,6 @@ export type IntNullableFilter = {
   lte?: InputMaybe<Scalars["Int"]>;
   not?: InputMaybe<NestedIntNullableFilter>;
   notIn?: InputMaybe<Array<Scalars["Int"]>>;
-};
-
-export type JsonNullableFilter = {
-  array_contains?: InputMaybe<Scalars["JSON"]>;
-  array_ends_with?: InputMaybe<Scalars["JSON"]>;
-  array_starts_with?: InputMaybe<Scalars["JSON"]>;
-  equals?: InputMaybe<Scalars["JSON"]>;
-  gt?: InputMaybe<Scalars["JSON"]>;
-  gte?: InputMaybe<Scalars["JSON"]>;
-  lt?: InputMaybe<Scalars["JSON"]>;
-  lte?: InputMaybe<Scalars["JSON"]>;
-  not?: InputMaybe<Scalars["JSON"]>;
-  path?: InputMaybe<Array<Scalars["String"]>>;
-  string_contains?: InputMaybe<Scalars["String"]>;
-  string_ends_with?: InputMaybe<Scalars["String"]>;
-  string_starts_with?: InputMaybe<Scalars["String"]>;
-};
-
-export type JsonNullableListFilter = {
-  equals?: InputMaybe<Array<Scalars["JSON"]>>;
-  has?: InputMaybe<Scalars["JSON"]>;
-  hasEvery?: InputMaybe<Array<Scalars["JSON"]>>;
-  hasSome?: InputMaybe<Array<Scalars["JSON"]>>;
-  isEmpty?: InputMaybe<Scalars["Boolean"]>;
 };
 
 export type JwtDecoded = {
@@ -1954,7 +1905,7 @@ export type Mutation = {
   updateUserPassword: User;
   upsertComment: Array<Comment>;
   userFromAccessTokenDecoded: AuthDetailed;
-  viewerCreateEntry: Entry;
+  viewerCreateEntry: Array<Entry>;
 };
 
 export type MutationChangePasswordArgs = {
@@ -2007,7 +1958,7 @@ export type MutationUserFromAccessTokenDecodedArgs = {
 };
 
 export type MutationViewerCreateEntryArgs = {
-  viewerEntryCreateInput: EntryCreateWithoutAuthorInput;
+  viewerEntryCreateInput: EntryUpdateManyWithWhereWithoutAuthorInput;
 };
 
 export type NestedBoolFilter = {
@@ -2200,8 +2151,8 @@ export type PaginationArgsInput = {
 
 export type Profile = Node & {
   __typename?: "Profile";
-  activiyFeed?: Maybe<Array<Scalars["JSONObject"]>>;
-  bio?: Maybe<Array<Scalars["JSONObject"]>>;
+  activiyFeed?: Maybe<Scalars["String"]>;
+  bio?: Maybe<Scalars["String"]>;
   city?: Maybe<Scalars["String"]>;
   country?: Maybe<Scalars["String"]>;
   coverPhoto?: Maybe<Scalars["String"]>;
@@ -2213,7 +2164,7 @@ export type Profile = Node & {
   occupation?: Maybe<Scalars["String"]>;
   phoneNumber?: Maybe<Scalars["String"]>;
   pronouns?: Maybe<Pronouns>;
-  recentActivity?: Maybe<Array<Scalars["JSONObject"]>>;
+  recentActivity?: Maybe<Scalars["String"]>;
   user: User;
   userId: Scalars["String"];
   userInProfile: User;
@@ -2227,8 +2178,8 @@ export type ProfileConnection = {
 };
 
 export type ProfileCreateInput = {
-  activiyFeed?: InputMaybe<ProfileCreateactiviyFeedInput>;
-  bio?: InputMaybe<ProfileCreatebioInput>;
+  activiyFeed?: InputMaybe<Scalars["String"]>;
+  bio?: InputMaybe<Scalars["String"]>;
   city?: InputMaybe<Scalars["String"]>;
   country?: InputMaybe<Scalars["String"]>;
   coverPhoto?: InputMaybe<Scalars["String"]>;
@@ -2240,7 +2191,7 @@ export type ProfileCreateInput = {
   occupation?: InputMaybe<Scalars["String"]>;
   phoneNumber?: InputMaybe<Scalars["String"]>;
   pronouns?: InputMaybe<Pronouns>;
-  recentActivity?: InputMaybe<ProfileCreaterecentActivityInput>;
+  recentActivity?: InputMaybe<Scalars["String"]>;
   user: UserCreateNestedOneWithoutProfileInput;
 };
 
@@ -2256,8 +2207,8 @@ export type ProfileCreateOrConnectWithoutUserInput = {
 };
 
 export type ProfileCreateWithoutUserInput = {
-  activiyFeed?: InputMaybe<ProfileCreateactiviyFeedInput>;
-  bio?: InputMaybe<ProfileCreatebioInput>;
+  activiyFeed?: InputMaybe<Scalars["String"]>;
+  bio?: InputMaybe<Scalars["String"]>;
   city?: InputMaybe<Scalars["String"]>;
   country?: InputMaybe<Scalars["String"]>;
   coverPhoto?: InputMaybe<Scalars["String"]>;
@@ -2269,19 +2220,7 @@ export type ProfileCreateWithoutUserInput = {
   occupation?: InputMaybe<Scalars["String"]>;
   phoneNumber?: InputMaybe<Scalars["String"]>;
   pronouns?: InputMaybe<Pronouns>;
-  recentActivity?: InputMaybe<ProfileCreaterecentActivityInput>;
-};
-
-export type ProfileCreateactiviyFeedInput = {
-  set: Array<Scalars["JSON"]>;
-};
-
-export type ProfileCreatebioInput = {
-  set: Array<Scalars["JSON"]>;
-};
-
-export type ProfileCreaterecentActivityInput = {
-  set: Array<Scalars["JSON"]>;
+  recentActivity?: InputMaybe<Scalars["String"]>;
 };
 
 export type ProfileEdge = {
@@ -2291,6 +2230,8 @@ export type ProfileEdge = {
 };
 
 export enum ProfileOrderByRelevanceFieldEnum {
+  ActiviyFeed = "activiyFeed",
+  Bio = "bio",
   City = "city",
   Country = "country",
   CoverPhoto = "coverPhoto",
@@ -2298,6 +2239,7 @@ export enum ProfileOrderByRelevanceFieldEnum {
   Id = "id",
   Occupation = "occupation",
   PhoneNumber = "phoneNumber",
+  RecentActivity = "recentActivity",
   UserId = "userId"
 }
 
@@ -2361,8 +2303,8 @@ export type ProfileUpdateOneWithoutUserInput = {
 };
 
 export type ProfileUpdateWithoutUserInput = {
-  activiyFeed?: InputMaybe<ProfileUpdateactiviyFeedInput>;
-  bio?: InputMaybe<ProfileUpdatebioInput>;
+  activiyFeed?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  bio?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   country?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   coverPhoto?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -2374,22 +2316,7 @@ export type ProfileUpdateWithoutUserInput = {
   occupation?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   phoneNumber?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   pronouns?: InputMaybe<NullableEnumPronounsFieldUpdateOperationsInput>;
-  recentActivity?: InputMaybe<ProfileUpdaterecentActivityInput>;
-};
-
-export type ProfileUpdateactiviyFeedInput = {
-  push?: InputMaybe<Array<Scalars["JSON"]>>;
-  set?: InputMaybe<Array<Scalars["JSON"]>>;
-};
-
-export type ProfileUpdatebioInput = {
-  push?: InputMaybe<Array<Scalars["JSON"]>>;
-  set?: InputMaybe<Array<Scalars["JSON"]>>;
-};
-
-export type ProfileUpdaterecentActivityInput = {
-  push?: InputMaybe<Array<Scalars["JSON"]>>;
-  set?: InputMaybe<Array<Scalars["JSON"]>>;
+  recentActivity?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
 };
 
 export type ProfileUpsertWithoutUserInput = {
@@ -2401,8 +2328,8 @@ export type ProfileWhereInput = {
   AND?: InputMaybe<Array<ProfileWhereInput>>;
   NOT?: InputMaybe<Array<ProfileWhereInput>>;
   OR?: InputMaybe<Array<ProfileWhereInput>>;
-  activiyFeed?: InputMaybe<JsonNullableListFilter>;
-  bio?: InputMaybe<JsonNullableListFilter>;
+  activiyFeed?: InputMaybe<StringNullableFilter>;
+  bio?: InputMaybe<StringNullableFilter>;
   city?: InputMaybe<StringNullableFilter>;
   country?: InputMaybe<StringNullableFilter>;
   coverPhoto?: InputMaybe<StringNullableFilter>;
@@ -2414,7 +2341,7 @@ export type ProfileWhereInput = {
   occupation?: InputMaybe<StringNullableFilter>;
   phoneNumber?: InputMaybe<StringNullableFilter>;
   pronouns?: InputMaybe<EnumPronounsNullableFilter>;
-  recentActivity?: InputMaybe<JsonNullableListFilter>;
+  recentActivity?: InputMaybe<StringNullableFilter>;
   user?: InputMaybe<UserRelationFilter>;
   userId?: InputMaybe<StringFilter>;
 };
@@ -2425,7 +2352,7 @@ export type ProfileWhereUniqueInput = {
 };
 
 export type ProfilesInput = {
-  bioFilter?: InputMaybe<JsonNullableFilter>;
+  bioFilter?: InputMaybe<StringNullableFilter>;
   dobFilter?: InputMaybe<StringNullableFilter>;
   genderFilter?: InputMaybe<EnumGenderNullableFilter>;
   orderBy?: InputMaybe<ProfileOrderByWithRelationAndSearchRelevanceInput>;
@@ -3260,9 +3187,9 @@ export type ViewerEntriesWhereInput = {
   categories?: InputMaybe<CategoryListRelationFilter>;
   categoryId?: InputMaybe<StringNullableFilter>;
   comments?: InputMaybe<CommentListRelationFilter>;
-  content?: InputMaybe<JsonNullableListFilter>;
+  content?: InputMaybe<StringNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
-  featuredImage?: InputMaybe<JsonNullableListFilter>;
+  featuredImage?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<StringFilter>;
   published?: InputMaybe<BoolFilter>;
   title?: InputMaybe<StringFilter>;
@@ -3513,8 +3440,6 @@ export type ResolversTypes = ResolversObject<{
   EntryCount: ResolverTypeWrapper<EntryCount>;
   EntryCreateManyAuthorInput: EntryCreateManyAuthorInput;
   EntryCreateManyAuthorInputEnvelope: EntryCreateManyAuthorInputEnvelope;
-  EntryCreateManycontentInput: EntryCreateManycontentInput;
-  EntryCreateManyfeaturedImageInput: EntryCreateManyfeaturedImageInput;
   EntryCreateNestedManyWithoutAuthorInput: EntryCreateNestedManyWithoutAuthorInput;
   EntryCreateNestedManyWithoutCategoriesInput: EntryCreateNestedManyWithoutCategoriesInput;
   EntryCreateNestedOneWithoutCommentsInput: EntryCreateNestedOneWithoutCommentsInput;
@@ -3524,8 +3449,6 @@ export type ResolversTypes = ResolversObject<{
   EntryCreateWithoutAuthorInput: EntryCreateWithoutAuthorInput;
   EntryCreateWithoutCategoriesInput: EntryCreateWithoutCategoriesInput;
   EntryCreateWithoutCommentsInput: EntryCreateWithoutCommentsInput;
-  EntryCreatecontentInput: EntryCreatecontentInput;
-  EntryCreatefeaturedImageInput: EntryCreatefeaturedImageInput;
   EntryEdge: ResolverTypeWrapper<EntryEdge>;
   EntryListRelationFilter: EntryListRelationFilter;
   EntryOrderByRelationAggregateInput: EntryOrderByRelationAggregateInput;
@@ -3547,8 +3470,6 @@ export type ResolversTypes = ResolversObject<{
   EntryUpdateWithoutAuthorInput: EntryUpdateWithoutAuthorInput;
   EntryUpdateWithoutCategoriesInput: EntryUpdateWithoutCategoriesInput;
   EntryUpdateWithoutCommentsInput: EntryUpdateWithoutCommentsInput;
-  EntryUpdatecontentInput: EntryUpdatecontentInput;
-  EntryUpdatefeaturedImageInput: EntryUpdatefeaturedImageInput;
   EntryUpsertWithWhereUniqueWithoutAuthorInput: EntryUpsertWithWhereUniqueWithoutAuthorInput;
   EntryUpsertWithWhereUniqueWithoutCategoriesInput: EntryUpsertWithWhereUniqueWithoutCategoriesInput;
   EntryUpsertWithoutCommentsInput: EntryUpsertWithoutCommentsInput;
@@ -3573,10 +3494,6 @@ export type ResolversTypes = ResolversObject<{
   ID: ResolverTypeWrapper<Scalars["ID"]>;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
   IntNullableFilter: IntNullableFilter;
-  JSON: ResolverTypeWrapper<Scalars["JSON"]>;
-  JSONObject: ResolverTypeWrapper<Scalars["JSONObject"]>;
-  JsonNullableFilter: JsonNullableFilter;
-  JsonNullableListFilter: JsonNullableListFilter;
   JwtDecoded: ResolverTypeWrapper<JwtDecoded>;
   JwtHeaders: ResolverTypeWrapper<JwtHeaders>;
   JwtPayload: ResolverTypeWrapper<JwtPayload>;
@@ -3651,9 +3568,6 @@ export type ResolversTypes = ResolversObject<{
   ProfileCreateNestedOneWithoutUserInput: ProfileCreateNestedOneWithoutUserInput;
   ProfileCreateOrConnectWithoutUserInput: ProfileCreateOrConnectWithoutUserInput;
   ProfileCreateWithoutUserInput: ProfileCreateWithoutUserInput;
-  ProfileCreateactiviyFeedInput: ProfileCreateactiviyFeedInput;
-  ProfileCreatebioInput: ProfileCreatebioInput;
-  ProfileCreaterecentActivityInput: ProfileCreaterecentActivityInput;
   ProfileEdge: ResolverTypeWrapper<ProfileEdge>;
   ProfileOrderByRelevanceFieldEnum: ProfileOrderByRelevanceFieldEnum;
   ProfileOrderByRelevanceInput: ProfileOrderByRelevanceInput;
@@ -3662,9 +3576,6 @@ export type ResolversTypes = ResolversObject<{
   ProfileScalarFieldEnum: ProfileScalarFieldEnum;
   ProfileUpdateOneWithoutUserInput: ProfileUpdateOneWithoutUserInput;
   ProfileUpdateWithoutUserInput: ProfileUpdateWithoutUserInput;
-  ProfileUpdateactiviyFeedInput: ProfileUpdateactiviyFeedInput;
-  ProfileUpdatebioInput: ProfileUpdatebioInput;
-  ProfileUpdaterecentActivityInput: ProfileUpdaterecentActivityInput;
   ProfileUpsertWithoutUserInput: ProfileUpsertWithoutUserInput;
   ProfileWhereInput: ProfileWhereInput;
   ProfileWhereUniqueInput: ProfileWhereUniqueInput;
@@ -3870,8 +3781,6 @@ export type ResolversParentTypes = ResolversObject<{
   EntryCount: EntryCount;
   EntryCreateManyAuthorInput: EntryCreateManyAuthorInput;
   EntryCreateManyAuthorInputEnvelope: EntryCreateManyAuthorInputEnvelope;
-  EntryCreateManycontentInput: EntryCreateManycontentInput;
-  EntryCreateManyfeaturedImageInput: EntryCreateManyfeaturedImageInput;
   EntryCreateNestedManyWithoutAuthorInput: EntryCreateNestedManyWithoutAuthorInput;
   EntryCreateNestedManyWithoutCategoriesInput: EntryCreateNestedManyWithoutCategoriesInput;
   EntryCreateNestedOneWithoutCommentsInput: EntryCreateNestedOneWithoutCommentsInput;
@@ -3881,8 +3790,6 @@ export type ResolversParentTypes = ResolversObject<{
   EntryCreateWithoutAuthorInput: EntryCreateWithoutAuthorInput;
   EntryCreateWithoutCategoriesInput: EntryCreateWithoutCategoriesInput;
   EntryCreateWithoutCommentsInput: EntryCreateWithoutCommentsInput;
-  EntryCreatecontentInput: EntryCreatecontentInput;
-  EntryCreatefeaturedImageInput: EntryCreatefeaturedImageInput;
   EntryEdge: EntryEdge;
   EntryListRelationFilter: EntryListRelationFilter;
   EntryOrderByRelationAggregateInput: EntryOrderByRelationAggregateInput;
@@ -3902,8 +3809,6 @@ export type ResolversParentTypes = ResolversObject<{
   EntryUpdateWithoutAuthorInput: EntryUpdateWithoutAuthorInput;
   EntryUpdateWithoutCategoriesInput: EntryUpdateWithoutCategoriesInput;
   EntryUpdateWithoutCommentsInput: EntryUpdateWithoutCommentsInput;
-  EntryUpdatecontentInput: EntryUpdatecontentInput;
-  EntryUpdatefeaturedImageInput: EntryUpdatefeaturedImageInput;
   EntryUpsertWithWhereUniqueWithoutAuthorInput: EntryUpsertWithWhereUniqueWithoutAuthorInput;
   EntryUpsertWithWhereUniqueWithoutCategoriesInput: EntryUpsertWithWhereUniqueWithoutCategoriesInput;
   EntryUpsertWithoutCommentsInput: EntryUpsertWithoutCommentsInput;
@@ -3927,10 +3832,6 @@ export type ResolversParentTypes = ResolversObject<{
   ID: Scalars["ID"];
   Int: Scalars["Int"];
   IntNullableFilter: IntNullableFilter;
-  JSON: Scalars["JSON"];
-  JSONObject: Scalars["JSONObject"];
-  JsonNullableFilter: JsonNullableFilter;
-  JsonNullableListFilter: JsonNullableListFilter;
   JwtDecoded: JwtDecoded;
   JwtHeaders: JwtHeaders;
   JwtPayload: JwtPayload;
@@ -4001,18 +3902,12 @@ export type ResolversParentTypes = ResolversObject<{
   ProfileCreateNestedOneWithoutUserInput: ProfileCreateNestedOneWithoutUserInput;
   ProfileCreateOrConnectWithoutUserInput: ProfileCreateOrConnectWithoutUserInput;
   ProfileCreateWithoutUserInput: ProfileCreateWithoutUserInput;
-  ProfileCreateactiviyFeedInput: ProfileCreateactiviyFeedInput;
-  ProfileCreatebioInput: ProfileCreatebioInput;
-  ProfileCreaterecentActivityInput: ProfileCreaterecentActivityInput;
   ProfileEdge: ProfileEdge;
   ProfileOrderByRelevanceInput: ProfileOrderByRelevanceInput;
   ProfileOrderByWithRelationAndSearchRelevanceInput: ProfileOrderByWithRelationAndSearchRelevanceInput;
   ProfileRelationFilter: ProfileRelationFilter;
   ProfileUpdateOneWithoutUserInput: ProfileUpdateOneWithoutUserInput;
   ProfileUpdateWithoutUserInput: ProfileUpdateWithoutUserInput;
-  ProfileUpdateactiviyFeedInput: ProfileUpdateactiviyFeedInput;
-  ProfileUpdatebioInput: ProfileUpdatebioInput;
-  ProfileUpdaterecentActivityInput: ProfileUpdaterecentActivityInput;
   ProfileUpsertWithoutUserInput: ProfileUpsertWithoutUserInput;
   ProfileWhereInput: ProfileWhereInput;
   ProfileWhereUniqueInput: ProfileWhereUniqueInput;
@@ -4290,7 +4185,7 @@ export type CommentResolvers<
   author?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
   authorId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   body?: Resolver<
-    Maybe<ResolversTypes["JSONObject"]>,
+    Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
@@ -4415,7 +4310,7 @@ export type EntryResolvers<
     ContextType
   >;
   content?: Resolver<
-    Maybe<Array<ResolversTypes["JSONObject"]>>,
+    Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
@@ -4425,7 +4320,7 @@ export type EntryResolvers<
     ContextType
   >;
   featuredImage?: Resolver<
-    Maybe<Array<ResolversTypes["JSONObject"]>>,
+    Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
@@ -4490,16 +4385,6 @@ export type EntryEdgeResolvers<
   node?: Resolver<ResolversTypes["Entry"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
-
-export interface JsonScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes["JSON"], any> {
-  name: "JSON";
-}
-
-export interface JsonObjectScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes["JSONObject"], any> {
-  name: "JSONObject";
-}
 
 export type JwtDecodedResolvers<
   ContextType = any,
@@ -4699,7 +4584,7 @@ export type MutationResolvers<
     RequireFields<MutationUserFromAccessTokenDecodedArgs, "token">
   >;
   viewerCreateEntry?: Resolver<
-    ResolversTypes["Entry"],
+    Array<ResolversTypes["Entry"]>,
     ParentType,
     ContextType,
     RequireFields<MutationViewerCreateEntryArgs, "viewerEntryCreateInput">
@@ -4764,15 +4649,11 @@ export type ProfileResolvers<
   ParentType extends ResolversParentTypes["Profile"] = ResolversParentTypes["Profile"]
 > = ResolversObject<{
   activiyFeed?: Resolver<
-    Maybe<Array<ResolversTypes["JSONObject"]>>,
+    Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
-  bio?: Resolver<
-    Maybe<Array<ResolversTypes["JSONObject"]>>,
-    ParentType,
-    ContextType
-  >;
+  bio?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   city?: Resolver<
     Maybe<ResolversTypes["String"]>,
     ParentType,
@@ -4821,7 +4702,7 @@ export type ProfileResolvers<
     ContextType
   >;
   recentActivity?: Resolver<
-    Maybe<Array<ResolversTypes["JSONObject"]>>,
+    Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
@@ -4944,7 +4825,7 @@ export type QueryResolvers<
     ResolversTypes["UserConnection"],
     ParentType,
     ContextType,
-    RequireFields<QueryListUsersArgs, "findManyUsersPaginatedInput">
+    Partial<QueryListUsersArgs>
   >;
   me?: Resolver<ResolversTypes["AuthDetailed"], ParentType, ContextType>;
   node?: Resolver<
@@ -5366,8 +5247,6 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   EntryConnection?: EntryConnectionResolvers<ContextType>;
   EntryCount?: EntryCountResolvers<ContextType>;
   EntryEdge?: EntryEdgeResolvers<ContextType>;
-  JSON?: GraphQLScalarType;
-  JSONObject?: GraphQLScalarType;
   JwtDecoded?: JwtDecodedResolvers<ContextType>;
   JwtHeaders?: JwtHeadersResolvers<ContextType>;
   JwtPayload?: JwtPayloadResolvers<ContextType>;

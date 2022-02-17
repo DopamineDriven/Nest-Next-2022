@@ -67,10 +67,10 @@ Table Profile {
   occupation String
   city String
   country String
-  bio Json [not null]
-  activiyFeed Json [not null]
+  bio String
+  activiyFeed String
   user User [not null]
-  recentActivity Json [not null]
+  recentActivity String
 }
 
 Table Session {
@@ -93,7 +93,7 @@ Table Comment {
   id String [pk]
   authorId String [not null]
   entryId String [not null]
-  body Json
+  body String
   position String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime
@@ -123,10 +123,10 @@ Table Entry {
   title String [not null]
   published Boolean [not null, default: false]
   authorId String [unique, not null]
-  content Json [not null]
+  content String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime
-  featuredImage Json [not null]
+  featuredImage String
   categories Category [not null]
   author User [not null]
   comments Comment [not null]

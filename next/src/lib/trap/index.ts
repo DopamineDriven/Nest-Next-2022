@@ -11,7 +11,7 @@ import { tabbable, FocusableElement } from "tabbable";
 export type DocumentChildren<T extends keyof Document> = {
   [P in T]: Document[P];
 };
-export interface Props {
+export interface FocusTrapProps {
   children: ReactNode | Array<ReactNode>;
   focusFirst?: boolean;
 }
@@ -19,7 +19,7 @@ export interface Props {
 export default function FocusTrap({
   children,
   focusFirst = false
-}: Props) {
+}: FocusTrapProps) {
   const root: MutableRefObject<FocusableElement | null | undefined> =
     useRef();
   const anchor: MutableRefObject<FocusableElement> = useRef(
@@ -83,3 +83,15 @@ export default function FocusTrap({
     children
   );
 }
+
+/**
+   return createElement(
+    <FC><unknown>({ propTypes: FocusTrap({ children, focusFirst }), FocusTrapProps }) })<unknown><FC>
+    <unknown>{
+      ref: root,
+      className: "outline-none focus-trap",
+      tabIndex: -1
+    },
+    children
+  );
+ */

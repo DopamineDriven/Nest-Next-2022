@@ -13,22 +13,15 @@ import {
 import { Profile } from "../profile/model/profile.model";
 import { PubSub } from "graphql-subscriptions";
 import { GraphqlAuthGuard } from "../auth/gql-auth.guard";
-import { ProfileCreateOrConnectWithoutUserInput } from "../.generated/prisma-nestjs-graphql/profile/inputs/profile-create-or-connect-without-user.input";
-import { ProfileOrderByWithRelationAndSearchRelevanceInput } from "../.generated/prisma-nestjs-graphql/profile/inputs/profile-order-by-with-relation-and-search-relevance.input";
-import { ProfileConnection, ProfileEdge } from "./model/profile-connection.model";
-import { PaginationArgs } from "../common/pagination/pagination.args";
-import { Edge, findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
+import { ProfileConnection } from "./model/profile-connection.model";
+import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import {} from "@devoxa/prisma-relay-cursor-connection";
 import { User } from "../user/model/user.model";
-import { ProfileCreateWithoutUserInput } from "../.generated/prisma-nestjs-graphql/profile/inputs/profile-create-without-user.input";
-import { EnumGenderNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-gender-nullable-filter.input";
-import { EnumPronounsNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-pronouns-nullable-filter.input";
-import { JsonNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/json-nullable-filter.input";
-import { StringNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/string-nullable-filter.input";
 import { ProfilesInput } from "./inputs/profiles.input";
 import { ProfileCreateInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-create.input";
 import { FindManyProfilesPaginatedInput } from "./inputs/profile-paginated.input";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
+
 const pubSub = new PubSub();
 @Resolver(() => Profile)
 export class ProfileResolver {

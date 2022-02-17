@@ -3,46 +3,42 @@ export const clearData = async <
 >(
   prisma: T
 ) => {
-  const runTransaction = await prisma.$transaction([
-    prisma.verificationToken.deleteMany({}),
-    prisma.mediaItem.deleteMany({}),
-    prisma.comment.deleteMany({}),
-    prisma.connection.deleteMany({}),
-    prisma.category.deleteMany({}),
-    prisma.entry.deleteMany({}),
-    prisma.account.deleteMany({}),
-    prisma.profile.deleteMany({}),
-    prisma.session.deleteMany({})
-  ]).then((batch) => {
-    return prisma.user.deleteMany({}).then((data) => {
-      return {
-        data,
-        ...batch
-      }
-    })
-  })
-  const users = await prisma.user.deleteMany({});
-  const accounts = await prisma.account.deleteMany({});
-  const entries = await prisma.entry.deleteMany({});
-  const connections = await prisma.connection.deleteMany({});
-  const comments = await prisma.comment.deleteMany({});
-  const categories = await prisma.category.deleteMany({});
-  const verificationRequests = await prisma.verificationToken.deleteMany({});
-  const sessions = await prisma.session.deleteMany({});
-  const profile = await prisma.profile.deleteMany({});
-  const mediaItems = await prisma.mediaItem.deleteMany({})
+  const {
+    "0": verificationToken,
+    "1": mediaItem,
+    "2": comment,
+    "3": connection,
+    "4": category,
+    "5": entry,
+    "6": account,
+    "7": profile,
+    "8": session,
+    "9": user
+  } = await prisma
+    .$transaction([
+      prisma.verificationToken.deleteMany({}),
+      prisma.mediaItem.deleteMany({}),
+      prisma.comment.deleteMany({}),
+      prisma.connection.deleteMany({}),
+      prisma.category.deleteMany({}),
+      prisma.entry.deleteMany({}),
+      prisma.account.deleteMany({}),
+      prisma.profile.deleteMany({}),
+      prisma.session.deleteMany({}),
+      prisma.user.deleteMany({})
+    ]);
 
   return {
-    accounts,
+    verificationToken,
+    mediaItem,
+    comment,
+    connection,
+    category,
+    entry,
+    account,
     profile,
-    sessions,
-    entries,
-    connections,
-    categories,
-    comments,
-    verificationRequests,
-    mediaItems,
-    users
+    session,
+    user
   };
 };
 
@@ -96,9 +92,12 @@ async function main() {
       .then(() => console.log("[clearing]: db connection opened"));
     const s = async (): Promise<ClearInferred> =>
       await clearData(prisma).then(data => {
-        console.log(
-          `[clearing]: there are ${data.users.count} users, ${data.accounts.count} accounts, ${data.comments.count} comments, ${data.connections.count} connections, ${data.categories.count} categories, ${data.entries.count} entries, ${data.profile.count} profiles, ${data.sessions.count} sessions, ${data.mediaItems.count} media items, and ${data.verificationRequests.count} verification requests remaining`
-        );
+          console.log(
+            `[clearing]: there are ${data.user.count} users, ${data.account.count} accounts, ${data.comment.count} comments, ${data.connection.count} connections, ${data.category.count} categories, ${data.entry.count} entries, ${data.profile.count} profiles, ${data.session.count} sessions, ${data.mediaItem.count} media items, and ${data.verificationToken.count} verification requests remaining`
+
+          );
+
+        console.log();
         return data;
       });
     return await s();

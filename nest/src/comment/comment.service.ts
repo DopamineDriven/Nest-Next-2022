@@ -1,18 +1,10 @@
 import {
-  Args,
-  Context,
   createUnionType,
   Field,
-  GqlContextType,
-  GqlExecutionContext,
-  Info,
-  InterfaceType,
-  ObjectType,
-  ResolveField,
-  ReturnTypeFunc,
-  ReturnTypeFuncValue
+  GqlExecutionContext,  InterfaceType,
+  ObjectType
 } from "@nestjs/graphql";
-import { Injectable, Type, Inject, ExecutionContext } from "@nestjs/common";
+import { Injectable, Type, Inject } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AuthService } from "src/auth/auth-jwt.service";
 import { EntryService } from "src/entry/entry.service";
@@ -20,28 +12,22 @@ import { FindManyCommentsPaginatedInput } from "./inputs/comment-paginated.input
 import { FindManyEntriesPaginatedInput } from "src/entry/inputs/entry-paginated.input";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
-import { PaginationService } from "src/pagination/pagination.service";
 import { Comment } from ".";
 import { EntryConnection } from "src/entry/model/entry-connection.model";
 import { CommentConnection } from "./model/comment-connection.model";
-import { ClassType, Constructor } from "src/common/types/helpers.type";
-import { UnwrapPromise } from "@prisma/client";
 import {
   GraphQLAbstractType,
   GraphQLIsTypeOfFn,
   GraphQLResolveInfo,
   GraphQLTypeResolver,
-  Source,
   __Type
 } from "graphql";
-import { ResolveTypeFactory } from "@nestjs/graphql/dist/schema-builder/factories/resolve-type.factory";
-import { Entry } from "src/entry";
-import { info } from "console";
+import { Entry } from "src/entry/model/entry.model";
 import { CommentUpsertWithWhereUniqueWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/comment/inputs/comment-upsert-with-where-unique-without-author.input";
 
-type ResolveTypeFn<TSource = any, TContext = any> = (
-  ...args: Parameters<GraphQLTypeResolver<TSource, TContext>>
-) => any;
+// type ResolveTypeFn<TSource = any, TContext = any> = (
+//   ...args: Parameters<GraphQLTypeResolver<TSource, TContext>>
+// ) => any;
 export type EntryCommentUnionType = EntryConnection | CommentConnection | null;
 export const createEntryCommentUnion = createUnionType<
   Type<EntryCommentUnionType>[]
@@ -70,13 +56,8 @@ export interface CommentUnionType<T = EntryCommentUnionType> {
     TContext extends GqlExecutionContext
   >(
     { id }: TSource,
-    { getInfo }: TContext,
-    { returnType }: GraphQLResolveInfo,
-    { resolveType }: GraphQLAbstractType
-  ): // { getArgByIndex, getClass, getInfo, getHandler, getContext, getType, setType, getRoot }: TContext,
-  // { returnType, schema, variableValues, fieldName, parentType, fragments, fieldNodes }: GraphQLResolveInfo,
-  // { inspect, toJSON, toString, resolveType, name, toConfig, astNode }: GraphQLAbstractType
-  typeof EntryConnection | typeof CommentConnection {
+    {getClass, getRoot}: TContext
+  ): typeof EntryConnection | typeof CommentConnection {
     return id in EntryConnection && fromGlobalId(id).type.startsWith(Entry.name)
       ? EntryConnection
       : id in CommentConnection &&
@@ -99,14 +80,14 @@ export class EntryCommentUnionobj
   /**
    *
    */
-  unionField: Type<EntryConnection | CommentConnection>[];
+  unionField: Type<(EntryConnection | CommentConnection)>[];
 
   constructor() {
     __Type.isTypeOf as GraphQLIsTypeOfFn<
       Type<NonNullable<EntryConnection | CommentConnection>>,
       GqlExecutionContext
     >;
-    //.apply((source: <Type<NonNullable<EntryConnection | CommentConnection>> & GqlExecutionContext > (Source.prototype.name, Context(), Info).valueOf().valueOf().constructor()
+
   }
 }
 
@@ -115,9 +96,7 @@ export class CommentService {
   constructor(
     @Inject(PrismaService) private prismaService: PrismaService,
     @Inject(AuthService) private authService: AuthService,
-    @Inject(EntryService) private entryService: EntryService,
-    private readonly paginationService: PaginationService
-  ) {}
+    @Inject(EntryService) private entryService: EntryService  ) {}
   async siftComments(params: FindManyCommentsPaginatedInput) {
     return await findManyCursorConnection(
       args =>

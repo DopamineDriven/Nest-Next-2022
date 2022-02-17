@@ -1,22 +1,10 @@
-import {
-  DateResolver,
-  GraphQLJSONObject,
-  JSONObjectResolver,
-  JSONResolver,
-  PhoneNumberResolver
-} from "graphql-scalars";
 import { User } from "../../user/model/user.model";
 import { Field, ObjectType, ID } from "@nestjs/graphql";
 import { Gender } from "../../.generated/prisma-nestjs-graphql/prisma/enums/gender.enum";
 import { Pronouns } from "../../.generated/prisma-nestjs-graphql/prisma/enums/pronouns.enum";
-import { Country } from "..";
-import { JSONValue } from "src/common/types/json.type";
-import { isInputObjectType } from "graphql";
-import GraphQLJSON from "graphql-type-json";
-import { Prisma, Profile as PrismaProfile } from "@prisma/client";
 import { Node } from "src/node/model/node.model";
 
-@ObjectType("Profile", {implements: () => Node})
+@ObjectType("Profile", { implements: () => Node })
 export class Profile implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
@@ -33,8 +21,8 @@ export class Profile implements Node {
   @Field(() => Pronouns, { nullable: true, defaultValue: "NOT_LISTED" })
   pronouns?: keyof typeof Pronouns | null;
 
-  @Field(() => String, {nullable:true})
-  coverPhoto?: string
+  @Field(() => String, { nullable: true })
+  coverPhoto?: string;
 
   @Field(() => Date, { nullable: true })
   lastSeen?: Date | null;
@@ -54,15 +42,15 @@ export class Profile implements Node {
   @Field(() => String, { nullable: true })
   country?: string | null;
 
-  @Field(() => [JSONObjectResolver], {nullable:true})
-  bio!: Array<Prisma.JsonValue>
+  @Field(() => String, { nullable: true })
+  bio?: string;
 
-  @Field(() => [JSONObjectResolver], {nullable:true})
-  activiyFeed!: Array<Prisma.JsonValue>
+  @Field(() => String, { nullable: true })
+  activiyFeed?: string;
 
   @Field(() => User, { nullable: false })
   user?: User;
 
-  @Field(() => [JSONObjectResolver], {nullable:true})
-  recentActivity!: Array<Prisma.JsonValue>
+  @Field(() => String, { nullable: true })
+  recentActivity?: string;
 }

@@ -10,9 +10,7 @@ export class FindManyUsersPaginatedInput {
   @Field(() => UserWhereInput, { nullable: true })
   where?: UserWhereInput;
 
-  @Field(() => [UserOrderByWithRelationAndSearchRelevanceInput], {
-    nullable: true
-  })
+  @Field(() => [UserOrderByWithRelationAndSearchRelevanceInput])
   orderBy?: Array<UserOrderByWithRelationAndSearchRelevanceInput>;
 
   @Field(() => UserWhereUniqueInput, { nullable: true })

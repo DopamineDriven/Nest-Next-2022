@@ -1,5 +1,3 @@
-import * as Prisma from "@prisma/client";
-
 export async function seed<T extends import("@prisma/client").PrismaClient>(
   prisma: T
 ) {
@@ -390,12 +388,12 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
         updatedAt: new Date(Date.now()),
         profile: {
           create: {
-            bio: {
+            bio: `{
               set: [
-                { headline: faker.lorem.sentence(12, 14) },
-                { body: faker.lorem.paragraph(5) }
-              ] as Prisma.Prisma.InputJsonArray
-            } as Prisma.Prisma.InputJsonObject,
+                { headline: ${faker.lorem.sentence(12, 14)}},
+                { body: ${faker.lorem.paragraph(5)} }
+              ]
+            }`,
             city: userCity,
             dob: dobGenerated,
             gender: [
@@ -438,7 +436,7 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
             phoneNumber: standardE164,
             memberSince: new Date(Date.now()),
             lastSeen: new Date(Date.now()),
-            activiyFeed: [{ feed: `No new activity to show` }],
+            activiyFeed: `feed: No new activity to show`,
             pronouns: [
               Pronouns.HE_HIM_HIS,
               Pronouns.SHE_HER_HERS,
@@ -458,11 +456,11 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
             ][n(0, 14)],
             coverPhoto: coverImageString,
             occupation: faker.lorem.words(2),
-            recentActivity: {
+            recentActivity: `{
               set: [
-                { createdProfile: `${new Date(Date.now())}` }
-              ] as Prisma.Prisma.InputJsonArray
-            } as Prisma.Prisma.InputJsonObject
+                { createdProfile: ${new Date(Date.now())}} }
+              ]
+            } `
           }
         },
         accounts: {
@@ -500,13 +498,13 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
           create: [
             {
               title: faker.lorem.words(8),
-              content: {
+              content: `{
                 set: [
-                  { subtitle: faker.lorem.sentences(2) },
-                  { body: faker.lorem.paragraphs(4, "\n") }
-                ] as Prisma.Prisma.InputJsonArray
-              } as Prisma.Prisma.InputJsonObject,
-              featuredImage: featuredImage,
+                  { subtitle: ${faker.lorem.sentences(2)} },
+                  { body: ${faker.lorem.paragraphs(4, "\n")} }
+                ]
+              }`,
+              featuredImage: `${featuredImage}`,
               createdAt: new Date(Date.now()),
               id: entryId,
               published: [true, false, true, false][n(0, 3)]
@@ -519,24 +517,28 @@ export async function seed<T extends import("@prisma/client").PrismaClient>(
               authorId_entryId: { authorId: seedUserId, entryId: entryId }
             },
             create: {
-              body: {
-                set: [
+              body: "This is an excellent comment, perhaps the most fantastic comment in the history of comments. ever. all the other comments are trash -- this comment steals the show.",
+              /**
+               set: [
                   {
                     input: [
                       {
-                        ip: [
-                          faker.internet.ip(),
-                          faker.internet.ipv6(),
-                          faker.internet.ip(),
-                          faker.internet.ip()
-                        ][n(0, 3)]
+                        ip: ${
+                          [
+                            faker.internet.ip(),
+                            faker.internet.ipv6(),
+                            faker.internet.ip(),
+                            faker.internet.ip()
+                          ][n(0, 3)]
+                        }
                       },
-                      { timestamp: new Date(Date.now()) },
-                      { content: faker.lorem.paragraph(3) }
-                    ] as Prisma.Prisma.InputJsonArray
-                  } as Prisma.Prisma.InputJsonObject
-                ] as Prisma.Prisma.InputJsonArray
-              } as Prisma.Prisma.InputJsonObject,
+                      { timestamp: ${new Date(Date.now())} },
+                      { content: ${faker.lorem.paragraph(3)} }
+                    ]
+                  }
+                ]
+              },`,
+               */
               createdAt: new Date(Date.now()),
               entryId: entryId,
               id: faker.datatype.uuid(),
