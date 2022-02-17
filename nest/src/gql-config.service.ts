@@ -1,12 +1,7 @@
 import { ConfigService } from "@nestjs/config";
 import { ApolloDriverConfig } from "@nestjs/apollo";
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  GqlOptionsFactory,
-  IntersectionType,
-  InterfaceType,
-  ObjectType
-} from "@nestjs/graphql";
+import { GqlOptionsFactory } from "@nestjs/graphql";
 import {
   ApolloConfig,
   GraphqlConfig
@@ -14,23 +9,12 @@ import {
 import { AuthService } from "./auth/auth-jwt.service";
 import { Context } from "src/app.module";
 import { AuthDetailed } from "./auth/model/auth-detailed.model";
-import { Auth } from "./auth/model/auth.model";
-import { JwtDecoded } from "./auth/dto/jwt-decoded.dto";
-import { JwtService } from "@nestjs/jwt";
-import {
-  ApolloServerPluginLandingPageLocalDefault,
-  ApolloServerPluginInlineTrace
-} from "apollo-server-core";
-import { join } from "path";
+import internal from "stream";
+
 export type ParsedUrlQuery<
   T extends string,
   N extends NodeJS.Dict<T | T[keyof T]>
 > = N[T];
-
-// @InterfaceType("I", {
-//   implements: () => IntersectionType(Auth, JwtDecoded, ObjectType)
-// })
-// export class ViewerContextIntersection {}
 
 @Injectable()
 export class GqlConfigService implements GqlOptionsFactory {
@@ -39,13 +23,6 @@ export class GqlConfigService implements GqlOptionsFactory {
     @Inject<typeof AuthService>(AuthService)
     private readonly authService: AuthService
   ) {}
-  async userIdFromContext(accessToken: string) {
-    return (
-      (await this.authService.getUserWithDecodedToken(
-        accessToken
-      )) as AuthDetailed
-    ).jwt.payload.userId;
-  }
   createGqlOptions(): ApolloDriverConfig {
     const graphqlConfig = this.configService.get<GraphqlConfig>("graphql");
     const apolloConfig = this.configService.get<ApolloConfig>("apollo");
@@ -66,8 +43,6 @@ export class GqlConfigService implements GqlOptionsFactory {
         path: "src/graphql.schema.ts",
         outputAs: "class",
         emitTypenameField: true
-        // additionalHeader: request.headers.authorization
-        // customScalarTypeMapping: {} TODO
       },
       playground: true,
       debug: true,
@@ -82,88 +57,31 @@ export class GqlConfigService implements GqlOptionsFactory {
         req,
         res,
         token = req.headers.authorization?.split(/([ ])/)[2] ?? null
-      }: Context): Promise<any> => {
-        // const viewerContext = await this.authService.getUserWithDecodedToken(
-        //   `${token}`
-        // );
-        // const { session, tokensAndJwt, user } = {
-        //   user: viewerContext.auth.user,
-        //   session: viewerContext.auth.session,
-        //   tokensAndJwt: {
-        //     jwt: viewerContext.jwt,
-        //     accessToken: viewerContext.auth.accessToken,
-        //     refreshToken: viewerContext.auth.refreshToken
-        //   }
-        // };
-        const viewerId = await this.userIdFromContext(token ?? "");
-        const ctx = {
-          req,
-          res,
-          token: token as string | null,
-          viewerId: viewerId as string | null
-          // viewer: viewerContext as AuthDetailed
-        };
-        // token != null && token.length > 0
-        //   ? userId != null
-        //     ? console.log("token : " + token + "\r viewerId: " + userId)
-        //     : console.log("token: " + token + "userId: no userId")
-        //   : console.log("no userId or token to parse");
-        if (token != null && token.substring(0).length > 10) {
-          res.set({
-            authorization: `Bearer ${token}`,
-            "X-Viewer-Id": viewerId
-          });
-          return {req, res, token, viewerId };
-        } else {
-          return { req, res, token: null, viewerId: null };
+      }: Context) => {
+        try {
+          if (token != null && token.length > 10) {
+            const viewerId = (
+              (await this.authService.getUserWithDecodedToken(
+                token
+              )) as AuthDetailed
+            ).jwt.payload.userId;
+            res.setHeader("authorization", `Bearer ${token}`);
+            return {
+              req,
+              res,
+              token,
+              viewerId: viewerId
+            };
+          } else {
+            return { req, res };
+          }
+        } catch (error) {
+          throw new Error(`error in gql-config.service.ts: ${error}`);
         }
+        // finally {
+        //   res.emit("pipe", new internal.Readable({ emitClose: true }))
+        // }
       }
     };
   }
 }
-// useFactory: async (configService: ConfigService) => {
-//   const rootSchema = await loadSchema("./src/schema.gql", {
-//     loaders: [new GraphQLFileLoader()],
-//     sort: true,
-//     experimentalFragmentVariables: true,
-//     commentDescriptions: true
-//   });
-//   const graphqlConfig = configService.get<GraphqlConfig>("graphql");
-//   const apolloConfig = configService.get<ApolloConfig>("apollo");
-//   return {schema: rootSchema,
-//     // driver: ApolloDriver,
-//     fieldResolverEnhancers: ["guards"],
-//     installSubscriptionHandlers: true,
-//     cors: false,
-//     buildSchemaOptions: {
-//       dateScalarMode: "isoDate",
-//       numberScalarMode: "integer"
-//     },
-//     sortSchema: graphqlConfig?.sortSchema
-//       ? graphqlConfig.sortSchema
-//       : true,
-//     autoSchemaFile: "src/schema.gql",
-//     definitions: {
-//       path: "src/graphql.schema.ts" || graphqlConfig?.schemaDestination,
-//       outputAs: "class",
-//       emitTypenameField: true
-//     },
-//     typeDefs: [
-//       join(process.cwd(), "/node_modules/.prisma/client/index.d.ts")
-//     ],
-//     apollo: {
-//       key: apolloConfig?.key ? apolloConfig.key : ""
-//     },
-//     playground: {
-//       settings: {
-//         "general.betaUpdates": true,
-//         "tracing.hideTracingResponse": false,
-//         "schema.polling.interval": 5000
-//       }
-//     },
-//     debug: graphqlConfig?.debug
-//       ? graphqlConfig.debug
-//       : process.env.NODE_ENV !== "production"
-//       ? true
-//       : false,
-// },

@@ -219,7 +219,10 @@ enum AlgorithmType {
 }
 
 type Auth {
+  """JWT access token"""
   accessToken: String
+
+  """JWT refresh token"""
   refreshToken: String
   session: Session
   user: User!
@@ -231,7 +234,10 @@ type AuthDetailed {
 }
 
 type AuthSansSession {
+  """JWT access token"""
   accessToken: String
+
+  """JWT refresh token"""
   refreshToken: String
   user: User
 }

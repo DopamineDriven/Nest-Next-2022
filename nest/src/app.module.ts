@@ -196,7 +196,9 @@ export type Context = {
     }
   ]
 })
-export class AppModule {}
+export class AppModule { }
+
+
 // export class AppModule<
 //   T extends Context<T[keyof T]>,
 //   K extends Record<keyof K, K> extends infer U

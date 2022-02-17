@@ -3,31 +3,25 @@ import { User } from "../../user/model/user.model";
 import { Session } from "../../session/model";
 import { PrismaClientUnknownRequestError } from "@prisma/client/runtime";
 import { InstanceOf } from "ts-morph";
-
+import { Token } from ".";
 @ObjectType("Auth")
-export class Auth {
+export class Auth extends Token {
+  constructor() {
+    super();
+  }
   @Field(() => User)
   user!: User;
   @Field(() => Session, { nullable: true })
   session: Session | null;
-
-  @Field(_type => String, { nullable: true })
-  accessToken!: string | null;
-
-  @Field(_type => String, { nullable: true })
-  refreshToken!: string | null;
 }
 
 @ObjectType("AuthSansSession")
-export class AuthSansSession {
+export class AuthSansSession extends Token {
+  constructor() {
+    super()
+  }
   @Field(() => User, { nullable: true })
   user!: User | null;
-
-  @Field(_type => String, { nullable: true })
-  accessToken!: string | null;
-
-  @Field(_type => String, { nullable: true })
-  refreshToken!: string | null;
 }
 
 @ObjectType("Viewer")
