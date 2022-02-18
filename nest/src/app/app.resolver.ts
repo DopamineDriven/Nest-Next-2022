@@ -1,7 +1,8 @@
-import { Inject } from "@nestjs/common";
-import { Resolver, Query, Args, Mutation, ResolveField } from "@nestjs/graphql";
+import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
+import { Resolver, Query, Args, Mutation, ResolveField, Context } from "@nestjs/graphql";
 import { AuthService } from "src/auth/auth-jwt.service";
 import { AuthDetailed } from "src/auth/model/auth-detailed.model";
+import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { PrismaService } from "src/prisma";
 import { AppService } from "./app.service";
 // import { ConnectionEdgeUnion, EdgeUnion } from "src/union/model/union-factory.strategy";
@@ -19,9 +20,11 @@ import { AppService } from "./app.service";
 
 @Resolver("AppResolver")
 export class AppResolver {
-  constructor(@Inject(AppService) private readonly appService: AppService, private readonly authService: AuthService, @Inject(PrismaService) private readonly prismaService: PrismaService) {
-
-  }
+  constructor(
+    @Inject(AppService) private readonly appService: AppService,
+    private readonly authService: AuthService,
+    @Inject(PrismaService) private readonly prismaService: PrismaService
+  ) {}
   @Query(() => String)
   helloWorld(): string {
     return "Hello World!";
@@ -71,7 +74,14 @@ export class AppResolver {
   //   );
   // }
 
-  @Mutation(() => AuthDetailed)
+  @UseGuards(AuthGuard)
+  @Query(() => AuthDetailed)
+  async decodeViewerTokenFromContext(@Context("token") ctx: ExecutionContext) {
+    return await this.authService.getUserWithDecodedToken(ctx as unknown as string);
+  }
+
+  @UseGuards(AuthGuard)
+  @Query(() => AuthDetailed)
   async userFromAccessTokenDecoded(
     @Args("token", { type: () => String }) token: string
   ): Promise<AuthDetailed> {

@@ -4,8 +4,8 @@
 # import PageInfoPartial from "../fragments/page-info-partial.graphql";
 # import UserPartial from "../fragments/user-partial.graphql";
 
-query getProfiles($findManyProfiles: FindManyProfilesPaginatedInput!) {
-  listProfiles(findManyProfilesPaginatedInput: $findManyProfiles) {
+query listProfiles($findManyProfiles: FindManyProfilesPaginatedInput!) {
+  listProfiles(profilesArgs: $findManyProfiles) {
     ...ProfileConnectionPartial
     pageInfo {
       ...PageInfoPartial

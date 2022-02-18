@@ -2,7 +2,6 @@ import { Field, ID } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { Role } from 'src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum';
 import { UserStatus } from 'src/.generated/prisma-nestjs-graphql/prisma/enums/user-status.enum';
-import { UserCreateimageInput } from 'src/.generated/prisma-nestjs-graphql/prisma/inputs/user-createimage.input';
 import { ProfileCreateNestedOneWithoutUserInput } from 'src/.generated/prisma-nestjs-graphql/profile/inputs/profile-create-nested-one-without-user.input';
 import { AccountCreateNestedManyWithoutUserInput } from 'src/.generated/prisma-nestjs-graphql/account/inputs/account-create-nested-many-without-user.input';
 import { EntryCreateNestedManyWithoutAuthorInput } from 'src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-nested-many-without-author.input';

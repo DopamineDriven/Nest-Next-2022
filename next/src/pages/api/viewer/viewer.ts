@@ -6,10 +6,10 @@ import {
   ViewerQuery,
   ViewerQueryVariables,
   deriveUserDetailsFromTokenDocument,
-  usederiveUserDetailsFromTokenMutation,
   deriveUserDetailsFromToken,
-  deriveUserDetailsFromTokenMutation,
-  deriveUserDetailsFromTokenMutationVariables
+  deriveUserDetailsFromTokenLazyQueryHookResult,
+  deriveUserDetailsFromTokenQuery,
+  deriveUserDetailsFromTokenQueryVariables
 } from "@/graphql/generated/graphql";
 import { ApolloError, ErrorPolicy } from "@apollo/client";
 import { RequireOnlyOne } from "@/types/helpers";
@@ -17,7 +17,7 @@ import { RequireOnlyOne } from "@/types/helpers";
 export default async function viewerValidate(
   req: NextApiRequest,
   res: NextApiResponse<{
-    authDetailed: deriveUserDetailsFromTokenMutation["userFromAccessTokenDecoded"];
+    authDetailed: deriveUserDetailsFromTokenQuery["userFromAccessTokenDecoded"];
   }>
 ) {
   const {
@@ -27,14 +27,13 @@ export default async function viewerValidate(
   console.log(req.headers ?? "no forwarded");
   const apolloClient = initializeApollo({}, { req, res });
   try {
-    const nestSwaggerValidate = await apolloClient.mutate<
-      deriveUserDetailsFromTokenMutation,
-      deriveUserDetailsFromTokenMutationVariables
+    const nestSwaggerValidate = await apolloClient.query<
+      deriveUserDetailsFromTokenQuery,
+      deriveUserDetailsFromTokenQueryVariables
       >({
       variables: {token: token as string},
-      mutation: deriveUserDetailsFromTokenDocument,
+      query: deriveUserDetailsFromTokenDocument,
       context: { req, res, token: token as string },
-      refetchQueries: [{ query: ViewerDocument }],
       errorPolicy: "all" as RequireOnlyOne<ErrorPolicy>
     });
     const setAuthHeader = res.setHeader(

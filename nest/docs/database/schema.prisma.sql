@@ -74,7 +74,7 @@ Table Profile {
 }
 
 Table Session {
-  id String [not null]
+  id String [pk]
   userId String [unique, not null]
   accessToken String
   alg String

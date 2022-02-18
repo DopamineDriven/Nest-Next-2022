@@ -21,8 +21,8 @@ export class Profile implements Node {
   @Field(() => Pronouns, { nullable: true, defaultValue: "NOT_LISTED" })
   pronouns?: keyof typeof Pronouns | null;
 
-  @Field(() => String, { nullable: true })
-  coverPhoto?: string;
+  @Field(() => String, {nullable: true})
+  coverPhoto: string | null;
 
   @Field(() => Date, { nullable: true })
   lastSeen?: Date | null;
@@ -43,14 +43,14 @@ export class Profile implements Node {
   country?: string | null;
 
   @Field(() => String, { nullable: true })
-  bio?: string;
+  bio: string | null;
 
   @Field(() => String, { nullable: true })
-  activiyFeed?: string;
+  activiyFeed: string | null;
 
   @Field(() => User, { nullable: false })
   user?: User;
 
   @Field(() => String, { nullable: true })
-  recentActivity?: string;
+  recentActivity: string | null;
 }

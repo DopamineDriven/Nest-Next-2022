@@ -14,11 +14,12 @@ import { AuthDetailed } from "src/auth/model/auth-detailed.model";
 import { FindManyUsersPaginatedInput } from "./inputs/user-paginated-args.input";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { FindManyEntriesPaginatedInput } from "src/entry/inputs/entry-paginated.input";
-import { FindManyMediaItemsInput } from "src/media/inputs/find-many-media-items-paginated.input";
+import { FindManyMediaItemsPaginatedInput } from "src/media/inputs/find-many-media-items-paginated.input";
 import { Entry } from "src/entry";
 import { ContentNodes } from "./outputs/content-nodes.output";
 import { EntryUpdateManyWithWhereWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-update-many-with-where-without-author.input";
 import { GraphqlAuthGuard } from "src/auth/gql-auth.guard";
+import { Context as AppContext } from "src/app.module";
 
 @Resolver(() => User)
 export class UserResolver {
@@ -28,16 +29,15 @@ export class UserResolver {
     private userService: UserService
   ) {}
 
-  @UseGuards(GraphqlAuthGuard)
+  @UseGuards(AuthGuard)
   @Query(() => AuthDetailed)
   async me(
-    @UserMeta() user: User,
     @Context("token") ctx: ExecutionContext
   ): Promise<AuthDetailed | null> {
-    console.log({ userFromDecorator: { ...user } ?? "no user" });
+    console.log(ctx ?? "no viewerId coupled with token");
 
     return await this.authService.getUserWithDecodedToken(
-      ctx as unknown as string
+      (ctx as unknown as  string) ?? ""
     );
   }
 
@@ -51,10 +51,10 @@ export class UserResolver {
     @Args("findManyEntriesPaginatedInput")
     entryParams: FindManyEntriesPaginatedInput,
     @Args("findManyMediaItemsPaginated", {
-      type: () => FindManyMediaItemsInput,
+      type: () => FindManyMediaItemsPaginatedInput,
       nullable: true
     })
-    mediaParams: FindManyMediaItemsInput
+    mediaParams: FindManyMediaItemsPaginatedInput
   ): Promise<ContentNodes> {
     const edgingUserNodes = await findManyCursorConnection(
       args =>
@@ -201,7 +201,7 @@ export class UserResolver {
       id: cursor
     });
   }
-  @UseGuards(GraphqlAuthGuard)
+  @UseGuards(AuthGuard)
   @Mutation(() => User)
   async changePassword(
     @Context("viewerId") ctx: ExecutionContext,
@@ -226,7 +226,7 @@ export class UserResolver {
         return changePW;
       });
   }
-  @UseGuards(GraphqlAuthGuard)
+  @UseGuards(AuthGuard)
   @Mutation(() => [Entry])
   async viewerCreateEntry(
     @Context("viewerId") ctx: ExecutionContext,

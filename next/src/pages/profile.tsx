@@ -68,9 +68,9 @@ import {
 } from "@/components/UI";
 import { storeKeyNameFromField } from "@apollo/client/utilities";
 import {
-  DeriveUserDetailsFromTokenDocument,
-  useDeriveUserDetailsFromTokenMutation
-} from "@/graphql/mutations/get-user-from-access-token.graphql";
+  deriveUserDetailsFromTokenDocument,
+  usederiveUserDetailsFromTokenLazyQuery
+} from "@/graphql/generated/graphql"
 type ProfileProps = {
   apolloCache: NormalizedCacheObject;
   authHeaderReq: string;
@@ -85,8 +85,8 @@ export default function Profile<T extends typeof getServerSideProps>({
   authHeaderRes
 }: InferGetServerSidePropsType<T>) {
   const [lazyDerivePayload, { data, called, client, error, loading }] =
-    useDeriveUserDetailsFromTokenMutation({
-      mutation: DeriveUserDetailsFromTokenDocument
+  usederiveUserDetailsFromTokenLazyQuery({
+      query: deriveUserDetailsFromTokenDocument
     });
   const callbackData = useCallback(async () => {
     const fetchIt = async () =>
@@ -112,10 +112,7 @@ export default function Profile<T extends typeof getServerSideProps>({
         .then(resolved => resolved as AuthDetailed);
     return await lazyDerivePayload({
       variables: {
-        token: authHeaderReq
-          ? authHeaderReq
-          : authHeaderRes ??
-            (await fetchIt()).auth.accessToken.split(/([ ])/)[0]
+        token: authHeaderReq ? authHeaderReq : authHeaderRes ?? ""
       }
     }).then(data => {
       data.data?.userFromAccessTokenDecoded as unknown as AuthDetailed;
@@ -123,7 +120,6 @@ export default function Profile<T extends typeof getServerSideProps>({
   }, [authHeaderReq, authHeaderRes, lazyDerivePayload]);
   useEffect(() => {
     if (typeof window !== "undefined") {
-
       async () => await callbackData();
     }
   }, [callbackData]);

@@ -5,8 +5,8 @@ import { MediaItemWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/
 import { MediaItemScalarFieldEnum } from "src/.generated/prisma-nestjs-graphql/media-item/enums/media-item-scalar-field.enum";
 import { PaginationArgsInput } from "src/common/pagination/pagination.args";
 
-@InputType("FindManyMediaItemsInput")
-export class FindManyMediaItemsInput {
+@InputType("FindManyMediaItemsPaginatedInput")
+export class FindManyMediaItemsPaginatedInput {
   @Field(() => MediaItemWhereInput, { nullable: true })
   where?: MediaItemWhereInput;
 

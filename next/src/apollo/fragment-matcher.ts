@@ -1,6 +1,5 @@
 export type PossibleTypesResultData = {
   possibleTypes: {
-    EntryCommentUnion: ["CommentConnection", "EntryConnection"];
     Node: [
       "Account",
       "Category",
@@ -13,12 +12,19 @@ export type PossibleTypesResultData = {
       "User",
       "ViewerDetailed"
     ];
+    NodeUnion: [
+      "CommentConnection",
+      "EntryConnection",
+      "MediaItemConnection",
+      "ProfileConnection",
+      "SessionConnection",
+      "UserConnection"
+    ];
     TypesUnion: ["Entry", "MediaItem", "User"];
   };
 };
 const result: PossibleTypesResultData = {
   possibleTypes: {
-    EntryCommentUnion: ["CommentConnection", "EntryConnection"],
     Node: [
       "Account",
       "Category",
@@ -30,6 +36,14 @@ const result: PossibleTypesResultData = {
       "Session",
       "User",
       "ViewerDetailed"
+    ],
+    NodeUnion: [
+      "CommentConnection",
+      "EntryConnection",
+      "MediaItemConnection",
+      "ProfileConnection",
+      "SessionConnection",
+      "UserConnection"
     ],
     TypesUnion: ["Entry", "MediaItem", "User"]
   }

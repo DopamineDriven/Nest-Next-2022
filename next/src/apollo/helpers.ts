@@ -117,12 +117,32 @@ export type CategoryFieldPolicy = {
   name?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
 };
+export type CategoryConnectionKeySpecifier = (
+  | "edges"
+  | "pageInfo"
+  | "totalCount"
+  | CategoryConnectionKeySpecifier
+)[];
+export type CategoryConnectionFieldPolicy = {
+  edges?: FieldPolicy<any> | FieldReadFunction<any>;
+  pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalCount?: FieldPolicy<any> | FieldReadFunction<any>;
+};
 export type CategoryCountKeySpecifier = (
   | "entries"
   | CategoryCountKeySpecifier
 )[];
 export type CategoryCountFieldPolicy = {
   entries?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type CategoryEdgeKeySpecifier = (
+  | "cursor"
+  | "node"
+  | CategoryEdgeKeySpecifier
+)[];
+export type CategoryEdgeFieldPolicy = {
+  cursor?: FieldPolicy<any> | FieldReadFunction<any>;
+  node?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type CommentKeySpecifier = (
   | "author"
@@ -191,6 +211,26 @@ export type ConnectionFieldPolicy = {
   owner?: FieldPolicy<any> | FieldReadFunction<any>;
   ownerId?: FieldPolicy<any> | FieldReadFunction<any>;
   phoneNumber?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type ConnectionConnectionKeySpecifier = (
+  | "edges"
+  | "pageInfo"
+  | "totalCount"
+  | ConnectionConnectionKeySpecifier
+)[];
+export type ConnectionConnectionFieldPolicy = {
+  edges?: FieldPolicy<any> | FieldReadFunction<any>;
+  pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalCount?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type ConnectionEdgeKeySpecifier = (
+  | "cursor"
+  | "node"
+  | ConnectionEdgeKeySpecifier
+)[];
+export type ConnectionEdgeFieldPolicy = {
+  cursor?: FieldPolicy<any> | FieldReadFunction<any>;
+  node?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type ContentNodesKeySpecifier = (
   | "contentNodes"
@@ -355,7 +395,6 @@ export type MutationKeySpecifier = (
   | "signup"
   | "updateUserPassword"
   | "upsertComment"
-  | "userFromAccessTokenDecoded"
   | "viewerCreateEntry"
   | MutationKeySpecifier
 )[];
@@ -371,12 +410,22 @@ export type MutationFieldPolicy = {
   signup?: FieldPolicy<any> | FieldReadFunction<any>;
   updateUserPassword?: FieldPolicy<any> | FieldReadFunction<any>;
   upsertComment?: FieldPolicy<any> | FieldReadFunction<any>;
-  userFromAccessTokenDecoded?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerCreateEntry?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type NodeKeySpecifier = ("id" | NodeKeySpecifier)[];
 export type NodeFieldPolicy = {
   id?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type NodeUnionConnectionKeySpecifier = (
+  | "edges"
+  | "pageInfo"
+  | "totalCount"
+  | NodeUnionConnectionKeySpecifier
+)[];
+export type NodeUnionConnectionFieldPolicy = {
+  edges?: FieldPolicy<any> | FieldReadFunction<any>;
+  pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalCount?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type PageInfoKeySpecifier = (
   | "endCursor"
@@ -451,54 +500,70 @@ export type ProfileEdgeFieldPolicy = {
   node?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type QueryKeySpecifier = (
+  | "categoryByRelayId"
   | "commentByRelayId"
-  | "commentConnectionUnion"
+  | "comprehensiveConnectionUnion"
+  | "connectionByRelayId"
   | "contentNodesUnion"
+  | "decodeViewerTokenFromContext"
   | "entryById"
   | "findUniqueMediaItem"
   | "getUserFromAccessToken"
   | "getViewer"
   | "hello"
   | "helloWorld"
+  | "listCategories"
   | "listComments"
+  | "listConnections"
   | "listEntries"
   | "listMediaItems"
   | "listProfiles"
+  | "listSessions"
   | "listUsers"
   | "me"
   | "node"
+  | "nodeUnionResolver"
   | "profileByRelayId"
-  | "profiles"
+  | "sessionByRelayId"
   | "siftEntries"
   | "userById"
   | "userByRelayId"
+  | "userFromAccessTokenDecoded"
   | "viewer"
   | "viewerAuthInfoFromContext"
   | "viewerEntriesPaginated"
   | QueryKeySpecifier
 )[];
 export type QueryFieldPolicy = {
+  categoryByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
   commentByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
-  commentConnectionUnion?: FieldPolicy<any> | FieldReadFunction<any>;
+  comprehensiveConnectionUnion?: FieldPolicy<any> | FieldReadFunction<any>;
+  connectionByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
   contentNodesUnion?: FieldPolicy<any> | FieldReadFunction<any>;
+  decodeViewerTokenFromContext?: FieldPolicy<any> | FieldReadFunction<any>;
   entryById?: FieldPolicy<any> | FieldReadFunction<any>;
   findUniqueMediaItem?: FieldPolicy<any> | FieldReadFunction<any>;
   getUserFromAccessToken?: FieldPolicy<any> | FieldReadFunction<any>;
   getViewer?: FieldPolicy<any> | FieldReadFunction<any>;
   hello?: FieldPolicy<any> | FieldReadFunction<any>;
   helloWorld?: FieldPolicy<any> | FieldReadFunction<any>;
+  listCategories?: FieldPolicy<any> | FieldReadFunction<any>;
   listComments?: FieldPolicy<any> | FieldReadFunction<any>;
+  listConnections?: FieldPolicy<any> | FieldReadFunction<any>;
   listEntries?: FieldPolicy<any> | FieldReadFunction<any>;
   listMediaItems?: FieldPolicy<any> | FieldReadFunction<any>;
   listProfiles?: FieldPolicy<any> | FieldReadFunction<any>;
+  listSessions?: FieldPolicy<any> | FieldReadFunction<any>;
   listUsers?: FieldPolicy<any> | FieldReadFunction<any>;
   me?: FieldPolicy<any> | FieldReadFunction<any>;
   node?: FieldPolicy<any> | FieldReadFunction<any>;
+  nodeUnionResolver?: FieldPolicy<any> | FieldReadFunction<any>;
   profileByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
-  profiles?: FieldPolicy<any> | FieldReadFunction<any>;
+  sessionByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
   siftEntries?: FieldPolicy<any> | FieldReadFunction<any>;
   userById?: FieldPolicy<any> | FieldReadFunction<any>;
   userByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
+  userFromAccessTokenDecoded?: FieldPolicy<any> | FieldReadFunction<any>;
   viewer?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerAuthInfoFromContext?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerEntriesPaginated?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -533,6 +598,26 @@ export type SessionFieldPolicy = {
   tokenState?: FieldPolicy<any> | FieldReadFunction<any>;
   user?: FieldPolicy<any> | FieldReadFunction<any>;
   userId?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type SessionConnectionKeySpecifier = (
+  | "edges"
+  | "pageInfo"
+  | "totalCount"
+  | SessionConnectionKeySpecifier
+)[];
+export type SessionConnectionFieldPolicy = {
+  edges?: FieldPolicy<any> | FieldReadFunction<any>;
+  pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalCount?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type SessionEdgeKeySpecifier = (
+  | "cursor"
+  | "node"
+  | SessionEdgeKeySpecifier
+)[];
+export type SessionEdgeFieldPolicy = {
+  cursor?: FieldPolicy<any> | FieldReadFunction<any>;
+  node?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type SubscriptionKeySpecifier = (
   | "entryCreated"
@@ -748,12 +833,26 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | CategoryKeySpecifier);
     fields?: CategoryFieldPolicy;
   };
+  CategoryConnection?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | CategoryConnectionKeySpecifier
+      | (() => undefined | CategoryConnectionKeySpecifier);
+    fields?: CategoryConnectionFieldPolicy;
+  };
   CategoryCount?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
       | CategoryCountKeySpecifier
       | (() => undefined | CategoryCountKeySpecifier);
     fields?: CategoryCountFieldPolicy;
+  };
+  CategoryEdge?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | CategoryEdgeKeySpecifier
+      | (() => undefined | CategoryEdgeKeySpecifier);
+    fields?: CategoryEdgeFieldPolicy;
   };
   Comment?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
@@ -782,6 +881,20 @@ export type StrictTypedTypePolicies = {
       | ConnectionKeySpecifier
       | (() => undefined | ConnectionKeySpecifier);
     fields?: ConnectionFieldPolicy;
+  };
+  ConnectionConnection?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | ConnectionConnectionKeySpecifier
+      | (() => undefined | ConnectionConnectionKeySpecifier);
+    fields?: ConnectionConnectionFieldPolicy;
+  };
+  ConnectionEdge?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | ConnectionEdgeKeySpecifier
+      | (() => undefined | ConnectionEdgeKeySpecifier);
+    fields?: ConnectionEdgeFieldPolicy;
   };
   ContentNodes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
@@ -874,6 +987,13 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | NodeKeySpecifier);
     fields?: NodeFieldPolicy;
   };
+  NodeUnionConnection?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | NodeUnionConnectionKeySpecifier
+      | (() => undefined | NodeUnionConnectionKeySpecifier);
+    fields?: NodeUnionConnectionFieldPolicy;
+  };
   PageInfo?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
@@ -915,6 +1035,20 @@ export type StrictTypedTypePolicies = {
       | SessionKeySpecifier
       | (() => undefined | SessionKeySpecifier);
     fields?: SessionFieldPolicy;
+  };
+  SessionConnection?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | SessionConnectionKeySpecifier
+      | (() => undefined | SessionConnectionKeySpecifier);
+    fields?: SessionConnectionFieldPolicy;
+  };
+  SessionEdge?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | SessionEdgeKeySpecifier
+      | (() => undefined | SessionEdgeKeySpecifier);
+    fields?: SessionEdgeFieldPolicy;
   };
   Subscription?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:

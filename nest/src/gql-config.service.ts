@@ -65,6 +65,7 @@ export class GqlConfigService implements GqlOptionsFactory {
                 token
               )) as AuthDetailed
             ).jwt.payload.userId;
+            console.log(token ?? "no token");
             res.setHeader("authorization", `Bearer ${token}`);
             return {
               req,
@@ -73,7 +74,7 @@ export class GqlConfigService implements GqlOptionsFactory {
               viewerId: viewerId
             };
           } else {
-            return { req, res };
+            return { req, res, token: null, viewerId: null };
           }
         } catch (error) {
           throw new Error(`error in gql-config.service.ts: ${error}`);

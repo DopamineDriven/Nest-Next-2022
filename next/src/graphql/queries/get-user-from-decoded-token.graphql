@@ -6,7 +6,7 @@
 # import JwtPayloadPartial from "../fragments/jwt-payload-partial.graphql";
 # import JwtDecodedPartial from "../fragments/jwt-decoded-partial.graphql";
 
-mutation deriveUserDetailsFromToken($token: String!) {
+query deriveUserDetailsFromToken($token: String!) {
   userFromAccessTokenDecoded(token: $token) {
     __typename
     auth {
