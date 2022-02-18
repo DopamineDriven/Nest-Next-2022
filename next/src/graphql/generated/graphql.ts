@@ -332,6 +332,13 @@ export type Category = Node & {
   updatedAt?: Maybe<FieldWrapper<Scalars["DateTime"]>>;
 };
 
+export type CategoryConnection = {
+  __typename?: "CategoryConnection";
+  edges: Array<FieldWrapper<CategoryEdge>>;
+  pageInfo: FieldWrapper<PageInfo>;
+  totalCount: FieldWrapper<Scalars["Int"]>;
+};
+
 export type CategoryCount = {
   __typename?: "CategoryCount";
   entries: FieldWrapper<Scalars["Int"]>;
@@ -395,6 +402,12 @@ export type CategoryCreateWithoutEntriesInput = {
   updatedAt?: InputMaybe<Scalars["DateTime"]>;
 };
 
+export type CategoryEdge = {
+  __typename?: "CategoryEdge";
+  cursor: FieldWrapper<Scalars["String"]>;
+  node: FieldWrapper<Category>;
+};
+
 export type CategoryListRelationFilter = {
   every?: InputMaybe<CategoryWhereInput>;
   none?: InputMaybe<CategoryWhereInput>;
@@ -404,6 +417,40 @@ export type CategoryListRelationFilter = {
 export type CategoryOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
+
+export enum CategoryOrderByRelevanceFieldEnum {
+  creatorId = "creatorId",
+  entryId = "entryId",
+  id = "id",
+  name = "name"
+}
+
+export type CategoryOrderByRelevanceInput = {
+  fields: Array<CategoryOrderByRelevanceFieldEnum>;
+  search: Scalars["String"];
+  sort: SortOrder;
+};
+
+export type CategoryOrderByWithRelationAndSearchRelevanceInput = {
+  _relevance?: InputMaybe<CategoryOrderByRelevanceInput>;
+  createdAt?: InputMaybe<SortOrder>;
+  creator?: InputMaybe<UserOrderByWithRelationAndSearchRelevanceInput>;
+  creatorId?: InputMaybe<SortOrder>;
+  entries?: InputMaybe<EntryOrderByRelationAggregateInput>;
+  entryId?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  name?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export enum CategoryScalarFieldEnum {
+  createdAt = "createdAt",
+  creatorId = "creatorId",
+  entryId = "entryId",
+  id = "id",
+  name = "name",
+  updatedAt = "updatedAt"
+}
 
 export type CategoryScalarWhereInput = {
   AND?: InputMaybe<Array<CategoryScalarWhereInput>>;
@@ -881,6 +928,13 @@ export type Connection = Node & {
   phoneNumber?: Maybe<FieldWrapper<Scalars["PhoneNumber"]>>;
 };
 
+export type ConnectionConnection = {
+  __typename?: "ConnectionConnection";
+  edges: Array<FieldWrapper<ConnectionEdge>>;
+  pageInfo: FieldWrapper<PageInfo>;
+  totalCount: FieldWrapper<Scalars["Int"]>;
+};
+
 export type ConnectionCreateManyOwnerInput = {
   email: Scalars["String"];
   firstName?: InputMaybe<Scalars["String"]>;
@@ -920,6 +974,12 @@ export type ConnectionCreateWithoutOwnerInput = {
   phoneNumber?: InputMaybe<Scalars["String"]>;
 };
 
+export type ConnectionEdge = {
+  __typename?: "ConnectionEdge";
+  cursor: FieldWrapper<Scalars["String"]>;
+  node: FieldWrapper<Connection>;
+};
+
 export type ConnectionListRelationFilter = {
   every?: InputMaybe<ConnectionWhereInput>;
   none?: InputMaybe<ConnectionWhereInput>;
@@ -929,6 +989,46 @@ export type ConnectionListRelationFilter = {
 export type ConnectionOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
+
+export enum ConnectionOrderByRelevanceFieldEnum {
+  email = "email",
+  firstName = "firstName",
+  id = "id",
+  ip = "ip",
+  lastName = "lastName",
+  ownerId = "ownerId",
+  phoneNumber = "phoneNumber"
+}
+
+export type ConnectionOrderByRelevanceInput = {
+  fields: Array<ConnectionOrderByRelevanceFieldEnum>;
+  search: Scalars["String"];
+  sort: SortOrder;
+};
+
+export type ConnectionOrderByWithRelationAndSearchRelevanceInput = {
+  _relevance?: InputMaybe<ConnectionOrderByRelevanceInput>;
+  email?: InputMaybe<SortOrder>;
+  firstName?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  ip?: InputMaybe<SortOrder>;
+  lastModified?: InputMaybe<SortOrder>;
+  lastName?: InputMaybe<SortOrder>;
+  owner?: InputMaybe<UserOrderByWithRelationAndSearchRelevanceInput>;
+  ownerId?: InputMaybe<SortOrder>;
+  phoneNumber?: InputMaybe<SortOrder>;
+};
+
+export enum ConnectionScalarFieldEnum {
+  email = "email",
+  firstName = "firstName",
+  id = "id",
+  ip = "ip",
+  lastModified = "lastModified",
+  lastName = "lastName",
+  ownerId = "ownerId",
+  phoneNumber = "phoneNumber"
+}
 
 export type ConnectionScalarWhereInput = {
   AND?: InputMaybe<Array<ConnectionScalarWhereInput>>;
@@ -1068,8 +1168,6 @@ export type Entry = Node & {
   title?: Maybe<FieldWrapper<Scalars["String"]>>;
   updatedAt?: Maybe<FieldWrapper<Scalars["DateTime"]>>;
 };
-
-export type EntryCommentUnion = CommentConnection | EntryConnection;
 
 export type EntryConnection = {
   __typename?: "EntryConnection";
@@ -1472,6 +1570,18 @@ export type EnumUserStatusNullableFilter = {
   notIn?: InputMaybe<Array<UserStatus>>;
 };
 
+export type FindManyCategoriesPaginatedInput = {
+  cursor?: InputMaybe<CategoryWhereUniqueInput>;
+  distinct?: InputMaybe<Array<CategoryScalarFieldEnum>>;
+  orderBy?: InputMaybe<
+    Array<CategoryOrderByWithRelationAndSearchRelevanceInput>
+  >;
+  pagination: PaginationArgsInput;
+  skip?: InputMaybe<Scalars["Int"]>;
+  take?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<CategoryWhereInput>;
+};
+
 export type FindManyCommentsPaginatedInput = {
   cursor?: InputMaybe<CommentWhereUniqueInput>;
   distinct?: InputMaybe<Array<CommentScalarFieldEnum>>;
@@ -1482,6 +1592,18 @@ export type FindManyCommentsPaginatedInput = {
   skip?: InputMaybe<Scalars["Int"]>;
   take?: InputMaybe<Scalars["Int"]>;
   where?: InputMaybe<CommentWhereInput>;
+};
+
+export type FindManyConnectionsPaginatedInput = {
+  cursor?: InputMaybe<ConnectionWhereUniqueInput>;
+  distinct?: InputMaybe<Array<ConnectionScalarFieldEnum>>;
+  orderBy?: InputMaybe<
+    Array<ConnectionOrderByWithRelationAndSearchRelevanceInput>
+  >;
+  pagination: PaginationArgsInput;
+  skip?: InputMaybe<Scalars["Int"]>;
+  take?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<ConnectionWhereInput>;
 };
 
 export type FindManyEntriessPaginatedInput = {
@@ -1496,7 +1618,7 @@ export type FindManyEntriessPaginatedInput = {
   where?: InputMaybe<EntryWhereInput>;
 };
 
-export type FindManyMediaItemsInput = {
+export type FindManyMediaItemsPaginatedInput = {
   cursor?: InputMaybe<MediaItemWhereUniqueInput>;
   distinct?: InputMaybe<Array<MediaItemScalarFieldEnum>>;
   orderBy?: InputMaybe<
@@ -1518,6 +1640,18 @@ export type FindManyProfilesPaginatedInput = {
   skip?: InputMaybe<Scalars["Int"]>;
   take?: InputMaybe<Scalars["Int"]>;
   where?: InputMaybe<ProfileWhereInput>;
+};
+
+export type FindManySessionsPaginatedInput = {
+  cursor: SessionWhereUniqueInput;
+  distinct?: InputMaybe<Array<SessionScalarFieldEnum>>;
+  orderBy?: InputMaybe<
+    Array<SessionOrderByWithRelationAndSearchRelevanceInput>
+  >;
+  pagination: PaginationArgsInput;
+  skip?: InputMaybe<Scalars["Int"]>;
+  take?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<SessionWhereInput>;
 };
 
 export type FindManyUsersPaginatedInput = {
@@ -1920,7 +2054,6 @@ export type Mutation = {
   signup: FieldWrapper<Token>;
   updateUserPassword: FieldWrapper<User>;
   upsertComment: Array<FieldWrapper<Comment>>;
-  userFromAccessTokenDecoded: FieldWrapper<AuthDetailed>;
   viewerCreateEntry: Array<FieldWrapper<Entry>>;
 };
 
@@ -1967,10 +2100,6 @@ export type MutationupdateUserPasswordArgs = {
 
 export type MutationupsertCommentArgs = {
   commentUpsertInput: CommentUpsertWithWhereUniqueWithoutAuthorInput;
-};
-
-export type MutationuserFromAccessTokenDecodedArgs = {
-  token: Scalars["String"];
 };
 
 export type MutationviewerCreateEntryArgs = {
@@ -2100,6 +2229,21 @@ export type NestedStringNullableFilter = {
 
 export type Node = {
   id: FieldWrapper<Scalars["ID"]>;
+};
+
+export type NodeUnion =
+  | CommentConnection
+  | EntryConnection
+  | MediaItemConnection
+  | ProfileConnection
+  | SessionConnection
+  | UserConnection;
+
+export type NodeUnionConnection = {
+  __typename?: "NodeUnionConnection";
+  edges: Array<FieldWrapper<NodeUnion>>;
+  pageInfo: FieldWrapper<PageInfo>;
+  totalCount: FieldWrapper<Scalars["Int"]>;
 };
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -2367,15 +2511,6 @@ export type ProfileWhereUniqueInput = {
   userId?: InputMaybe<Scalars["String"]>;
 };
 
-export type ProfilesInput = {
-  bioFilter?: InputMaybe<StringNullableFilter>;
-  dobFilter?: InputMaybe<StringNullableFilter>;
-  genderFilter?: InputMaybe<EnumGenderNullableFilter>;
-  orderBy?: InputMaybe<ProfileOrderByWithRelationAndSearchRelevanceInput>;
-  paginationArgs?: InputMaybe<PaginationArgsInput>;
-  pronounsFilter?: InputMaybe<EnumPronounsNullableFilter>;
-};
-
 export enum Pronouns {
   HE_HIM_HIS = "HE_HIM_HIS",
   NOT_LISTED = "NOT_LISTED",
@@ -2386,44 +2521,55 @@ export enum Pronouns {
 
 export type Query = {
   __typename?: "Query";
+  categoryByRelayId: FieldWrapper<Category>;
   commentByRelayId: FieldWrapper<Comment>;
-  commentConnectionUnion: Array<FieldWrapper<EntryCommentUnion>>;
+  comprehensiveConnectionUnion: Array<FieldWrapper<NodeUnion>>;
+  connectionByRelayId: FieldWrapper<Connection>;
   contentNodesUnion: FieldWrapper<ContentNodes>;
+  decodeViewerTokenFromContext: FieldWrapper<AuthDetailed>;
   entryById: FieldWrapper<Entry>;
   findUniqueMediaItem: FieldWrapper<MediaItem>;
   getUserFromAccessToken: FieldWrapper<User>;
   getViewer: FieldWrapper<AuthDetailed>;
   hello: FieldWrapper<Scalars["String"]>;
   helloWorld: FieldWrapper<Scalars["String"]>;
+  listCategories: FieldWrapper<CategoryConnection>;
   listComments: FieldWrapper<CommentConnection>;
+  listConnections: FieldWrapper<ConnectionConnection>;
   listEntries: FieldWrapper<EntryConnection>;
   listMediaItems: FieldWrapper<MediaItemConnection>;
   listProfiles: FieldWrapper<ProfileConnection>;
+  listSessions: FieldWrapper<SessionConnection>;
   listUsers: FieldWrapper<UserConnection>;
   me: FieldWrapper<AuthDetailed>;
   node?: Maybe<FieldWrapper<Node>>;
+  nodeUnionResolver: FieldWrapper<NodeUnionConnection>;
   profileByRelayId: FieldWrapper<Profile>;
-  profiles: FieldWrapper<ProfileConnection>;
+  sessionByRelayId: FieldWrapper<Session>;
   siftEntries: FieldWrapper<EntryConnection>;
   userById: FieldWrapper<User>;
   userByRelayId: FieldWrapper<User>;
+  userFromAccessTokenDecoded: FieldWrapper<AuthDetailed>;
   viewer: FieldWrapper<ViewerDetailed>;
   viewerAuthInfoFromContext: FieldWrapper<ViewerAuthInfo>;
   viewerEntriesPaginated: FieldWrapper<EntryConnection>;
+};
+
+export type QuerycategoryByRelayIdArgs = {
+  cursor: Scalars["String"];
 };
 
 export type QuerycommentByRelayIdArgs = {
   cursor: Scalars["String"];
 };
 
-export type QuerycommentConnectionUnionArgs = {
-  findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput;
-  findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput;
+export type QueryconnectionByRelayIdArgs = {
+  connectionCursor: Scalars["String"];
 };
 
 export type QuerycontentNodesUnionArgs = {
   findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput;
-  findManyMediaItemsPaginated?: InputMaybe<FindManyMediaItemsInput>;
+  findManyMediaItemsPaginated?: InputMaybe<FindManyMediaItemsPaginatedInput>;
   findManyUsersPaginatedInput?: InputMaybe<FindManyUsersPaginatedInput>;
 };
 
@@ -2443,8 +2589,16 @@ export type QueryhelloArgs = {
   name: Scalars["String"];
 };
 
+export type QuerylistCategoriesArgs = {
+  findManyCategoriesPaginatedInput: FindManyCategoriesPaginatedInput;
+};
+
 export type QuerylistCommentsArgs = {
   findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput;
+};
+
+export type QuerylistConnectionsArgs = {
+  findManyConnectionsPaginatedInput: FindManyConnectionsPaginatedInput;
 };
 
 export type QuerylistEntriesArgs = {
@@ -2452,11 +2606,15 @@ export type QuerylistEntriesArgs = {
 };
 
 export type QuerylistMediaItemsArgs = {
-  findManyMediaItemsPaginated?: InputMaybe<FindManyMediaItemsInput>;
+  findManyMediaItemsPaginated?: InputMaybe<FindManyMediaItemsPaginatedInput>;
 };
 
 export type QuerylistProfilesArgs = {
-  findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput;
+  profilesArgs: FindManyProfilesPaginatedInput;
+};
+
+export type QuerylistSessionsArgs = {
+  findManySessionsPaginatedInput: FindManySessionsPaginatedInput;
 };
 
 export type QuerylistUsersArgs = {
@@ -2467,8 +2625,18 @@ export type QuerynodeArgs = {
   id: Scalars["ID"];
 };
 
-export type QueryprofilesArgs = {
-  profilesArgs: ProfilesInput;
+export type QuerynodeUnionResolverArgs = {
+  id: Scalars["String"];
+  manyComments: FindManyCommentsPaginatedInput;
+  manyEntries: FindManyEntriessPaginatedInput;
+  manyMediaItems: FindManyMediaItemsPaginatedInput;
+  manyProfiles: FindManyProfilesPaginatedInput;
+  manySessions: FindManySessionsPaginatedInput;
+  manyUsers: FindManyUsersPaginatedInput;
+};
+
+export type QuerysessionByRelayIdArgs = {
+  cursor: Scalars["String"];
 };
 
 export type QuerysiftEntriesArgs = {
@@ -2481,6 +2649,10 @@ export type QueryuserByIdArgs = {
 
 export type QueryuserByRelayIdArgs = {
   cursor: Scalars["String"];
+};
+
+export type QueryuserFromAccessTokenDecodedArgs = {
+  token: Scalars["String"];
 };
 
 export type QueryviewerEntriesPaginatedArgs = {
@@ -2514,6 +2686,13 @@ export type Session = Node & {
   tokenState?: Maybe<FieldWrapper<Scalars["String"]>>;
   user?: Maybe<FieldWrapper<User>>;
   userId: FieldWrapper<Scalars["String"]>;
+};
+
+export type SessionConnection = {
+  __typename?: "SessionConnection";
+  edges: Array<FieldWrapper<SessionEdge>>;
+  pageInfo: FieldWrapper<PageInfo>;
+  totalCount: FieldWrapper<Scalars["Int"]>;
 };
 
 export type SessionCreateManyUserInput = {
@@ -2571,6 +2750,12 @@ export type SessionCreatescopesInput = {
   set: Array<Scalars["String"]>;
 };
 
+export type SessionEdge = {
+  __typename?: "SessionEdge";
+  cursor: FieldWrapper<Scalars["String"]>;
+  node: FieldWrapper<Session>;
+};
+
 export type SessionListRelationFilter = {
   every?: InputMaybe<SessionWhereInput>;
   none?: InputMaybe<SessionWhereInput>;
@@ -2580,6 +2765,56 @@ export type SessionListRelationFilter = {
 export type SessionOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
+
+export enum SessionOrderByRelevanceFieldEnum {
+  accessToken = "accessToken",
+  alg = "alg",
+  id = "id",
+  provider = "provider",
+  refreshToken = "refreshToken",
+  scopes = "scopes",
+  signature = "signature",
+  tokenState = "tokenState",
+  userId = "userId"
+}
+
+export type SessionOrderByRelevanceInput = {
+  fields: Array<SessionOrderByRelevanceFieldEnum>;
+  search: Scalars["String"];
+  sort: SortOrder;
+};
+
+export type SessionOrderByWithRelationAndSearchRelevanceInput = {
+  _relevance?: InputMaybe<SessionOrderByRelevanceInput>;
+  accessToken?: InputMaybe<SortOrder>;
+  alg?: InputMaybe<SortOrder>;
+  exp?: InputMaybe<SortOrder>;
+  iat?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  lastVerified?: InputMaybe<SortOrder>;
+  provider?: InputMaybe<SortOrder>;
+  refreshToken?: InputMaybe<SortOrder>;
+  scopes?: InputMaybe<SortOrder>;
+  signature?: InputMaybe<SortOrder>;
+  tokenState?: InputMaybe<SortOrder>;
+  user?: InputMaybe<UserOrderByWithRelationAndSearchRelevanceInput>;
+  userId?: InputMaybe<SortOrder>;
+};
+
+export enum SessionScalarFieldEnum {
+  accessToken = "accessToken",
+  alg = "alg",
+  exp = "exp",
+  iat = "iat",
+  id = "id",
+  lastVerified = "lastVerified",
+  provider = "provider",
+  refreshToken = "refreshToken",
+  scopes = "scopes",
+  signature = "signature",
+  tokenState = "tokenState",
+  userId = "userId"
+}
 
 export type SessionScalarWhereInput = {
   AND?: InputMaybe<Array<SessionScalarWhereInput>>;
@@ -2686,6 +2921,7 @@ export type SessionWhereInput = {
 };
 
 export type SessionWhereUniqueInput = {
+  id?: InputMaybe<Scalars["String"]>;
   userId?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3521,41 +3757,6 @@ export const createUser = gql`
   }
   ${TokenPartial}
 `;
-export const deriveUserDetailsFromToken = gql`
-  mutation deriveUserDetailsFromToken($token: String!) {
-    userFromAccessTokenDecoded(token: $token) {
-      __typename
-      auth {
-        session {
-          ...SessionPartial
-        }
-        user {
-          _count {
-            ...UserCountPartial
-          }
-          ...UserPartial
-        }
-        ...AuthPartial
-      }
-      jwt {
-        header {
-          ...JwtHeadersPartial
-        }
-        payload {
-          ...JwtPayloadPartial
-        }
-        ...JwtDecodedPartial
-      }
-    }
-  }
-  ${SessionPartial}
-  ${UserCountPartial}
-  ${UserPartial}
-  ${AuthPartial}
-  ${JwtHeadersPartial}
-  ${JwtPayloadPartial}
-  ${JwtDecodedPartial}
-`;
 export const loginUser = gql`
   mutation loginUser($data: LoginInput!) {
     login(data: $data) {
@@ -3655,50 +3856,6 @@ export const findUniqueCommentByRelayCursor = gql`
   }
   ${CommentPartial}
 `;
-export const getCommentEntryConnection = gql`
-  query getCommentEntryConnection(
-    $entriesPaginatedInput: FindManyEntriessPaginatedInput!
-    $commentsPaginatedInput: FindManyCommentsPaginatedInput!
-  ) {
-    commentConnectionUnion(
-      findManyEntriesPaginatedInput: $entriesPaginatedInput
-      findManyCommentsPaginatedInput: $commentsPaginatedInput
-    ) {
-      __typename
-      ... on EntryConnection {
-        ...EntryConnectionPartial
-        pageInfo {
-          ...PageInfoPartial
-        }
-        edges {
-          ...EntryEdgePartial
-          node {
-            ...EntryPartial
-          }
-        }
-      }
-      ... on CommentConnection {
-        ...CommentConnectionPartial
-        pageInfo {
-          ...PageInfoPartial
-        }
-        edges {
-          ...CommentEdgePartial
-          node {
-            ...CommentPartial
-          }
-        }
-      }
-    }
-  }
-  ${EntryConnectionPartial}
-  ${PageInfoPartial}
-  ${EntryEdgePartial}
-  ${EntryPartial}
-  ${CommentConnectionPartial}
-  ${CommentEdgePartial}
-  ${CommentPartial}
-`;
 export const listEntries = gql`
   query listEntries(
     $findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!
@@ -3727,9 +3884,9 @@ export const listEntries = gql`
   ${EntryPartial}
   ${EntryCountPartial}
 `;
-export const getProfiles = gql`
-  query getProfiles($findManyProfiles: FindManyProfilesPaginatedInput!) {
-    listProfiles(findManyProfilesPaginatedInput: $findManyProfiles) {
+export const listProfiles = gql`
+  query listProfiles($findManyProfiles: FindManyProfilesPaginatedInput!) {
+    listProfiles(profilesArgs: $findManyProfiles) {
       ...ProfileConnectionPartial
       pageInfo {
         ...PageInfoPartial
@@ -3750,6 +3907,41 @@ export const getProfiles = gql`
   ${ProfileEdgePartial}
   ${ProfilePartial}
   ${UserPartial}
+`;
+export const deriveUserDetailsFromToken = gql`
+  query deriveUserDetailsFromToken($token: String!) {
+    userFromAccessTokenDecoded(token: $token) {
+      __typename
+      auth {
+        session {
+          ...SessionPartial
+        }
+        user {
+          _count {
+            ...UserCountPartial
+          }
+          ...UserPartial
+        }
+        ...AuthPartial
+      }
+      jwt {
+        header {
+          ...JwtHeadersPartial
+        }
+        payload {
+          ...JwtPayloadPartial
+        }
+        ...JwtDecodedPartial
+      }
+    }
+  }
+  ${SessionPartial}
+  ${UserCountPartial}
+  ${UserPartial}
+  ${AuthPartial}
+  ${JwtHeadersPartial}
+  ${JwtPayloadPartial}
+  ${JwtDecodedPartial}
 `;
 export const getAllComments = gql`
   query getAllComments {
@@ -3783,7 +3975,7 @@ export const getAllComments = gql`
 `;
 export const allMediaItems = gql`
   query allMediaItems(
-    $findManyMediaItemsPaginated: FindManyMediaItemsInput!
+    $findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput!
   ) {
     listMediaItems(
       findManyMediaItemsPaginated: $findManyMediaItemsPaginated
@@ -4127,6 +4319,7 @@ export type ResolversTypes = ResolversObject<{
   BoolFilter: ResolverTypeWrapper<DeepPartial<BoolFilter>>;
   Boolean: ResolverTypeWrapper<DeepPartial<Scalars["Boolean"]>>;
   Category: ResolverTypeWrapper<DeepPartial<Category>>;
+  CategoryConnection: ResolverTypeWrapper<DeepPartial<CategoryConnection>>;
   CategoryCount: ResolverTypeWrapper<DeepPartial<CategoryCount>>;
   CategoryCreateManyCreatorInput: ResolverTypeWrapper<
     DeepPartial<CategoryCreateManyCreatorInput>
@@ -4152,11 +4345,24 @@ export type ResolversTypes = ResolversObject<{
   CategoryCreateWithoutEntriesInput: ResolverTypeWrapper<
     DeepPartial<CategoryCreateWithoutEntriesInput>
   >;
+  CategoryEdge: ResolverTypeWrapper<DeepPartial<CategoryEdge>>;
   CategoryListRelationFilter: ResolverTypeWrapper<
     DeepPartial<CategoryListRelationFilter>
   >;
   CategoryOrderByRelationAggregateInput: ResolverTypeWrapper<
     DeepPartial<CategoryOrderByRelationAggregateInput>
+  >;
+  CategoryOrderByRelevanceFieldEnum: ResolverTypeWrapper<
+    DeepPartial<CategoryOrderByRelevanceFieldEnum>
+  >;
+  CategoryOrderByRelevanceInput: ResolverTypeWrapper<
+    DeepPartial<CategoryOrderByRelevanceInput>
+  >;
+  CategoryOrderByWithRelationAndSearchRelevanceInput: ResolverTypeWrapper<
+    DeepPartial<CategoryOrderByWithRelationAndSearchRelevanceInput>
+  >;
+  CategoryScalarFieldEnum: ResolverTypeWrapper<
+    DeepPartial<CategoryScalarFieldEnum>
   >;
   CategoryScalarWhereInput: ResolverTypeWrapper<
     DeepPartial<CategoryScalarWhereInput>
@@ -4306,6 +4512,9 @@ export type ResolversTypes = ResolversObject<{
     DeepPartial<CommentWhereUniqueInput>
   >;
   Connection: ResolverTypeWrapper<DeepPartial<Connection>>;
+  ConnectionConnection: ResolverTypeWrapper<
+    DeepPartial<ConnectionConnection>
+  >;
   ConnectionCreateManyOwnerInput: ResolverTypeWrapper<
     DeepPartial<ConnectionCreateManyOwnerInput>
   >;
@@ -4321,11 +4530,24 @@ export type ResolversTypes = ResolversObject<{
   ConnectionCreateWithoutOwnerInput: ResolverTypeWrapper<
     DeepPartial<ConnectionCreateWithoutOwnerInput>
   >;
+  ConnectionEdge: ResolverTypeWrapper<DeepPartial<ConnectionEdge>>;
   ConnectionListRelationFilter: ResolverTypeWrapper<
     DeepPartial<ConnectionListRelationFilter>
   >;
   ConnectionOrderByRelationAggregateInput: ResolverTypeWrapper<
     DeepPartial<ConnectionOrderByRelationAggregateInput>
+  >;
+  ConnectionOrderByRelevanceFieldEnum: ResolverTypeWrapper<
+    DeepPartial<ConnectionOrderByRelevanceFieldEnum>
+  >;
+  ConnectionOrderByRelevanceInput: ResolverTypeWrapper<
+    DeepPartial<ConnectionOrderByRelevanceInput>
+  >;
+  ConnectionOrderByWithRelationAndSearchRelevanceInput: ResolverTypeWrapper<
+    DeepPartial<ConnectionOrderByWithRelationAndSearchRelevanceInput>
+  >;
+  ConnectionScalarFieldEnum: ResolverTypeWrapper<
+    DeepPartial<ConnectionScalarFieldEnum>
   >;
   ConnectionScalarWhereInput: ResolverTypeWrapper<
     DeepPartial<ConnectionScalarWhereInput>
@@ -4364,9 +4586,6 @@ export type ResolversTypes = ResolversObject<{
     DeepPartial<DateTimeNullableFilter>
   >;
   Entry: ResolverTypeWrapper<DeepPartial<Entry>>;
-  EntryCommentUnion: DeepPartial<
-    ResolversTypes["CommentConnection"] | ResolversTypes["EntryConnection"]
-  >;
   EntryConnection: ResolverTypeWrapper<DeepPartial<EntryConnection>>;
   EntryCount: ResolverTypeWrapper<DeepPartial<EntryCount>>;
   EntryCreateManyAuthorInput: ResolverTypeWrapper<
@@ -4497,17 +4716,26 @@ export type ResolversTypes = ResolversObject<{
   EnumUserStatusNullableFilter: ResolverTypeWrapper<
     DeepPartial<EnumUserStatusNullableFilter>
   >;
+  FindManyCategoriesPaginatedInput: ResolverTypeWrapper<
+    DeepPartial<FindManyCategoriesPaginatedInput>
+  >;
   FindManyCommentsPaginatedInput: ResolverTypeWrapper<
     DeepPartial<FindManyCommentsPaginatedInput>
+  >;
+  FindManyConnectionsPaginatedInput: ResolverTypeWrapper<
+    DeepPartial<FindManyConnectionsPaginatedInput>
   >;
   FindManyEntriessPaginatedInput: ResolverTypeWrapper<
     DeepPartial<FindManyEntriessPaginatedInput>
   >;
-  FindManyMediaItemsInput: ResolverTypeWrapper<
-    DeepPartial<FindManyMediaItemsInput>
+  FindManyMediaItemsPaginatedInput: ResolverTypeWrapper<
+    DeepPartial<FindManyMediaItemsPaginatedInput>
   >;
   FindManyProfilesPaginatedInput: ResolverTypeWrapper<
     DeepPartial<FindManyProfilesPaginatedInput>
+  >;
+  FindManySessionsPaginatedInput: ResolverTypeWrapper<
+    DeepPartial<FindManySessionsPaginatedInput>
   >;
   FindManyUsersPaginatedInput: ResolverTypeWrapper<
     DeepPartial<FindManyUsersPaginatedInput>
@@ -4646,6 +4874,21 @@ export type ResolversTypes = ResolversObject<{
     | ResolversTypes["Session"]
     | ResolversTypes["User"]
     | ResolversTypes["ViewerDetailed"];
+  NodeUnion: DeepPartial<
+    | ResolversTypes["CommentConnection"]
+    | ResolversTypes["EntryConnection"]
+    | ResolversTypes["MediaItemConnection"]
+    | ResolversTypes["ProfileConnection"]
+    | ResolversTypes["SessionConnection"]
+    | ResolversTypes["UserConnection"]
+  >;
+  NodeUnionConnection: ResolverTypeWrapper<
+    DeepPartial<
+      Omit<NodeUnionConnection, "edges"> & {
+        edges: Array<ResolversTypes["NodeUnion"]>;
+      }
+    >
+  >;
   NullableDateTimeFieldUpdateOperationsInput: ResolverTypeWrapper<
     DeepPartial<NullableDateTimeFieldUpdateOperationsInput>
   >;
@@ -4722,12 +4965,12 @@ export type ResolversTypes = ResolversObject<{
   ProfileWhereUniqueInput: ResolverTypeWrapper<
     DeepPartial<ProfileWhereUniqueInput>
   >;
-  ProfilesInput: ResolverTypeWrapper<DeepPartial<ProfilesInput>>;
   Pronouns: ResolverTypeWrapper<DeepPartial<Pronouns>>;
   Query: ResolverTypeWrapper<{}>;
   QueryMode: ResolverTypeWrapper<DeepPartial<QueryMode>>;
   Role: ResolverTypeWrapper<DeepPartial<Role>>;
   Session: ResolverTypeWrapper<DeepPartial<Session>>;
+  SessionConnection: ResolverTypeWrapper<DeepPartial<SessionConnection>>;
   SessionCreateManyUserInput: ResolverTypeWrapper<
     DeepPartial<SessionCreateManyUserInput>
   >;
@@ -4749,11 +4992,24 @@ export type ResolversTypes = ResolversObject<{
   SessionCreatescopesInput: ResolverTypeWrapper<
     DeepPartial<SessionCreatescopesInput>
   >;
+  SessionEdge: ResolverTypeWrapper<DeepPartial<SessionEdge>>;
   SessionListRelationFilter: ResolverTypeWrapper<
     DeepPartial<SessionListRelationFilter>
   >;
   SessionOrderByRelationAggregateInput: ResolverTypeWrapper<
     DeepPartial<SessionOrderByRelationAggregateInput>
+  >;
+  SessionOrderByRelevanceFieldEnum: ResolverTypeWrapper<
+    DeepPartial<SessionOrderByRelevanceFieldEnum>
+  >;
+  SessionOrderByRelevanceInput: ResolverTypeWrapper<
+    DeepPartial<SessionOrderByRelevanceInput>
+  >;
+  SessionOrderByWithRelationAndSearchRelevanceInput: ResolverTypeWrapper<
+    DeepPartial<SessionOrderByWithRelationAndSearchRelevanceInput>
+  >;
+  SessionScalarFieldEnum: ResolverTypeWrapper<
+    DeepPartial<SessionScalarFieldEnum>
   >;
   SessionScalarWhereInput: ResolverTypeWrapper<
     DeepPartial<SessionScalarWhereInput>
@@ -4936,6 +5192,7 @@ export type ResolversParentTypes = ResolversObject<{
   BoolFilter: DeepPartial<BoolFilter>;
   Boolean: DeepPartial<Scalars["Boolean"]>;
   Category: DeepPartial<Category>;
+  CategoryConnection: DeepPartial<CategoryConnection>;
   CategoryCount: DeepPartial<CategoryCount>;
   CategoryCreateManyCreatorInput: DeepPartial<CategoryCreateManyCreatorInput>;
   CategoryCreateManyCreatorInputEnvelope: DeepPartial<CategoryCreateManyCreatorInputEnvelope>;
@@ -4945,8 +5202,11 @@ export type ResolversParentTypes = ResolversObject<{
   CategoryCreateOrConnectWithoutEntriesInput: DeepPartial<CategoryCreateOrConnectWithoutEntriesInput>;
   CategoryCreateWithoutCreatorInput: DeepPartial<CategoryCreateWithoutCreatorInput>;
   CategoryCreateWithoutEntriesInput: DeepPartial<CategoryCreateWithoutEntriesInput>;
+  CategoryEdge: DeepPartial<CategoryEdge>;
   CategoryListRelationFilter: DeepPartial<CategoryListRelationFilter>;
   CategoryOrderByRelationAggregateInput: DeepPartial<CategoryOrderByRelationAggregateInput>;
+  CategoryOrderByRelevanceInput: DeepPartial<CategoryOrderByRelevanceInput>;
+  CategoryOrderByWithRelationAndSearchRelevanceInput: DeepPartial<CategoryOrderByWithRelationAndSearchRelevanceInput>;
   CategoryScalarWhereInput: DeepPartial<CategoryScalarWhereInput>;
   CategoryUpdateManyMutationInput: DeepPartial<CategoryUpdateManyMutationInput>;
   CategoryUpdateManyWithWhereWithoutCreatorInput: DeepPartial<CategoryUpdateManyWithWhereWithoutCreatorInput>;
@@ -4998,13 +5258,17 @@ export type ResolversParentTypes = ResolversObject<{
   CommentWhereInput: DeepPartial<CommentWhereInput>;
   CommentWhereUniqueInput: DeepPartial<CommentWhereUniqueInput>;
   Connection: DeepPartial<Connection>;
+  ConnectionConnection: DeepPartial<ConnectionConnection>;
   ConnectionCreateManyOwnerInput: DeepPartial<ConnectionCreateManyOwnerInput>;
   ConnectionCreateManyOwnerInputEnvelope: DeepPartial<ConnectionCreateManyOwnerInputEnvelope>;
   ConnectionCreateNestedManyWithoutOwnerInput: DeepPartial<ConnectionCreateNestedManyWithoutOwnerInput>;
   ConnectionCreateOrConnectWithoutOwnerInput: DeepPartial<ConnectionCreateOrConnectWithoutOwnerInput>;
   ConnectionCreateWithoutOwnerInput: DeepPartial<ConnectionCreateWithoutOwnerInput>;
+  ConnectionEdge: DeepPartial<ConnectionEdge>;
   ConnectionListRelationFilter: DeepPartial<ConnectionListRelationFilter>;
   ConnectionOrderByRelationAggregateInput: DeepPartial<ConnectionOrderByRelationAggregateInput>;
+  ConnectionOrderByRelevanceInput: DeepPartial<ConnectionOrderByRelevanceInput>;
+  ConnectionOrderByWithRelationAndSearchRelevanceInput: DeepPartial<ConnectionOrderByWithRelationAndSearchRelevanceInput>;
   ConnectionScalarWhereInput: DeepPartial<ConnectionScalarWhereInput>;
   ConnectionUpdateManyMutationInput: DeepPartial<ConnectionUpdateManyMutationInput>;
   ConnectionUpdateManyWithWhereWithoutOwnerInput: DeepPartial<ConnectionUpdateManyWithWhereWithoutOwnerInput>;
@@ -5020,10 +5284,6 @@ export type ResolversParentTypes = ResolversObject<{
   DateTimeFilter: DeepPartial<DateTimeFilter>;
   DateTimeNullableFilter: DeepPartial<DateTimeNullableFilter>;
   Entry: DeepPartial<Entry>;
-  EntryCommentUnion: DeepPartial<
-    | ResolversParentTypes["CommentConnection"]
-    | ResolversParentTypes["EntryConnection"]
-  >;
   EntryConnection: DeepPartial<EntryConnection>;
   EntryCount: DeepPartial<EntryCount>;
   EntryCreateManyAuthorInput: DeepPartial<EntryCreateManyAuthorInput>;
@@ -5068,10 +5328,13 @@ export type ResolversParentTypes = ResolversObject<{
   EnumPronounsNullableFilter: DeepPartial<EnumPronounsNullableFilter>;
   EnumRoleNullableFilter: DeepPartial<EnumRoleNullableFilter>;
   EnumUserStatusNullableFilter: DeepPartial<EnumUserStatusNullableFilter>;
+  FindManyCategoriesPaginatedInput: DeepPartial<FindManyCategoriesPaginatedInput>;
   FindManyCommentsPaginatedInput: DeepPartial<FindManyCommentsPaginatedInput>;
+  FindManyConnectionsPaginatedInput: DeepPartial<FindManyConnectionsPaginatedInput>;
   FindManyEntriessPaginatedInput: DeepPartial<FindManyEntriessPaginatedInput>;
-  FindManyMediaItemsInput: DeepPartial<FindManyMediaItemsInput>;
+  FindManyMediaItemsPaginatedInput: DeepPartial<FindManyMediaItemsPaginatedInput>;
   FindManyProfilesPaginatedInput: DeepPartial<FindManyProfilesPaginatedInput>;
+  FindManySessionsPaginatedInput: DeepPartial<FindManySessionsPaginatedInput>;
   FindManyUsersPaginatedInput: DeepPartial<FindManyUsersPaginatedInput>;
   FindViewerEntriesPaginatedInput: DeepPartial<FindViewerEntriesPaginatedInput>;
   Float: DeepPartial<Scalars["Float"]>;
@@ -5130,6 +5393,19 @@ export type ResolversParentTypes = ResolversObject<{
     | ResolversParentTypes["Session"]
     | ResolversParentTypes["User"]
     | ResolversParentTypes["ViewerDetailed"];
+  NodeUnion: DeepPartial<
+    | ResolversParentTypes["CommentConnection"]
+    | ResolversParentTypes["EntryConnection"]
+    | ResolversParentTypes["MediaItemConnection"]
+    | ResolversParentTypes["ProfileConnection"]
+    | ResolversParentTypes["SessionConnection"]
+    | ResolversParentTypes["UserConnection"]
+  >;
+  NodeUnionConnection: DeepPartial<
+    Omit<NodeUnionConnection, "edges"> & {
+      edges: Array<ResolversParentTypes["NodeUnion"]>;
+    }
+  >;
   NullableDateTimeFieldUpdateOperationsInput: DeepPartial<NullableDateTimeFieldUpdateOperationsInput>;
   NullableEnumGenderFieldUpdateOperationsInput: DeepPartial<NullableEnumGenderFieldUpdateOperationsInput>;
   NullableEnumMediaItemDestinationFieldUpdateOperationsInput: DeepPartial<NullableEnumMediaItemDestinationFieldUpdateOperationsInput>;
@@ -5158,9 +5434,9 @@ export type ResolversParentTypes = ResolversObject<{
   ProfileUpsertWithoutUserInput: DeepPartial<ProfileUpsertWithoutUserInput>;
   ProfileWhereInput: DeepPartial<ProfileWhereInput>;
   ProfileWhereUniqueInput: DeepPartial<ProfileWhereUniqueInput>;
-  ProfilesInput: DeepPartial<ProfilesInput>;
   Query: {};
   Session: DeepPartial<Session>;
+  SessionConnection: DeepPartial<SessionConnection>;
   SessionCreateManyUserInput: DeepPartial<SessionCreateManyUserInput>;
   SessionCreateManyUserInputEnvelope: DeepPartial<SessionCreateManyUserInputEnvelope>;
   SessionCreateManyscopesInput: DeepPartial<SessionCreateManyscopesInput>;
@@ -5168,8 +5444,11 @@ export type ResolversParentTypes = ResolversObject<{
   SessionCreateOrConnectWithoutUserInput: DeepPartial<SessionCreateOrConnectWithoutUserInput>;
   SessionCreateWithoutUserInput: DeepPartial<SessionCreateWithoutUserInput>;
   SessionCreatescopesInput: DeepPartial<SessionCreatescopesInput>;
+  SessionEdge: DeepPartial<SessionEdge>;
   SessionListRelationFilter: DeepPartial<SessionListRelationFilter>;
   SessionOrderByRelationAggregateInput: DeepPartial<SessionOrderByRelationAggregateInput>;
+  SessionOrderByRelevanceInput: DeepPartial<SessionOrderByRelevanceInput>;
+  SessionOrderByWithRelationAndSearchRelevanceInput: DeepPartial<SessionOrderByWithRelationAndSearchRelevanceInput>;
   SessionScalarWhereInput: DeepPartial<SessionScalarWhereInput>;
   SessionUpdateManyMutationInput: DeepPartial<SessionUpdateManyMutationInput>;
   SessionUpdateManyWithWhereWithoutUserInput: DeepPartial<SessionUpdateManyWithWhereWithoutUserInput>;
@@ -5418,11 +5697,34 @@ export type CategoryResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type CategoryConnectionResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["CategoryConnection"] = ResolversParentTypes["CategoryConnection"]
+> = ResolversObject<{
+  edges?: Resolver<
+    Array<ResolversTypes["CategoryEdge"]>,
+    ParentType,
+    ContextType
+  >;
+  pageInfo?: Resolver<ResolversTypes["PageInfo"], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type CategoryCountResolvers<
   ContextType = ResolverContext,
   ParentType extends ResolversParentTypes["CategoryCount"] = ResolversParentTypes["CategoryCount"]
 > = ResolversObject<{
   entries?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CategoryEdgeResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["CategoryEdge"] = ResolversParentTypes["CategoryEdge"]
+> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes["Category"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -5518,6 +5820,29 @@ export type ConnectionResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type ConnectionConnectionResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["ConnectionConnection"] = ResolversParentTypes["ConnectionConnection"]
+> = ResolversObject<{
+  edges?: Resolver<
+    Array<ResolversTypes["ConnectionEdge"]>,
+    ParentType,
+    ContextType
+  >;
+  pageInfo?: Resolver<ResolversTypes["PageInfo"], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ConnectionEdgeResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["ConnectionEdge"] = ResolversParentTypes["ConnectionEdge"]
+> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes["Connection"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type ContentNodesResolvers<
   ContextType = ResolverContext,
   ParentType extends ResolversParentTypes["ContentNodes"] = ResolversParentTypes["ContentNodes"]
@@ -5589,17 +5914,6 @@ export type EntryResolvers<
     ContextType
   >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type EntryCommentUnionResolvers<
-  ContextType = ResolverContext,
-  ParentType extends ResolversParentTypes["EntryCommentUnion"] = ResolversParentTypes["EntryCommentUnion"]
-> = ResolversObject<{
-  __resolveType: TypeResolveFn<
-    "CommentConnection" | "EntryConnection",
-    ParentType,
-    ContextType
-  >;
 }>;
 
 export type EntryConnectionResolvers<
@@ -5825,12 +6139,6 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationupsertCommentArgs, "commentUpsertInput">
   >;
-  userFromAccessTokenDecoded?: Resolver<
-    ResolversTypes["AuthDetailed"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationuserFromAccessTokenDecodedArgs, "token">
-  >;
   viewerCreateEntry?: Resolver<
     Array<ResolversTypes["Entry"]>,
     ParentType,
@@ -5858,6 +6166,36 @@ export type NodeResolvers<
     ContextType
   >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+}>;
+
+export type NodeUnionResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["NodeUnion"] = ResolversParentTypes["NodeUnion"]
+> = ResolversObject<{
+  __resolveType: TypeResolveFn<
+    | "CommentConnection"
+    | "EntryConnection"
+    | "MediaItemConnection"
+    | "ProfileConnection"
+    | "SessionConnection"
+    | "UserConnection",
+    ParentType,
+    ContextType
+  >;
+}>;
+
+export type NodeUnionConnectionResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["NodeUnionConnection"] = ResolversParentTypes["NodeUnionConnection"]
+> = ResolversObject<{
+  edges?: Resolver<
+    Array<ResolversTypes["NodeUnion"]>,
+    ParentType,
+    ContextType
+  >;
+  pageInfo?: Resolver<ResolversTypes["PageInfo"], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type PageInfoResolvers<
@@ -5991,20 +6329,28 @@ export type QueryResolvers<
   ContextType = ResolverContext,
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
+  categoryByRelayId?: Resolver<
+    ResolversTypes["Category"],
+    ParentType,
+    ContextType,
+    RequireFields<QuerycategoryByRelayIdArgs, "cursor">
+  >;
   commentByRelayId?: Resolver<
     ResolversTypes["Comment"],
     ParentType,
     ContextType,
     RequireFields<QuerycommentByRelayIdArgs, "cursor">
   >;
-  commentConnectionUnion?: Resolver<
-    Array<ResolversTypes["EntryCommentUnion"]>,
+  comprehensiveConnectionUnion?: Resolver<
+    Array<ResolversTypes["NodeUnion"]>,
+    ParentType,
+    ContextType
+  >;
+  connectionByRelayId?: Resolver<
+    ResolversTypes["Connection"],
     ParentType,
     ContextType,
-    RequireFields<
-      QuerycommentConnectionUnionArgs,
-      "findManyCommentsPaginatedInput" | "findManyEntriesPaginatedInput"
-    >
+    RequireFields<QueryconnectionByRelayIdArgs, "connectionCursor">
   >;
   contentNodesUnion?: Resolver<
     ResolversTypes["ContentNodes"],
@@ -6014,6 +6360,11 @@ export type QueryResolvers<
       QuerycontentNodesUnionArgs,
       "findManyEntriesPaginatedInput"
     >
+  >;
+  decodeViewerTokenFromContext?: Resolver<
+    ResolversTypes["AuthDetailed"],
+    ParentType,
+    ContextType
   >;
   entryById?: Resolver<
     ResolversTypes["Entry"],
@@ -6045,11 +6396,29 @@ export type QueryResolvers<
     RequireFields<QueryhelloArgs, "name">
   >;
   helloWorld?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  listCategories?: Resolver<
+    ResolversTypes["CategoryConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QuerylistCategoriesArgs,
+      "findManyCategoriesPaginatedInput"
+    >
+  >;
   listComments?: Resolver<
     ResolversTypes["CommentConnection"],
     ParentType,
     ContextType,
     RequireFields<QuerylistCommentsArgs, "findManyCommentsPaginatedInput">
+  >;
+  listConnections?: Resolver<
+    ResolversTypes["ConnectionConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QuerylistConnectionsArgs,
+      "findManyConnectionsPaginatedInput"
+    >
   >;
   listEntries?: Resolver<
     ResolversTypes["EntryConnection"],
@@ -6067,7 +6436,13 @@ export type QueryResolvers<
     ResolversTypes["ProfileConnection"],
     ParentType,
     ContextType,
-    RequireFields<QuerylistProfilesArgs, "findManyProfilesPaginatedInput">
+    RequireFields<QuerylistProfilesArgs, "profilesArgs">
+  >;
+  listSessions?: Resolver<
+    ResolversTypes["SessionConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<QuerylistSessionsArgs, "findManySessionsPaginatedInput">
   >;
   listUsers?: Resolver<
     ResolversTypes["UserConnection"],
@@ -6082,16 +6457,31 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QuerynodeArgs, "id">
   >;
+  nodeUnionResolver?: Resolver<
+    ResolversTypes["NodeUnionConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QuerynodeUnionResolverArgs,
+      | "id"
+      | "manyComments"
+      | "manyEntries"
+      | "manyMediaItems"
+      | "manyProfiles"
+      | "manySessions"
+      | "manyUsers"
+    >
+  >;
   profileByRelayId?: Resolver<
     ResolversTypes["Profile"],
     ParentType,
     ContextType
   >;
-  profiles?: Resolver<
-    ResolversTypes["ProfileConnection"],
+  sessionByRelayId?: Resolver<
+    ResolversTypes["Session"],
     ParentType,
     ContextType,
-    RequireFields<QueryprofilesArgs, "profilesArgs">
+    RequireFields<QuerysessionByRelayIdArgs, "cursor">
   >;
   siftEntries?: Resolver<
     ResolversTypes["EntryConnection"],
@@ -6110,6 +6500,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryuserByRelayIdArgs, "cursor">
+  >;
+  userFromAccessTokenDecoded?: Resolver<
+    ResolversTypes["AuthDetailed"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryuserFromAccessTokenDecodedArgs, "token">
   >;
   viewer?: Resolver<
     ResolversTypes["ViewerDetailed"],
@@ -6177,6 +6573,29 @@ export type SessionResolvers<
   >;
   user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
   userId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SessionConnectionResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["SessionConnection"] = ResolversParentTypes["SessionConnection"]
+> = ResolversObject<{
+  edges?: Resolver<
+    Array<ResolversTypes["SessionEdge"]>,
+    ParentType,
+    ContextType
+  >;
+  pageInfo?: Resolver<ResolversTypes["PageInfo"], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SessionEdgeResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["SessionEdge"] = ResolversParentTypes["SessionEdge"]
+> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes["Session"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -6483,15 +6902,18 @@ export type Resolvers<ContextType = ResolverContext> = ResolversObject<{
   BaseTypesEdge?: BaseTypesEdgeResolvers<ContextType>;
   BigInt?: GraphQLScalarType;
   Category?: CategoryResolvers<ContextType>;
+  CategoryConnection?: CategoryConnectionResolvers<ContextType>;
   CategoryCount?: CategoryCountResolvers<ContextType>;
+  CategoryEdge?: CategoryEdgeResolvers<ContextType>;
   Comment?: CommentResolvers<ContextType>;
   CommentConnection?: CommentConnectionResolvers<ContextType>;
   CommentEdge?: CommentEdgeResolvers<ContextType>;
   Connection?: ConnectionResolvers<ContextType>;
+  ConnectionConnection?: ConnectionConnectionResolvers<ContextType>;
+  ConnectionEdge?: ConnectionEdgeResolvers<ContextType>;
   ContentNodes?: ContentNodesResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   Entry?: EntryResolvers<ContextType>;
-  EntryCommentUnion?: EntryCommentUnionResolvers<ContextType>;
   EntryConnection?: EntryConnectionResolvers<ContextType>;
   EntryCount?: EntryCountResolvers<ContextType>;
   EntryEdge?: EntryEdgeResolvers<ContextType>;
@@ -6503,6 +6925,8 @@ export type Resolvers<ContextType = ResolverContext> = ResolversObject<{
   MediaItemEdge?: MediaItemEdgeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Node?: NodeResolvers<ContextType>;
+  NodeUnion?: NodeUnionResolvers<ContextType>;
+  NodeUnionConnection?: NodeUnionConnectionResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   PhoneNumber?: GraphQLScalarType;
   Profile?: ProfileResolvers<ContextType>;
@@ -6510,6 +6934,8 @@ export type Resolvers<ContextType = ResolverContext> = ResolversObject<{
   ProfileEdge?: ProfileEdgeResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Session?: SessionResolvers<ContextType>;
+  SessionConnection?: SessionConnectionResolvers<ContextType>;
+  SessionEdge?: SessionEdgeResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   Token?: TokenResolvers<ContextType>;
   TypesUnion?: TypesUnionResolvers<ContextType>;
@@ -6817,76 +7243,6 @@ export type createUserMutation = {
   };
 };
 
-export type deriveUserDetailsFromTokenMutationVariables = Exact<{
-  token: Scalars["String"];
-}>;
-
-export type deriveUserDetailsFromTokenMutation = {
-  __typename?: "Mutation";
-  userFromAccessTokenDecoded: {
-    __typename: "AuthDetailed";
-    auth?: {
-      __typename: "Auth";
-      accessToken?: string | null;
-      refreshToken?: string | null;
-      session?: {
-        __typename: "Session";
-        accessToken?: string | null;
-        alg?: string | null;
-        exp?: number | null;
-        iat?: number | null;
-        id: string;
-        lastVerified?: Date | null;
-        provider?: string | null;
-        refreshToken?: string | null;
-        scopes?: Array<string> | null;
-        signature?: string | null;
-        tokenState?: string | null;
-        userId: string;
-      } | null;
-      user: {
-        __typename: "User";
-        createdAt: Date;
-        email: string;
-        emailVerified?: Date | null;
-        id: string;
-        image?: string | null;
-        firstName?: string | null;
-        lastName?: string | null;
-        password: string;
-        role?: Role | null;
-        status: UserStatus;
-        updatedAt?: Date | null;
-        _count?: {
-          __typename: "UserCount";
-          accounts: number;
-          categories: number;
-          comments: number;
-          connections: number;
-          mediaItems: number;
-          entries: number;
-          sessions: number;
-        } | null;
-      };
-    } | null;
-    jwt?: {
-      __typename: "JwtDecoded";
-      signature: string;
-      header: {
-        __typename: "JwtHeaders";
-        alg: AlgorithmType;
-        typ: string;
-      };
-      payload: {
-        __typename: "JwtPayload";
-        exp?: typeof GraphQLBigInt | null;
-        iat?: typeof GraphQLBigInt | null;
-        userId?: string | null;
-      };
-    } | null;
-  };
-};
-
 export type loginUserMutationVariables = Exact<{
   data: LoginInput;
 }>;
@@ -7101,68 +7457,6 @@ export type findUniqueCommentByRelayCursorQuery = {
   };
 };
 
-export type getCommentEntryConnectionQueryVariables = Exact<{
-  entriesPaginatedInput: FindManyEntriessPaginatedInput;
-  commentsPaginatedInput: FindManyCommentsPaginatedInput;
-}>;
-
-export type getCommentEntryConnectionQuery = {
-  __typename?: "Query";
-  commentConnectionUnion: Array<
-    | {
-        __typename: "CommentConnection";
-        totalCount: number;
-        pageInfo: {
-          __typename: "PageInfo";
-          startCursor?: string | null;
-          endCursor?: string | null;
-          hasNextPage: boolean;
-          hasPreviousPage: boolean;
-        };
-        edges: Array<{
-          __typename: "CommentEdge";
-          cursor: string;
-          node: {
-            __typename: "Comment";
-            body?: string | null;
-            updatedAt?: Date | null;
-            createdAt: Date;
-            entryId: string;
-            authorId: string;
-            id: string;
-            position?: string | null;
-            reactions?: Array<CommentReactions> | null;
-          };
-        }>;
-      }
-    | {
-        __typename: "EntryConnection";
-        totalCount: number;
-        pageInfo: {
-          __typename: "PageInfo";
-          startCursor?: string | null;
-          endCursor?: string | null;
-          hasNextPage: boolean;
-          hasPreviousPage: boolean;
-        };
-        edges: Array<{
-          __typename: "EntryEdge";
-          cursor: string;
-          node: {
-            __typename: "Entry";
-            authorId: string;
-            content?: string | null;
-            createdAt: Date;
-            featuredImage?: string | null;
-            title?: string | null;
-            published?: boolean | null;
-            id: string;
-          };
-        }>;
-      }
-  >;
-};
-
 export type listEntriesQueryVariables = Exact<{
   findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput;
 }>;
@@ -7201,11 +7495,11 @@ export type listEntriesQuery = {
   };
 };
 
-export type getProfilesQueryVariables = Exact<{
+export type listProfilesQueryVariables = Exact<{
   findManyProfiles: FindManyProfilesPaginatedInput;
 }>;
 
-export type getProfilesQuery = {
+export type listProfilesQuery = {
   __typename?: "Query";
   listProfiles: {
     __typename: "ProfileConnection";
@@ -7253,6 +7547,76 @@ export type getProfilesQuery = {
         };
       };
     }>;
+  };
+};
+
+export type deriveUserDetailsFromTokenQueryVariables = Exact<{
+  token: Scalars["String"];
+}>;
+
+export type deriveUserDetailsFromTokenQuery = {
+  __typename?: "Query";
+  userFromAccessTokenDecoded: {
+    __typename: "AuthDetailed";
+    auth?: {
+      __typename: "Auth";
+      accessToken?: string | null;
+      refreshToken?: string | null;
+      session?: {
+        __typename: "Session";
+        accessToken?: string | null;
+        alg?: string | null;
+        exp?: number | null;
+        iat?: number | null;
+        id: string;
+        lastVerified?: Date | null;
+        provider?: string | null;
+        refreshToken?: string | null;
+        scopes?: Array<string> | null;
+        signature?: string | null;
+        tokenState?: string | null;
+        userId: string;
+      } | null;
+      user: {
+        __typename: "User";
+        createdAt: Date;
+        email: string;
+        emailVerified?: Date | null;
+        id: string;
+        image?: string | null;
+        firstName?: string | null;
+        lastName?: string | null;
+        password: string;
+        role?: Role | null;
+        status: UserStatus;
+        updatedAt?: Date | null;
+        _count?: {
+          __typename: "UserCount";
+          accounts: number;
+          categories: number;
+          comments: number;
+          connections: number;
+          mediaItems: number;
+          entries: number;
+          sessions: number;
+        } | null;
+      };
+    } | null;
+    jwt?: {
+      __typename: "JwtDecoded";
+      signature: string;
+      header: {
+        __typename: "JwtHeaders";
+        alg: AlgorithmType;
+        typ: string;
+      };
+      payload: {
+        __typename: "JwtPayload";
+        exp?: typeof GraphQLBigInt | null;
+        iat?: typeof GraphQLBigInt | null;
+        userId?: string | null;
+      };
+    } | null;
   };
 };
 
@@ -7313,7 +7677,7 @@ export type getAllCommentsQuery = {
 };
 
 export type allMediaItemsQueryVariables = Exact<{
-  findManyMediaItemsPaginated: FindManyMediaItemsInput;
+  findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput;
 }>;
 
 export type allMediaItemsQuery = {
@@ -8027,85 +8391,6 @@ export type createUserMutationOptions = Apollo.BaseMutationOptions<
   createUserMutation,
   createUserMutationVariables
 >;
-export const deriveUserDetailsFromTokenDocument = gql`
-  mutation deriveUserDetailsFromToken($token: String!) {
-    userFromAccessTokenDecoded(token: $token) {
-      __typename
-      auth {
-        session {
-          ...SessionPartial
-        }
-        user {
-          _count {
-            ...UserCountPartial
-          }
-          ...UserPartial
-        }
-        ...AuthPartial
-      }
-      jwt {
-        header {
-          ...JwtHeadersPartial
-        }
-        payload {
-          ...JwtPayloadPartial
-        }
-        ...JwtDecodedPartial
-      }
-    }
-  }
-  ${SessionPartialFragmentDoc}
-  ${UserCountPartialFragmentDoc}
-  ${UserPartialFragmentDoc}
-  ${AuthPartialFragmentDoc}
-  ${JwtHeadersPartialFragmentDoc}
-  ${JwtPayloadPartialFragmentDoc}
-  ${JwtDecodedPartialFragmentDoc}
-`;
-export type deriveUserDetailsFromTokenMutationFn = Apollo.MutationFunction<
-  deriveUserDetailsFromTokenMutation,
-  deriveUserDetailsFromTokenMutationVariables
->;
-
-/**
- * __usederiveUserDetailsFromTokenMutation__
- *
- * To run a mutation, you first call `usederiveUserDetailsFromTokenMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usederiveUserDetailsFromTokenMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deriveUserDetailsFromTokenMutation, { data, loading, error }] = usederiveUserDetailsFromTokenMutation({
- *   variables: {
- *      token: // value for 'token'
- *   },
- * });
- */
-export function usederiveUserDetailsFromTokenMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    deriveUserDetailsFromTokenMutation,
-    deriveUserDetailsFromTokenMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    deriveUserDetailsFromTokenMutation,
-    deriveUserDetailsFromTokenMutationVariables
-  >(deriveUserDetailsFromTokenDocument, options);
-}
-export type deriveUserDetailsFromTokenMutationHookResult = ReturnType<
-  typeof usederiveUserDetailsFromTokenMutation
->;
-export type deriveUserDetailsFromTokenMutationResult =
-  Apollo.MutationResult<deriveUserDetailsFromTokenMutation>;
-export type deriveUserDetailsFromTokenMutationOptions =
-  Apollo.BaseMutationOptions<
-    deriveUserDetailsFromTokenMutation,
-    deriveUserDetailsFromTokenMutationVariables
-  >;
 export const loginUserDocument = gql`
   mutation loginUser($data: LoginInput!) {
     login(data: $data) {
@@ -8393,110 +8678,6 @@ export function refetchfindUniqueCommentByRelayCursorQuery(
     variables: variables
   };
 }
-export const getCommentEntryConnectionDocument = gql`
-  query getCommentEntryConnection(
-    $entriesPaginatedInput: FindManyEntriessPaginatedInput!
-    $commentsPaginatedInput: FindManyCommentsPaginatedInput!
-  ) {
-    commentConnectionUnion(
-      findManyEntriesPaginatedInput: $entriesPaginatedInput
-      findManyCommentsPaginatedInput: $commentsPaginatedInput
-    ) {
-      __typename
-      ... on EntryConnection {
-        ...EntryConnectionPartial
-        pageInfo {
-          ...PageInfoPartial
-        }
-        edges {
-          ...EntryEdgePartial
-          node {
-            ...EntryPartial
-          }
-        }
-      }
-      ... on CommentConnection {
-        ...CommentConnectionPartial
-        pageInfo {
-          ...PageInfoPartial
-        }
-        edges {
-          ...CommentEdgePartial
-          node {
-            ...CommentPartial
-          }
-        }
-      }
-    }
-  }
-  ${EntryConnectionPartialFragmentDoc}
-  ${PageInfoPartialFragmentDoc}
-  ${EntryEdgePartialFragmentDoc}
-  ${EntryPartialFragmentDoc}
-  ${CommentConnectionPartialFragmentDoc}
-  ${CommentEdgePartialFragmentDoc}
-  ${CommentPartialFragmentDoc}
-`;
-
-/**
- * __usegetCommentEntryConnectionQuery__
- *
- * To run a query within a React component, call `usegetCommentEntryConnectionQuery` and pass it any options that fit your needs.
- * When your component renders, `usegetCommentEntryConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usegetCommentEntryConnectionQuery({
- *   variables: {
- *      entriesPaginatedInput: // value for 'entriesPaginatedInput'
- *      commentsPaginatedInput: // value for 'commentsPaginatedInput'
- *   },
- * });
- */
-export function usegetCommentEntryConnectionQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    getCommentEntryConnectionQuery,
-    getCommentEntryConnectionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    getCommentEntryConnectionQuery,
-    getCommentEntryConnectionQueryVariables
-  >(getCommentEntryConnectionDocument, options);
-}
-export function usegetCommentEntryConnectionLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    getCommentEntryConnectionQuery,
-    getCommentEntryConnectionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    getCommentEntryConnectionQuery,
-    getCommentEntryConnectionQueryVariables
-  >(getCommentEntryConnectionDocument, options);
-}
-export type getCommentEntryConnectionQueryHookResult = ReturnType<
-  typeof usegetCommentEntryConnectionQuery
->;
-export type getCommentEntryConnectionLazyQueryHookResult = ReturnType<
-  typeof usegetCommentEntryConnectionLazyQuery
->;
-export type getCommentEntryConnectionQueryResult = Apollo.QueryResult<
-  getCommentEntryConnectionQuery,
-  getCommentEntryConnectionQueryVariables
->;
-export function refetchgetCommentEntryConnectionQuery(
-  variables: getCommentEntryConnectionQueryVariables
-) {
-  return {
-    query: getCommentEntryConnectionDocument,
-    variables: variables
-  };
-}
 export const listEntriesDocument = gql`
   query listEntries(
     $findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!
@@ -8581,9 +8762,9 @@ export function refetchlistEntriesQuery(
 ) {
   return { query: listEntriesDocument, variables: variables };
 }
-export const getProfilesDocument = gql`
-  query getProfiles($findManyProfiles: FindManyProfilesPaginatedInput!) {
-    listProfiles(findManyProfilesPaginatedInput: $findManyProfiles) {
+export const listProfilesDocument = gql`
+  query listProfiles($findManyProfiles: FindManyProfilesPaginatedInput!) {
+    listProfiles(profilesArgs: $findManyProfiles) {
       ...ProfileConnectionPartial
       pageInfo {
         ...PageInfoPartial
@@ -8607,59 +8788,153 @@ export const getProfilesDocument = gql`
 `;
 
 /**
- * __usegetProfilesQuery__
+ * __uselistProfilesQuery__
  *
- * To run a query within a React component, call `usegetProfilesQuery` and pass it any options that fit your needs.
- * When your component renders, `usegetProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `uselistProfilesQuery` and pass it any options that fit your needs.
+ * When your component renders, `uselistProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usegetProfilesQuery({
+ * const { data, loading, error } = uselistProfilesQuery({
  *   variables: {
  *      findManyProfiles: // value for 'findManyProfiles'
  *   },
  * });
  */
-export function usegetProfilesQuery(
+export function uselistProfilesQuery(
   baseOptions: Apollo.QueryHookOptions<
-    getProfilesQuery,
-    getProfilesQueryVariables
+    listProfilesQuery,
+    listProfilesQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<getProfilesQuery, getProfilesQueryVariables>(
-    getProfilesDocument,
+  return Apollo.useQuery<listProfilesQuery, listProfilesQueryVariables>(
+    listProfilesDocument,
     options
   );
 }
-export function usegetProfilesLazyQuery(
+export function uselistProfilesLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    getProfilesQuery,
-    getProfilesQueryVariables
+    listProfilesQuery,
+    listProfilesQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<getProfilesQuery, getProfilesQueryVariables>(
-    getProfilesDocument,
-    options
-  );
+  return Apollo.useLazyQuery<
+    listProfilesQuery,
+    listProfilesQueryVariables
+  >(listProfilesDocument, options);
 }
-export type getProfilesQueryHookResult = ReturnType<
-  typeof usegetProfilesQuery
+export type listProfilesQueryHookResult = ReturnType<
+  typeof uselistProfilesQuery
 >;
-export type getProfilesLazyQueryHookResult = ReturnType<
-  typeof usegetProfilesLazyQuery
+export type listProfilesLazyQueryHookResult = ReturnType<
+  typeof uselistProfilesLazyQuery
 >;
-export type getProfilesQueryResult = Apollo.QueryResult<
-  getProfilesQuery,
-  getProfilesQueryVariables
+export type listProfilesQueryResult = Apollo.QueryResult<
+  listProfilesQuery,
+  listProfilesQueryVariables
 >;
-export function refetchgetProfilesQuery(
-  variables: getProfilesQueryVariables
+export function refetchlistProfilesQuery(
+  variables: listProfilesQueryVariables
 ) {
-  return { query: getProfilesDocument, variables: variables };
+  return { query: listProfilesDocument, variables: variables };
+}
+export const deriveUserDetailsFromTokenDocument = gql`
+  query deriveUserDetailsFromToken($token: String!) {
+    userFromAccessTokenDecoded(token: $token) {
+      __typename
+      auth {
+        session {
+          ...SessionPartial
+        }
+        user {
+          _count {
+            ...UserCountPartial
+          }
+          ...UserPartial
+        }
+        ...AuthPartial
+      }
+      jwt {
+        header {
+          ...JwtHeadersPartial
+        }
+        payload {
+          ...JwtPayloadPartial
+        }
+        ...JwtDecodedPartial
+      }
+    }
+  }
+  ${SessionPartialFragmentDoc}
+  ${UserCountPartialFragmentDoc}
+  ${UserPartialFragmentDoc}
+  ${AuthPartialFragmentDoc}
+  ${JwtHeadersPartialFragmentDoc}
+  ${JwtPayloadPartialFragmentDoc}
+  ${JwtDecodedPartialFragmentDoc}
+`;
+
+/**
+ * __usederiveUserDetailsFromTokenQuery__
+ *
+ * To run a query within a React component, call `usederiveUserDetailsFromTokenQuery` and pass it any options that fit your needs.
+ * When your component renders, `usederiveUserDetailsFromTokenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usederiveUserDetailsFromTokenQuery({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function usederiveUserDetailsFromTokenQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    deriveUserDetailsFromTokenQuery,
+    deriveUserDetailsFromTokenQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    deriveUserDetailsFromTokenQuery,
+    deriveUserDetailsFromTokenQueryVariables
+  >(deriveUserDetailsFromTokenDocument, options);
+}
+export function usederiveUserDetailsFromTokenLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    deriveUserDetailsFromTokenQuery,
+    deriveUserDetailsFromTokenQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    deriveUserDetailsFromTokenQuery,
+    deriveUserDetailsFromTokenQueryVariables
+  >(deriveUserDetailsFromTokenDocument, options);
+}
+export type deriveUserDetailsFromTokenQueryHookResult = ReturnType<
+  typeof usederiveUserDetailsFromTokenQuery
+>;
+export type deriveUserDetailsFromTokenLazyQueryHookResult = ReturnType<
+  typeof usederiveUserDetailsFromTokenLazyQuery
+>;
+export type deriveUserDetailsFromTokenQueryResult = Apollo.QueryResult<
+  deriveUserDetailsFromTokenQuery,
+  deriveUserDetailsFromTokenQueryVariables
+>;
+export function refetchderiveUserDetailsFromTokenQuery(
+  variables: deriveUserDetailsFromTokenQueryVariables
+) {
+  return {
+    query: deriveUserDetailsFromTokenDocument,
+    variables: variables
+  };
 }
 export const getAllCommentsDocument = gql`
   query getAllComments {
@@ -8748,7 +9023,7 @@ export function refetchgetAllCommentsQuery(
 }
 export const allMediaItemsDocument = gql`
   query allMediaItems(
-    $findManyMediaItemsPaginated: FindManyMediaItemsInput!
+    $findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput!
   ) {
     listMediaItems(
       findManyMediaItemsPaginated: $findManyMediaItemsPaginated
@@ -9221,9 +9496,9 @@ export function refetchViewerQuery(variables?: ViewerQueryVariables) {
 export const namedOperations = {
   Query: {
     findUniqueCommentByRelayCursor: "findUniqueCommentByRelayCursor",
-    getCommentEntryConnection: "getCommentEntryConnection",
     listEntries: "listEntries",
-    getProfiles: "getProfiles",
+    listProfiles: "listProfiles",
+    deriveUserDetailsFromToken: "deriveUserDetailsFromToken",
     getAllComments: "getAllComments",
     allMediaItems: "allMediaItems",
     userByEncodedCursor: "userByEncodedCursor",
@@ -9235,7 +9510,6 @@ export const namedOperations = {
   Mutation: {
     changePassword: "changePassword",
     createUser: "createUser",
-    deriveUserDetailsFromToken: "deriveUserDetailsFromToken",
     loginUser: "loginUser",
     registerNewUser: "registerNewUser",
     signInUser: "signInUser"

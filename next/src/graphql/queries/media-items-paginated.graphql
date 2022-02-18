@@ -4,7 +4,7 @@
 # import MediaItemConnectionPartial from "../fragments/media-item-partial.graphql";
 
 query allMediaItems(
-  $findManyMediaItemsPaginated: FindManyMediaItemsInput!
+  $findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput!
 ) {
   listMediaItems(
     findManyMediaItemsPaginated: $findManyMediaItemsPaginated

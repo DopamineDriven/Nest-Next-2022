@@ -12,7 +12,7 @@ import { AuthService } from "src/auth/auth-jwt.service";
 import { FindManyEntriesPaginatedInput } from "./inputs/entry-paginated.input";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { EntryCreateManyAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-many-author.input";
-import { EntryWhereUniqueInput } from "src/graphql.schema";
+import { EntryWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-where-unique.input";
 import {
   Field,
   InputType,

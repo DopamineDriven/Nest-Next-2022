@@ -1,33 +1,30 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma";
+import { PrismaService } from "src/prisma/prisma.service";
+import { FindManyCategoriesPaginatedInput } from "./inputs/find-many-categories-paginated.input";
+import { Injectable } from "@nestjs/common";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
-import { FindManyMediaItemsPaginatedInput } from "./inputs/find-many-media-items-paginated.input";
-import { MediaItemConnection } from "./model/media-connection";
-import { MediaItem } from "./model/media.model";
-import { FindManyMediaItemArgs } from "src/.generated/prisma-nestjs-graphql/media-item/args/find-many-media-item.args";
+import { Category } from "./model/category.model";
 
 @Injectable()
-export class MediaItemService {
-  constructor(@Inject(PrismaService) private prismaService: PrismaService) {}
+export class CategoryService {
+  constructor(private prismaService: PrismaService) {}
 
-  async relayFindUniqueMediaItem(params: { id: string }) {
-    const mediaItem = await this.prismaService.mediaItem.findUnique({
+  async relayFindUniqueCategory(params: { id: string }) {
+    const category = await this.prismaService.category.findUnique({
       where: { id: fromGlobalId(params.id).id }
     });
-    if (!mediaItem) {
-      throw new Error("could not find mediaItem with id " + params.id);
+    if (!category) {
+      throw new Error("could not find category with id " + params.id);
     }
-    return mediaItem;
+    return category;
   }
-
-  async listMediaItems(
-    params: FindManyMediaItemsPaginatedInput
-  ): Promise<MediaItemConnection> {
+  async listCategories(params: FindManyCategoriesPaginatedInput) {
     return await findManyCursorConnection(
       args =>
-        this.prismaService.mediaItem.findMany({
-          include: { user: true },
+        this.prismaService.category.findMany({
+          include: {
+            entries: true
+          },
           distinct: params.distinct,
           take: params.take,
           skip: params.skip,
@@ -37,7 +34,7 @@ export class MediaItemService {
           ...args
         }),
       () =>
-        this.prismaService.mediaItem.count({
+        this.prismaService.category.count({
           orderBy: params.orderBy,
           take: params.take,
           distinct: params.distinct,
@@ -57,7 +54,7 @@ export class MediaItemService {
         },
         decodeCursor: (cursor: string) => fromGlobalId(cursor),
         encodeCursor: (cursor: { id: string }) =>
-          toGlobalId(MediaItem.name, cursor.id)
+          toGlobalId(Category.name, cursor.id)
       }
     );
   }

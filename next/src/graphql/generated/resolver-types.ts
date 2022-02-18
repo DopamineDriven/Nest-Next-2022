@@ -316,6 +316,13 @@ export type Category = Node & {
   updatedAt?: Maybe<Scalars["DateTime"]>;
 };
 
+export type CategoryConnection = {
+  __typename?: "CategoryConnection";
+  edges: Array<CategoryEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars["Int"];
+};
+
 export type CategoryCount = {
   __typename?: "CategoryCount";
   entries: Scalars["Int"];
@@ -379,6 +386,12 @@ export type CategoryCreateWithoutEntriesInput = {
   updatedAt?: InputMaybe<Scalars["DateTime"]>;
 };
 
+export type CategoryEdge = {
+  __typename?: "CategoryEdge";
+  cursor: Scalars["String"];
+  node: Category;
+};
+
 export type CategoryListRelationFilter = {
   every?: InputMaybe<CategoryWhereInput>;
   none?: InputMaybe<CategoryWhereInput>;
@@ -388,6 +401,40 @@ export type CategoryListRelationFilter = {
 export type CategoryOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
+
+export enum CategoryOrderByRelevanceFieldEnum {
+  CreatorId = "creatorId",
+  EntryId = "entryId",
+  Id = "id",
+  Name = "name"
+}
+
+export type CategoryOrderByRelevanceInput = {
+  fields: Array<CategoryOrderByRelevanceFieldEnum>;
+  search: Scalars["String"];
+  sort: SortOrder;
+};
+
+export type CategoryOrderByWithRelationAndSearchRelevanceInput = {
+  _relevance?: InputMaybe<CategoryOrderByRelevanceInput>;
+  createdAt?: InputMaybe<SortOrder>;
+  creator?: InputMaybe<UserOrderByWithRelationAndSearchRelevanceInput>;
+  creatorId?: InputMaybe<SortOrder>;
+  entries?: InputMaybe<EntryOrderByRelationAggregateInput>;
+  entryId?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  name?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+};
+
+export enum CategoryScalarFieldEnum {
+  CreatedAt = "createdAt",
+  CreatorId = "creatorId",
+  EntryId = "entryId",
+  Id = "id",
+  Name = "name",
+  UpdatedAt = "updatedAt"
+}
 
 export type CategoryScalarWhereInput = {
   AND?: InputMaybe<Array<CategoryScalarWhereInput>>;
@@ -865,6 +912,13 @@ export type Connection = Node & {
   phoneNumber?: Maybe<Scalars["PhoneNumber"]>;
 };
 
+export type ConnectionConnection = {
+  __typename?: "ConnectionConnection";
+  edges: Array<ConnectionEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars["Int"];
+};
+
 export type ConnectionCreateManyOwnerInput = {
   email: Scalars["String"];
   firstName?: InputMaybe<Scalars["String"]>;
@@ -904,6 +958,12 @@ export type ConnectionCreateWithoutOwnerInput = {
   phoneNumber?: InputMaybe<Scalars["String"]>;
 };
 
+export type ConnectionEdge = {
+  __typename?: "ConnectionEdge";
+  cursor: Scalars["String"];
+  node: Connection;
+};
+
 export type ConnectionListRelationFilter = {
   every?: InputMaybe<ConnectionWhereInput>;
   none?: InputMaybe<ConnectionWhereInput>;
@@ -913,6 +973,46 @@ export type ConnectionListRelationFilter = {
 export type ConnectionOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
+
+export enum ConnectionOrderByRelevanceFieldEnum {
+  Email = "email",
+  FirstName = "firstName",
+  Id = "id",
+  Ip = "ip",
+  LastName = "lastName",
+  OwnerId = "ownerId",
+  PhoneNumber = "phoneNumber"
+}
+
+export type ConnectionOrderByRelevanceInput = {
+  fields: Array<ConnectionOrderByRelevanceFieldEnum>;
+  search: Scalars["String"];
+  sort: SortOrder;
+};
+
+export type ConnectionOrderByWithRelationAndSearchRelevanceInput = {
+  _relevance?: InputMaybe<ConnectionOrderByRelevanceInput>;
+  email?: InputMaybe<SortOrder>;
+  firstName?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  ip?: InputMaybe<SortOrder>;
+  lastModified?: InputMaybe<SortOrder>;
+  lastName?: InputMaybe<SortOrder>;
+  owner?: InputMaybe<UserOrderByWithRelationAndSearchRelevanceInput>;
+  ownerId?: InputMaybe<SortOrder>;
+  phoneNumber?: InputMaybe<SortOrder>;
+};
+
+export enum ConnectionScalarFieldEnum {
+  Email = "email",
+  FirstName = "firstName",
+  Id = "id",
+  Ip = "ip",
+  LastModified = "lastModified",
+  LastName = "lastName",
+  OwnerId = "ownerId",
+  PhoneNumber = "phoneNumber"
+}
 
 export type ConnectionScalarWhereInput = {
   AND?: InputMaybe<Array<ConnectionScalarWhereInput>>;
@@ -1052,8 +1152,6 @@ export type Entry = Node & {
   title?: Maybe<Scalars["String"]>;
   updatedAt?: Maybe<Scalars["DateTime"]>;
 };
-
-export type EntryCommentUnion = CommentConnection | EntryConnection;
 
 export type EntryConnection = {
   __typename?: "EntryConnection";
@@ -1456,6 +1554,18 @@ export type EnumUserStatusNullableFilter = {
   notIn?: InputMaybe<Array<UserStatus>>;
 };
 
+export type FindManyCategoriesPaginatedInput = {
+  cursor?: InputMaybe<CategoryWhereUniqueInput>;
+  distinct?: InputMaybe<Array<CategoryScalarFieldEnum>>;
+  orderBy?: InputMaybe<
+    Array<CategoryOrderByWithRelationAndSearchRelevanceInput>
+  >;
+  pagination: PaginationArgsInput;
+  skip?: InputMaybe<Scalars["Int"]>;
+  take?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<CategoryWhereInput>;
+};
+
 export type FindManyCommentsPaginatedInput = {
   cursor?: InputMaybe<CommentWhereUniqueInput>;
   distinct?: InputMaybe<Array<CommentScalarFieldEnum>>;
@@ -1466,6 +1576,18 @@ export type FindManyCommentsPaginatedInput = {
   skip?: InputMaybe<Scalars["Int"]>;
   take?: InputMaybe<Scalars["Int"]>;
   where?: InputMaybe<CommentWhereInput>;
+};
+
+export type FindManyConnectionsPaginatedInput = {
+  cursor?: InputMaybe<ConnectionWhereUniqueInput>;
+  distinct?: InputMaybe<Array<ConnectionScalarFieldEnum>>;
+  orderBy?: InputMaybe<
+    Array<ConnectionOrderByWithRelationAndSearchRelevanceInput>
+  >;
+  pagination: PaginationArgsInput;
+  skip?: InputMaybe<Scalars["Int"]>;
+  take?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<ConnectionWhereInput>;
 };
 
 export type FindManyEntriessPaginatedInput = {
@@ -1480,7 +1602,7 @@ export type FindManyEntriessPaginatedInput = {
   where?: InputMaybe<EntryWhereInput>;
 };
 
-export type FindManyMediaItemsInput = {
+export type FindManyMediaItemsPaginatedInput = {
   cursor?: InputMaybe<MediaItemWhereUniqueInput>;
   distinct?: InputMaybe<Array<MediaItemScalarFieldEnum>>;
   orderBy?: InputMaybe<
@@ -1502,6 +1624,18 @@ export type FindManyProfilesPaginatedInput = {
   skip?: InputMaybe<Scalars["Int"]>;
   take?: InputMaybe<Scalars["Int"]>;
   where?: InputMaybe<ProfileWhereInput>;
+};
+
+export type FindManySessionsPaginatedInput = {
+  cursor: SessionWhereUniqueInput;
+  distinct?: InputMaybe<Array<SessionScalarFieldEnum>>;
+  orderBy?: InputMaybe<
+    Array<SessionOrderByWithRelationAndSearchRelevanceInput>
+  >;
+  pagination: PaginationArgsInput;
+  skip?: InputMaybe<Scalars["Int"]>;
+  take?: InputMaybe<Scalars["Int"]>;
+  where?: InputMaybe<SessionWhereInput>;
 };
 
 export type FindManyUsersPaginatedInput = {
@@ -1904,7 +2038,6 @@ export type Mutation = {
   signup: Token;
   updateUserPassword: User;
   upsertComment: Array<Comment>;
-  userFromAccessTokenDecoded: AuthDetailed;
   viewerCreateEntry: Array<Entry>;
 };
 
@@ -1951,10 +2084,6 @@ export type MutationUpdateUserPasswordArgs = {
 
 export type MutationUpsertCommentArgs = {
   commentUpsertInput: CommentUpsertWithWhereUniqueWithoutAuthorInput;
-};
-
-export type MutationUserFromAccessTokenDecodedArgs = {
-  token: Scalars["String"];
 };
 
 export type MutationViewerCreateEntryArgs = {
@@ -2084,6 +2213,21 @@ export type NestedStringNullableFilter = {
 
 export type Node = {
   id: Scalars["ID"];
+};
+
+export type NodeUnion =
+  | CommentConnection
+  | EntryConnection
+  | MediaItemConnection
+  | ProfileConnection
+  | SessionConnection
+  | UserConnection;
+
+export type NodeUnionConnection = {
+  __typename?: "NodeUnionConnection";
+  edges: Array<NodeUnion>;
+  pageInfo: PageInfo;
+  totalCount: Scalars["Int"];
 };
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -2351,15 +2495,6 @@ export type ProfileWhereUniqueInput = {
   userId?: InputMaybe<Scalars["String"]>;
 };
 
-export type ProfilesInput = {
-  bioFilter?: InputMaybe<StringNullableFilter>;
-  dobFilter?: InputMaybe<StringNullableFilter>;
-  genderFilter?: InputMaybe<EnumGenderNullableFilter>;
-  orderBy?: InputMaybe<ProfileOrderByWithRelationAndSearchRelevanceInput>;
-  paginationArgs?: InputMaybe<PaginationArgsInput>;
-  pronounsFilter?: InputMaybe<EnumPronounsNullableFilter>;
-};
-
 export enum Pronouns {
   HeHimHis = "HE_HIM_HIS",
   NotListed = "NOT_LISTED",
@@ -2370,44 +2505,55 @@ export enum Pronouns {
 
 export type Query = {
   __typename?: "Query";
+  categoryByRelayId: Category;
   commentByRelayId: Comment;
-  commentConnectionUnion: Array<EntryCommentUnion>;
+  comprehensiveConnectionUnion: Array<NodeUnion>;
+  connectionByRelayId: Connection;
   contentNodesUnion: ContentNodes;
+  decodeViewerTokenFromContext: AuthDetailed;
   entryById: Entry;
   findUniqueMediaItem: MediaItem;
   getUserFromAccessToken: User;
   getViewer: AuthDetailed;
   hello: Scalars["String"];
   helloWorld: Scalars["String"];
+  listCategories: CategoryConnection;
   listComments: CommentConnection;
+  listConnections: ConnectionConnection;
   listEntries: EntryConnection;
   listMediaItems: MediaItemConnection;
   listProfiles: ProfileConnection;
+  listSessions: SessionConnection;
   listUsers: UserConnection;
   me: AuthDetailed;
   node?: Maybe<Node>;
+  nodeUnionResolver: NodeUnionConnection;
   profileByRelayId: Profile;
-  profiles: ProfileConnection;
+  sessionByRelayId: Session;
   siftEntries: EntryConnection;
   userById: User;
   userByRelayId: User;
+  userFromAccessTokenDecoded: AuthDetailed;
   viewer: ViewerDetailed;
   viewerAuthInfoFromContext: ViewerAuthInfo;
   viewerEntriesPaginated: EntryConnection;
+};
+
+export type QueryCategoryByRelayIdArgs = {
+  cursor: Scalars["String"];
 };
 
 export type QueryCommentByRelayIdArgs = {
   cursor: Scalars["String"];
 };
 
-export type QueryCommentConnectionUnionArgs = {
-  findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput;
-  findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput;
+export type QueryConnectionByRelayIdArgs = {
+  connectionCursor: Scalars["String"];
 };
 
 export type QueryContentNodesUnionArgs = {
   findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput;
-  findManyMediaItemsPaginated?: InputMaybe<FindManyMediaItemsInput>;
+  findManyMediaItemsPaginated?: InputMaybe<FindManyMediaItemsPaginatedInput>;
   findManyUsersPaginatedInput?: InputMaybe<FindManyUsersPaginatedInput>;
 };
 
@@ -2427,8 +2573,16 @@ export type QueryHelloArgs = {
   name: Scalars["String"];
 };
 
+export type QueryListCategoriesArgs = {
+  findManyCategoriesPaginatedInput: FindManyCategoriesPaginatedInput;
+};
+
 export type QueryListCommentsArgs = {
   findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput;
+};
+
+export type QueryListConnectionsArgs = {
+  findManyConnectionsPaginatedInput: FindManyConnectionsPaginatedInput;
 };
 
 export type QueryListEntriesArgs = {
@@ -2436,11 +2590,15 @@ export type QueryListEntriesArgs = {
 };
 
 export type QueryListMediaItemsArgs = {
-  findManyMediaItemsPaginated?: InputMaybe<FindManyMediaItemsInput>;
+  findManyMediaItemsPaginated?: InputMaybe<FindManyMediaItemsPaginatedInput>;
 };
 
 export type QueryListProfilesArgs = {
-  findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput;
+  profilesArgs: FindManyProfilesPaginatedInput;
+};
+
+export type QueryListSessionsArgs = {
+  findManySessionsPaginatedInput: FindManySessionsPaginatedInput;
 };
 
 export type QueryListUsersArgs = {
@@ -2451,8 +2609,18 @@ export type QueryNodeArgs = {
   id: Scalars["ID"];
 };
 
-export type QueryProfilesArgs = {
-  profilesArgs: ProfilesInput;
+export type QueryNodeUnionResolverArgs = {
+  id: Scalars["String"];
+  manyComments: FindManyCommentsPaginatedInput;
+  manyEntries: FindManyEntriessPaginatedInput;
+  manyMediaItems: FindManyMediaItemsPaginatedInput;
+  manyProfiles: FindManyProfilesPaginatedInput;
+  manySessions: FindManySessionsPaginatedInput;
+  manyUsers: FindManyUsersPaginatedInput;
+};
+
+export type QuerySessionByRelayIdArgs = {
+  cursor: Scalars["String"];
 };
 
 export type QuerySiftEntriesArgs = {
@@ -2465,6 +2633,10 @@ export type QueryUserByIdArgs = {
 
 export type QueryUserByRelayIdArgs = {
   cursor: Scalars["String"];
+};
+
+export type QueryUserFromAccessTokenDecodedArgs = {
+  token: Scalars["String"];
 };
 
 export type QueryViewerEntriesPaginatedArgs = {
@@ -2498,6 +2670,13 @@ export type Session = Node & {
   tokenState?: Maybe<Scalars["String"]>;
   user?: Maybe<User>;
   userId: Scalars["String"];
+};
+
+export type SessionConnection = {
+  __typename?: "SessionConnection";
+  edges: Array<SessionEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars["Int"];
 };
 
 export type SessionCreateManyUserInput = {
@@ -2555,6 +2734,12 @@ export type SessionCreatescopesInput = {
   set: Array<Scalars["String"]>;
 };
 
+export type SessionEdge = {
+  __typename?: "SessionEdge";
+  cursor: Scalars["String"];
+  node: Session;
+};
+
 export type SessionListRelationFilter = {
   every?: InputMaybe<SessionWhereInput>;
   none?: InputMaybe<SessionWhereInput>;
@@ -2564,6 +2749,56 @@ export type SessionListRelationFilter = {
 export type SessionOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
+
+export enum SessionOrderByRelevanceFieldEnum {
+  AccessToken = "accessToken",
+  Alg = "alg",
+  Id = "id",
+  Provider = "provider",
+  RefreshToken = "refreshToken",
+  Scopes = "scopes",
+  Signature = "signature",
+  TokenState = "tokenState",
+  UserId = "userId"
+}
+
+export type SessionOrderByRelevanceInput = {
+  fields: Array<SessionOrderByRelevanceFieldEnum>;
+  search: Scalars["String"];
+  sort: SortOrder;
+};
+
+export type SessionOrderByWithRelationAndSearchRelevanceInput = {
+  _relevance?: InputMaybe<SessionOrderByRelevanceInput>;
+  accessToken?: InputMaybe<SortOrder>;
+  alg?: InputMaybe<SortOrder>;
+  exp?: InputMaybe<SortOrder>;
+  iat?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  lastVerified?: InputMaybe<SortOrder>;
+  provider?: InputMaybe<SortOrder>;
+  refreshToken?: InputMaybe<SortOrder>;
+  scopes?: InputMaybe<SortOrder>;
+  signature?: InputMaybe<SortOrder>;
+  tokenState?: InputMaybe<SortOrder>;
+  user?: InputMaybe<UserOrderByWithRelationAndSearchRelevanceInput>;
+  userId?: InputMaybe<SortOrder>;
+};
+
+export enum SessionScalarFieldEnum {
+  AccessToken = "accessToken",
+  Alg = "alg",
+  Exp = "exp",
+  Iat = "iat",
+  Id = "id",
+  LastVerified = "lastVerified",
+  Provider = "provider",
+  RefreshToken = "refreshToken",
+  Scopes = "scopes",
+  Signature = "signature",
+  TokenState = "tokenState",
+  UserId = "userId"
+}
 
 export type SessionScalarWhereInput = {
   AND?: InputMaybe<Array<SessionScalarWhereInput>>;
@@ -2670,6 +2905,7 @@ export type SessionWhereInput = {
 };
 
 export type SessionWhereUniqueInput = {
+  id?: InputMaybe<Scalars["String"]>;
   userId?: InputMaybe<Scalars["String"]>;
 };
 
@@ -3346,6 +3582,7 @@ export type ResolversTypes = ResolversObject<{
   BoolFilter: BoolFilter;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   Category: ResolverTypeWrapper<Category>;
+  CategoryConnection: ResolverTypeWrapper<CategoryConnection>;
   CategoryCount: ResolverTypeWrapper<CategoryCount>;
   CategoryCreateManyCreatorInput: CategoryCreateManyCreatorInput;
   CategoryCreateManyCreatorInputEnvelope: CategoryCreateManyCreatorInputEnvelope;
@@ -3355,8 +3592,13 @@ export type ResolversTypes = ResolversObject<{
   CategoryCreateOrConnectWithoutEntriesInput: CategoryCreateOrConnectWithoutEntriesInput;
   CategoryCreateWithoutCreatorInput: CategoryCreateWithoutCreatorInput;
   CategoryCreateWithoutEntriesInput: CategoryCreateWithoutEntriesInput;
+  CategoryEdge: ResolverTypeWrapper<CategoryEdge>;
   CategoryListRelationFilter: CategoryListRelationFilter;
   CategoryOrderByRelationAggregateInput: CategoryOrderByRelationAggregateInput;
+  CategoryOrderByRelevanceFieldEnum: CategoryOrderByRelevanceFieldEnum;
+  CategoryOrderByRelevanceInput: CategoryOrderByRelevanceInput;
+  CategoryOrderByWithRelationAndSearchRelevanceInput: CategoryOrderByWithRelationAndSearchRelevanceInput;
+  CategoryScalarFieldEnum: CategoryScalarFieldEnum;
   CategoryScalarWhereInput: CategoryScalarWhereInput;
   CategoryUpdateManyMutationInput: CategoryUpdateManyMutationInput;
   CategoryUpdateManyWithWhereWithoutCreatorInput: CategoryUpdateManyWithWhereWithoutCreatorInput;
@@ -3411,13 +3653,19 @@ export type ResolversTypes = ResolversObject<{
   CommentWhereInput: CommentWhereInput;
   CommentWhereUniqueInput: CommentWhereUniqueInput;
   Connection: ResolverTypeWrapper<Connection>;
+  ConnectionConnection: ResolverTypeWrapper<ConnectionConnection>;
   ConnectionCreateManyOwnerInput: ConnectionCreateManyOwnerInput;
   ConnectionCreateManyOwnerInputEnvelope: ConnectionCreateManyOwnerInputEnvelope;
   ConnectionCreateNestedManyWithoutOwnerInput: ConnectionCreateNestedManyWithoutOwnerInput;
   ConnectionCreateOrConnectWithoutOwnerInput: ConnectionCreateOrConnectWithoutOwnerInput;
   ConnectionCreateWithoutOwnerInput: ConnectionCreateWithoutOwnerInput;
+  ConnectionEdge: ResolverTypeWrapper<ConnectionEdge>;
   ConnectionListRelationFilter: ConnectionListRelationFilter;
   ConnectionOrderByRelationAggregateInput: ConnectionOrderByRelationAggregateInput;
+  ConnectionOrderByRelevanceFieldEnum: ConnectionOrderByRelevanceFieldEnum;
+  ConnectionOrderByRelevanceInput: ConnectionOrderByRelevanceInput;
+  ConnectionOrderByWithRelationAndSearchRelevanceInput: ConnectionOrderByWithRelationAndSearchRelevanceInput;
+  ConnectionScalarFieldEnum: ConnectionScalarFieldEnum;
   ConnectionScalarWhereInput: ConnectionScalarWhereInput;
   ConnectionUpdateManyMutationInput: ConnectionUpdateManyMutationInput;
   ConnectionUpdateManyWithWhereWithoutOwnerInput: ConnectionUpdateManyWithWhereWithoutOwnerInput;
@@ -3433,9 +3681,6 @@ export type ResolversTypes = ResolversObject<{
   DateTimeFilter: DateTimeFilter;
   DateTimeNullableFilter: DateTimeNullableFilter;
   Entry: ResolverTypeWrapper<Entry>;
-  EntryCommentUnion:
-    | ResolversTypes["CommentConnection"]
-    | ResolversTypes["EntryConnection"];
   EntryConnection: ResolverTypeWrapper<EntryConnection>;
   EntryCount: ResolverTypeWrapper<EntryCount>;
   EntryCreateManyAuthorInput: EntryCreateManyAuthorInput;
@@ -3482,10 +3727,13 @@ export type ResolversTypes = ResolversObject<{
   EnumPronounsNullableFilter: EnumPronounsNullableFilter;
   EnumRoleNullableFilter: EnumRoleNullableFilter;
   EnumUserStatusNullableFilter: EnumUserStatusNullableFilter;
+  FindManyCategoriesPaginatedInput: FindManyCategoriesPaginatedInput;
   FindManyCommentsPaginatedInput: FindManyCommentsPaginatedInput;
+  FindManyConnectionsPaginatedInput: FindManyConnectionsPaginatedInput;
   FindManyEntriessPaginatedInput: FindManyEntriessPaginatedInput;
-  FindManyMediaItemsInput: FindManyMediaItemsInput;
+  FindManyMediaItemsPaginatedInput: FindManyMediaItemsPaginatedInput;
   FindManyProfilesPaginatedInput: FindManyProfilesPaginatedInput;
+  FindManySessionsPaginatedInput: FindManySessionsPaginatedInput;
   FindManyUsersPaginatedInput: FindManyUsersPaginatedInput;
   FindViewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput;
   Float: ResolverTypeWrapper<Scalars["Float"]>;
@@ -3549,6 +3797,18 @@ export type ResolversTypes = ResolversObject<{
     | ResolversTypes["Session"]
     | ResolversTypes["User"]
     | ResolversTypes["ViewerDetailed"];
+  NodeUnion:
+    | ResolversTypes["CommentConnection"]
+    | ResolversTypes["EntryConnection"]
+    | ResolversTypes["MediaItemConnection"]
+    | ResolversTypes["ProfileConnection"]
+    | ResolversTypes["SessionConnection"]
+    | ResolversTypes["UserConnection"];
+  NodeUnionConnection: ResolverTypeWrapper<
+    Omit<NodeUnionConnection, "edges"> & {
+      edges: Array<ResolversTypes["NodeUnion"]>;
+    }
+  >;
   NullableDateTimeFieldUpdateOperationsInput: NullableDateTimeFieldUpdateOperationsInput;
   NullableEnumGenderFieldUpdateOperationsInput: NullableEnumGenderFieldUpdateOperationsInput;
   NullableEnumMediaItemDestinationFieldUpdateOperationsInput: NullableEnumMediaItemDestinationFieldUpdateOperationsInput;
@@ -3579,12 +3839,12 @@ export type ResolversTypes = ResolversObject<{
   ProfileUpsertWithoutUserInput: ProfileUpsertWithoutUserInput;
   ProfileWhereInput: ProfileWhereInput;
   ProfileWhereUniqueInput: ProfileWhereUniqueInput;
-  ProfilesInput: ProfilesInput;
   Pronouns: Pronouns;
   Query: ResolverTypeWrapper<{}>;
   QueryMode: QueryMode;
   Role: Role;
   Session: ResolverTypeWrapper<Session>;
+  SessionConnection: ResolverTypeWrapper<SessionConnection>;
   SessionCreateManyUserInput: SessionCreateManyUserInput;
   SessionCreateManyUserInputEnvelope: SessionCreateManyUserInputEnvelope;
   SessionCreateManyscopesInput: SessionCreateManyscopesInput;
@@ -3592,8 +3852,13 @@ export type ResolversTypes = ResolversObject<{
   SessionCreateOrConnectWithoutUserInput: SessionCreateOrConnectWithoutUserInput;
   SessionCreateWithoutUserInput: SessionCreateWithoutUserInput;
   SessionCreatescopesInput: SessionCreatescopesInput;
+  SessionEdge: ResolverTypeWrapper<SessionEdge>;
   SessionListRelationFilter: SessionListRelationFilter;
   SessionOrderByRelationAggregateInput: SessionOrderByRelationAggregateInput;
+  SessionOrderByRelevanceFieldEnum: SessionOrderByRelevanceFieldEnum;
+  SessionOrderByRelevanceInput: SessionOrderByRelevanceInput;
+  SessionOrderByWithRelationAndSearchRelevanceInput: SessionOrderByWithRelationAndSearchRelevanceInput;
+  SessionScalarFieldEnum: SessionScalarFieldEnum;
   SessionScalarWhereInput: SessionScalarWhereInput;
   SessionUpdateManyMutationInput: SessionUpdateManyMutationInput;
   SessionUpdateManyWithWhereWithoutUserInput: SessionUpdateManyWithWhereWithoutUserInput;
@@ -3690,6 +3955,7 @@ export type ResolversParentTypes = ResolversObject<{
   BoolFilter: BoolFilter;
   Boolean: Scalars["Boolean"];
   Category: Category;
+  CategoryConnection: CategoryConnection;
   CategoryCount: CategoryCount;
   CategoryCreateManyCreatorInput: CategoryCreateManyCreatorInput;
   CategoryCreateManyCreatorInputEnvelope: CategoryCreateManyCreatorInputEnvelope;
@@ -3699,8 +3965,11 @@ export type ResolversParentTypes = ResolversObject<{
   CategoryCreateOrConnectWithoutEntriesInput: CategoryCreateOrConnectWithoutEntriesInput;
   CategoryCreateWithoutCreatorInput: CategoryCreateWithoutCreatorInput;
   CategoryCreateWithoutEntriesInput: CategoryCreateWithoutEntriesInput;
+  CategoryEdge: CategoryEdge;
   CategoryListRelationFilter: CategoryListRelationFilter;
   CategoryOrderByRelationAggregateInput: CategoryOrderByRelationAggregateInput;
+  CategoryOrderByRelevanceInput: CategoryOrderByRelevanceInput;
+  CategoryOrderByWithRelationAndSearchRelevanceInput: CategoryOrderByWithRelationAndSearchRelevanceInput;
   CategoryScalarWhereInput: CategoryScalarWhereInput;
   CategoryUpdateManyMutationInput: CategoryUpdateManyMutationInput;
   CategoryUpdateManyWithWhereWithoutCreatorInput: CategoryUpdateManyWithWhereWithoutCreatorInput;
@@ -3752,13 +4021,17 @@ export type ResolversParentTypes = ResolversObject<{
   CommentWhereInput: CommentWhereInput;
   CommentWhereUniqueInput: CommentWhereUniqueInput;
   Connection: Connection;
+  ConnectionConnection: ConnectionConnection;
   ConnectionCreateManyOwnerInput: ConnectionCreateManyOwnerInput;
   ConnectionCreateManyOwnerInputEnvelope: ConnectionCreateManyOwnerInputEnvelope;
   ConnectionCreateNestedManyWithoutOwnerInput: ConnectionCreateNestedManyWithoutOwnerInput;
   ConnectionCreateOrConnectWithoutOwnerInput: ConnectionCreateOrConnectWithoutOwnerInput;
   ConnectionCreateWithoutOwnerInput: ConnectionCreateWithoutOwnerInput;
+  ConnectionEdge: ConnectionEdge;
   ConnectionListRelationFilter: ConnectionListRelationFilter;
   ConnectionOrderByRelationAggregateInput: ConnectionOrderByRelationAggregateInput;
+  ConnectionOrderByRelevanceInput: ConnectionOrderByRelevanceInput;
+  ConnectionOrderByWithRelationAndSearchRelevanceInput: ConnectionOrderByWithRelationAndSearchRelevanceInput;
   ConnectionScalarWhereInput: ConnectionScalarWhereInput;
   ConnectionUpdateManyMutationInput: ConnectionUpdateManyMutationInput;
   ConnectionUpdateManyWithWhereWithoutOwnerInput: ConnectionUpdateManyWithWhereWithoutOwnerInput;
@@ -3774,9 +4047,6 @@ export type ResolversParentTypes = ResolversObject<{
   DateTimeFilter: DateTimeFilter;
   DateTimeNullableFilter: DateTimeNullableFilter;
   Entry: Entry;
-  EntryCommentUnion:
-    | ResolversParentTypes["CommentConnection"]
-    | ResolversParentTypes["EntryConnection"];
   EntryConnection: EntryConnection;
   EntryCount: EntryCount;
   EntryCreateManyAuthorInput: EntryCreateManyAuthorInput;
@@ -3821,10 +4091,13 @@ export type ResolversParentTypes = ResolversObject<{
   EnumPronounsNullableFilter: EnumPronounsNullableFilter;
   EnumRoleNullableFilter: EnumRoleNullableFilter;
   EnumUserStatusNullableFilter: EnumUserStatusNullableFilter;
+  FindManyCategoriesPaginatedInput: FindManyCategoriesPaginatedInput;
   FindManyCommentsPaginatedInput: FindManyCommentsPaginatedInput;
+  FindManyConnectionsPaginatedInput: FindManyConnectionsPaginatedInput;
   FindManyEntriessPaginatedInput: FindManyEntriessPaginatedInput;
-  FindManyMediaItemsInput: FindManyMediaItemsInput;
+  FindManyMediaItemsPaginatedInput: FindManyMediaItemsPaginatedInput;
   FindManyProfilesPaginatedInput: FindManyProfilesPaginatedInput;
+  FindManySessionsPaginatedInput: FindManySessionsPaginatedInput;
   FindManyUsersPaginatedInput: FindManyUsersPaginatedInput;
   FindViewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput;
   Float: Scalars["Float"];
@@ -3883,6 +4156,16 @@ export type ResolversParentTypes = ResolversObject<{
     | ResolversParentTypes["Session"]
     | ResolversParentTypes["User"]
     | ResolversParentTypes["ViewerDetailed"];
+  NodeUnion:
+    | ResolversParentTypes["CommentConnection"]
+    | ResolversParentTypes["EntryConnection"]
+    | ResolversParentTypes["MediaItemConnection"]
+    | ResolversParentTypes["ProfileConnection"]
+    | ResolversParentTypes["SessionConnection"]
+    | ResolversParentTypes["UserConnection"];
+  NodeUnionConnection: Omit<NodeUnionConnection, "edges"> & {
+    edges: Array<ResolversParentTypes["NodeUnion"]>;
+  };
   NullableDateTimeFieldUpdateOperationsInput: NullableDateTimeFieldUpdateOperationsInput;
   NullableEnumGenderFieldUpdateOperationsInput: NullableEnumGenderFieldUpdateOperationsInput;
   NullableEnumMediaItemDestinationFieldUpdateOperationsInput: NullableEnumMediaItemDestinationFieldUpdateOperationsInput;
@@ -3911,9 +4194,9 @@ export type ResolversParentTypes = ResolversObject<{
   ProfileUpsertWithoutUserInput: ProfileUpsertWithoutUserInput;
   ProfileWhereInput: ProfileWhereInput;
   ProfileWhereUniqueInput: ProfileWhereUniqueInput;
-  ProfilesInput: ProfilesInput;
   Query: {};
   Session: Session;
+  SessionConnection: SessionConnection;
   SessionCreateManyUserInput: SessionCreateManyUserInput;
   SessionCreateManyUserInputEnvelope: SessionCreateManyUserInputEnvelope;
   SessionCreateManyscopesInput: SessionCreateManyscopesInput;
@@ -3921,8 +4204,11 @@ export type ResolversParentTypes = ResolversObject<{
   SessionCreateOrConnectWithoutUserInput: SessionCreateOrConnectWithoutUserInput;
   SessionCreateWithoutUserInput: SessionCreateWithoutUserInput;
   SessionCreatescopesInput: SessionCreatescopesInput;
+  SessionEdge: SessionEdge;
   SessionListRelationFilter: SessionListRelationFilter;
   SessionOrderByRelationAggregateInput: SessionOrderByRelationAggregateInput;
+  SessionOrderByRelevanceInput: SessionOrderByRelevanceInput;
+  SessionOrderByWithRelationAndSearchRelevanceInput: SessionOrderByWithRelationAndSearchRelevanceInput;
   SessionScalarWhereInput: SessionScalarWhereInput;
   SessionUpdateManyMutationInput: SessionUpdateManyMutationInput;
   SessionUpdateManyWithWhereWithoutUserInput: SessionUpdateManyWithWhereWithoutUserInput;
@@ -4170,11 +4456,34 @@ export type CategoryResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type CategoryConnectionResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["CategoryConnection"] = ResolversParentTypes["CategoryConnection"]
+> = ResolversObject<{
+  edges?: Resolver<
+    Array<ResolversTypes["CategoryEdge"]>,
+    ParentType,
+    ContextType
+  >;
+  pageInfo?: Resolver<ResolversTypes["PageInfo"], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type CategoryCountResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["CategoryCount"] = ResolversParentTypes["CategoryCount"]
 > = ResolversObject<{
   entries?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CategoryEdgeResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["CategoryEdge"] = ResolversParentTypes["CategoryEdge"]
+> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes["Category"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -4270,6 +4579,29 @@ export type ConnectionResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type ConnectionConnectionResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["ConnectionConnection"] = ResolversParentTypes["ConnectionConnection"]
+> = ResolversObject<{
+  edges?: Resolver<
+    Array<ResolversTypes["ConnectionEdge"]>,
+    ParentType,
+    ContextType
+  >;
+  pageInfo?: Resolver<ResolversTypes["PageInfo"], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ConnectionEdgeResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["ConnectionEdge"] = ResolversParentTypes["ConnectionEdge"]
+> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes["Connection"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type ContentNodesResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["ContentNodes"] = ResolversParentTypes["ContentNodes"]
@@ -4341,17 +4673,6 @@ export type EntryResolvers<
     ContextType
   >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type EntryCommentUnionResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes["EntryCommentUnion"] = ResolversParentTypes["EntryCommentUnion"]
-> = ResolversObject<{
-  __resolveType: TypeResolveFn<
-    "CommentConnection" | "EntryConnection",
-    ParentType,
-    ContextType
-  >;
 }>;
 
 export type EntryConnectionResolvers<
@@ -4577,12 +4898,6 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationUpsertCommentArgs, "commentUpsertInput">
   >;
-  userFromAccessTokenDecoded?: Resolver<
-    ResolversTypes["AuthDetailed"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationUserFromAccessTokenDecodedArgs, "token">
-  >;
   viewerCreateEntry?: Resolver<
     Array<ResolversTypes["Entry"]>,
     ParentType,
@@ -4610,6 +4925,36 @@ export type NodeResolvers<
     ContextType
   >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+}>;
+
+export type NodeUnionResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["NodeUnion"] = ResolversParentTypes["NodeUnion"]
+> = ResolversObject<{
+  __resolveType: TypeResolveFn<
+    | "CommentConnection"
+    | "EntryConnection"
+    | "MediaItemConnection"
+    | "ProfileConnection"
+    | "SessionConnection"
+    | "UserConnection",
+    ParentType,
+    ContextType
+  >;
+}>;
+
+export type NodeUnionConnectionResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["NodeUnionConnection"] = ResolversParentTypes["NodeUnionConnection"]
+> = ResolversObject<{
+  edges?: Resolver<
+    Array<ResolversTypes["NodeUnion"]>,
+    ParentType,
+    ContextType
+  >;
+  pageInfo?: Resolver<ResolversTypes["PageInfo"], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type PageInfoResolvers<
@@ -4743,20 +5088,28 @@ export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
+  categoryByRelayId?: Resolver<
+    ResolversTypes["Category"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryCategoryByRelayIdArgs, "cursor">
+  >;
   commentByRelayId?: Resolver<
     ResolversTypes["Comment"],
     ParentType,
     ContextType,
     RequireFields<QueryCommentByRelayIdArgs, "cursor">
   >;
-  commentConnectionUnion?: Resolver<
-    Array<ResolversTypes["EntryCommentUnion"]>,
+  comprehensiveConnectionUnion?: Resolver<
+    Array<ResolversTypes["NodeUnion"]>,
+    ParentType,
+    ContextType
+  >;
+  connectionByRelayId?: Resolver<
+    ResolversTypes["Connection"],
     ParentType,
     ContextType,
-    RequireFields<
-      QueryCommentConnectionUnionArgs,
-      "findManyCommentsPaginatedInput" | "findManyEntriesPaginatedInput"
-    >
+    RequireFields<QueryConnectionByRelayIdArgs, "connectionCursor">
   >;
   contentNodesUnion?: Resolver<
     ResolversTypes["ContentNodes"],
@@ -4766,6 +5119,11 @@ export type QueryResolvers<
       QueryContentNodesUnionArgs,
       "findManyEntriesPaginatedInput"
     >
+  >;
+  decodeViewerTokenFromContext?: Resolver<
+    ResolversTypes["AuthDetailed"],
+    ParentType,
+    ContextType
   >;
   entryById?: Resolver<
     ResolversTypes["Entry"],
@@ -4797,11 +5155,29 @@ export type QueryResolvers<
     RequireFields<QueryHelloArgs, "name">
   >;
   helloWorld?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  listCategories?: Resolver<
+    ResolversTypes["CategoryConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryListCategoriesArgs,
+      "findManyCategoriesPaginatedInput"
+    >
+  >;
   listComments?: Resolver<
     ResolversTypes["CommentConnection"],
     ParentType,
     ContextType,
     RequireFields<QueryListCommentsArgs, "findManyCommentsPaginatedInput">
+  >;
+  listConnections?: Resolver<
+    ResolversTypes["ConnectionConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryListConnectionsArgs,
+      "findManyConnectionsPaginatedInput"
+    >
   >;
   listEntries?: Resolver<
     ResolversTypes["EntryConnection"],
@@ -4819,7 +5195,13 @@ export type QueryResolvers<
     ResolversTypes["ProfileConnection"],
     ParentType,
     ContextType,
-    RequireFields<QueryListProfilesArgs, "findManyProfilesPaginatedInput">
+    RequireFields<QueryListProfilesArgs, "profilesArgs">
+  >;
+  listSessions?: Resolver<
+    ResolversTypes["SessionConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryListSessionsArgs, "findManySessionsPaginatedInput">
   >;
   listUsers?: Resolver<
     ResolversTypes["UserConnection"],
@@ -4834,16 +5216,31 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryNodeArgs, "id">
   >;
+  nodeUnionResolver?: Resolver<
+    ResolversTypes["NodeUnionConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryNodeUnionResolverArgs,
+      | "id"
+      | "manyComments"
+      | "manyEntries"
+      | "manyMediaItems"
+      | "manyProfiles"
+      | "manySessions"
+      | "manyUsers"
+    >
+  >;
   profileByRelayId?: Resolver<
     ResolversTypes["Profile"],
     ParentType,
     ContextType
   >;
-  profiles?: Resolver<
-    ResolversTypes["ProfileConnection"],
+  sessionByRelayId?: Resolver<
+    ResolversTypes["Session"],
     ParentType,
     ContextType,
-    RequireFields<QueryProfilesArgs, "profilesArgs">
+    RequireFields<QuerySessionByRelayIdArgs, "cursor">
   >;
   siftEntries?: Resolver<
     ResolversTypes["EntryConnection"],
@@ -4862,6 +5259,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryUserByRelayIdArgs, "cursor">
+  >;
+  userFromAccessTokenDecoded?: Resolver<
+    ResolversTypes["AuthDetailed"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryUserFromAccessTokenDecodedArgs, "token">
   >;
   viewer?: Resolver<
     ResolversTypes["ViewerDetailed"],
@@ -4929,6 +5332,29 @@ export type SessionResolvers<
   >;
   user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
   userId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SessionConnectionResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["SessionConnection"] = ResolversParentTypes["SessionConnection"]
+> = ResolversObject<{
+  edges?: Resolver<
+    Array<ResolversTypes["SessionEdge"]>,
+    ParentType,
+    ContextType
+  >;
+  pageInfo?: Resolver<ResolversTypes["PageInfo"], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SessionEdgeResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["SessionEdge"] = ResolversParentTypes["SessionEdge"]
+> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes["Session"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -5235,15 +5661,18 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   BaseTypesEdge?: BaseTypesEdgeResolvers<ContextType>;
   BigInt?: GraphQLScalarType;
   Category?: CategoryResolvers<ContextType>;
+  CategoryConnection?: CategoryConnectionResolvers<ContextType>;
   CategoryCount?: CategoryCountResolvers<ContextType>;
+  CategoryEdge?: CategoryEdgeResolvers<ContextType>;
   Comment?: CommentResolvers<ContextType>;
   CommentConnection?: CommentConnectionResolvers<ContextType>;
   CommentEdge?: CommentEdgeResolvers<ContextType>;
   Connection?: ConnectionResolvers<ContextType>;
+  ConnectionConnection?: ConnectionConnectionResolvers<ContextType>;
+  ConnectionEdge?: ConnectionEdgeResolvers<ContextType>;
   ContentNodes?: ContentNodesResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   Entry?: EntryResolvers<ContextType>;
-  EntryCommentUnion?: EntryCommentUnionResolvers<ContextType>;
   EntryConnection?: EntryConnectionResolvers<ContextType>;
   EntryCount?: EntryCountResolvers<ContextType>;
   EntryEdge?: EntryEdgeResolvers<ContextType>;
@@ -5255,6 +5684,8 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   MediaItemEdge?: MediaItemEdgeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Node?: NodeResolvers<ContextType>;
+  NodeUnion?: NodeUnionResolvers<ContextType>;
+  NodeUnionConnection?: NodeUnionConnectionResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   PhoneNumber?: GraphQLScalarType;
   Profile?: ProfileResolvers<ContextType>;
@@ -5262,6 +5693,8 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   ProfileEdge?: ProfileEdgeResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Session?: SessionResolvers<ContextType>;
+  SessionConnection?: SessionConnectionResolvers<ContextType>;
+  SessionEdge?: SessionEdgeResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   Token?: TokenResolvers<ContextType>;
   TypesUnion?: TypesUnionResolvers<ContextType>;

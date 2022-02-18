@@ -279,6 +279,12 @@ type Category implements Node {
   updatedAt: DateTime
 }
 
+type CategoryConnection {
+  edges: [CategoryEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type CategoryCount {
   entries: Int!
 }
@@ -337,6 +343,11 @@ input CategoryCreateWithoutEntriesInput {
   updatedAt: DateTime
 }
 
+type CategoryEdge {
+  cursor: String!
+  node: Category!
+}
+
 input CategoryListRelationFilter {
   every: CategoryWhereInput
   none: CategoryWhereInput
@@ -345,6 +356,40 @@ input CategoryListRelationFilter {
 
 input CategoryOrderByRelationAggregateInput {
   _count: SortOrder
+}
+
+enum CategoryOrderByRelevanceFieldEnum {
+  creatorId
+  entryId
+  id
+  name
+}
+
+input CategoryOrderByRelevanceInput {
+  fields: [CategoryOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input CategoryOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: CategoryOrderByRelevanceInput
+  createdAt: SortOrder
+  creator: UserOrderByWithRelationAndSearchRelevanceInput
+  creatorId: SortOrder
+  entries: EntryOrderByRelationAggregateInput
+  entryId: SortOrder
+  id: SortOrder
+  name: SortOrder
+  updatedAt: SortOrder
+}
+
+enum CategoryScalarFieldEnum {
+  createdAt
+  creatorId
+  entryId
+  id
+  name
+  updatedAt
 }
 
 input CategoryScalarWhereInput {
@@ -783,6 +828,12 @@ type Connection implements Node {
   phoneNumber: PhoneNumber
 }
 
+type ConnectionConnection {
+  edges: [ConnectionEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 input ConnectionCreateManyOwnerInput {
   email: String!
   firstName: String
@@ -820,6 +871,11 @@ input ConnectionCreateWithoutOwnerInput {
   phoneNumber: String
 }
 
+type ConnectionEdge {
+  cursor: String!
+  node: Connection!
+}
+
 input ConnectionListRelationFilter {
   every: ConnectionWhereInput
   none: ConnectionWhereInput
@@ -828,6 +884,46 @@ input ConnectionListRelationFilter {
 
 input ConnectionOrderByRelationAggregateInput {
   _count: SortOrder
+}
+
+enum ConnectionOrderByRelevanceFieldEnum {
+  email
+  firstName
+  id
+  ip
+  lastName
+  ownerId
+  phoneNumber
+}
+
+input ConnectionOrderByRelevanceInput {
+  fields: [ConnectionOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input ConnectionOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: ConnectionOrderByRelevanceInput
+  email: SortOrder
+  firstName: SortOrder
+  id: SortOrder
+  ip: SortOrder
+  lastModified: SortOrder
+  lastName: SortOrder
+  owner: UserOrderByWithRelationAndSearchRelevanceInput
+  ownerId: SortOrder
+  phoneNumber: SortOrder
+}
+
+enum ConnectionScalarFieldEnum {
+  email
+  firstName
+  id
+  ip
+  lastModified
+  lastName
+  ownerId
+  phoneNumber
 }
 
 input ConnectionScalarWhereInput {
@@ -963,8 +1059,6 @@ type Entry implements Node {
   title: String
   updatedAt: DateTime
 }
-
-union EntryCommentUnion = CommentConnection | EntryConnection
 
 type EntryConnection {
   edges: [EntryEdge!]!
@@ -1346,6 +1440,16 @@ input EnumUserStatusNullableFilter {
   notIn: [UserStatus!]
 }
 
+input FindManyCategoriesPaginatedInput {
+  cursor: CategoryWhereUniqueInput
+  distinct: [CategoryScalarFieldEnum!]
+  orderBy: [CategoryOrderByWithRelationAndSearchRelevanceInput!]
+  pagination: PaginationArgsInput!
+  skip: Int
+  take: Int
+  where: CategoryWhereInput
+}
+
 input FindManyCommentsPaginatedInput {
   cursor: CommentWhereUniqueInput
   distinct: [CommentScalarFieldEnum!]
@@ -1354,6 +1458,16 @@ input FindManyCommentsPaginatedInput {
   skip: Int
   take: Int
   where: CommentWhereInput
+}
+
+input FindManyConnectionsPaginatedInput {
+  cursor: ConnectionWhereUniqueInput
+  distinct: [ConnectionScalarFieldEnum!]
+  orderBy: [ConnectionOrderByWithRelationAndSearchRelevanceInput!]
+  pagination: PaginationArgsInput!
+  skip: Int
+  take: Int
+  where: ConnectionWhereInput
 }
 
 input FindManyEntriessPaginatedInput {
@@ -1366,7 +1480,7 @@ input FindManyEntriessPaginatedInput {
   where: EntryWhereInput
 }
 
-input FindManyMediaItemsInput {
+input FindManyMediaItemsPaginatedInput {
   cursor: MediaItemWhereUniqueInput
   distinct: [MediaItemScalarFieldEnum!]
   orderBy: [MediaItemOrderByWithRelationAndSearchRelevanceInput!]
@@ -1384,6 +1498,16 @@ input FindManyProfilesPaginatedInput {
   skip: Int
   take: Int
   where: ProfileWhereInput
+}
+
+input FindManySessionsPaginatedInput {
+  cursor: SessionWhereUniqueInput!
+  distinct: [SessionScalarFieldEnum!]
+  orderBy: [SessionOrderByWithRelationAndSearchRelevanceInput!]
+  pagination: PaginationArgsInput!
+  skip: Int
+  take: Int
+  where: SessionWhereInput
 }
 
 input FindManyUsersPaginatedInput {
@@ -1767,7 +1891,6 @@ type Mutation {
   signup(data: SignupInput!): Token!
   updateUserPassword(passwordInput: ChangePasswordInput!): User!
   upsertComment(commentUpsertInput: CommentUpsertWithWhereUniqueWithoutAuthorInput!): [Comment!]!
-  userFromAccessTokenDecoded(token: String!): AuthDetailed!
   viewerCreateEntry(viewerEntryCreateInput: EntryUpdateManyWithWhereWithoutAuthorInput!): [Entry!]!
 }
 
@@ -1894,6 +2017,14 @@ input NestedStringNullableFilter {
 
 interface Node {
   id: ID!
+}
+
+union NodeUnion = CommentConnection | EntryConnection | MediaItemConnection | ProfileConnection | SessionConnection | UserConnection
+
+type NodeUnionConnection {
+  edges: [NodeUnion!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 input NullableDateTimeFieldUpdateOperationsInput {
@@ -2162,15 +2293,6 @@ input ProfileWhereUniqueInput {
   userId: String
 }
 
-input ProfilesInput {
-  bioFilter: StringNullableFilter
-  dobFilter: StringNullableFilter
-  genderFilter: EnumGenderNullableFilter
-  orderBy: ProfileOrderByWithRelationAndSearchRelevanceInput
-  paginationArgs: PaginationArgsInput
-  pronounsFilter: EnumPronounsNullableFilter
-}
-
 enum Pronouns {
   HE_HIM_HIS
   NOT_LISTED
@@ -2180,27 +2302,35 @@ enum Pronouns {
 }
 
 type Query {
+  categoryByRelayId(cursor: String!): Category!
   commentByRelayId(cursor: String!): Comment!
-  commentConnectionUnion(findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput!, findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!): [EntryCommentUnion!]!
-  contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!, findManyMediaItemsPaginated: FindManyMediaItemsInput, findManyUsersPaginatedInput: FindManyUsersPaginatedInput): ContentNodes!
+  comprehensiveConnectionUnion: [NodeUnion!]!
+  connectionByRelayId(connectionCursor: String!): Connection!
+  contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!, findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput, findManyUsersPaginatedInput: FindManyUsersPaginatedInput): ContentNodes!
+  decodeViewerTokenFromContext: AuthDetailed!
   entryById(id: String!): Entry!
   findUniqueMediaItem(mediaItemId: String!): MediaItem!
   getUserFromAccessToken(token: String!): User!
   getViewer: AuthDetailed!
   hello(name: String!): String!
   helloWorld: String!
+  listCategories(findManyCategoriesPaginatedInput: FindManyCategoriesPaginatedInput!): CategoryConnection!
   listComments(findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput!): CommentConnection!
+  listConnections(findManyConnectionsPaginatedInput: FindManyConnectionsPaginatedInput!): ConnectionConnection!
   listEntries(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!): EntryConnection!
-  listMediaItems(findManyMediaItemsPaginated: FindManyMediaItemsInput): MediaItemConnection!
-  listProfiles(findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput!): ProfileConnection!
+  listMediaItems(findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput): MediaItemConnection!
+  listProfiles(profilesArgs: FindManyProfilesPaginatedInput!): ProfileConnection!
+  listSessions(findManySessionsPaginatedInput: FindManySessionsPaginatedInput!): SessionConnection!
   listUsers(findManyUsersPaginatedInput: FindManyUsersPaginatedInput = {}): UserConnection!
   me: AuthDetailed!
   node(id: ID!): Node
+  nodeUnionResolver(id: String!, manyComments: FindManyCommentsPaginatedInput!, manyEntries: FindManyEntriessPaginatedInput!, manyMediaItems: FindManyMediaItemsPaginatedInput!, manyProfiles: FindManyProfilesPaginatedInput!, manySessions: FindManySessionsPaginatedInput!, manyUsers: FindManyUsersPaginatedInput!): NodeUnionConnection!
   profileByRelayId: Profile!
-  profiles(profilesArgs: ProfilesInput!): ProfileConnection!
+  sessionByRelayId(cursor: String!): Session!
   siftEntries(entryFindManyInput: FindManyEntriessPaginatedInput!): EntryConnection!
   userById(id: String!): User!
   userByRelayId(cursor: String!): User!
+  userFromAccessTokenDecoded(token: String!): AuthDetailed!
   viewer: ViewerDetailed!
   viewerAuthInfoFromContext: ViewerAuthInfo!
   viewerEntriesPaginated(viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput!): EntryConnection!
@@ -2232,6 +2362,12 @@ type Session implements Node {
   tokenState: String
   user: User
   userId: String!
+}
+
+type SessionConnection {
+  edges: [SessionEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 input SessionCreateManyUserInput {
@@ -2287,6 +2423,11 @@ input SessionCreatescopesInput {
   set: [String!]!
 }
 
+type SessionEdge {
+  cursor: String!
+  node: Session!
+}
+
 input SessionListRelationFilter {
   every: SessionWhereInput
   none: SessionWhereInput
@@ -2295,6 +2436,56 @@ input SessionListRelationFilter {
 
 input SessionOrderByRelationAggregateInput {
   _count: SortOrder
+}
+
+enum SessionOrderByRelevanceFieldEnum {
+  accessToken
+  alg
+  id
+  provider
+  refreshToken
+  scopes
+  signature
+  tokenState
+  userId
+}
+
+input SessionOrderByRelevanceInput {
+  fields: [SessionOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input SessionOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: SessionOrderByRelevanceInput
+  accessToken: SortOrder
+  alg: SortOrder
+  exp: SortOrder
+  iat: SortOrder
+  id: SortOrder
+  lastVerified: SortOrder
+  provider: SortOrder
+  refreshToken: SortOrder
+  scopes: SortOrder
+  signature: SortOrder
+  tokenState: SortOrder
+  user: UserOrderByWithRelationAndSearchRelevanceInput
+  userId: SortOrder
+}
+
+enum SessionScalarFieldEnum {
+  accessToken
+  alg
+  exp
+  iat
+  id
+  lastVerified
+  provider
+  refreshToken
+  scopes
+  signature
+  tokenState
+  userId
 }
 
 input SessionScalarWhereInput {
@@ -2398,6 +2589,7 @@ input SessionWhereInput {
 }
 
 input SessionWhereUniqueInput {
+  id: String
   userId: String
 }
 

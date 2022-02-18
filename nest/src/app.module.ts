@@ -1,28 +1,15 @@
 import { Module } from "@nestjs/common";
-import {
-  GraphQLModule,
-  ReturnTypeFuncValue,
-  GqlModuleAsyncOptions,
-  GqlModuleOptions,
-  GqlOptionsFactory
-} from "@nestjs/graphql";
-import { join } from "path";
+import { GraphQLModule } from "@nestjs/graphql";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import {
-  ApolloConfig,
-  RedisConfig,
-  GraphqlConfig
-} from "./common/config/config-interfaces.config";
+import { RedisConfig } from "./common/config/config-interfaces.config";
 import config from "./common/config/config.config";
 import { ExpressContext } from "apollo-server-express";
 import { AppController } from "./app/app.controller";
 import { AppService } from "./app/app.service";
 import { AppResolver } from "./app/app.resolver";
-import { APP_FILTER, ModulesContainer } from "@nestjs/core";
+import { APP_FILTER } from "@nestjs/core";
 import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
 import { PrismaModule } from "./prisma/prisma.module";
-import { loadSchema, loadSchemaSync } from "@graphql-tools/load";
-import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { PasswordModule } from "./auth/password.module";
 import { AuthModule } from "./auth/auth-jwt.module";
 import { UserModule } from "./user/user.module";
@@ -37,29 +24,16 @@ import {
 import { ThrottlerModule, ThrottlerModuleOptions } from "@nestjs/throttler";
 import { ThrottlerStorageRedisService } from "nestjs-throttler-storage-redis";
 import { RedisError } from "redis";
-import { PrismaService } from "./prisma";
-import { UserService } from "./user/user.service";
 import { AuthService } from "./auth/auth-jwt.service";
-import { UploadModule } from "./upload/upload.module";
 import { MediaModule } from "./media/media.module";
-import { graphqlUploadExpress, Upload } from "graphql-upload";
 import { NodeModule } from "./node/node.module";
-import {
-  ApolloDriverAsyncConfig,
-  ServerRegistration,
-  getApolloServer,
-  ApolloDriver,
-  ApolloDriverConfig
-} from "@nestjs/apollo";
-import { PubSub, PubSubOptions, PubSubEngine } from "graphql-subscriptions";
-import { ViewerModule } from "./viewer/viewer.module";
-import { ApolloConfigInput, GraphQLExecutor } from "apollo-server-types";
-// import { ExpressGraphQLDriver } from "src/app/driver/express-graphql.driver";
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { CommentModule } from "./comment/comment.module";
-import { GraphQLSchema } from "graphql";
 import { GqlConfigService } from "./gql-config.service";
-import { JwtModule, JwtService } from "@nestjs/jwt";
-import {Request} from "express-serve-static-core"
+import { SessionModule } from "./session/session.module";
+import { CategoryModule } from "./category/category.module";
+import { ConnectionModule } from "./connection/connection.module";
+
 export type RecordContiional<T> =
   | Record<keyof T, T>
   | Array<T>
@@ -183,7 +157,9 @@ export type Context = {
     NodeModule,
     MediaModule,
     CommentModule,
-    // UploadModule,
+    SessionModule,
+    CategoryModule,
+    ConnectionModule,
     ProfileModule
   ],
   controllers: [AppController],
@@ -196,38 +172,4 @@ export type Context = {
     }
   ]
 })
-export class AppModule { }
-
-
-// export class AppModule<
-//   T extends Context<T[keyof T]>,
-//   K extends Record<keyof K, K> extends infer U
-//     ? Record<keyof K, U>
-//     : Record<keyof K, unknown> extends Record<keyof K, infer T>
-//     ? Record<keyof K, T>
-//     : { [index: string | number | symbol]: unknown },
-//   _implements = () => {
-//     prisma: <K>(props: ReturnTypeFuncValue) => import("./prisma/prisma.service").PrismaService;
-//   }
-// > {
-//   constructor(private readonly context: T) {
-//     context = this.context;
-//   }
-// }
-// const getUserFromToken = (token: string) => {
-//   return Promise.resolve(
-//     authService
-//       .getUserFromToken(
-//         token
-//           ? token
-//           : req.headers?.authorization?.split(/([ ])/)[1]
-//           ? req.headers.authorization?.split(/([[ ]])/)[1]
-//           : ""
-//       )
-//       .then(data => {
-//         console.log(JSON.stringify(data ?? "no user", null, 2));
-//         return { ...data };
-//       })
-//   );
-// };
-// console.log(token ? getUserFromToken(token) ?? "emptystring" : "no token")
+export class AppModule {}

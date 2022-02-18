@@ -1,7 +1,7 @@
 import { Injectable, Inject } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { Prisma, Profile } from "@prisma/client";
-import { fromGlobalId } from "graphql-relay";
+import { Prisma } from "@prisma/client";
+import { fromGlobalId, toGlobalId } from "graphql-relay";
 import {
   PaginationService,
   PaginationArgs
@@ -10,60 +10,51 @@ import { ProfileConnection } from "./model/profile-connection.model";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { ProfilesInput } from "./inputs/profiles.input";
 import { ProfileCreateInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-create.input";
+import { FindManyProfilesPaginatedInput } from "./inputs/profile-paginated.input";
+import { Profile } from "./model/profile.model";
+import { ProfileWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-where-unique.input";
+import { ProfileUncheckedUpdateInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-unchecked-update.input";
+
 @Injectable()
 export class ProfileService {
   constructor(
-    private prisma: PrismaService,
+    private prismaService: PrismaService,
     @Inject(PaginationService) private paginationService: PaginationService
   ) {}
 
   async profile(
-    entryWhereUniqueInput: Prisma.ProfileWhereUniqueInput
+    profileWhereUniqueInput: ProfileWhereUniqueInput
   ): Promise<Profile | null> {
-    const { id, userId } = entryWhereUniqueInput;
-    return this.prisma.profile.findUnique({
-      where: id ? { id: id } : { userId: userId }
-    });
-  }
-
-  async profiles(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.ProfileWhereUniqueInput;
-    where?: Prisma.ProfileWhereInput;
-    orderBy?: Prisma.Enumerable<Prisma.ProfileOrderByWithRelationAndSearchRelevanceInput>;
-  }): Promise<Profile[]> {
-    const { skip, take, cursor, where, orderBy } = params;
-    return await this.prisma.profile.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy
-    });
+    return await this.prismaService.profile
+      .findUnique({
+        where: profileWhereUniqueInput
+      })
+      .then();
   }
 
   async findFirstProfiles(
     params: Prisma.ProfileFindFirstArgs
   ): Promise<Profile | null> {
-    const findFirst = await this.prisma.profile
-      .findFirst(params)
+    return await this.prismaService.profile
+      .findFirst({ ...params })
       .user()
-      .profile();
-
-    return findFirst;
+      .profile()
+      .then(data => data)
+      .then();
   }
-  async createProfile(
-    data: ProfileCreateInput,
-    userId: string | undefined
-  ) {
-    const userToProfileCreate = await this.prisma.user
+  async createProfile(data: ProfileCreateInput, userId: string | undefined) {
+    const userToProfileCreate = await this.prismaService.user
       .findFirst({
         where: { id: userId },
-        include: {_count: true, mediaItems: true,profile: true, entries: true}
+        include: {
+          _count: true,
+          mediaItems: true,
+          profile: true,
+          entries: true
+        }
       })
       .then(async dataUser => {
-        const createUserProfile = await this.prisma.profile.create({
+        const createUserProfile = await this.prismaService.profile.create({
           data: {
             user: { connect: { id: userId ? userId : undefined } },
             lastSeen: new Date(Date.now()),
@@ -85,16 +76,14 @@ export class ProfileService {
           include: {
             user: { include: { mediaItems: true, _count: true } }
           }
-        })
+        });
         return createUserProfile;
       });
     return userToProfileCreate;
   }
 
-  async prismaProfiles(
-    prisma: PrismaService['profile']
-  ): Promise<
-    PrismaService['profile'] & {
+  async prismaProfiles(prisma: PrismaService["profile"]): Promise<
+    PrismaService["profile"] & {
       Profiles({
         orderBy,
         pronounsFilter,
@@ -141,16 +130,23 @@ export class ProfileService {
       }
     });
   }
-  async updateProfile(params: Prisma.ProfileUpdateArgs): Promise<Profile> {
-    return await this.prisma.profile.update(params);
+  async updateProfile(
+    params: ProfileUncheckedUpdateInput,
+    userId: string
+  ): Promise<Profile> {
+    return await this.prismaService.profile.update({
+      data: { ...params },
+      where: { userId: userId },
+      include: { user: true }
+    });
   }
 
   async deleteProfile(params: Prisma.ProfileDeleteArgs): Promise<Profile> {
-    return this.prisma.profile.delete(params);
+    return this.prismaService.profile.delete(params);
   }
 
   async relayFindUniqueProfile(params: { id: string }) {
-    const profile = await this.prisma.profile.findUnique({
+    const profile = await this.prismaService.profile.findUnique({
       where: { id: fromGlobalId(params.id).id }
     });
     if (!profile) {
@@ -170,8 +166,49 @@ export class ProfileService {
   }
 
   async relayFindManyProfiles(params: PaginationArgs) {
-    return await this.prisma.profile.findMany({
+    return await this.prismaService.profile.findMany({
       ...(await this.paginationService.relayToPrismaPagination(params))
     });
+  }
+
+  async listProfiles(params: FindManyProfilesPaginatedInput) {
+    return await findManyCursorConnection(
+      args =>
+        this.prismaService.profile.findMany({
+          include: {
+            user: true
+          },
+          distinct: params.distinct,
+          take: params.take,
+          skip: params.skip,
+          where: params.where,
+          cursor: params.cursor,
+          orderBy: params.orderBy,
+          ...args
+        }),
+      () =>
+        this.prismaService.profile.count({
+          orderBy: params.orderBy,
+          take: params.take,
+          distinct: params.distinct,
+          skip: params.skip,
+          where: params.where,
+          cursor: params.cursor
+        }),
+      {
+        first: params.pagination.first ?? 10,
+        last: params.pagination.last,
+        before: params.pagination.before,
+        after: params.pagination.after
+      },
+      {
+        getCursor: (record: { id: string }) => {
+          return record;
+        },
+        decodeCursor: (cursor: string) => fromGlobalId(cursor),
+        encodeCursor: (cursor: { id: string }) =>
+          toGlobalId(Profile.name, cursor.id)
+      }
+    );
   }
 }

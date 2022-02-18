@@ -13,13 +13,7 @@ import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
 import { EntryService } from "src/entry/entry.service";
 import { Comment } from "./model/comment.model";
 import {
-  CommentService,
-  CommentUnionType,
-  createEntryCommentUnion,
-  EntryCommentUnion,
-  EntryCommentUnionobj,
-  EntryCommentUnionType
-} from "./comment.service";
+  CommentService} from "./comment.service";
 import { PrismaService } from "src/prisma";
 import { AuthService } from "src/auth/auth-jwt.service";
 import { CommentConnection } from "./model/comment-connection.model";
@@ -57,25 +51,25 @@ export class CommentResolver {
 
   // }
 
-  @Query(() => [createEntryCommentUnion])
-  async commentConnectionUnion(
-    { unionField }: EntryCommentUnionobj,
-    @Args("findManyCommentsPaginatedInput", {
-      type: () => FindManyCommentsPaginatedInput
-    })
-    commentParams: FindManyCommentsPaginatedInput,
-    @Args("findManyEntriesPaginatedInput", {
-      type: () => FindManyEntriesPaginatedInput
-    })
-    entryParams: FindManyEntriesPaginatedInput
-  ): Promise<EntryConnection | CommentConnection> {
-    return await this.commentService
-      .entryCommentUnion({ unionField: unionField }, entryParams, commentParams)
-      .then(async data => {
-        // const resolve = data.id in EntryConnection ? data.id in EntryConnection : data.id in CommentConnection;
-        return data;
-      });
-  }
+  // @Query(() => [createEntryCommentUnion])
+  // async commentConnectionUnion(
+  //   { unionField }: EntryCommentUnionobj,
+  //   @Args("findManyCommentsPaginatedInput", {
+  //     type: () => FindManyCommentsPaginatedInput
+  //   })
+  //   commentParams: FindManyCommentsPaginatedInput,
+  //   @Args("findManyEntriesPaginatedInput", {
+  //     type: () => FindManyEntriesPaginatedInput
+  //   })
+  //   entryParams: FindManyEntriesPaginatedInput
+  // ): Promise<EntryConnection | CommentConnection> {
+  //   return await this.commentService
+  //     .entryCommentUnion({ unionField: unionField }, entryParams, commentParams)
+  //     .then(async data => {
+  //       // const resolve = data.id in EntryConnection ? data.id in EntryConnection : data.id in CommentConnection;
+  //       return data;
+  //     });
+  // }
 
   @Query(() => Comment)
   async commentByRelayId(

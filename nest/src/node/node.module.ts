@@ -6,11 +6,19 @@ import { NodeResolver } from "./node.resolver";
 import { CommentModule } from "src/comment/comment.module";
 import { NodeService } from "./node.service";
 import { ResolveTypeFactory } from "@nestjs/graphql/dist/schema-builder/factories/resolve-type.factory";
-
+import { SessionModule } from "src/session/session.module";
 import { MediaModule } from "src/media/media.module";
+import { NodeUnionResolver } from "./comprehensive-union.resolver";
 
 @Module({
-  imports: [EntryModule, CommentModule, UserModule, ProfileModule, MediaModule],
+  imports: [
+    EntryModule,
+    CommentModule,
+    UserModule,
+    ProfileModule,
+    MediaModule,
+    SessionModule
+  ],
   providers: [NodeResolver, NodeService],
   exports: [NodeService]
 })

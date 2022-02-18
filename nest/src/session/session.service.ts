@@ -1,33 +1,33 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma";
+import { PrismaService } from "src/prisma/prisma.service";
+import { PaginationService } from "src/pagination/pagination.service";
+import { FindManySessionsPaginatedInput } from "./inputs/sessions-paginated.input";
+import { Injectable, Inject } from "@nestjs/common";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
+import { SessionWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/session/inputs/session-where-unique.input";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
-import { FindManyMediaItemsPaginatedInput } from "./inputs/find-many-media-items-paginated.input";
-import { MediaItemConnection } from "./model/media-connection";
-import { MediaItem } from "./model/media.model";
-import { FindManyMediaItemArgs } from "src/.generated/prisma-nestjs-graphql/media-item/args/find-many-media-item.args";
+import { Session } from "./model";
+
 
 @Injectable()
-export class MediaItemService {
-  constructor(@Inject(PrismaService) private prismaService: PrismaService) {}
+export class SessionService {
+  constructor(private prismaService: PrismaService) { }
 
-  async relayFindUniqueMediaItem(params: { id: string }) {
-    const mediaItem = await this.prismaService.mediaItem.findUnique({
+  async relayFindUniqueSession(params: { id: string }) {
+    const session = await this.prismaService.session.findUnique({
       where: { id: fromGlobalId(params.id).id }
     });
-    if (!mediaItem) {
-      throw new Error("could not find mediaItem with id " + params.id);
+    if (!session) {
+      throw new Error("could not find session with id " + params.id);
     }
-    return mediaItem;
+    return session;
   }
-
-  async listMediaItems(
-    params: FindManyMediaItemsPaginatedInput
-  ): Promise<MediaItemConnection> {
+  async listSessions(params: FindManySessionsPaginatedInput) {
     return await findManyCursorConnection(
       args =>
-        this.prismaService.mediaItem.findMany({
-          include: { user: true },
+        this.prismaService.session.findMany({
+          include: {
+            user: true
+          },
           distinct: params.distinct,
           take: params.take,
           skip: params.skip,
@@ -37,7 +37,7 @@ export class MediaItemService {
           ...args
         }),
       () =>
-        this.prismaService.mediaItem.count({
+        this.prismaService.session.count({
           orderBy: params.orderBy,
           take: params.take,
           distinct: params.distinct,
@@ -57,7 +57,7 @@ export class MediaItemService {
         },
         decodeCursor: (cursor: string) => fromGlobalId(cursor),
         encodeCursor: (cursor: { id: string }) =>
-          toGlobalId(MediaItem.name, cursor.id)
+          toGlobalId(Session.name, cursor.id)
       }
     );
   }

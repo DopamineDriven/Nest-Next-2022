@@ -26,6 +26,22 @@ export enum AlgorithmType {
     RS512 = "RS512"
 }
 
+export enum CategoryOrderByRelevanceFieldEnum {
+    creatorId = "creatorId",
+    entryId = "entryId",
+    id = "id",
+    name = "name"
+}
+
+export enum CategoryScalarFieldEnum {
+    createdAt = "createdAt",
+    creatorId = "creatorId",
+    entryId = "entryId",
+    id = "id",
+    name = "name",
+    updatedAt = "updatedAt"
+}
+
 export enum CommentOrderByRelevanceFieldEnum {
     authorId = "authorId",
     body = "body",
@@ -57,6 +73,27 @@ export enum CommentScalarFieldEnum {
     position = "position",
     reactions = "reactions",
     updatedAt = "updatedAt"
+}
+
+export enum ConnectionOrderByRelevanceFieldEnum {
+    email = "email",
+    firstName = "firstName",
+    id = "id",
+    ip = "ip",
+    lastName = "lastName",
+    ownerId = "ownerId",
+    phoneNumber = "phoneNumber"
+}
+
+export enum ConnectionScalarFieldEnum {
+    email = "email",
+    firstName = "firstName",
+    id = "id",
+    ip = "ip",
+    lastModified = "lastModified",
+    lastName = "lastName",
+    ownerId = "ownerId",
+    phoneNumber = "phoneNumber"
 }
 
 export enum EntryOrderByRelevanceFieldEnum {
@@ -188,6 +225,33 @@ export enum Role {
     MAINTAINER = "MAINTAINER",
     SUPERADMIN = "SUPERADMIN",
     USER = "USER"
+}
+
+export enum SessionOrderByRelevanceFieldEnum {
+    accessToken = "accessToken",
+    alg = "alg",
+    id = "id",
+    provider = "provider",
+    refreshToken = "refreshToken",
+    scopes = "scopes",
+    signature = "signature",
+    tokenState = "tokenState",
+    userId = "userId"
+}
+
+export enum SessionScalarFieldEnum {
+    accessToken = "accessToken",
+    alg = "alg",
+    exp = "exp",
+    iat = "iat",
+    id = "id",
+    lastVerified = "lastVerified",
+    provider = "provider",
+    refreshToken = "refreshToken",
+    scopes = "scopes",
+    signature = "signature",
+    tokenState = "tokenState",
+    userId = "userId"
 }
 
 export enum SortOrder {
@@ -476,6 +540,24 @@ export class CategoryListRelationFilter {
 
 export class CategoryOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
+}
+
+export class CategoryOrderByRelevanceInput {
+    fields: CategoryOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
+}
+
+export class CategoryOrderByWithRelationAndSearchRelevanceInput {
+    _relevance?: Nullable<CategoryOrderByRelevanceInput>;
+    createdAt?: Nullable<SortOrder>;
+    creator?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    creatorId?: Nullable<SortOrder>;
+    entries?: Nullable<EntryOrderByRelationAggregateInput>;
+    entryId?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    name?: Nullable<SortOrder>;
+    updatedAt?: Nullable<SortOrder>;
 }
 
 export class CategoryScalarWhereInput {
@@ -890,6 +972,25 @@ export class ConnectionListRelationFilter {
 
 export class ConnectionOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
+}
+
+export class ConnectionOrderByRelevanceInput {
+    fields: ConnectionOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
+}
+
+export class ConnectionOrderByWithRelationAndSearchRelevanceInput {
+    _relevance?: Nullable<ConnectionOrderByRelevanceInput>;
+    email?: Nullable<SortOrder>;
+    firstName?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    ip?: Nullable<SortOrder>;
+    lastModified?: Nullable<SortOrder>;
+    lastName?: Nullable<SortOrder>;
+    owner?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    ownerId?: Nullable<SortOrder>;
+    phoneNumber?: Nullable<SortOrder>;
 }
 
 export class ConnectionScalarWhereInput {
@@ -1344,6 +1445,16 @@ export class EnumUserStatusNullableFilter {
     notIn?: Nullable<UserStatus[]>;
 }
 
+export class FindManyCategoriesPaginatedInput {
+    cursor?: Nullable<CategoryWhereUniqueInput>;
+    distinct?: Nullable<CategoryScalarFieldEnum[]>;
+    orderBy?: Nullable<CategoryOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<CategoryWhereInput>;
+}
+
 export class FindManyCommentsPaginatedInput {
     cursor?: Nullable<CommentWhereUniqueInput>;
     distinct?: Nullable<CommentScalarFieldEnum[]>;
@@ -1352,6 +1463,16 @@ export class FindManyCommentsPaginatedInput {
     skip?: Nullable<number>;
     take?: Nullable<number>;
     where?: Nullable<CommentWhereInput>;
+}
+
+export class FindManyConnectionsPaginatedInput {
+    cursor?: Nullable<ConnectionWhereUniqueInput>;
+    distinct?: Nullable<ConnectionScalarFieldEnum[]>;
+    orderBy?: Nullable<ConnectionOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<ConnectionWhereInput>;
 }
 
 export class FindManyEntriessPaginatedInput {
@@ -1364,7 +1485,7 @@ export class FindManyEntriessPaginatedInput {
     where?: Nullable<EntryWhereInput>;
 }
 
-export class FindManyMediaItemsInput {
+export class FindManyMediaItemsPaginatedInput {
     cursor?: Nullable<MediaItemWhereUniqueInput>;
     distinct?: Nullable<MediaItemScalarFieldEnum[]>;
     orderBy?: Nullable<MediaItemOrderByWithRelationAndSearchRelevanceInput[]>;
@@ -1382,6 +1503,16 @@ export class FindManyProfilesPaginatedInput {
     skip?: Nullable<number>;
     take?: Nullable<number>;
     where?: Nullable<ProfileWhereInput>;
+}
+
+export class FindManySessionsPaginatedInput {
+    cursor: SessionWhereUniqueInput;
+    distinct?: Nullable<SessionScalarFieldEnum[]>;
+    orderBy?: Nullable<SessionOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<SessionWhereInput>;
 }
 
 export class FindManyUsersPaginatedInput {
@@ -1962,15 +2093,6 @@ export class ProfileWhereUniqueInput {
     userId?: Nullable<string>;
 }
 
-export class ProfilesInput {
-    bioFilter?: Nullable<StringNullableFilter>;
-    dobFilter?: Nullable<StringNullableFilter>;
-    genderFilter?: Nullable<EnumGenderNullableFilter>;
-    orderBy?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput>;
-    paginationArgs?: Nullable<PaginationArgsInput>;
-    pronounsFilter?: Nullable<EnumPronounsNullableFilter>;
-}
-
 export class SessionCreateManyUserInput {
     accessToken?: Nullable<string>;
     alg?: Nullable<string>;
@@ -2032,6 +2154,29 @@ export class SessionListRelationFilter {
 
 export class SessionOrderByRelationAggregateInput {
     _count?: Nullable<SortOrder>;
+}
+
+export class SessionOrderByRelevanceInput {
+    fields: SessionOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
+}
+
+export class SessionOrderByWithRelationAndSearchRelevanceInput {
+    _relevance?: Nullable<SessionOrderByRelevanceInput>;
+    accessToken?: Nullable<SortOrder>;
+    alg?: Nullable<SortOrder>;
+    exp?: Nullable<SortOrder>;
+    iat?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    lastVerified?: Nullable<SortOrder>;
+    provider?: Nullable<SortOrder>;
+    refreshToken?: Nullable<SortOrder>;
+    scopes?: Nullable<SortOrder>;
+    signature?: Nullable<SortOrder>;
+    tokenState?: Nullable<SortOrder>;
+    user?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    userId?: Nullable<SortOrder>;
 }
 
 export class SessionScalarWhereInput {
@@ -2135,6 +2280,7 @@ export class SessionWhereInput {
 }
 
 export class SessionWhereUniqueInput {
+    id?: Nullable<string>;
     userId?: Nullable<string>;
 }
 
@@ -2593,9 +2739,22 @@ export class Category implements Node {
     updatedAt?: Nullable<DateTime>;
 }
 
+export class CategoryConnection {
+    __typename?: 'CategoryConnection';
+    edges: CategoryEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
+}
+
 export class CategoryCount {
     __typename?: 'CategoryCount';
     entries: number;
+}
+
+export class CategoryEdge {
+    __typename?: 'CategoryEdge';
+    cursor: string;
+    node: Category;
 }
 
 export class Comment implements Node {
@@ -2636,6 +2795,19 @@ export class Connection implements Node {
     owner: User;
     ownerId: string;
     phoneNumber?: Nullable<PhoneNumber>;
+}
+
+export class ConnectionConnection {
+    __typename?: 'ConnectionConnection';
+    edges: ConnectionEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
+}
+
+export class ConnectionEdge {
+    __typename?: 'ConnectionEdge';
+    cursor: string;
+    node: Connection;
 }
 
 export class ContentNodes {
@@ -2755,9 +2927,14 @@ export abstract class IMutation {
 
     abstract upsertComment(commentUpsertInput: CommentUpsertWithWhereUniqueWithoutAuthorInput): Comment[] | Promise<Comment[]>;
 
-    abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
-
     abstract viewerCreateEntry(viewerEntryCreateInput: EntryUpdateManyWithWhereWithoutAuthorInput): Entry[] | Promise<Entry[]>;
+}
+
+export class NodeUnionConnection {
+    __typename?: 'NodeUnionConnection';
+    edges: NodeUnion[];
+    pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class PageInfo {
@@ -2805,11 +2982,17 @@ export class ProfileEdge {
 export abstract class IQuery {
     __typename?: 'IQuery';
 
+    abstract categoryByRelayId(cursor: string): Category | Promise<Category>;
+
     abstract commentByRelayId(cursor: string): Comment | Promise<Comment>;
 
-    abstract commentConnectionUnion(findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput, findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput): EntryCommentUnion[] | Promise<EntryCommentUnion[]>;
+    abstract comprehensiveConnectionUnion(): NodeUnion[] | Promise<NodeUnion[]>;
 
-    abstract contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput, findManyMediaItemsPaginated?: Nullable<FindManyMediaItemsInput>, findManyUsersPaginatedInput?: Nullable<FindManyUsersPaginatedInput>): ContentNodes | Promise<ContentNodes>;
+    abstract connectionByRelayId(connectionCursor: string): Connection | Promise<Connection>;
+
+    abstract contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput, findManyMediaItemsPaginated?: Nullable<FindManyMediaItemsPaginatedInput>, findManyUsersPaginatedInput?: Nullable<FindManyUsersPaginatedInput>): ContentNodes | Promise<ContentNodes>;
+
+    abstract decodeViewerTokenFromContext(): AuthDetailed | Promise<AuthDetailed>;
 
     abstract entryById(id: string): Entry | Promise<Entry>;
 
@@ -2823,13 +3006,19 @@ export abstract class IQuery {
 
     abstract helloWorld(): string | Promise<string>;
 
+    abstract listCategories(findManyCategoriesPaginatedInput: FindManyCategoriesPaginatedInput): CategoryConnection | Promise<CategoryConnection>;
+
     abstract listComments(findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput): CommentConnection | Promise<CommentConnection>;
+
+    abstract listConnections(findManyConnectionsPaginatedInput: FindManyConnectionsPaginatedInput): ConnectionConnection | Promise<ConnectionConnection>;
 
     abstract listEntries(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput): EntryConnection | Promise<EntryConnection>;
 
-    abstract listMediaItems(findManyMediaItemsPaginated?: Nullable<FindManyMediaItemsInput>): MediaItemConnection | Promise<MediaItemConnection>;
+    abstract listMediaItems(findManyMediaItemsPaginated?: Nullable<FindManyMediaItemsPaginatedInput>): MediaItemConnection | Promise<MediaItemConnection>;
 
-    abstract listProfiles(findManyProfilesPaginatedInput: FindManyProfilesPaginatedInput): ProfileConnection | Promise<ProfileConnection>;
+    abstract listProfiles(profilesArgs: FindManyProfilesPaginatedInput): ProfileConnection | Promise<ProfileConnection>;
+
+    abstract listSessions(findManySessionsPaginatedInput: FindManySessionsPaginatedInput): SessionConnection | Promise<SessionConnection>;
 
     abstract listUsers(findManyUsersPaginatedInput?: Nullable<FindManyUsersPaginatedInput>): UserConnection | Promise<UserConnection>;
 
@@ -2837,15 +3026,19 @@ export abstract class IQuery {
 
     abstract node(id: string): Nullable<Node> | Promise<Nullable<Node>>;
 
+    abstract nodeUnionResolver(id: string, manyComments: FindManyCommentsPaginatedInput, manyEntries: FindManyEntriessPaginatedInput, manyMediaItems: FindManyMediaItemsPaginatedInput, manyProfiles: FindManyProfilesPaginatedInput, manySessions: FindManySessionsPaginatedInput, manyUsers: FindManyUsersPaginatedInput): NodeUnionConnection | Promise<NodeUnionConnection>;
+
     abstract profileByRelayId(): Profile | Promise<Profile>;
 
-    abstract profiles(profilesArgs: ProfilesInput): ProfileConnection | Promise<ProfileConnection>;
+    abstract sessionByRelayId(cursor: string): Session | Promise<Session>;
 
     abstract siftEntries(entryFindManyInput: FindManyEntriessPaginatedInput): EntryConnection | Promise<EntryConnection>;
 
     abstract userById(id: string): User | Promise<User>;
 
     abstract userByRelayId(cursor: string): User | Promise<User>;
+
+    abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
 
     abstract viewer(): ViewerDetailed | Promise<ViewerDetailed>;
 
@@ -2869,6 +3062,19 @@ export class Session implements Node {
     tokenState?: Nullable<string>;
     user?: Nullable<User>;
     userId: string;
+}
+
+export class SessionConnection {
+    __typename?: 'SessionConnection';
+    edges: SessionEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
+}
+
+export class SessionEdge {
+    __typename?: 'SessionEdge';
+    cursor: string;
+    node: Session;
 }
 
 export abstract class ISubscription {
@@ -2970,6 +3176,6 @@ export class ViewerDetailed implements Node {
 export type BigInt = any;
 export type DateTime = any;
 export type PhoneNumber = any;
-export type EntryCommentUnion = CommentConnection | EntryConnection;
+export type NodeUnion = CommentConnection | EntryConnection | MediaItemConnection | ProfileConnection | SessionConnection | UserConnection;
 export type TypesUnion = Entry | MediaItem | User;
 type Nullable<T> = T | null;

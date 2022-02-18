@@ -1,6 +1,6 @@
 import { Resolver, Query, Args } from "@nestjs/graphql";
 import { MediaItemConnection } from "./model/media-connection";
-import { FindManyMediaItemsInput } from "./inputs/find-many-media-items-paginated.input";
+import { FindManyMediaItemsPaginatedInput } from "./inputs/find-many-media-items-paginated.input";
 import { MediaItem } from "./model/media.model";
 import { PrismaService } from "src/prisma";
 import { AuthService } from "src/auth/auth-jwt.service";
@@ -21,10 +21,10 @@ export class MediaResolver {
   @Query(() => MediaItemConnection)
   async listMediaItems(
     @Args("findManyMediaItemsPaginated", {
-      type: () => FindManyMediaItemsInput,
+      type: () => FindManyMediaItemsPaginatedInput,
       nullable: true
     })
-    params: FindManyMediaItemsInput
+    params: FindManyMediaItemsPaginatedInput
   ) {
     return await findManyCursorConnection(
       args =>

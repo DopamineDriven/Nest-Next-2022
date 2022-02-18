@@ -14,25 +14,21 @@ import { Profile } from "../profile/model/profile.model";
 import { PubSub } from "graphql-subscriptions";
 import { GraphqlAuthGuard } from "../auth/gql-auth.guard";
 import { ProfileConnection } from "./model/profile-connection.model";
-import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
-import {} from "@devoxa/prisma-relay-cursor-connection";
 import { User } from "../user/model/user.model";
-import { ProfilesInput } from "./inputs/profiles.input";
 import { ProfileCreateInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-create.input";
 import { FindManyProfilesPaginatedInput } from "./inputs/profile-paginated.input";
-import { fromGlobalId, toGlobalId } from "graphql-relay";
 
 const pubSub = new PubSub();
 @Resolver(() => Profile)
 export class ProfileResolver {
   constructor(
-    @Inject(PrismaService) private prisma: PrismaService,
+    @Inject(PrismaService) private prismaService: PrismaService,
     private profileService: ProfileService
   ) {}
 
   @Query(() => Profile)
   async profileByRelayId(@Parent() profile: Profile) {
-    const getId = await this.prisma.profile
+    const getId = await this.prismaService.profile
       .findUnique({
         where: { id: profile.id },
         include: { user: true }
@@ -60,58 +56,17 @@ export class ProfileResolver {
     return newProfile;
   }
 
-  @Query(() => ProfileConnection, { name: "listProfiles" })
-  async listProfiles(
-    @Args("findManyProfilesPaginatedInput", { type: () => FindManyProfilesPaginatedInput })
-    findManyProfiles: FindManyProfilesPaginatedInput
-  ) {
-
-    const edgingThoseProfiles = await findManyCursorConnection(
-      args =>
-        this.prisma.profile.findMany({
-          include: { user: true },
-          skip: findManyProfiles.skip,
-          take: findManyProfiles.take,
-          distinct: findManyProfiles.distinct,
-          where: findManyProfiles.where,
-          orderBy: findManyProfiles.orderBy,
-          ...args
-        }),
-      () =>
-        this.prisma.profile.count({
-          where: findManyProfiles.where
-        }),
-      {
-        first: findManyProfiles.pagination.first ?? 10,
-        last: findManyProfiles.pagination.last,
-        before: findManyProfiles.pagination.before,
-        after: findManyProfiles.pagination.after
-      },
-      {
-        getCursor: (record: {id: string}) => {
-          return record
-        },
-        decodeCursor: (cursor: string) => fromGlobalId(cursor),
-        encodeCursor: (cursor: { id: string }) => toGlobalId(Profile.name, cursor.id)
-      }
-    );
-    return edgingThoseProfiles;
-  }
-
   @Query(() => ProfileConnection)
-  async profiles(
-    @Args("profilesArgs", { type: () => ProfilesInput })
-    profilesArgs: ProfilesInput
+  async listProfiles(
+    @Args("profilesArgs", { type: () => FindManyProfilesPaginatedInput })
+    params: FindManyProfilesPaginatedInput
   ): Promise<ProfileConnection> {
-    const getProfiles = await this.profileService
-      .prismaProfiles(this.prisma["profile"])
-      .then(async val => await val.Profiles({ ...profilesArgs }));
-    return getProfiles;
+    return await this.profileService.listProfiles(params);
   }
 
   @ResolveField(() => User)
   async userInProfile(@HostParam() profile: Profile) {
-    return await this.prisma.user
+    return await this.prismaService.user
       .findUnique({
         where: { id: profile.userId }
       })

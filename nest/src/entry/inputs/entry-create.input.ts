@@ -10,9 +10,7 @@ import { CategoryCreateNestedManyWithoutEntriesInput } from "src/.generated/pris
 import { UserCreateNestedOneWithoutEntriesInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-create-nested-one-without-entries.input";
 import { CommentCreateNestedManyWithoutEntryInput } from "src/.generated/prisma-nestjs-graphql/comment/inputs/comment-create-nested-many-without-entry.input";
 import { UserCreateOrConnectWithoutEntriesInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-create-or-connect-without-entries.input";
-import { EntryCreatecontentInput } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/entry-createcontent.input";
 import { GraphQLJSON, JSONObjectResolver } from "graphql-scalars";
-import { EntryCreatefeaturedImageInput } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/entry-createfeatured-image.input";
 import { IntersectionType, OmitType } from "@nestjs/mapped-types";
 import { Constructor } from "src/common/types/helpers.type";
 

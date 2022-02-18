@@ -26,10 +26,7 @@ export class EntryEdge extends Entry {
 }
 
 @ConnectionObjectType(EntryEdge)
-export class EntryConnection extends EntryEdge {
-  constructor() {
-    super();
-  }
+export class EntryConnection {
 }
 
 // const EntryUnion = (func: ResolveTypeFn<EntryOpsUnion, ExecutionContext>) =>

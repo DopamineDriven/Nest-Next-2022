@@ -4,7 +4,7 @@ import {
   GqlExecutionContext,  InterfaceType,
   ObjectType
 } from "@nestjs/graphql";
-import { Injectable, Type, Inject } from "@nestjs/common";
+import { Injectable, Type, Inject, ExecutionContext } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AuthService } from "src/auth/auth-jwt.service";
 import { EntryService } from "src/entry/entry.service";
@@ -28,68 +28,69 @@ import { CommentUpsertWithWhereUniqueWithoutAuthorInput } from "src/.generated/p
 // type ResolveTypeFn<TSource = any, TContext = any> = (
 //   ...args: Parameters<GraphQLTypeResolver<TSource, TContext>>
 // ) => any;
-export type EntryCommentUnionType = EntryConnection | CommentConnection | null;
-export const createEntryCommentUnion = createUnionType<
-  Type<EntryCommentUnionType>[]
->({
-  name: "EntryCommentUnion",
-  types: () => [EntryConnection, CommentConnection],
-  resolveType: (
-    { id, authorId, author }: NonNullable<EntryCommentUnionType>,
-    {},
-    { schema, fieldName },
-    { resolveType, name }
-  ) => {
-    return name === EntryConnection.name && id in EntryConnection
-      ? typeof EntryConnection
-      : name === CommentConnection.name && id in CommentConnection
-      ? typeof CommentConnection
-      : null;
-  }
-});
-export interface CommentUnionType<T = EntryCommentUnionType> {
-  new (...args: typeof createEntryCommentUnion[]): T extends infer U ? U : T;
-}
-@InterfaceType("EntryCommentUnion", {
-  resolveType<
-    TSource extends NonNullable<EntryCommentUnionType>,
-    TContext extends GqlExecutionContext
-  >(
-    { id }: TSource,
-    {getClass, getRoot}: TContext
-  ): typeof EntryConnection | typeof CommentConnection {
-    return id in EntryConnection && fromGlobalId(id).type.startsWith(Entry.name)
-      ? EntryConnection
-      : id in CommentConnection &&
-        fromGlobalId(id).type.startsWith(Comment.name)
-      ? CommentConnection
-      : EntryConnection || CommentConnection;
-  }
-})
-export abstract class EntryCommentUnion<
-  T extends Type<NonNullable<EntryCommentUnionType>>
-> {
-  @Field(() => [createEntryCommentUnion])
-  unionField: T[];
-}
+// export type EntryCommentUnionType = EntryConnection | CommentConnection | null;
+// export const createEntryCommentUnion = createUnionType<
+//   Type<EntryCommentUnionType>[]
+// >({
+//   name: "EntryCommentUnion",
+//   types: () => [EntryConnection, CommentConnection],
+//   resolveType: (
+//     props: EntryCommentUnionType,
+//     {getType}: ExecutionContext,
+//     { schema, fieldName },
+//     { resolveType, name }
+//   ) => {
+//     return name === EntryConnection.name && fieldName.valueOf() in EntryConnection
+//       ? typeof EntryConnection
+//       : name === CommentConnection.name && fieldName.valueOf() in CommentConnection
+//       ? typeof CommentConnection
+//       : null;
+//   }
+// });
+// export interface CommentUnionType<T = EntryCommentUnionType> {
+//   new (...args: typeof createEntryCommentUnion[]): T extends infer U ? U : T;
+// }
+// @InterfaceType("EntryCommentUnion", {
+//   resolveType<
+//     TSource extends NonNullable<EntryCommentUnionType>,
+//     TContext extends GqlExecutionContext
+//   >(
+//     props: TSource,
+//     {getClass, getRoot}: TContext
+//   ): typeof EntryConnection | typeof CommentConnection {
 
-@ObjectType("EntryCommentUnionobj", { implements: () => [EntryCommentUnion] })
-export class EntryCommentUnionobj
-  implements EntryCommentUnion<Type<NonNullable<EntryCommentUnionType>>>
-{
-  /**
-   *
-   */
-  unionField: Type<(EntryConnection | CommentConnection)>[];
+//     return id in EntryConnection && fromGlobalId(id).type.startsWith(Entry.name)
+//       ? EntryConnection
+//       : id in CommentConnection &&
+//         fromGlobalId(id).type.startsWith(Comment.name)
+//       ? CommentConnection
+//       : EntryConnection || CommentConnection;
+//   }
+// })
+// export abstract class EntryCommentUnion<
+//   T extends Type<NonNullable<EntryCommentUnionType>>
+// > {
+//   @Field(() => [createEntryCommentUnion])
+//   unionField: T[];
+// }
 
-  constructor() {
-    __Type.isTypeOf as GraphQLIsTypeOfFn<
-      Type<NonNullable<EntryConnection | CommentConnection>>,
-      GqlExecutionContext
-    >;
+// @ObjectType("EntryCommentUnionobj", { implements: () => [EntryCommentUnion] })
+// export class EntryCommentUnionobj
+//   implements EntryCommentUnion<Type<NonNullable<EntryCommentUnionType>>>
+// {
+//   /**
+//    *
+//    */
+//   unionField: Type<(EntryConnection | CommentConnection)>[];
 
-  }
-}
+//   constructor() {
+//     __Type.isTypeOf as GraphQLIsTypeOfFn<
+//       Type<NonNullable<EntryConnection | CommentConnection>>,
+//       GqlExecutionContext
+//     >;
+
+//   }
+// }
 
 @Injectable()
 export class CommentService {
@@ -137,23 +138,23 @@ export class CommentService {
       }
     );
   }
-  async entryCommentUnion(
-    { unionField }: EntryCommentUnionobj,
-    entryParams: FindManyEntriesPaginatedInput,
-    commentParams: FindManyCommentsPaginatedInput
-  ): Promise<EntryConnection | CommentConnection> {
-    const unionFieldId =
-      unionField.find(entryConnection => entryConnection)?.name ?? "";
-    return unionFieldId in EntryConnection.prototype
-      ? ((await this.entryService
-          .siftEntries(entryParams)
-          .then(dataEntry => dataEntry)) as EntryConnection)
-      : unionFieldId in CommentConnection.prototype
-      ? ((await this.siftComments(commentParams).then(
-          dataComment => dataComment
-        )) as CommentConnection)
-      : (null as unknown as EntryConnection | CommentConnection);
-  }
+  // async entryCommentUnion(
+  //   { unionField }: EntryCommentUnionobj,
+  //   entryParams: FindManyEntriesPaginatedInput,
+  //   commentParams: FindManyCommentsPaginatedInput
+  // ): Promise<EntryConnection | CommentConnection> {
+  //   const unionFieldId =
+  //     unionField.find(entryConnection => entryConnection)?.name ?? "";
+  //   return unionFieldId in EntryConnection.prototype
+  //     ? ((await this.entryService
+  //         .siftEntries(entryParams)
+  //         .then(dataEntry => dataEntry)) as EntryConnection)
+  //     : unionFieldId in CommentConnection.prototype
+  //     ? ((await this.siftComments(commentParams).then(
+  //         dataComment => dataComment
+  //       )) as CommentConnection)
+  //     : (null as unknown as EntryConnection | CommentConnection);
+  // }
 
   async relayFindUniqueComment(params: { id: string }) {
     const comment = await this.prismaService.comment.findUnique({
