@@ -104,18 +104,63 @@ export class AuthService {
     }
     return user;
   }
+
+  async getViewerFromContext(viewerId: string) {
+    return await this.validateUser(viewerId);
+  }
+
   async getUserWithDecodedToken(token: string) {
-    const id = this.jwtService.decode(token, {
+    const { header, payload, signature } = this.jwtService.decode(token, {
       complete: true
     }) as JwtDecoded;
-    const user = await this.validateUser(id.payload.userId);
-    const { accessToken, refreshToken } = this.generateTokens({
-      userId: id.payload.userId ? id.payload.userId : ""
-    });
+    const user = await this.validateUser(payload.userId);
+    const { auth, jwt } = {
+      jwt: {
+        header,
+        payload,
+        signature
+      },
+      auth: {
+        accessToken: token,
+        refreshToken: user?.sessions.sort(
+          (a, b) =>
+            (a.lastVerified
+              ? a.lastVerified.getMilliseconds()
+              : payload.exp.valueOf()) -
+            (b.lastVerified
+              ? b.lastVerified?.getMilliseconds()
+              : payload.iat.valueOf())
+        )[0].refreshToken,
+        user: {
+          sessions: user?.sessions.sort(
+            (a, b) =>
+              (a.lastVerified
+                ? a.lastVerified.getMilliseconds()
+                : payload.exp.valueOf()) -
+              (b.lastVerified
+                ? b.lastVerified?.getMilliseconds()
+                : payload.iat.valueOf())
+          )[0],
+          password: user?.password,
+          createdAt: user?.createdAt,
+          email: user?.email,
+          emailVerified: user?.emailVerified,
+          firstName: user?.firstName,
+          id: user?.id,
+          image: user?.image,
+          lastName: user?.lastName,
+          role: user?.role,
+          status: user?.status,
+          updatedAt: user?.updatedAt,
+          _count: user?._count,
+          mediaItems: user?.mediaItems
+        }
+      }
+    } as AuthDetailed;
 
     return await this.prismaService.user
       .update({
-        where: { id: id.payload.userId },
+        where: { id: payload.userId },
         include: { _count: true, mediaItems: true, sessions: true },
         data: {
           status: { set: "ONLINE" },
@@ -124,18 +169,18 @@ export class AuthService {
             upsert: [
               {
                 update: {
-                  accessToken: accessToken,
-                  alg: { set: id.header.alg },
+                  accessToken: auth.accessToken,
+                  alg: { set: header.alg },
                   exp: {
-                    set: id.payload.exp
+                    set: payload.exp
                   },
                   iat: {
-                    set: id.payload.iat
+                    set: payload.iat
                   },
-                  refreshToken: { set: refreshToken },
-                  signature: { set: id.signature },
+                  refreshToken: { set: auth.refreshToken },
+                  signature: { set: signature },
                   provider: {
-                    set: id.header.typ
+                    set: header.typ
                   },
                   lastVerified: { set: new Date(Date.now()) },
                   scopes: {
@@ -150,15 +195,15 @@ export class AuthService {
                   },
                   tokenState: { set: "valid" }
                 },
-                where: { userId: id.payload.userId },
+                where: { userId: payload.userId },
                 create: {
-                  accessToken: accessToken,
-                  alg: id.header.alg,
-                  exp: id.payload.exp,
-                  iat: id.payload.iat,
-                  refreshToken: refreshToken,
-                  signature: id.signature,
-                  provider: id.header.typ,
+                  accessToken: auth.accessToken,
+                  alg: header.alg,
+                  exp: payload.exp,
+                  iat: payload.iat,
+                  refreshToken: auth.refreshToken,
+                  signature: signature,
+                  provider: header.typ,
                   lastVerified: new Date(Date.now()),
                   scopes:
                     user?.role === "SUPERADMIN"
@@ -183,12 +228,12 @@ export class AuthService {
       })
       .then(async results => ({
         auth: {
-          accessToken,
-          refreshToken,
+          accessToken: auth.accessToken,
+          refreshToken: auth.refreshToken,
           session: results.session[0],
           user: results.user
         },
-        jwt: id
+        jwt
       }));
   }
   async signIn(
@@ -296,7 +341,8 @@ export class AuthService {
     return await this.prismaService.user.findUnique({
       include: {
         _count: true,
-        mediaItems: true
+        mediaItems: true,
+        sessions: true
       },
       where: { id: userId ? userId : "" }
     });

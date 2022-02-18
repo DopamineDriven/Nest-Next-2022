@@ -5,7 +5,8 @@ import {
   Field,
   ID,
   Query,
-  Resolver
+  Resolver,
+  UnionOptions
 } from "@nestjs/graphql";
 import { fromGlobalId, globalIdField, toGlobalId } from "graphql-relay";
 import { UserService } from "../user/user.service";
@@ -40,6 +41,8 @@ import { FindManyProfilesPaginatedInput } from "src/profile/inputs/profile-pagin
 import { FindManySessionsPaginatedInput } from "src/session/inputs/sessions-paginated.input";
 import { FindManyMediaItemsPaginatedInput } from "src/media/inputs/find-many-media-items-paginated.input";
 import { ComprehensiveConnectionUnionPartialInput } from "./inputs/connection-union.input";
+import { createContextId } from "@nestjs/core";
+import { GraphQLError } from "graphql";
 
 export type UnionOnNode =
   | UserConnection
@@ -49,7 +52,7 @@ export type UnionOnNode =
   | SessionConnection
   | CommentConnection;
 
-export const UnionNode = createUnionType<Type<UnionOnNode>[]>({
+export const UnionNode: UnionOnNode = createUnionType<Type<UnionOnNode>[]>({
   name: "NodeUnion",
   types: () => [
     UserConnection,
@@ -58,7 +61,26 @@ export const UnionNode = createUnionType<Type<UnionOnNode>[]>({
     ProfileConnection,
     SessionConnection,
     CommentConnection
-  ]
+  ],
+  resolveType(
+    options: UnionOptions<Type<
+      | UserConnection
+      | EntryConnection
+      | MediaItemConnection
+      | ProfileConnection
+      | SessionConnection
+      | CommentConnection
+    >[]>
+  ) {
+    // resolve
+    /**
+     *           "message": "Abstract type \"NodeUnion\" must resolve to an Object type at runtime for field \"Query.comprehensiveConnectionUnion\". Either the \"NodeUnion\" type should provide a \"resolveType\" function or each possible type should provide an \"isTypeOf\" function.",
+     */
+    if (!options) {
+      return new GraphQLError(`no ${options} returned`);
+    }
+    return options;
+  }
 });
 
 @ConnectionObjectType(UnionNode)
@@ -230,7 +252,7 @@ export class NodeResolver {
       new ProfileConnection(),
       new MediaItemConnection(),
       new SessionConnection(),
-      new EntryConnection(),
+      new EntryConnection()
     ];
   }
 }
