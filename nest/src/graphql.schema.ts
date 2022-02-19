@@ -1,3 +1,4 @@
+
 /*
  * -------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
@@ -7,3291 +8,3222 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum AlgorithmType {
-  ES256 = "ES256",
-  ES256K = "ES256K",
-  ES384 = "ES384",
-  ES512 = "ES512",
-  Ed448 = "Ed448",
-  Ed25519 = "Ed25519",
-  HS256 = "HS256",
-  HS384 = "HS384",
-  HS512 = "HS512",
-  None = "None",
-  PS256 = "PS256",
-  PS384 = "PS384",
-  PS512 = "PS512",
-  RS256 = "RS256",
-  RS384 = "RS384",
-  RS512 = "RS512"
+    ES256 = "ES256",
+    ES256K = "ES256K",
+    ES384 = "ES384",
+    ES512 = "ES512",
+    Ed448 = "Ed448",
+    Ed25519 = "Ed25519",
+    HS256 = "HS256",
+    HS384 = "HS384",
+    HS512 = "HS512",
+    None = "None",
+    PS256 = "PS256",
+    PS384 = "PS384",
+    PS512 = "PS512",
+    RS256 = "RS256",
+    RS384 = "RS384",
+    RS512 = "RS512"
 }
 
 export enum CategoryOrderByRelevanceFieldEnum {
-  creatorId = "creatorId",
-  entryId = "entryId",
-  id = "id",
-  name = "name"
+    creatorId = "creatorId",
+    entryId = "entryId",
+    id = "id",
+    name = "name"
 }
 
 export enum CategoryScalarFieldEnum {
-  createdAt = "createdAt",
-  creatorId = "creatorId",
-  entryId = "entryId",
-  id = "id",
-  name = "name",
-  updatedAt = "updatedAt"
+    createdAt = "createdAt",
+    creatorId = "creatorId",
+    entryId = "entryId",
+    id = "id",
+    name = "name",
+    updatedAt = "updatedAt"
 }
 
 export enum CommentOrderByRelevanceFieldEnum {
-  authorId = "authorId",
-  body = "body",
-  entryId = "entryId",
-  id = "id",
-  position = "position"
+    authorId = "authorId",
+    body = "body",
+    entryId = "entryId",
+    id = "id",
+    position = "position"
 }
 
 export enum CommentReactions {
-  ANGRY = "ANGRY",
-  CARE = "CARE",
-  CONFUSED = "CONFUSED",
-  DISLIKE = "DISLIKE",
-  LAUGH = "LAUGH",
-  LIKE = "LIKE",
-  LOVE = "LOVE",
-  PARROT = "PARROT",
-  ROCKET = "ROCKET",
-  TEARS = "TEARS",
-  WOW = "WOW"
+    ANGRY = "ANGRY",
+    CARE = "CARE",
+    CONFUSED = "CONFUSED",
+    DISLIKE = "DISLIKE",
+    LAUGH = "LAUGH",
+    LIKE = "LIKE",
+    LOVE = "LOVE",
+    PARROT = "PARROT",
+    ROCKET = "ROCKET",
+    TEARS = "TEARS",
+    WOW = "WOW"
 }
 
 export enum CommentScalarFieldEnum {
-  authorId = "authorId",
-  body = "body",
-  createdAt = "createdAt",
-  entryId = "entryId",
-  id = "id",
-  position = "position",
-  reactions = "reactions",
-  updatedAt = "updatedAt"
+    authorId = "authorId",
+    body = "body",
+    createdAt = "createdAt",
+    entryId = "entryId",
+    id = "id",
+    position = "position",
+    reactions = "reactions",
+    updatedAt = "updatedAt"
 }
 
 export enum ConnectionOrderByRelevanceFieldEnum {
-  email = "email",
-  firstName = "firstName",
-  id = "id",
-  ip = "ip",
-  lastName = "lastName",
-  ownerId = "ownerId",
-  phoneNumber = "phoneNumber"
+    email = "email",
+    firstName = "firstName",
+    id = "id",
+    ip = "ip",
+    lastName = "lastName",
+    ownerId = "ownerId",
+    phoneNumber = "phoneNumber"
 }
 
 export enum ConnectionScalarFieldEnum {
-  email = "email",
-  firstName = "firstName",
-  id = "id",
-  ip = "ip",
-  lastModified = "lastModified",
-  lastName = "lastName",
-  ownerId = "ownerId",
-  phoneNumber = "phoneNumber"
+    email = "email",
+    firstName = "firstName",
+    id = "id",
+    ip = "ip",
+    lastModified = "lastModified",
+    lastName = "lastName",
+    ownerId = "ownerId",
+    phoneNumber = "phoneNumber"
 }
 
 export enum EntryOrderByRelevanceFieldEnum {
-  authorId = "authorId",
-  categoryId = "categoryId",
-  content = "content",
-  featuredImage = "featuredImage",
-  id = "id",
-  title = "title"
+    authorId = "authorId",
+    categoryId = "categoryId",
+    content = "content",
+    featuredImage = "featuredImage",
+    id = "id",
+    title = "title"
 }
 
 export enum EntryScalarFieldEnum {
-  authorId = "authorId",
-  categoryId = "categoryId",
-  content = "content",
-  createdAt = "createdAt",
-  featuredImage = "featuredImage",
-  id = "id",
-  published = "published",
-  title = "title",
-  updatedAt = "updatedAt"
+    authorId = "authorId",
+    categoryId = "categoryId",
+    content = "content",
+    createdAt = "createdAt",
+    featuredImage = "featuredImage",
+    id = "id",
+    published = "published",
+    title = "title",
+    updatedAt = "updatedAt"
 }
 
 export enum Gender {
-  FEMALE = "FEMALE",
-  MALE = "MALE",
-  OTHER = "OTHER",
-  UNCERTAIN = "UNCERTAIN"
+    FEMALE = "FEMALE",
+    MALE = "MALE",
+    OTHER = "OTHER",
+    UNCERTAIN = "UNCERTAIN"
 }
 
 export enum MediaItemDestination {
-  AVATAR = "AVATAR",
-  COMMENT_ATTACHMENT = "COMMENT_ATTACHMENT",
-  COVER_IMAGE = "COVER_IMAGE",
-  ENTRY_ATTACHMENT = "ENTRY_ATTACHMENT",
-  FEATURED_IMAGE = "FEATURED_IMAGE"
+    AVATAR = "AVATAR",
+    COMMENT_ATTACHMENT = "COMMENT_ATTACHMENT",
+    COVER_IMAGE = "COVER_IMAGE",
+    ENTRY_ATTACHMENT = "ENTRY_ATTACHMENT",
+    FEATURED_IMAGE = "FEATURED_IMAGE"
 }
 
 export enum MediaItemOrderByRelevanceFieldEnum {
-  ariaLabel = "ariaLabel",
-  caption = "caption",
-  id = "id",
-  name = "name",
-  size = "size",
-  src = "src",
-  srcSet = "srcSet",
-  title = "title",
-  userId = "userId"
+    ariaLabel = "ariaLabel",
+    caption = "caption",
+    id = "id",
+    name = "name",
+    size = "size",
+    src = "src",
+    srcSet = "srcSet",
+    title = "title",
+    userId = "userId"
 }
 
 export enum MediaItemScalarFieldEnum {
-  ariaLabel = "ariaLabel",
-  caption = "caption",
-  destination = "destination",
-  fileLastModified = "fileLastModified",
-  height = "height",
-  id = "id",
-  name = "name",
-  quality = "quality",
-  size = "size",
-  src = "src",
-  srcSet = "srcSet",
-  title = "title",
-  type = "type",
-  updatedAt = "updatedAt",
-  uploadedAt = "uploadedAt",
-  userId = "userId",
-  width = "width"
+    ariaLabel = "ariaLabel",
+    caption = "caption",
+    destination = "destination",
+    fileLastModified = "fileLastModified",
+    height = "height",
+    id = "id",
+    name = "name",
+    quality = "quality",
+    size = "size",
+    src = "src",
+    srcSet = "srcSet",
+    title = "title",
+    type = "type",
+    updatedAt = "updatedAt",
+    uploadedAt = "uploadedAt",
+    userId = "userId",
+    width = "width"
 }
 
 export enum MimeTypes {
-  AVIF = "AVIF",
-  BMP = "BMP",
-  GIF = "GIF",
-  JPEG = "JPEG",
-  PNG = "PNG",
-  SVG = "SVG",
-  TIFF = "TIFF",
-  WEBP = "WEBP"
+    AVIF = "AVIF",
+    BMP = "BMP",
+    GIF = "GIF",
+    JPEG = "JPEG",
+    PNG = "PNG",
+    SVG = "SVG",
+    TIFF = "TIFF",
+    WEBP = "WEBP"
 }
 
 export enum ProfileOrderByRelevanceFieldEnum {
-  activiyFeed = "activiyFeed",
-  bio = "bio",
-  city = "city",
-  country = "country",
-  coverPhoto = "coverPhoto",
-  dob = "dob",
-  id = "id",
-  occupation = "occupation",
-  phoneNumber = "phoneNumber",
-  recentActivity = "recentActivity",
-  userId = "userId"
+    activiyFeed = "activiyFeed",
+    bio = "bio",
+    city = "city",
+    country = "country",
+    coverPhoto = "coverPhoto",
+    dob = "dob",
+    id = "id",
+    occupation = "occupation",
+    phoneNumber = "phoneNumber",
+    recentActivity = "recentActivity",
+    userId = "userId"
 }
 
 export enum ProfileScalarFieldEnum {
-  activiyFeed = "activiyFeed",
-  bio = "bio",
-  city = "city",
-  country = "country",
-  coverPhoto = "coverPhoto",
-  dob = "dob",
-  gender = "gender",
-  id = "id",
-  lastSeen = "lastSeen",
-  memberSince = "memberSince",
-  occupation = "occupation",
-  phoneNumber = "phoneNumber",
-  pronouns = "pronouns",
-  recentActivity = "recentActivity",
-  userId = "userId"
+    activiyFeed = "activiyFeed",
+    bio = "bio",
+    city = "city",
+    country = "country",
+    coverPhoto = "coverPhoto",
+    dob = "dob",
+    gender = "gender",
+    id = "id",
+    lastSeen = "lastSeen",
+    memberSince = "memberSince",
+    occupation = "occupation",
+    phoneNumber = "phoneNumber",
+    pronouns = "pronouns",
+    recentActivity = "recentActivity",
+    userId = "userId"
 }
 
 export enum Pronouns {
-  HE_HIM_HIS = "HE_HIM_HIS",
-  NOT_LISTED = "NOT_LISTED",
-  PREFER_NOT_TO_SAY = "PREFER_NOT_TO_SAY",
-  SHE_HER_HERS = "SHE_HER_HERS",
-  THEY_THEM_THEIRS = "THEY_THEM_THEIRS"
+    HE_HIM_HIS = "HE_HIM_HIS",
+    NOT_LISTED = "NOT_LISTED",
+    PREFER_NOT_TO_SAY = "PREFER_NOT_TO_SAY",
+    SHE_HER_HERS = "SHE_HER_HERS",
+    THEY_THEM_THEIRS = "THEY_THEM_THEIRS"
 }
 
 export enum QueryMode {
-  "default" = "default",
-  insensitive = "insensitive"
+    "default" = "default",
+    insensitive = "insensitive"
 }
 
 export enum Role {
-  ADMIN = "ADMIN",
-  MAINTAINER = "MAINTAINER",
-  SUPERADMIN = "SUPERADMIN",
-  USER = "USER"
+    ADMIN = "ADMIN",
+    MAINTAINER = "MAINTAINER",
+    SUPERADMIN = "SUPERADMIN",
+    USER = "USER"
 }
 
 export enum SessionOrderByRelevanceFieldEnum {
-  accessToken = "accessToken",
-  alg = "alg",
-  id = "id",
-  provider = "provider",
-  refreshToken = "refreshToken",
-  scopes = "scopes",
-  signature = "signature",
-  tokenState = "tokenState",
-  userId = "userId"
+    accessToken = "accessToken",
+    alg = "alg",
+    id = "id",
+    provider = "provider",
+    refreshToken = "refreshToken",
+    scopes = "scopes",
+    signature = "signature",
+    tokenState = "tokenState",
+    userId = "userId"
 }
 
 export enum SessionScalarFieldEnum {
-  accessToken = "accessToken",
-  alg = "alg",
-  exp = "exp",
-  iat = "iat",
-  id = "id",
-  lastVerified = "lastVerified",
-  provider = "provider",
-  refreshToken = "refreshToken",
-  scopes = "scopes",
-  signature = "signature",
-  tokenState = "tokenState",
-  userId = "userId"
+    accessToken = "accessToken",
+    alg = "alg",
+    exp = "exp",
+    iat = "iat",
+    id = "id",
+    lastVerified = "lastVerified",
+    provider = "provider",
+    refreshToken = "refreshToken",
+    scopes = "scopes",
+    signature = "signature",
+    tokenState = "tokenState",
+    userId = "userId"
 }
 
 export enum SortOrder {
-  asc = "asc",
-  desc = "desc"
+    asc = "asc",
+    desc = "desc"
 }
 
 export enum UserOrderByRelevanceFieldEnum {
-  email = "email",
-  firstName = "firstName",
-  id = "id",
-  image = "image",
-  lastName = "lastName",
-  password = "password"
+    email = "email",
+    firstName = "firstName",
+    id = "id",
+    image = "image",
+    lastName = "lastName",
+    password = "password"
 }
 
 export enum UserScalarFieldEnum {
-  createdAt = "createdAt",
-  email = "email",
-  emailVerified = "emailVerified",
-  firstName = "firstName",
-  id = "id",
-  image = "image",
-  lastName = "lastName",
-  password = "password",
-  role = "role",
-  status = "status",
-  updatedAt = "updatedAt"
+    createdAt = "createdAt",
+    email = "email",
+    emailVerified = "emailVerified",
+    firstName = "firstName",
+    id = "id",
+    image = "image",
+    lastName = "lastName",
+    password = "password",
+    role = "role",
+    status = "status",
+    updatedAt = "updatedAt"
 }
 
 export enum UserStatus {
-  BANNED = "BANNED",
-  DEACTIVATED = "DEACTIVATED",
-  DELETED = "DELETED",
-  OFFLINE = "OFFLINE",
-  ONLINE = "ONLINE",
-  SUSPENDED = "SUSPENDED"
+    BANNED = "BANNED",
+    DEACTIVATED = "DEACTIVATED",
+    DELETED = "DELETED",
+    OFFLINE = "OFFLINE",
+    ONLINE = "ONLINE",
+    SUSPENDED = "SUSPENDED"
 }
 
 export class AccountCreateManyUserInput {
-  access_token?: Nullable<string>;
-  expires_at?: Nullable<number>;
-  id?: Nullable<string>;
-  id_token?: Nullable<string>;
-  oauth_token?: Nullable<string>;
-  oauth_token_secret?: Nullable<string>;
-  provider: string;
-  providerAccountId: string;
-  refresh_secret?: Nullable<string>;
-  refresh_token?: Nullable<string>;
-  scope?: Nullable<string>;
-  session_state?: Nullable<string>;
-  token_type?: Nullable<string>;
-  type: string;
+    access_token?: Nullable<string>;
+    expires_at?: Nullable<number>;
+    id?: Nullable<string>;
+    id_token?: Nullable<string>;
+    oauth_token?: Nullable<string>;
+    oauth_token_secret?: Nullable<string>;
+    provider: string;
+    providerAccountId: string;
+    refresh_secret?: Nullable<string>;
+    refresh_token?: Nullable<string>;
+    scope?: Nullable<string>;
+    session_state?: Nullable<string>;
+    token_type?: Nullable<string>;
+    type: string;
 }
 
 export class AccountCreateManyUserInputEnvelope {
-  data: AccountCreateManyUserInput[];
-  skipDuplicates?: Nullable<boolean>;
+    data: AccountCreateManyUserInput[];
+    skipDuplicates?: Nullable<boolean>;
 }
 
 export class AccountCreateNestedManyWithoutUserInput {
-  connect?: Nullable<AccountWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<AccountCreateOrConnectWithoutUserInput[]>;
-  create?: Nullable<AccountCreateWithoutUserInput[]>;
-  createMany?: Nullable<AccountCreateManyUserInputEnvelope>;
+    connect?: Nullable<AccountWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<AccountCreateOrConnectWithoutUserInput[]>;
+    create?: Nullable<AccountCreateWithoutUserInput[]>;
+    createMany?: Nullable<AccountCreateManyUserInputEnvelope>;
 }
 
 export class AccountCreateOrConnectWithoutUserInput {
-  create: AccountCreateWithoutUserInput;
-  where: AccountWhereUniqueInput;
+    create: AccountCreateWithoutUserInput;
+    where: AccountWhereUniqueInput;
 }
 
 export class AccountCreateWithoutUserInput {
-  access_token?: Nullable<string>;
-  expires_at?: Nullable<number>;
-  id?: Nullable<string>;
-  id_token?: Nullable<string>;
-  oauth_token?: Nullable<string>;
-  oauth_token_secret?: Nullable<string>;
-  provider: string;
-  providerAccountId: string;
-  refresh_secret?: Nullable<string>;
-  refresh_token?: Nullable<string>;
-  scope?: Nullable<string>;
-  session_state?: Nullable<string>;
-  token_type?: Nullable<string>;
-  type: string;
+    access_token?: Nullable<string>;
+    expires_at?: Nullable<number>;
+    id?: Nullable<string>;
+    id_token?: Nullable<string>;
+    oauth_token?: Nullable<string>;
+    oauth_token_secret?: Nullable<string>;
+    provider: string;
+    providerAccountId: string;
+    refresh_secret?: Nullable<string>;
+    refresh_token?: Nullable<string>;
+    scope?: Nullable<string>;
+    session_state?: Nullable<string>;
+    token_type?: Nullable<string>;
+    type: string;
 }
 
 export class AccountListRelationFilter {
-  every?: Nullable<AccountWhereInput>;
-  none?: Nullable<AccountWhereInput>;
-  some?: Nullable<AccountWhereInput>;
+    every?: Nullable<AccountWhereInput>;
+    none?: Nullable<AccountWhereInput>;
+    some?: Nullable<AccountWhereInput>;
 }
 
 export class AccountOrderByRelationAggregateInput {
-  _count?: Nullable<SortOrder>;
+    _count?: Nullable<SortOrder>;
 }
 
 export class AccountProviderProviderAccountIdCompoundUniqueInput {
-  provider: string;
-  providerAccountId: string;
+    provider: string;
+    providerAccountId: string;
 }
 
 export class AccountScalarWhereInput {
-  AND?: Nullable<AccountScalarWhereInput[]>;
-  NOT?: Nullable<AccountScalarWhereInput[]>;
-  OR?: Nullable<AccountScalarWhereInput[]>;
-  access_token?: Nullable<StringNullableFilter>;
-  expires_at?: Nullable<IntNullableFilter>;
-  id?: Nullable<StringFilter>;
-  id_token?: Nullable<StringNullableFilter>;
-  oauth_token?: Nullable<StringNullableFilter>;
-  oauth_token_secret?: Nullable<StringNullableFilter>;
-  provider?: Nullable<StringFilter>;
-  providerAccountId?: Nullable<StringFilter>;
-  refresh_secret?: Nullable<StringNullableFilter>;
-  refresh_token?: Nullable<StringNullableFilter>;
-  scope?: Nullable<StringNullableFilter>;
-  session_state?: Nullable<StringNullableFilter>;
-  token_type?: Nullable<StringNullableFilter>;
-  type?: Nullable<StringFilter>;
-  userId?: Nullable<StringFilter>;
+    AND?: Nullable<AccountScalarWhereInput[]>;
+    NOT?: Nullable<AccountScalarWhereInput[]>;
+    OR?: Nullable<AccountScalarWhereInput[]>;
+    access_token?: Nullable<StringNullableFilter>;
+    expires_at?: Nullable<IntNullableFilter>;
+    id?: Nullable<StringFilter>;
+    id_token?: Nullable<StringNullableFilter>;
+    oauth_token?: Nullable<StringNullableFilter>;
+    oauth_token_secret?: Nullable<StringNullableFilter>;
+    provider?: Nullable<StringFilter>;
+    providerAccountId?: Nullable<StringFilter>;
+    refresh_secret?: Nullable<StringNullableFilter>;
+    refresh_token?: Nullable<StringNullableFilter>;
+    scope?: Nullable<StringNullableFilter>;
+    session_state?: Nullable<StringNullableFilter>;
+    token_type?: Nullable<StringNullableFilter>;
+    type?: Nullable<StringFilter>;
+    userId?: Nullable<StringFilter>;
 }
 
 export class AccountUpdateManyMutationInput {
-  access_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  expires_at?: Nullable<NullableIntFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  id_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  oauth_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  oauth_token_secret?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  provider?: Nullable<StringFieldUpdateOperationsInput>;
-  providerAccountId?: Nullable<StringFieldUpdateOperationsInput>;
-  refresh_secret?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  refresh_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  scope?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  session_state?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  token_type?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  type?: Nullable<StringFieldUpdateOperationsInput>;
+    access_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    expires_at?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    id_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    oauth_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    oauth_token_secret?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    provider?: Nullable<StringFieldUpdateOperationsInput>;
+    providerAccountId?: Nullable<StringFieldUpdateOperationsInput>;
+    refresh_secret?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    refresh_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    scope?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    session_state?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    token_type?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    type?: Nullable<StringFieldUpdateOperationsInput>;
 }
 
 export class AccountUpdateManyWithWhereWithoutUserInput {
-  data: AccountUpdateManyMutationInput;
-  where: AccountScalarWhereInput;
+    data: AccountUpdateManyMutationInput;
+    where: AccountScalarWhereInput;
 }
 
 export class AccountUpdateManyWithoutUserInput {
-  connect?: Nullable<AccountWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<AccountCreateOrConnectWithoutUserInput[]>;
-  create?: Nullable<AccountCreateWithoutUserInput[]>;
-  createMany?: Nullable<AccountCreateManyUserInputEnvelope>;
-  delete?: Nullable<AccountWhereUniqueInput[]>;
-  deleteMany?: Nullable<AccountScalarWhereInput[]>;
-  disconnect?: Nullable<AccountWhereUniqueInput[]>;
-  set?: Nullable<AccountWhereUniqueInput[]>;
-  update?: Nullable<AccountUpdateWithWhereUniqueWithoutUserInput[]>;
-  updateMany?: Nullable<AccountUpdateManyWithWhereWithoutUserInput[]>;
-  upsert?: Nullable<AccountUpsertWithWhereUniqueWithoutUserInput[]>;
+    connect?: Nullable<AccountWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<AccountCreateOrConnectWithoutUserInput[]>;
+    create?: Nullable<AccountCreateWithoutUserInput[]>;
+    createMany?: Nullable<AccountCreateManyUserInputEnvelope>;
+    delete?: Nullable<AccountWhereUniqueInput[]>;
+    deleteMany?: Nullable<AccountScalarWhereInput[]>;
+    disconnect?: Nullable<AccountWhereUniqueInput[]>;
+    set?: Nullable<AccountWhereUniqueInput[]>;
+    update?: Nullable<AccountUpdateWithWhereUniqueWithoutUserInput[]>;
+    updateMany?: Nullable<AccountUpdateManyWithWhereWithoutUserInput[]>;
+    upsert?: Nullable<AccountUpsertWithWhereUniqueWithoutUserInput[]>;
 }
 
 export class AccountUpdateWithWhereUniqueWithoutUserInput {
-  data: AccountUpdateWithoutUserInput;
-  where: AccountWhereUniqueInput;
+    data: AccountUpdateWithoutUserInput;
+    where: AccountWhereUniqueInput;
 }
 
 export class AccountUpdateWithoutUserInput {
-  access_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  expires_at?: Nullable<NullableIntFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  id_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  oauth_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  oauth_token_secret?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  provider?: Nullable<StringFieldUpdateOperationsInput>;
-  providerAccountId?: Nullable<StringFieldUpdateOperationsInput>;
-  refresh_secret?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  refresh_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  scope?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  session_state?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  token_type?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  type?: Nullable<StringFieldUpdateOperationsInput>;
+    access_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    expires_at?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    id_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    oauth_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    oauth_token_secret?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    provider?: Nullable<StringFieldUpdateOperationsInput>;
+    providerAccountId?: Nullable<StringFieldUpdateOperationsInput>;
+    refresh_secret?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    refresh_token?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    scope?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    session_state?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    token_type?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    type?: Nullable<StringFieldUpdateOperationsInput>;
 }
 
 export class AccountUpsertWithWhereUniqueWithoutUserInput {
-  create: AccountCreateWithoutUserInput;
-  update: AccountUpdateWithoutUserInput;
-  where: AccountWhereUniqueInput;
+    create: AccountCreateWithoutUserInput;
+    update: AccountUpdateWithoutUserInput;
+    where: AccountWhereUniqueInput;
 }
 
 export class AccountWhereInput {
-  AND?: Nullable<AccountWhereInput[]>;
-  NOT?: Nullable<AccountWhereInput[]>;
-  OR?: Nullable<AccountWhereInput[]>;
-  access_token?: Nullable<StringNullableFilter>;
-  expires_at?: Nullable<IntNullableFilter>;
-  id?: Nullable<StringFilter>;
-  id_token?: Nullable<StringNullableFilter>;
-  oauth_token?: Nullable<StringNullableFilter>;
-  oauth_token_secret?: Nullable<StringNullableFilter>;
-  provider?: Nullable<StringFilter>;
-  providerAccountId?: Nullable<StringFilter>;
-  refresh_secret?: Nullable<StringNullableFilter>;
-  refresh_token?: Nullable<StringNullableFilter>;
-  scope?: Nullable<StringNullableFilter>;
-  session_state?: Nullable<StringNullableFilter>;
-  token_type?: Nullable<StringNullableFilter>;
-  type?: Nullable<StringFilter>;
-  user?: Nullable<UserRelationFilter>;
-  userId?: Nullable<StringFilter>;
+    AND?: Nullable<AccountWhereInput[]>;
+    NOT?: Nullable<AccountWhereInput[]>;
+    OR?: Nullable<AccountWhereInput[]>;
+    access_token?: Nullable<StringNullableFilter>;
+    expires_at?: Nullable<IntNullableFilter>;
+    id?: Nullable<StringFilter>;
+    id_token?: Nullable<StringNullableFilter>;
+    oauth_token?: Nullable<StringNullableFilter>;
+    oauth_token_secret?: Nullable<StringNullableFilter>;
+    provider?: Nullable<StringFilter>;
+    providerAccountId?: Nullable<StringFilter>;
+    refresh_secret?: Nullable<StringNullableFilter>;
+    refresh_token?: Nullable<StringNullableFilter>;
+    scope?: Nullable<StringNullableFilter>;
+    session_state?: Nullable<StringNullableFilter>;
+    token_type?: Nullable<StringNullableFilter>;
+    type?: Nullable<StringFilter>;
+    user?: Nullable<UserRelationFilter>;
+    userId?: Nullable<StringFilter>;
 }
 
 export class AccountWhereUniqueInput {
-  id?: Nullable<string>;
-  provider_providerAccountId?: Nullable<AccountProviderProviderAccountIdCompoundUniqueInput>;
+    id?: Nullable<string>;
+    provider_providerAccountId?: Nullable<AccountProviderProviderAccountIdCompoundUniqueInput>;
 }
 
 export class BoolFieldUpdateOperationsInput {
-  set?: Nullable<boolean>;
+    set?: Nullable<boolean>;
 }
 
 export class BoolFilter {
-  equals?: Nullable<boolean>;
-  not?: Nullable<NestedBoolFilter>;
+    equals?: Nullable<boolean>;
+    not?: Nullable<NestedBoolFilter>;
 }
 
 export class CategoryCreateManyCreatorInput {
-  createdAt?: Nullable<DateTime>;
-  entryId?: Nullable<string>;
-  id?: Nullable<string>;
-  name: string;
-  updatedAt?: Nullable<DateTime>;
+    createdAt?: Nullable<DateTime>;
+    entryId?: Nullable<string>;
+    id?: Nullable<string>;
+    name: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class CategoryCreateManyCreatorInputEnvelope {
-  data: CategoryCreateManyCreatorInput[];
-  skipDuplicates?: Nullable<boolean>;
+    data: CategoryCreateManyCreatorInput[];
+    skipDuplicates?: Nullable<boolean>;
 }
 
 export class CategoryCreateNestedManyWithoutCreatorInput {
-  connect?: Nullable<CategoryWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<CategoryCreateOrConnectWithoutCreatorInput[]>;
-  create?: Nullable<CategoryCreateWithoutCreatorInput[]>;
-  createMany?: Nullable<CategoryCreateManyCreatorInputEnvelope>;
+    connect?: Nullable<CategoryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CategoryCreateOrConnectWithoutCreatorInput[]>;
+    create?: Nullable<CategoryCreateWithoutCreatorInput[]>;
+    createMany?: Nullable<CategoryCreateManyCreatorInputEnvelope>;
 }
 
 export class CategoryCreateNestedManyWithoutEntriesInput {
-  connect?: Nullable<CategoryWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<CategoryCreateOrConnectWithoutEntriesInput[]>;
-  create?: Nullable<CategoryCreateWithoutEntriesInput[]>;
+    connect?: Nullable<CategoryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CategoryCreateOrConnectWithoutEntriesInput[]>;
+    create?: Nullable<CategoryCreateWithoutEntriesInput[]>;
 }
 
 export class CategoryCreateOrConnectWithoutCreatorInput {
-  create: CategoryCreateWithoutCreatorInput;
-  where: CategoryWhereUniqueInput;
+    create: CategoryCreateWithoutCreatorInput;
+    where: CategoryWhereUniqueInput;
 }
 
 export class CategoryCreateOrConnectWithoutEntriesInput {
-  create: CategoryCreateWithoutEntriesInput;
-  where: CategoryWhereUniqueInput;
+    create: CategoryCreateWithoutEntriesInput;
+    where: CategoryWhereUniqueInput;
 }
 
 export class CategoryCreateWithoutCreatorInput {
-  createdAt?: Nullable<DateTime>;
-  entries?: Nullable<EntryCreateNestedManyWithoutCategoriesInput>;
-  entryId?: Nullable<string>;
-  id?: Nullable<string>;
-  name: string;
-  updatedAt?: Nullable<DateTime>;
+    createdAt?: Nullable<DateTime>;
+    entries?: Nullable<EntryCreateNestedManyWithoutCategoriesInput>;
+    entryId?: Nullable<string>;
+    id?: Nullable<string>;
+    name: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class CategoryCreateWithoutEntriesInput {
-  createdAt?: Nullable<DateTime>;
-  creator: UserCreateNestedOneWithoutCategoriesInput;
-  entryId?: Nullable<string>;
-  id?: Nullable<string>;
-  name: string;
-  updatedAt?: Nullable<DateTime>;
+    createdAt?: Nullable<DateTime>;
+    creator: UserCreateNestedOneWithoutCategoriesInput;
+    entryId?: Nullable<string>;
+    id?: Nullable<string>;
+    name: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class CategoryListRelationFilter {
-  every?: Nullable<CategoryWhereInput>;
-  none?: Nullable<CategoryWhereInput>;
-  some?: Nullable<CategoryWhereInput>;
+    every?: Nullable<CategoryWhereInput>;
+    none?: Nullable<CategoryWhereInput>;
+    some?: Nullable<CategoryWhereInput>;
 }
 
 export class CategoryOrderByRelationAggregateInput {
-  _count?: Nullable<SortOrder>;
+    _count?: Nullable<SortOrder>;
 }
 
 export class CategoryOrderByRelevanceInput {
-  fields: CategoryOrderByRelevanceFieldEnum[];
-  search: string;
-  sort: SortOrder;
+    fields: CategoryOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
 }
 
 export class CategoryOrderByWithRelationAndSearchRelevanceInput {
-  _relevance?: Nullable<CategoryOrderByRelevanceInput>;
-  createdAt?: Nullable<SortOrder>;
-  creator?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
-  creatorId?: Nullable<SortOrder>;
-  entries?: Nullable<EntryOrderByRelationAggregateInput>;
-  entryId?: Nullable<SortOrder>;
-  id?: Nullable<SortOrder>;
-  name?: Nullable<SortOrder>;
-  updatedAt?: Nullable<SortOrder>;
+    _relevance?: Nullable<CategoryOrderByRelevanceInput>;
+    createdAt?: Nullable<SortOrder>;
+    creator?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    creatorId?: Nullable<SortOrder>;
+    entries?: Nullable<EntryOrderByRelationAggregateInput>;
+    entryId?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    name?: Nullable<SortOrder>;
+    updatedAt?: Nullable<SortOrder>;
 }
 
 export class CategoryScalarWhereInput {
-  AND?: Nullable<CategoryScalarWhereInput[]>;
-  NOT?: Nullable<CategoryScalarWhereInput[]>;
-  OR?: Nullable<CategoryScalarWhereInput[]>;
-  createdAt?: Nullable<DateTimeNullableFilter>;
-  creatorId?: Nullable<StringFilter>;
-  entryId?: Nullable<StringNullableFilter>;
-  id?: Nullable<StringFilter>;
-  name?: Nullable<StringFilter>;
-  updatedAt?: Nullable<DateTimeNullableFilter>;
+    AND?: Nullable<CategoryScalarWhereInput[]>;
+    NOT?: Nullable<CategoryScalarWhereInput[]>;
+    OR?: Nullable<CategoryScalarWhereInput[]>;
+    createdAt?: Nullable<DateTimeNullableFilter>;
+    creatorId?: Nullable<StringFilter>;
+    entryId?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    name?: Nullable<StringFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
 }
 
 export class CategoryUpdateManyMutationInput {
-  createdAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  entryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  name?: Nullable<StringFieldUpdateOperationsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    createdAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    entryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    name?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class CategoryUpdateManyWithWhereWithoutCreatorInput {
-  data: CategoryUpdateManyMutationInput;
-  where: CategoryScalarWhereInput;
+    data: CategoryUpdateManyMutationInput;
+    where: CategoryScalarWhereInput;
 }
 
 export class CategoryUpdateManyWithWhereWithoutEntriesInput {
-  data: CategoryUpdateManyMutationInput;
-  where: CategoryScalarWhereInput;
+    data: CategoryUpdateManyMutationInput;
+    where: CategoryScalarWhereInput;
 }
 
 export class CategoryUpdateManyWithoutCreatorInput {
-  connect?: Nullable<CategoryWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<CategoryCreateOrConnectWithoutCreatorInput[]>;
-  create?: Nullable<CategoryCreateWithoutCreatorInput[]>;
-  createMany?: Nullable<CategoryCreateManyCreatorInputEnvelope>;
-  delete?: Nullable<CategoryWhereUniqueInput[]>;
-  deleteMany?: Nullable<CategoryScalarWhereInput[]>;
-  disconnect?: Nullable<CategoryWhereUniqueInput[]>;
-  set?: Nullable<CategoryWhereUniqueInput[]>;
-  update?: Nullable<CategoryUpdateWithWhereUniqueWithoutCreatorInput[]>;
-  updateMany?: Nullable<CategoryUpdateManyWithWhereWithoutCreatorInput[]>;
-  upsert?: Nullable<CategoryUpsertWithWhereUniqueWithoutCreatorInput[]>;
+    connect?: Nullable<CategoryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CategoryCreateOrConnectWithoutCreatorInput[]>;
+    create?: Nullable<CategoryCreateWithoutCreatorInput[]>;
+    createMany?: Nullable<CategoryCreateManyCreatorInputEnvelope>;
+    delete?: Nullable<CategoryWhereUniqueInput[]>;
+    deleteMany?: Nullable<CategoryScalarWhereInput[]>;
+    disconnect?: Nullable<CategoryWhereUniqueInput[]>;
+    set?: Nullable<CategoryWhereUniqueInput[]>;
+    update?: Nullable<CategoryUpdateWithWhereUniqueWithoutCreatorInput[]>;
+    updateMany?: Nullable<CategoryUpdateManyWithWhereWithoutCreatorInput[]>;
+    upsert?: Nullable<CategoryUpsertWithWhereUniqueWithoutCreatorInput[]>;
 }
 
 export class CategoryUpdateManyWithoutEntriesInput {
-  connect?: Nullable<CategoryWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<CategoryCreateOrConnectWithoutEntriesInput[]>;
-  create?: Nullable<CategoryCreateWithoutEntriesInput[]>;
-  delete?: Nullable<CategoryWhereUniqueInput[]>;
-  deleteMany?: Nullable<CategoryScalarWhereInput[]>;
-  disconnect?: Nullable<CategoryWhereUniqueInput[]>;
-  set?: Nullable<CategoryWhereUniqueInput[]>;
-  update?: Nullable<CategoryUpdateWithWhereUniqueWithoutEntriesInput[]>;
-  updateMany?: Nullable<CategoryUpdateManyWithWhereWithoutEntriesInput[]>;
-  upsert?: Nullable<CategoryUpsertWithWhereUniqueWithoutEntriesInput[]>;
+    connect?: Nullable<CategoryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CategoryCreateOrConnectWithoutEntriesInput[]>;
+    create?: Nullable<CategoryCreateWithoutEntriesInput[]>;
+    delete?: Nullable<CategoryWhereUniqueInput[]>;
+    deleteMany?: Nullable<CategoryScalarWhereInput[]>;
+    disconnect?: Nullable<CategoryWhereUniqueInput[]>;
+    set?: Nullable<CategoryWhereUniqueInput[]>;
+    update?: Nullable<CategoryUpdateWithWhereUniqueWithoutEntriesInput[]>;
+    updateMany?: Nullable<CategoryUpdateManyWithWhereWithoutEntriesInput[]>;
+    upsert?: Nullable<CategoryUpsertWithWhereUniqueWithoutEntriesInput[]>;
 }
 
 export class CategoryUpdateWithWhereUniqueWithoutCreatorInput {
-  data: CategoryUpdateWithoutCreatorInput;
-  where: CategoryWhereUniqueInput;
+    data: CategoryUpdateWithoutCreatorInput;
+    where: CategoryWhereUniqueInput;
 }
 
 export class CategoryUpdateWithWhereUniqueWithoutEntriesInput {
-  data: CategoryUpdateWithoutEntriesInput;
-  where: CategoryWhereUniqueInput;
+    data: CategoryUpdateWithoutEntriesInput;
+    where: CategoryWhereUniqueInput;
 }
 
 export class CategoryUpdateWithoutCreatorInput {
-  createdAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  entries?: Nullable<EntryUpdateManyWithoutCategoriesInput>;
-  entryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  name?: Nullable<StringFieldUpdateOperationsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    createdAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    entries?: Nullable<EntryUpdateManyWithoutCategoriesInput>;
+    entryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    name?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class CategoryUpdateWithoutEntriesInput {
-  createdAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  creator?: Nullable<UserUpdateOneRequiredWithoutCategoriesInput>;
-  entryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  name?: Nullable<StringFieldUpdateOperationsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    createdAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    creator?: Nullable<UserUpdateOneRequiredWithoutCategoriesInput>;
+    entryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    name?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class CategoryUpsertWithWhereUniqueWithoutCreatorInput {
-  create: CategoryCreateWithoutCreatorInput;
-  update: CategoryUpdateWithoutCreatorInput;
-  where: CategoryWhereUniqueInput;
+    create: CategoryCreateWithoutCreatorInput;
+    update: CategoryUpdateWithoutCreatorInput;
+    where: CategoryWhereUniqueInput;
 }
 
 export class CategoryUpsertWithWhereUniqueWithoutEntriesInput {
-  create: CategoryCreateWithoutEntriesInput;
-  update: CategoryUpdateWithoutEntriesInput;
-  where: CategoryWhereUniqueInput;
+    create: CategoryCreateWithoutEntriesInput;
+    update: CategoryUpdateWithoutEntriesInput;
+    where: CategoryWhereUniqueInput;
 }
 
 export class CategoryWhereInput {
-  AND?: Nullable<CategoryWhereInput[]>;
-  NOT?: Nullable<CategoryWhereInput[]>;
-  OR?: Nullable<CategoryWhereInput[]>;
-  createdAt?: Nullable<DateTimeNullableFilter>;
-  creator?: Nullable<UserRelationFilter>;
-  creatorId?: Nullable<StringFilter>;
-  entries?: Nullable<EntryListRelationFilter>;
-  entryId?: Nullable<StringNullableFilter>;
-  id?: Nullable<StringFilter>;
-  name?: Nullable<StringFilter>;
-  updatedAt?: Nullable<DateTimeNullableFilter>;
+    AND?: Nullable<CategoryWhereInput[]>;
+    NOT?: Nullable<CategoryWhereInput[]>;
+    OR?: Nullable<CategoryWhereInput[]>;
+    createdAt?: Nullable<DateTimeNullableFilter>;
+    creator?: Nullable<UserRelationFilter>;
+    creatorId?: Nullable<StringFilter>;
+    entries?: Nullable<EntryListRelationFilter>;
+    entryId?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    name?: Nullable<StringFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
 }
 
 export class CategoryWhereUniqueInput {
-  id?: Nullable<string>;
-  name?: Nullable<string>;
+    id?: Nullable<string>;
+    name?: Nullable<string>;
 }
 
 export class ChangePasswordInput {
-  newPassword: string;
-  oldPassword: string;
+    newPassword: string;
+    oldPassword: string;
 }
 
 export class CommentAuthorIdEntryIdCompoundUniqueInput {
-  authorId: string;
-  entryId: string;
+    authorId: string;
+    entryId: string;
 }
 
 export class CommentCreateManyAuthorInput {
-  body?: Nullable<string>;
-  createdAt?: Nullable<DateTime>;
-  entryId: string;
-  id?: Nullable<string>;
-  position?: Nullable<string>;
-  reactions?: Nullable<CommentCreateManyreactionsInput>;
-  updatedAt?: Nullable<DateTime>;
+    body?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    entryId: string;
+    id?: Nullable<string>;
+    position?: Nullable<string>;
+    reactions?: Nullable<CommentCreateManyreactionsInput>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class CommentCreateManyAuthorInputEnvelope {
-  data: CommentCreateManyAuthorInput[];
-  skipDuplicates?: Nullable<boolean>;
+    data: CommentCreateManyAuthorInput[];
+    skipDuplicates?: Nullable<boolean>;
 }
 
 export class CommentCreateManyEntryInput {
-  authorId: string;
-  body?: Nullable<string>;
-  createdAt?: Nullable<DateTime>;
-  id?: Nullable<string>;
-  position?: Nullable<string>;
-  reactions?: Nullable<CommentCreateManyreactionsInput>;
-  updatedAt?: Nullable<DateTime>;
+    authorId: string;
+    body?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    id?: Nullable<string>;
+    position?: Nullable<string>;
+    reactions?: Nullable<CommentCreateManyreactionsInput>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class CommentCreateManyEntryInputEnvelope {
-  data: CommentCreateManyEntryInput[];
-  skipDuplicates?: Nullable<boolean>;
+    data: CommentCreateManyEntryInput[];
+    skipDuplicates?: Nullable<boolean>;
 }
 
 export class CommentCreateManyreactionsInput {
-  set: CommentReactions[];
+    set: CommentReactions[];
 }
 
 export class CommentCreateNestedManyWithoutAuthorInput {
-  connect?: Nullable<CommentWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<CommentCreateOrConnectWithoutAuthorInput[]>;
-  create?: Nullable<CommentCreateWithoutAuthorInput[]>;
-  createMany?: Nullable<CommentCreateManyAuthorInputEnvelope>;
+    connect?: Nullable<CommentWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CommentCreateOrConnectWithoutAuthorInput[]>;
+    create?: Nullable<CommentCreateWithoutAuthorInput[]>;
+    createMany?: Nullable<CommentCreateManyAuthorInputEnvelope>;
 }
 
 export class CommentCreateNestedManyWithoutEntryInput {
-  connect?: Nullable<CommentWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<CommentCreateOrConnectWithoutEntryInput[]>;
-  create?: Nullable<CommentCreateWithoutEntryInput[]>;
-  createMany?: Nullable<CommentCreateManyEntryInputEnvelope>;
+    connect?: Nullable<CommentWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CommentCreateOrConnectWithoutEntryInput[]>;
+    create?: Nullable<CommentCreateWithoutEntryInput[]>;
+    createMany?: Nullable<CommentCreateManyEntryInputEnvelope>;
 }
 
 export class CommentCreateOrConnectWithoutAuthorInput {
-  create: CommentCreateWithoutAuthorInput;
-  where: CommentWhereUniqueInput;
+    create: CommentCreateWithoutAuthorInput;
+    where: CommentWhereUniqueInput;
 }
 
 export class CommentCreateOrConnectWithoutEntryInput {
-  create: CommentCreateWithoutEntryInput;
-  where: CommentWhereUniqueInput;
+    create: CommentCreateWithoutEntryInput;
+    where: CommentWhereUniqueInput;
 }
 
 export class CommentCreateWithoutAuthorInput {
-  body?: Nullable<string>;
-  createdAt?: Nullable<DateTime>;
-  entry: EntryCreateNestedOneWithoutCommentsInput;
-  id?: Nullable<string>;
-  position?: Nullable<string>;
-  reactions?: Nullable<CommentCreatereactionsInput>;
-  updatedAt?: Nullable<DateTime>;
+    body?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    entry: EntryCreateNestedOneWithoutCommentsInput;
+    id?: Nullable<string>;
+    position?: Nullable<string>;
+    reactions?: Nullable<CommentCreatereactionsInput>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class CommentCreateWithoutEntryInput {
-  author: UserCreateNestedOneWithoutCommentsInput;
-  body?: Nullable<string>;
-  createdAt?: Nullable<DateTime>;
-  id?: Nullable<string>;
-  position?: Nullable<string>;
-  reactions?: Nullable<CommentCreatereactionsInput>;
-  updatedAt?: Nullable<DateTime>;
+    author: UserCreateNestedOneWithoutCommentsInput;
+    body?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    id?: Nullable<string>;
+    position?: Nullable<string>;
+    reactions?: Nullable<CommentCreatereactionsInput>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class CommentCreatereactionsInput {
-  set: CommentReactions[];
+    set: CommentReactions[];
 }
 
 export class CommentListRelationFilter {
-  every?: Nullable<CommentWhereInput>;
-  none?: Nullable<CommentWhereInput>;
-  some?: Nullable<CommentWhereInput>;
+    every?: Nullable<CommentWhereInput>;
+    none?: Nullable<CommentWhereInput>;
+    some?: Nullable<CommentWhereInput>;
 }
 
 export class CommentOrderByRelationAggregateInput {
-  _count?: Nullable<SortOrder>;
+    _count?: Nullable<SortOrder>;
 }
 
 export class CommentOrderByRelevanceInput {
-  fields: CommentOrderByRelevanceFieldEnum[];
-  search: string;
-  sort: SortOrder;
+    fields: CommentOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
 }
 
 export class CommentOrderByWithRelationAndSearchRelevanceInput {
-  _relevance?: Nullable<CommentOrderByRelevanceInput>;
-  author?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
-  authorId?: Nullable<SortOrder>;
-  body?: Nullable<SortOrder>;
-  createdAt?: Nullable<SortOrder>;
-  entry?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput>;
-  entryId?: Nullable<SortOrder>;
-  id?: Nullable<SortOrder>;
-  position?: Nullable<SortOrder>;
-  reactions?: Nullable<SortOrder>;
-  updatedAt?: Nullable<SortOrder>;
+    _relevance?: Nullable<CommentOrderByRelevanceInput>;
+    author?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    authorId?: Nullable<SortOrder>;
+    body?: Nullable<SortOrder>;
+    createdAt?: Nullable<SortOrder>;
+    entry?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput>;
+    entryId?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    position?: Nullable<SortOrder>;
+    reactions?: Nullable<SortOrder>;
+    updatedAt?: Nullable<SortOrder>;
 }
 
 export class CommentScalarWhereInput {
-  AND?: Nullable<CommentScalarWhereInput[]>;
-  NOT?: Nullable<CommentScalarWhereInput[]>;
-  OR?: Nullable<CommentScalarWhereInput[]>;
-  authorId?: Nullable<StringFilter>;
-  body?: Nullable<StringNullableFilter>;
-  createdAt?: Nullable<DateTimeFilter>;
-  entryId?: Nullable<StringFilter>;
-  id?: Nullable<StringFilter>;
-  position?: Nullable<StringNullableFilter>;
-  reactions?: Nullable<EnumCommentReactionsNullableListFilter>;
-  updatedAt?: Nullable<DateTimeNullableFilter>;
+    AND?: Nullable<CommentScalarWhereInput[]>;
+    NOT?: Nullable<CommentScalarWhereInput[]>;
+    OR?: Nullable<CommentScalarWhereInput[]>;
+    authorId?: Nullable<StringFilter>;
+    body?: Nullable<StringNullableFilter>;
+    createdAt?: Nullable<DateTimeFilter>;
+    entryId?: Nullable<StringFilter>;
+    id?: Nullable<StringFilter>;
+    position?: Nullable<StringNullableFilter>;
+    reactions?: Nullable<EnumCommentReactionsNullableListFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
 }
 
 export class CommentUncheckedCreateNestedManyWithoutEntryInput {
-  connect?: Nullable<CommentWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<CommentCreateOrConnectWithoutEntryInput[]>;
-  create?: Nullable<CommentCreateWithoutEntryInput[]>;
-  createMany?: Nullable<CommentCreateManyEntryInputEnvelope>;
+    connect?: Nullable<CommentWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CommentCreateOrConnectWithoutEntryInput[]>;
+    create?: Nullable<CommentCreateWithoutEntryInput[]>;
+    createMany?: Nullable<CommentCreateManyEntryInputEnvelope>;
 }
 
 export class CommentUpdateManyMutationInput {
-  body?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  position?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  reactions?: Nullable<CommentUpdatereactionsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    body?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    position?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    reactions?: Nullable<CommentUpdatereactionsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class CommentUpdateManyWithWhereWithoutAuthorInput {
-  data: CommentUpdateManyMutationInput;
-  where: CommentScalarWhereInput;
+    data: CommentUpdateManyMutationInput;
+    where: CommentScalarWhereInput;
 }
 
 export class CommentUpdateManyWithWhereWithoutEntryInput {
-  data: CommentUpdateManyMutationInput;
-  where: CommentScalarWhereInput;
+    data: CommentUpdateManyMutationInput;
+    where: CommentScalarWhereInput;
 }
 
 export class CommentUpdateManyWithoutAuthorInput {
-  connect?: Nullable<CommentWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<CommentCreateOrConnectWithoutAuthorInput[]>;
-  create?: Nullable<CommentCreateWithoutAuthorInput[]>;
-  createMany?: Nullable<CommentCreateManyAuthorInputEnvelope>;
-  delete?: Nullable<CommentWhereUniqueInput[]>;
-  deleteMany?: Nullable<CommentScalarWhereInput[]>;
-  disconnect?: Nullable<CommentWhereUniqueInput[]>;
-  set?: Nullable<CommentWhereUniqueInput[]>;
-  update?: Nullable<CommentUpdateWithWhereUniqueWithoutAuthorInput[]>;
-  updateMany?: Nullable<CommentUpdateManyWithWhereWithoutAuthorInput[]>;
-  upsert?: Nullable<CommentUpsertWithWhereUniqueWithoutAuthorInput[]>;
+    connect?: Nullable<CommentWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CommentCreateOrConnectWithoutAuthorInput[]>;
+    create?: Nullable<CommentCreateWithoutAuthorInput[]>;
+    createMany?: Nullable<CommentCreateManyAuthorInputEnvelope>;
+    delete?: Nullable<CommentWhereUniqueInput[]>;
+    deleteMany?: Nullable<CommentScalarWhereInput[]>;
+    disconnect?: Nullable<CommentWhereUniqueInput[]>;
+    set?: Nullable<CommentWhereUniqueInput[]>;
+    update?: Nullable<CommentUpdateWithWhereUniqueWithoutAuthorInput[]>;
+    updateMany?: Nullable<CommentUpdateManyWithWhereWithoutAuthorInput[]>;
+    upsert?: Nullable<CommentUpsertWithWhereUniqueWithoutAuthorInput[]>;
 }
 
 export class CommentUpdateManyWithoutEntryInput {
-  connect?: Nullable<CommentWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<CommentCreateOrConnectWithoutEntryInput[]>;
-  create?: Nullable<CommentCreateWithoutEntryInput[]>;
-  createMany?: Nullable<CommentCreateManyEntryInputEnvelope>;
-  delete?: Nullable<CommentWhereUniqueInput[]>;
-  deleteMany?: Nullable<CommentScalarWhereInput[]>;
-  disconnect?: Nullable<CommentWhereUniqueInput[]>;
-  set?: Nullable<CommentWhereUniqueInput[]>;
-  update?: Nullable<CommentUpdateWithWhereUniqueWithoutEntryInput[]>;
-  updateMany?: Nullable<CommentUpdateManyWithWhereWithoutEntryInput[]>;
-  upsert?: Nullable<CommentUpsertWithWhereUniqueWithoutEntryInput[]>;
+    connect?: Nullable<CommentWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<CommentCreateOrConnectWithoutEntryInput[]>;
+    create?: Nullable<CommentCreateWithoutEntryInput[]>;
+    createMany?: Nullable<CommentCreateManyEntryInputEnvelope>;
+    delete?: Nullable<CommentWhereUniqueInput[]>;
+    deleteMany?: Nullable<CommentScalarWhereInput[]>;
+    disconnect?: Nullable<CommentWhereUniqueInput[]>;
+    set?: Nullable<CommentWhereUniqueInput[]>;
+    update?: Nullable<CommentUpdateWithWhereUniqueWithoutEntryInput[]>;
+    updateMany?: Nullable<CommentUpdateManyWithWhereWithoutEntryInput[]>;
+    upsert?: Nullable<CommentUpsertWithWhereUniqueWithoutEntryInput[]>;
 }
 
 export class CommentUpdateWithWhereUniqueWithoutAuthorInput {
-  data: CommentUpdateWithoutAuthorInput;
-  where: CommentWhereUniqueInput;
+    data: CommentUpdateWithoutAuthorInput;
+    where: CommentWhereUniqueInput;
 }
 
 export class CommentUpdateWithWhereUniqueWithoutEntryInput {
-  data: CommentUpdateWithoutEntryInput;
-  where: CommentWhereUniqueInput;
+    data: CommentUpdateWithoutEntryInput;
+    where: CommentWhereUniqueInput;
 }
 
 export class CommentUpdateWithoutAuthorInput {
-  body?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  entry?: Nullable<EntryUpdateOneRequiredWithoutCommentsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  position?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  reactions?: Nullable<CommentUpdatereactionsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    body?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    entry?: Nullable<EntryUpdateOneRequiredWithoutCommentsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    position?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    reactions?: Nullable<CommentUpdatereactionsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class CommentUpdateWithoutEntryInput {
-  author?: Nullable<UserUpdateOneRequiredWithoutCommentsInput>;
-  body?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  position?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  reactions?: Nullable<CommentUpdatereactionsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    author?: Nullable<UserUpdateOneRequiredWithoutCommentsInput>;
+    body?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    position?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    reactions?: Nullable<CommentUpdatereactionsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class CommentUpdatereactionsInput {
-  push?: Nullable<CommentReactions[]>;
-  set?: Nullable<CommentReactions[]>;
+    push?: Nullable<CommentReactions[]>;
+    set?: Nullable<CommentReactions[]>;
 }
 
 export class CommentUpsertWithWhereUniqueWithoutAuthorInput {
-  create: CommentCreateWithoutAuthorInput;
-  update: CommentUpdateWithoutAuthorInput;
-  where: CommentWhereUniqueInput;
+    create: CommentCreateWithoutAuthorInput;
+    update: CommentUpdateWithoutAuthorInput;
+    where: CommentWhereUniqueInput;
 }
 
 export class CommentUpsertWithWhereUniqueWithoutEntryInput {
-  create: CommentCreateWithoutEntryInput;
-  update: CommentUpdateWithoutEntryInput;
-  where: CommentWhereUniqueInput;
+    create: CommentCreateWithoutEntryInput;
+    update: CommentUpdateWithoutEntryInput;
+    where: CommentWhereUniqueInput;
 }
 
 export class CommentWhereInput {
-  AND?: Nullable<CommentWhereInput[]>;
-  NOT?: Nullable<CommentWhereInput[]>;
-  OR?: Nullable<CommentWhereInput[]>;
-  author?: Nullable<UserRelationFilter>;
-  authorId?: Nullable<StringFilter>;
-  body?: Nullable<StringNullableFilter>;
-  createdAt?: Nullable<DateTimeFilter>;
-  entry?: Nullable<EntryRelationFilter>;
-  entryId?: Nullable<StringFilter>;
-  id?: Nullable<StringFilter>;
-  position?: Nullable<StringNullableFilter>;
-  reactions?: Nullable<EnumCommentReactionsNullableListFilter>;
-  updatedAt?: Nullable<DateTimeNullableFilter>;
+    AND?: Nullable<CommentWhereInput[]>;
+    NOT?: Nullable<CommentWhereInput[]>;
+    OR?: Nullable<CommentWhereInput[]>;
+    author?: Nullable<UserRelationFilter>;
+    authorId?: Nullable<StringFilter>;
+    body?: Nullable<StringNullableFilter>;
+    createdAt?: Nullable<DateTimeFilter>;
+    entry?: Nullable<EntryRelationFilter>;
+    entryId?: Nullable<StringFilter>;
+    id?: Nullable<StringFilter>;
+    position?: Nullable<StringNullableFilter>;
+    reactions?: Nullable<EnumCommentReactionsNullableListFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
 }
 
 export class CommentWhereUniqueInput {
-  authorId_entryId?: Nullable<CommentAuthorIdEntryIdCompoundUniqueInput>;
-  id?: Nullable<string>;
+    authorId_entryId?: Nullable<CommentAuthorIdEntryIdCompoundUniqueInput>;
+    id?: Nullable<string>;
 }
 
 export class ConnectionCreateManyOwnerInput {
-  email: string;
-  firstName?: Nullable<string>;
-  id?: Nullable<string>;
-  ip?: Nullable<string>;
-  lastModified?: Nullable<DateTime>;
-  lastName?: Nullable<string>;
-  phoneNumber?: Nullable<string>;
+    email: string;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    ip?: Nullable<string>;
+    lastModified?: Nullable<DateTime>;
+    lastName?: Nullable<string>;
+    phoneNumber?: Nullable<string>;
 }
 
 export class ConnectionCreateManyOwnerInputEnvelope {
-  data: ConnectionCreateManyOwnerInput[];
-  skipDuplicates?: Nullable<boolean>;
+    data: ConnectionCreateManyOwnerInput[];
+    skipDuplicates?: Nullable<boolean>;
 }
 
 export class ConnectionCreateNestedManyWithoutOwnerInput {
-  connect?: Nullable<ConnectionWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<ConnectionCreateOrConnectWithoutOwnerInput[]>;
-  create?: Nullable<ConnectionCreateWithoutOwnerInput[]>;
-  createMany?: Nullable<ConnectionCreateManyOwnerInputEnvelope>;
+    connect?: Nullable<ConnectionWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<ConnectionCreateOrConnectWithoutOwnerInput[]>;
+    create?: Nullable<ConnectionCreateWithoutOwnerInput[]>;
+    createMany?: Nullable<ConnectionCreateManyOwnerInputEnvelope>;
 }
 
 export class ConnectionCreateOrConnectWithoutOwnerInput {
-  create: ConnectionCreateWithoutOwnerInput;
-  where: ConnectionWhereUniqueInput;
+    create: ConnectionCreateWithoutOwnerInput;
+    where: ConnectionWhereUniqueInput;
 }
 
 export class ConnectionCreateWithoutOwnerInput {
-  email: string;
-  firstName?: Nullable<string>;
-  id?: Nullable<string>;
-  ip?: Nullable<string>;
-  lastModified?: Nullable<DateTime>;
-  lastName?: Nullable<string>;
-  phoneNumber?: Nullable<string>;
+    email: string;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    ip?: Nullable<string>;
+    lastModified?: Nullable<DateTime>;
+    lastName?: Nullable<string>;
+    phoneNumber?: Nullable<string>;
 }
 
 export class ConnectionListRelationFilter {
-  every?: Nullable<ConnectionWhereInput>;
-  none?: Nullable<ConnectionWhereInput>;
-  some?: Nullable<ConnectionWhereInput>;
+    every?: Nullable<ConnectionWhereInput>;
+    none?: Nullable<ConnectionWhereInput>;
+    some?: Nullable<ConnectionWhereInput>;
 }
 
 export class ConnectionOrderByRelationAggregateInput {
-  _count?: Nullable<SortOrder>;
+    _count?: Nullable<SortOrder>;
 }
 
 export class ConnectionOrderByRelevanceInput {
-  fields: ConnectionOrderByRelevanceFieldEnum[];
-  search: string;
-  sort: SortOrder;
+    fields: ConnectionOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
 }
 
 export class ConnectionOrderByWithRelationAndSearchRelevanceInput {
-  _relevance?: Nullable<ConnectionOrderByRelevanceInput>;
-  email?: Nullable<SortOrder>;
-  firstName?: Nullable<SortOrder>;
-  id?: Nullable<SortOrder>;
-  ip?: Nullable<SortOrder>;
-  lastModified?: Nullable<SortOrder>;
-  lastName?: Nullable<SortOrder>;
-  owner?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
-  ownerId?: Nullable<SortOrder>;
-  phoneNumber?: Nullable<SortOrder>;
+    _relevance?: Nullable<ConnectionOrderByRelevanceInput>;
+    email?: Nullable<SortOrder>;
+    firstName?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    ip?: Nullable<SortOrder>;
+    lastModified?: Nullable<SortOrder>;
+    lastName?: Nullable<SortOrder>;
+    owner?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    ownerId?: Nullable<SortOrder>;
+    phoneNumber?: Nullable<SortOrder>;
 }
 
 export class ConnectionScalarWhereInput {
-  AND?: Nullable<ConnectionScalarWhereInput[]>;
-  NOT?: Nullable<ConnectionScalarWhereInput[]>;
-  OR?: Nullable<ConnectionScalarWhereInput[]>;
-  email?: Nullable<StringFilter>;
-  firstName?: Nullable<StringNullableFilter>;
-  id?: Nullable<StringFilter>;
-  ip?: Nullable<StringNullableFilter>;
-  lastModified?: Nullable<DateTimeNullableFilter>;
-  lastName?: Nullable<StringNullableFilter>;
-  ownerId?: Nullable<StringFilter>;
-  phoneNumber?: Nullable<StringNullableFilter>;
+    AND?: Nullable<ConnectionScalarWhereInput[]>;
+    NOT?: Nullable<ConnectionScalarWhereInput[]>;
+    OR?: Nullable<ConnectionScalarWhereInput[]>;
+    email?: Nullable<StringFilter>;
+    firstName?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    ip?: Nullable<StringNullableFilter>;
+    lastModified?: Nullable<DateTimeNullableFilter>;
+    lastName?: Nullable<StringNullableFilter>;
+    ownerId?: Nullable<StringFilter>;
+    phoneNumber?: Nullable<StringNullableFilter>;
 }
 
 export class ConnectionUpdateManyMutationInput {
-  email?: Nullable<StringFieldUpdateOperationsInput>;
-  firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  ip?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  lastModified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  phoneNumber?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    email?: Nullable<StringFieldUpdateOperationsInput>;
+    firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    ip?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    lastModified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    phoneNumber?: Nullable<NullableStringFieldUpdateOperationsInput>;
 }
 
 export class ConnectionUpdateManyWithWhereWithoutOwnerInput {
-  data: ConnectionUpdateManyMutationInput;
-  where: ConnectionScalarWhereInput;
+    data: ConnectionUpdateManyMutationInput;
+    where: ConnectionScalarWhereInput;
 }
 
 export class ConnectionUpdateManyWithoutOwnerInput {
-  connect?: Nullable<ConnectionWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<ConnectionCreateOrConnectWithoutOwnerInput[]>;
-  create?: Nullable<ConnectionCreateWithoutOwnerInput[]>;
-  createMany?: Nullable<ConnectionCreateManyOwnerInputEnvelope>;
-  delete?: Nullable<ConnectionWhereUniqueInput[]>;
-  deleteMany?: Nullable<ConnectionScalarWhereInput[]>;
-  disconnect?: Nullable<ConnectionWhereUniqueInput[]>;
-  set?: Nullable<ConnectionWhereUniqueInput[]>;
-  update?: Nullable<ConnectionUpdateWithWhereUniqueWithoutOwnerInput[]>;
-  updateMany?: Nullable<ConnectionUpdateManyWithWhereWithoutOwnerInput[]>;
-  upsert?: Nullable<ConnectionUpsertWithWhereUniqueWithoutOwnerInput[]>;
+    connect?: Nullable<ConnectionWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<ConnectionCreateOrConnectWithoutOwnerInput[]>;
+    create?: Nullable<ConnectionCreateWithoutOwnerInput[]>;
+    createMany?: Nullable<ConnectionCreateManyOwnerInputEnvelope>;
+    delete?: Nullable<ConnectionWhereUniqueInput[]>;
+    deleteMany?: Nullable<ConnectionScalarWhereInput[]>;
+    disconnect?: Nullable<ConnectionWhereUniqueInput[]>;
+    set?: Nullable<ConnectionWhereUniqueInput[]>;
+    update?: Nullable<ConnectionUpdateWithWhereUniqueWithoutOwnerInput[]>;
+    updateMany?: Nullable<ConnectionUpdateManyWithWhereWithoutOwnerInput[]>;
+    upsert?: Nullable<ConnectionUpsertWithWhereUniqueWithoutOwnerInput[]>;
 }
 
 export class ConnectionUpdateWithWhereUniqueWithoutOwnerInput {
-  data: ConnectionUpdateWithoutOwnerInput;
-  where: ConnectionWhereUniqueInput;
+    data: ConnectionUpdateWithoutOwnerInput;
+    where: ConnectionWhereUniqueInput;
 }
 
 export class ConnectionUpdateWithoutOwnerInput {
-  email?: Nullable<StringFieldUpdateOperationsInput>;
-  firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  ip?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  lastModified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  phoneNumber?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    email?: Nullable<StringFieldUpdateOperationsInput>;
+    firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    ip?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    lastModified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    phoneNumber?: Nullable<NullableStringFieldUpdateOperationsInput>;
 }
 
 export class ConnectionUpsertWithWhereUniqueWithoutOwnerInput {
-  create: ConnectionCreateWithoutOwnerInput;
-  update: ConnectionUpdateWithoutOwnerInput;
-  where: ConnectionWhereUniqueInput;
+    create: ConnectionCreateWithoutOwnerInput;
+    update: ConnectionUpdateWithoutOwnerInput;
+    where: ConnectionWhereUniqueInput;
 }
 
 export class ConnectionWhereInput {
-  AND?: Nullable<ConnectionWhereInput[]>;
-  NOT?: Nullable<ConnectionWhereInput[]>;
-  OR?: Nullable<ConnectionWhereInput[]>;
-  email?: Nullable<StringFilter>;
-  firstName?: Nullable<StringNullableFilter>;
-  id?: Nullable<StringFilter>;
-  ip?: Nullable<StringNullableFilter>;
-  lastModified?: Nullable<DateTimeNullableFilter>;
-  lastName?: Nullable<StringNullableFilter>;
-  owner?: Nullable<UserRelationFilter>;
-  ownerId?: Nullable<StringFilter>;
-  phoneNumber?: Nullable<StringNullableFilter>;
+    AND?: Nullable<ConnectionWhereInput[]>;
+    NOT?: Nullable<ConnectionWhereInput[]>;
+    OR?: Nullable<ConnectionWhereInput[]>;
+    email?: Nullable<StringFilter>;
+    firstName?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    ip?: Nullable<StringNullableFilter>;
+    lastModified?: Nullable<DateTimeNullableFilter>;
+    lastName?: Nullable<StringNullableFilter>;
+    owner?: Nullable<UserRelationFilter>;
+    ownerId?: Nullable<StringFilter>;
+    phoneNumber?: Nullable<StringNullableFilter>;
 }
 
 export class ConnectionWhereUniqueInput {
-  id?: Nullable<string>;
+    id?: Nullable<string>;
 }
 
 export class DateTimeFieldUpdateOperationsInput {
-  set?: Nullable<DateTime>;
+    set?: Nullable<DateTime>;
 }
 
 export class DateTimeFilter {
-  equals?: Nullable<DateTime>;
-  gt?: Nullable<DateTime>;
-  gte?: Nullable<DateTime>;
-  in?: Nullable<DateTime[]>;
-  lt?: Nullable<DateTime>;
-  lte?: Nullable<DateTime>;
-  not?: Nullable<NestedDateTimeFilter>;
-  notIn?: Nullable<DateTime[]>;
+    equals?: Nullable<DateTime>;
+    gt?: Nullable<DateTime>;
+    gte?: Nullable<DateTime>;
+    in?: Nullable<DateTime[]>;
+    lt?: Nullable<DateTime>;
+    lte?: Nullable<DateTime>;
+    not?: Nullable<NestedDateTimeFilter>;
+    notIn?: Nullable<DateTime[]>;
 }
 
 export class DateTimeNullableFilter {
-  equals?: Nullable<DateTime>;
-  gt?: Nullable<DateTime>;
-  gte?: Nullable<DateTime>;
-  in?: Nullable<DateTime[]>;
-  lt?: Nullable<DateTime>;
-  lte?: Nullable<DateTime>;
-  not?: Nullable<NestedDateTimeNullableFilter>;
-  notIn?: Nullable<DateTime[]>;
+    equals?: Nullable<DateTime>;
+    gt?: Nullable<DateTime>;
+    gte?: Nullable<DateTime>;
+    in?: Nullable<DateTime[]>;
+    lt?: Nullable<DateTime>;
+    lte?: Nullable<DateTime>;
+    not?: Nullable<NestedDateTimeNullableFilter>;
+    notIn?: Nullable<DateTime[]>;
 }
 
 export class EntryCreateInput {
-  author: UserCreateNestedOneWithoutEntriesInput;
-  categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
-  categoryId?: Nullable<string>;
-  comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
-  content?: Nullable<string>;
-  createdAt?: Nullable<DateTime>;
-  featuredImage?: Nullable<string>;
-  id?: Nullable<string>;
-  published?: Nullable<boolean>;
-  title: string;
-  updatedAt?: Nullable<DateTime>;
+    author: UserCreateNestedOneWithoutEntriesInput;
+    categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
+    categoryId?: Nullable<string>;
+    comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
+    content?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<string>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class EntryCreateManyAuthorInput {
-  categoryId?: Nullable<string>;
-  content?: Nullable<string>;
-  createdAt?: Nullable<DateTime>;
-  featuredImage?: Nullable<string>;
-  id?: Nullable<string>;
-  published?: Nullable<boolean>;
-  title: string;
-  updatedAt?: Nullable<DateTime>;
+    categoryId?: Nullable<string>;
+    content?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<string>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class EntryCreateManyAuthorInputEnvelope {
-  data: EntryCreateManyAuthorInput[];
-  skipDuplicates?: Nullable<boolean>;
+    data: EntryCreateManyAuthorInput[];
+    skipDuplicates?: Nullable<boolean>;
 }
 
 export class EntryCreateNestedManyWithoutAuthorInput {
-  connect?: Nullable<EntryWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<EntryCreateOrConnectWithoutAuthorInput[]>;
-  create?: Nullable<EntryCreateWithoutAuthorInput[]>;
-  createMany?: Nullable<EntryCreateManyAuthorInputEnvelope>;
+    connect?: Nullable<EntryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutAuthorInput[]>;
+    create?: Nullable<EntryCreateWithoutAuthorInput[]>;
+    createMany?: Nullable<EntryCreateManyAuthorInputEnvelope>;
 }
 
 export class EntryCreateNestedManyWithoutCategoriesInput {
-  connect?: Nullable<EntryWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCategoriesInput[]>;
-  create?: Nullable<EntryCreateWithoutCategoriesInput[]>;
+    connect?: Nullable<EntryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCategoriesInput[]>;
+    create?: Nullable<EntryCreateWithoutCategoriesInput[]>;
 }
 
 export class EntryCreateNestedOneWithoutCommentsInput {
-  connect?: Nullable<EntryWhereUniqueInput>;
-  connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCommentsInput>;
-  create?: Nullable<EntryCreateWithoutCommentsInput>;
+    connect?: Nullable<EntryWhereUniqueInput>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCommentsInput>;
+    create?: Nullable<EntryCreateWithoutCommentsInput>;
 }
 
 export class EntryCreateOrConnectWithoutAuthorInput {
-  create: EntryCreateWithoutAuthorInput;
-  where: EntryWhereUniqueInput;
+    create: EntryCreateWithoutAuthorInput;
+    where: EntryWhereUniqueInput;
 }
 
 export class EntryCreateOrConnectWithoutCategoriesInput {
-  create: EntryCreateWithoutCategoriesInput;
-  where: EntryWhereUniqueInput;
+    create: EntryCreateWithoutCategoriesInput;
+    where: EntryWhereUniqueInput;
 }
 
 export class EntryCreateOrConnectWithoutCommentsInput {
-  create: EntryCreateWithoutCommentsInput;
-  where: EntryWhereUniqueInput;
+    create: EntryCreateWithoutCommentsInput;
+    where: EntryWhereUniqueInput;
 }
 
 export class EntryCreateWithoutAuthorInput {
-  categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
-  categoryId?: Nullable<string>;
-  comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
-  content?: Nullable<string>;
-  createdAt?: Nullable<DateTime>;
-  featuredImage?: Nullable<string>;
-  id?: Nullable<string>;
-  published?: Nullable<boolean>;
-  title: string;
-  updatedAt?: Nullable<DateTime>;
+    categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
+    categoryId?: Nullable<string>;
+    comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
+    content?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<string>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class EntryCreateWithoutCategoriesInput {
-  author: UserCreateNestedOneWithoutEntriesInput;
-  categoryId?: Nullable<string>;
-  comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
-  content?: Nullable<string>;
-  createdAt?: Nullable<DateTime>;
-  featuredImage?: Nullable<string>;
-  id?: Nullable<string>;
-  published?: Nullable<boolean>;
-  title: string;
-  updatedAt?: Nullable<DateTime>;
+    author: UserCreateNestedOneWithoutEntriesInput;
+    categoryId?: Nullable<string>;
+    comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
+    content?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<string>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class EntryCreateWithoutCommentsInput {
-  author: UserCreateNestedOneWithoutEntriesInput;
-  categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
-  categoryId?: Nullable<string>;
-  content?: Nullable<string>;
-  createdAt?: Nullable<DateTime>;
-  featuredImage?: Nullable<string>;
-  id?: Nullable<string>;
-  published?: Nullable<boolean>;
-  title: string;
-  updatedAt?: Nullable<DateTime>;
+    author: UserCreateNestedOneWithoutEntriesInput;
+    categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
+    categoryId?: Nullable<string>;
+    content?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<string>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class EntryListRelationFilter {
-  every?: Nullable<EntryWhereInput>;
-  none?: Nullable<EntryWhereInput>;
-  some?: Nullable<EntryWhereInput>;
+    every?: Nullable<EntryWhereInput>;
+    none?: Nullable<EntryWhereInput>;
+    some?: Nullable<EntryWhereInput>;
 }
 
 export class EntryOrderByRelationAggregateInput {
-  _count?: Nullable<SortOrder>;
+    _count?: Nullable<SortOrder>;
 }
 
 export class EntryOrderByRelevanceInput {
-  fields: EntryOrderByRelevanceFieldEnum[];
-  search: string;
-  sort: SortOrder;
+    fields: EntryOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
 }
 
 export class EntryOrderByWithRelationAndSearchRelevanceInput {
-  _relevance?: Nullable<EntryOrderByRelevanceInput>;
-  author?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
-  authorId?: Nullable<SortOrder>;
-  categories?: Nullable<CategoryOrderByRelationAggregateInput>;
-  categoryId?: Nullable<SortOrder>;
-  comments?: Nullable<CommentOrderByRelationAggregateInput>;
-  content?: Nullable<SortOrder>;
-  createdAt?: Nullable<SortOrder>;
-  featuredImage?: Nullable<SortOrder>;
-  id?: Nullable<SortOrder>;
-  published?: Nullable<SortOrder>;
-  title?: Nullable<SortOrder>;
-  updatedAt?: Nullable<SortOrder>;
+    _relevance?: Nullable<EntryOrderByRelevanceInput>;
+    author?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    authorId?: Nullable<SortOrder>;
+    categories?: Nullable<CategoryOrderByRelationAggregateInput>;
+    categoryId?: Nullable<SortOrder>;
+    comments?: Nullable<CommentOrderByRelationAggregateInput>;
+    content?: Nullable<SortOrder>;
+    createdAt?: Nullable<SortOrder>;
+    featuredImage?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    published?: Nullable<SortOrder>;
+    title?: Nullable<SortOrder>;
+    updatedAt?: Nullable<SortOrder>;
 }
 
 export class EntryRelationFilter {
-  is?: Nullable<EntryWhereInput>;
-  isNot?: Nullable<EntryWhereInput>;
+    is?: Nullable<EntryWhereInput>;
+    isNot?: Nullable<EntryWhereInput>;
 }
 
 export class EntryScalarWhereInput {
-  AND?: Nullable<EntryScalarWhereInput[]>;
-  NOT?: Nullable<EntryScalarWhereInput[]>;
-  OR?: Nullable<EntryScalarWhereInput[]>;
-  authorId?: Nullable<StringFilter>;
-  categoryId?: Nullable<StringNullableFilter>;
-  content?: Nullable<StringNullableFilter>;
-  createdAt?: Nullable<DateTimeFilter>;
-  featuredImage?: Nullable<StringNullableFilter>;
-  id?: Nullable<StringFilter>;
-  published?: Nullable<BoolFilter>;
-  title?: Nullable<StringFilter>;
-  updatedAt?: Nullable<DateTimeNullableFilter>;
+    AND?: Nullable<EntryScalarWhereInput[]>;
+    NOT?: Nullable<EntryScalarWhereInput[]>;
+    OR?: Nullable<EntryScalarWhereInput[]>;
+    authorId?: Nullable<StringFilter>;
+    categoryId?: Nullable<StringNullableFilter>;
+    content?: Nullable<StringNullableFilter>;
+    createdAt?: Nullable<DateTimeFilter>;
+    featuredImage?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    published?: Nullable<BoolFilter>;
+    title?: Nullable<StringFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
 }
 
 export class EntryUncheckedCreateInputSansAuthorId {
-  categoryId?: Nullable<string>;
-  comments?: Nullable<CommentUncheckedCreateNestedManyWithoutEntryInput>;
-  content?: Nullable<string>;
-  createdAt?: Nullable<DateTime>;
-  featuredImage?: Nullable<string>;
-  id?: Nullable<string>;
-  published?: Nullable<boolean>;
-  title: string;
-  updatedAt?: Nullable<DateTime>;
+    categoryId?: Nullable<string>;
+    comments?: Nullable<CommentUncheckedCreateNestedManyWithoutEntryInput>;
+    content?: Nullable<string>;
+    createdAt?: Nullable<DateTime>;
+    featuredImage?: Nullable<string>;
+    id?: Nullable<string>;
+    published?: Nullable<boolean>;
+    title: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class EntryUncheckedCreateNestedManyWithoutAuthorInput {
-  connect?: Nullable<EntryWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<EntryCreateOrConnectWithoutAuthorInput[]>;
-  create?: Nullable<EntryCreateWithoutAuthorInput[]>;
-  createMany?: Nullable<EntryCreateManyAuthorInputEnvelope>;
+    connect?: Nullable<EntryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutAuthorInput[]>;
+    create?: Nullable<EntryCreateWithoutAuthorInput[]>;
+    createMany?: Nullable<EntryCreateManyAuthorInputEnvelope>;
 }
 
 export class EntryUpdateManyMutationInput {
-  categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  content?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  featuredImage?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  published?: Nullable<BoolFieldUpdateOperationsInput>;
-  title?: Nullable<StringFieldUpdateOperationsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    content?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    featuredImage?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    published?: Nullable<BoolFieldUpdateOperationsInput>;
+    title?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class EntryUpdateManyWithWhereWithoutAuthorInput {
-  data: EntryUpdateManyMutationInput;
-  where: EntryScalarWhereInput;
+    data: EntryUpdateManyMutationInput;
+    where: EntryScalarWhereInput;
 }
 
 export class EntryUpdateManyWithWhereWithoutCategoriesInput {
-  data: EntryUpdateManyMutationInput;
-  where: EntryScalarWhereInput;
+    data: EntryUpdateManyMutationInput;
+    where: EntryScalarWhereInput;
 }
 
 export class EntryUpdateManyWithoutAuthorInput {
-  connect?: Nullable<EntryWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<EntryCreateOrConnectWithoutAuthorInput[]>;
-  create?: Nullable<EntryCreateWithoutAuthorInput[]>;
-  createMany?: Nullable<EntryCreateManyAuthorInputEnvelope>;
-  delete?: Nullable<EntryWhereUniqueInput[]>;
-  deleteMany?: Nullable<EntryScalarWhereInput[]>;
-  disconnect?: Nullable<EntryWhereUniqueInput[]>;
-  set?: Nullable<EntryWhereUniqueInput[]>;
-  update?: Nullable<EntryUpdateWithWhereUniqueWithoutAuthorInput[]>;
-  updateMany?: Nullable<EntryUpdateManyWithWhereWithoutAuthorInput[]>;
-  upsert?: Nullable<EntryUpsertWithWhereUniqueWithoutAuthorInput[]>;
+    connect?: Nullable<EntryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutAuthorInput[]>;
+    create?: Nullable<EntryCreateWithoutAuthorInput[]>;
+    createMany?: Nullable<EntryCreateManyAuthorInputEnvelope>;
+    delete?: Nullable<EntryWhereUniqueInput[]>;
+    deleteMany?: Nullable<EntryScalarWhereInput[]>;
+    disconnect?: Nullable<EntryWhereUniqueInput[]>;
+    set?: Nullable<EntryWhereUniqueInput[]>;
+    update?: Nullable<EntryUpdateWithWhereUniqueWithoutAuthorInput[]>;
+    updateMany?: Nullable<EntryUpdateManyWithWhereWithoutAuthorInput[]>;
+    upsert?: Nullable<EntryUpsertWithWhereUniqueWithoutAuthorInput[]>;
 }
 
 export class EntryUpdateManyWithoutCategoriesInput {
-  connect?: Nullable<EntryWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCategoriesInput[]>;
-  create?: Nullable<EntryCreateWithoutCategoriesInput[]>;
-  delete?: Nullable<EntryWhereUniqueInput[]>;
-  deleteMany?: Nullable<EntryScalarWhereInput[]>;
-  disconnect?: Nullable<EntryWhereUniqueInput[]>;
-  set?: Nullable<EntryWhereUniqueInput[]>;
-  update?: Nullable<EntryUpdateWithWhereUniqueWithoutCategoriesInput[]>;
-  updateMany?: Nullable<EntryUpdateManyWithWhereWithoutCategoriesInput[]>;
-  upsert?: Nullable<EntryUpsertWithWhereUniqueWithoutCategoriesInput[]>;
+    connect?: Nullable<EntryWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCategoriesInput[]>;
+    create?: Nullable<EntryCreateWithoutCategoriesInput[]>;
+    delete?: Nullable<EntryWhereUniqueInput[]>;
+    deleteMany?: Nullable<EntryScalarWhereInput[]>;
+    disconnect?: Nullable<EntryWhereUniqueInput[]>;
+    set?: Nullable<EntryWhereUniqueInput[]>;
+    update?: Nullable<EntryUpdateWithWhereUniqueWithoutCategoriesInput[]>;
+    updateMany?: Nullable<EntryUpdateManyWithWhereWithoutCategoriesInput[]>;
+    upsert?: Nullable<EntryUpsertWithWhereUniqueWithoutCategoriesInput[]>;
 }
 
 export class EntryUpdateOneRequiredWithoutCommentsInput {
-  connect?: Nullable<EntryWhereUniqueInput>;
-  connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCommentsInput>;
-  create?: Nullable<EntryCreateWithoutCommentsInput>;
-  update?: Nullable<EntryUpdateWithoutCommentsInput>;
-  upsert?: Nullable<EntryUpsertWithoutCommentsInput>;
+    connect?: Nullable<EntryWhereUniqueInput>;
+    connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCommentsInput>;
+    create?: Nullable<EntryCreateWithoutCommentsInput>;
+    update?: Nullable<EntryUpdateWithoutCommentsInput>;
+    upsert?: Nullable<EntryUpsertWithoutCommentsInput>;
 }
 
 export class EntryUpdateWithWhereUniqueWithoutAuthorInput {
-  data: EntryUpdateWithoutAuthorInput;
-  where: EntryWhereUniqueInput;
+    data: EntryUpdateWithoutAuthorInput;
+    where: EntryWhereUniqueInput;
 }
 
 export class EntryUpdateWithWhereUniqueWithoutCategoriesInput {
-  data: EntryUpdateWithoutCategoriesInput;
-  where: EntryWhereUniqueInput;
+    data: EntryUpdateWithoutCategoriesInput;
+    where: EntryWhereUniqueInput;
 }
 
 export class EntryUpdateWithoutAuthorInput {
-  categories?: Nullable<CategoryUpdateManyWithoutEntriesInput>;
-  categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  comments?: Nullable<CommentUpdateManyWithoutEntryInput>;
-  content?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  featuredImage?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  published?: Nullable<BoolFieldUpdateOperationsInput>;
-  title?: Nullable<StringFieldUpdateOperationsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    categories?: Nullable<CategoryUpdateManyWithoutEntriesInput>;
+    categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    comments?: Nullable<CommentUpdateManyWithoutEntryInput>;
+    content?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    featuredImage?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    published?: Nullable<BoolFieldUpdateOperationsInput>;
+    title?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class EntryUpdateWithoutCategoriesInput {
-  author?: Nullable<UserUpdateOneRequiredWithoutEntriesInput>;
-  categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  comments?: Nullable<CommentUpdateManyWithoutEntryInput>;
-  content?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  featuredImage?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  published?: Nullable<BoolFieldUpdateOperationsInput>;
-  title?: Nullable<StringFieldUpdateOperationsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    author?: Nullable<UserUpdateOneRequiredWithoutEntriesInput>;
+    categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    comments?: Nullable<CommentUpdateManyWithoutEntryInput>;
+    content?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    featuredImage?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    published?: Nullable<BoolFieldUpdateOperationsInput>;
+    title?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class EntryUpdateWithoutCommentsInput {
-  author?: Nullable<UserUpdateOneRequiredWithoutEntriesInput>;
-  categories?: Nullable<CategoryUpdateManyWithoutEntriesInput>;
-  categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  content?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  featuredImage?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  published?: Nullable<BoolFieldUpdateOperationsInput>;
-  title?: Nullable<StringFieldUpdateOperationsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    author?: Nullable<UserUpdateOneRequiredWithoutEntriesInput>;
+    categories?: Nullable<CategoryUpdateManyWithoutEntriesInput>;
+    categoryId?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    content?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    featuredImage?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    published?: Nullable<BoolFieldUpdateOperationsInput>;
+    title?: Nullable<StringFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class EntryUpsertWithWhereUniqueWithoutAuthorInput {
-  create: EntryCreateWithoutAuthorInput;
-  update: EntryUpdateWithoutAuthorInput;
-  where: EntryWhereUniqueInput;
+    create: EntryCreateWithoutAuthorInput;
+    update: EntryUpdateWithoutAuthorInput;
+    where: EntryWhereUniqueInput;
 }
 
 export class EntryUpsertWithWhereUniqueWithoutCategoriesInput {
-  create: EntryCreateWithoutCategoriesInput;
-  update: EntryUpdateWithoutCategoriesInput;
-  where: EntryWhereUniqueInput;
+    create: EntryCreateWithoutCategoriesInput;
+    update: EntryUpdateWithoutCategoriesInput;
+    where: EntryWhereUniqueInput;
 }
 
 export class EntryUpsertWithoutCommentsInput {
-  create: EntryCreateWithoutCommentsInput;
-  update: EntryUpdateWithoutCommentsInput;
+    create: EntryCreateWithoutCommentsInput;
+    update: EntryUpdateWithoutCommentsInput;
 }
 
 export class EntryWhereInput {
-  AND?: Nullable<EntryWhereInput[]>;
-  NOT?: Nullable<EntryWhereInput[]>;
-  OR?: Nullable<EntryWhereInput[]>;
-  author?: Nullable<UserRelationFilter>;
-  authorId?: Nullable<StringFilter>;
-  categories?: Nullable<CategoryListRelationFilter>;
-  categoryId?: Nullable<StringNullableFilter>;
-  comments?: Nullable<CommentListRelationFilter>;
-  content?: Nullable<StringNullableFilter>;
-  createdAt?: Nullable<DateTimeFilter>;
-  featuredImage?: Nullable<StringNullableFilter>;
-  id?: Nullable<StringFilter>;
-  published?: Nullable<BoolFilter>;
-  title?: Nullable<StringFilter>;
-  updatedAt?: Nullable<DateTimeNullableFilter>;
+    AND?: Nullable<EntryWhereInput[]>;
+    NOT?: Nullable<EntryWhereInput[]>;
+    OR?: Nullable<EntryWhereInput[]>;
+    author?: Nullable<UserRelationFilter>;
+    authorId?: Nullable<StringFilter>;
+    categories?: Nullable<CategoryListRelationFilter>;
+    categoryId?: Nullable<StringNullableFilter>;
+    comments?: Nullable<CommentListRelationFilter>;
+    content?: Nullable<StringNullableFilter>;
+    createdAt?: Nullable<DateTimeFilter>;
+    featuredImage?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    published?: Nullable<BoolFilter>;
+    title?: Nullable<StringFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
 }
 
 export class EntryWhereUniqueInput {
-  authorId?: Nullable<string>;
-  id?: Nullable<string>;
+    authorId?: Nullable<string>;
+    id?: Nullable<string>;
 }
 
 export class EnumCommentReactionsNullableListFilter {
-  equals?: Nullable<CommentReactions[]>;
-  has?: Nullable<CommentReactions>;
-  hasEvery?: Nullable<CommentReactions[]>;
-  hasSome?: Nullable<CommentReactions[]>;
-  isEmpty?: Nullable<boolean>;
+    equals?: Nullable<CommentReactions[]>;
+    has?: Nullable<CommentReactions>;
+    hasEvery?: Nullable<CommentReactions[]>;
+    hasSome?: Nullable<CommentReactions[]>;
+    isEmpty?: Nullable<boolean>;
 }
 
 export class EnumGenderNullableFilter {
-  equals?: Nullable<Gender>;
-  in?: Nullable<Gender[]>;
-  not?: Nullable<NestedEnumGenderNullableFilter>;
-  notIn?: Nullable<Gender[]>;
+    equals?: Nullable<Gender>;
+    in?: Nullable<Gender[]>;
+    not?: Nullable<NestedEnumGenderNullableFilter>;
+    notIn?: Nullable<Gender[]>;
 }
 
 export class EnumMediaItemDestinationNullableFilter {
-  equals?: Nullable<MediaItemDestination>;
-  in?: Nullable<MediaItemDestination[]>;
-  not?: Nullable<NestedEnumMediaItemDestinationNullableFilter>;
-  notIn?: Nullable<MediaItemDestination[]>;
+    equals?: Nullable<MediaItemDestination>;
+    in?: Nullable<MediaItemDestination[]>;
+    not?: Nullable<NestedEnumMediaItemDestinationNullableFilter>;
+    notIn?: Nullable<MediaItemDestination[]>;
 }
 
 export class EnumMimeTypesNullableFilter {
-  equals?: Nullable<MimeTypes>;
-  in?: Nullable<MimeTypes[]>;
-  not?: Nullable<NestedEnumMimeTypesNullableFilter>;
-  notIn?: Nullable<MimeTypes[]>;
+    equals?: Nullable<MimeTypes>;
+    in?: Nullable<MimeTypes[]>;
+    not?: Nullable<NestedEnumMimeTypesNullableFilter>;
+    notIn?: Nullable<MimeTypes[]>;
 }
 
 export class EnumPronounsNullableFilter {
-  equals?: Nullable<Pronouns>;
-  in?: Nullable<Pronouns[]>;
-  not?: Nullable<NestedEnumPronounsNullableFilter>;
-  notIn?: Nullable<Pronouns[]>;
+    equals?: Nullable<Pronouns>;
+    in?: Nullable<Pronouns[]>;
+    not?: Nullable<NestedEnumPronounsNullableFilter>;
+    notIn?: Nullable<Pronouns[]>;
 }
 
 export class EnumRoleNullableFilter {
-  equals?: Nullable<Role>;
-  in?: Nullable<Role[]>;
-  not?: Nullable<NestedEnumRoleNullableFilter>;
-  notIn?: Nullable<Role[]>;
+    equals?: Nullable<Role>;
+    in?: Nullable<Role[]>;
+    not?: Nullable<NestedEnumRoleNullableFilter>;
+    notIn?: Nullable<Role[]>;
 }
 
 export class EnumUserStatusNullableFilter {
-  equals?: Nullable<UserStatus>;
-  in?: Nullable<UserStatus[]>;
-  not?: Nullable<NestedEnumUserStatusNullableFilter>;
-  notIn?: Nullable<UserStatus[]>;
+    equals?: Nullable<UserStatus>;
+    in?: Nullable<UserStatus[]>;
+    not?: Nullable<NestedEnumUserStatusNullableFilter>;
+    notIn?: Nullable<UserStatus[]>;
 }
 
 export class FindManyCategoriesPaginatedInput {
-  cursor?: Nullable<CategoryWhereUniqueInput>;
-  distinct?: Nullable<CategoryScalarFieldEnum[]>;
-  orderBy?: Nullable<CategoryOrderByWithRelationAndSearchRelevanceInput[]>;
-  pagination: PaginationArgsInput;
-  skip?: Nullable<number>;
-  take?: Nullable<number>;
-  where?: Nullable<CategoryWhereInput>;
+    cursor?: Nullable<CategoryWhereUniqueInput>;
+    distinct?: Nullable<CategoryScalarFieldEnum[]>;
+    orderBy?: Nullable<CategoryOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<CategoryWhereInput>;
 }
 
 export class FindManyCommentsPaginatedInput {
-  cursor?: Nullable<CommentWhereUniqueInput>;
-  distinct?: Nullable<CommentScalarFieldEnum[]>;
-  orderBy?: Nullable<CommentOrderByWithRelationAndSearchRelevanceInput[]>;
-  pagination: PaginationArgsInput;
-  skip?: Nullable<number>;
-  take?: Nullable<number>;
-  where?: Nullable<CommentWhereInput>;
+    cursor?: Nullable<CommentWhereUniqueInput>;
+    distinct?: Nullable<CommentScalarFieldEnum[]>;
+    orderBy?: Nullable<CommentOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<CommentWhereInput>;
 }
 
 export class FindManyConnectionsPaginatedInput {
-  cursor?: Nullable<ConnectionWhereUniqueInput>;
-  distinct?: Nullable<ConnectionScalarFieldEnum[]>;
-  orderBy?: Nullable<ConnectionOrderByWithRelationAndSearchRelevanceInput[]>;
-  pagination: PaginationArgsInput;
-  skip?: Nullable<number>;
-  take?: Nullable<number>;
-  where?: Nullable<ConnectionWhereInput>;
+    cursor?: Nullable<ConnectionWhereUniqueInput>;
+    distinct?: Nullable<ConnectionScalarFieldEnum[]>;
+    orderBy?: Nullable<ConnectionOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<ConnectionWhereInput>;
 }
 
 export class FindManyEntriessPaginatedInput {
-  cursor?: Nullable<EntryWhereUniqueInput>;
-  distinct?: Nullable<EntryScalarFieldEnum[]>;
-  orderBy?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput[]>;
-  pagination: PaginationArgsInput;
-  skip?: Nullable<number>;
-  take?: Nullable<number>;
-  where?: Nullable<EntryWhereInput>;
+    cursor?: Nullable<EntryWhereUniqueInput>;
+    distinct?: Nullable<EntryScalarFieldEnum[]>;
+    orderBy?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<EntryWhereInput>;
 }
 
 export class FindManyMediaItemsPaginatedInput {
-  cursor?: Nullable<MediaItemWhereUniqueInput>;
-  distinct?: Nullable<MediaItemScalarFieldEnum[]>;
-  orderBy?: Nullable<MediaItemOrderByWithRelationAndSearchRelevanceInput[]>;
-  pagination?: Nullable<PaginationArgsInput>;
-  skip?: Nullable<number>;
-  take?: Nullable<number>;
-  where?: Nullable<MediaItemWhereInput>;
+    cursor?: Nullable<MediaItemWhereUniqueInput>;
+    distinct?: Nullable<MediaItemScalarFieldEnum[]>;
+    orderBy?: Nullable<MediaItemOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination?: Nullable<PaginationArgsInput>;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<MediaItemWhereInput>;
 }
 
 export class FindManyProfilesPaginatedInput {
-  cursor?: Nullable<ProfileWhereUniqueInput>;
-  distinct?: Nullable<ProfileScalarFieldEnum[]>;
-  orderBy?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput[]>;
-  pagination: PaginationArgsInput;
-  skip?: Nullable<number>;
-  take?: Nullable<number>;
-  where?: Nullable<ProfileWhereInput>;
+    cursor?: Nullable<ProfileWhereUniqueInput>;
+    distinct?: Nullable<ProfileScalarFieldEnum[]>;
+    orderBy?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<ProfileWhereInput>;
 }
 
 export class FindManySessionsPaginatedInput {
-  cursor: SessionWhereUniqueInput;
-  distinct?: Nullable<SessionScalarFieldEnum[]>;
-  orderBy?: Nullable<SessionOrderByWithRelationAndSearchRelevanceInput[]>;
-  pagination: PaginationArgsInput;
-  skip?: Nullable<number>;
-  take?: Nullable<number>;
-  where?: Nullable<SessionWhereInput>;
+    cursor: SessionWhereUniqueInput;
+    distinct?: Nullable<SessionScalarFieldEnum[]>;
+    orderBy?: Nullable<SessionOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<SessionWhereInput>;
 }
 
 export class FindManyUsersPaginatedInput {
-  cursor?: Nullable<UserWhereUniqueInput>;
-  distinct?: Nullable<UserScalarFieldEnum[]>;
-  orderBy: UserOrderByWithRelationAndSearchRelevanceInput[];
-  pagination?: Nullable<PaginationArgsInput>;
-  skip?: Nullable<number>;
-  take?: Nullable<number>;
-  where?: Nullable<UserWhereInput>;
+    cursor?: Nullable<UserWhereUniqueInput>;
+    distinct?: Nullable<UserScalarFieldEnum[]>;
+    orderBy: UserOrderByWithRelationAndSearchRelevanceInput[];
+    pagination?: Nullable<PaginationArgsInput>;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    where?: Nullable<UserWhereInput>;
 }
 
 export class FindViewerEntriesPaginatedInput {
-  cursor?: Nullable<EntryWhereUniqueInput>;
-  distinct?: Nullable<EntryScalarFieldEnum[]>;
-  orderBy?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput[]>;
-  pagination: PaginationArgsInput;
-  skip?: Nullable<number>;
-  take?: Nullable<number>;
-  unique?: Nullable<EntryWhereUniqueInput>;
-  where?: Nullable<ViewerEntriesWhereInput>;
+    cursor?: Nullable<EntryWhereUniqueInput>;
+    distinct?: Nullable<EntryScalarFieldEnum[]>;
+    orderBy?: Nullable<EntryOrderByWithRelationAndSearchRelevanceInput[]>;
+    pagination: PaginationArgsInput;
+    skip?: Nullable<number>;
+    take?: Nullable<number>;
+    unique?: Nullable<EntryWhereUniqueInput>;
+    where?: Nullable<ViewerEntriesWhereInput>;
 }
 
 export class FloatNullableFilter {
-  equals?: Nullable<number>;
-  gt?: Nullable<number>;
-  gte?: Nullable<number>;
-  in?: Nullable<number[]>;
-  lt?: Nullable<number>;
-  lte?: Nullable<number>;
-  not?: Nullable<NestedFloatNullableFilter>;
-  notIn?: Nullable<number[]>;
+    equals?: Nullable<number>;
+    gt?: Nullable<number>;
+    gte?: Nullable<number>;
+    in?: Nullable<number[]>;
+    lt?: Nullable<number>;
+    lte?: Nullable<number>;
+    not?: Nullable<NestedFloatNullableFilter>;
+    notIn?: Nullable<number[]>;
 }
 
 export class IntNullableFilter {
-  equals?: Nullable<number>;
-  gt?: Nullable<number>;
-  gte?: Nullable<number>;
-  in?: Nullable<number[]>;
-  lt?: Nullable<number>;
-  lte?: Nullable<number>;
-  not?: Nullable<NestedIntNullableFilter>;
-  notIn?: Nullable<number[]>;
+    equals?: Nullable<number>;
+    gt?: Nullable<number>;
+    gte?: Nullable<number>;
+    in?: Nullable<number[]>;
+    lt?: Nullable<number>;
+    lte?: Nullable<number>;
+    not?: Nullable<NestedIntNullableFilter>;
+    notIn?: Nullable<number[]>;
 }
 
 export class LoginInput {
-  email?: Nullable<string>;
-  password?: Nullable<string>;
+    email?: Nullable<string>;
+    password?: Nullable<string>;
 }
 
 export class MediaItemCreateManyUserInput {
-  ariaLabel?: Nullable<string>;
-  caption?: Nullable<string>;
-  destination?: Nullable<MediaItemDestination>;
-  fileLastModified?: Nullable<DateTime>;
-  height?: Nullable<number>;
-  id?: Nullable<string>;
-  name?: Nullable<string>;
-  quality?: Nullable<number>;
-  size?: Nullable<string>;
-  src?: Nullable<string>;
-  srcSet?: Nullable<string>;
-  title?: Nullable<string>;
-  type?: Nullable<MimeTypes>;
-  updatedAt?: Nullable<DateTime>;
-  uploadedAt?: Nullable<DateTime>;
-  width?: Nullable<number>;
+    ariaLabel?: Nullable<string>;
+    caption?: Nullable<string>;
+    destination?: Nullable<MediaItemDestination>;
+    fileLastModified?: Nullable<DateTime>;
+    height?: Nullable<number>;
+    id?: Nullable<string>;
+    name?: Nullable<string>;
+    quality?: Nullable<number>;
+    size?: Nullable<string>;
+    src?: Nullable<string>;
+    srcSet?: Nullable<string>;
+    title?: Nullable<string>;
+    type?: Nullable<MimeTypes>;
+    updatedAt?: Nullable<DateTime>;
+    uploadedAt?: Nullable<DateTime>;
+    width?: Nullable<number>;
 }
 
 export class MediaItemCreateManyUserInputEnvelope {
-  data: MediaItemCreateManyUserInput[];
-  skipDuplicates?: Nullable<boolean>;
+    data: MediaItemCreateManyUserInput[];
+    skipDuplicates?: Nullable<boolean>;
 }
 
 export class MediaItemCreateNestedManyWithoutUserInput {
-  connect?: Nullable<MediaItemWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<MediaItemCreateOrConnectWithoutUserInput[]>;
-  create?: Nullable<MediaItemCreateWithoutUserInput[]>;
-  createMany?: Nullable<MediaItemCreateManyUserInputEnvelope>;
+    connect?: Nullable<MediaItemWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<MediaItemCreateOrConnectWithoutUserInput[]>;
+    create?: Nullable<MediaItemCreateWithoutUserInput[]>;
+    createMany?: Nullable<MediaItemCreateManyUserInputEnvelope>;
 }
 
 export class MediaItemCreateOrConnectWithoutUserInput {
-  create: MediaItemCreateWithoutUserInput;
-  where: MediaItemWhereUniqueInput;
+    create: MediaItemCreateWithoutUserInput;
+    where: MediaItemWhereUniqueInput;
 }
 
 export class MediaItemCreateWithoutUserInput {
-  ariaLabel?: Nullable<string>;
-  caption?: Nullable<string>;
-  destination?: Nullable<MediaItemDestination>;
-  fileLastModified?: Nullable<DateTime>;
-  height?: Nullable<number>;
-  id?: Nullable<string>;
-  name?: Nullable<string>;
-  quality?: Nullable<number>;
-  size?: Nullable<string>;
-  src?: Nullable<string>;
-  srcSet?: Nullable<string>;
-  title?: Nullable<string>;
-  type?: Nullable<MimeTypes>;
-  updatedAt?: Nullable<DateTime>;
-  uploadedAt?: Nullable<DateTime>;
-  width?: Nullable<number>;
+    ariaLabel?: Nullable<string>;
+    caption?: Nullable<string>;
+    destination?: Nullable<MediaItemDestination>;
+    fileLastModified?: Nullable<DateTime>;
+    height?: Nullable<number>;
+    id?: Nullable<string>;
+    name?: Nullable<string>;
+    quality?: Nullable<number>;
+    size?: Nullable<string>;
+    src?: Nullable<string>;
+    srcSet?: Nullable<string>;
+    title?: Nullable<string>;
+    type?: Nullable<MimeTypes>;
+    updatedAt?: Nullable<DateTime>;
+    uploadedAt?: Nullable<DateTime>;
+    width?: Nullable<number>;
 }
 
 export class MediaItemListRelationFilter {
-  every?: Nullable<MediaItemWhereInput>;
-  none?: Nullable<MediaItemWhereInput>;
-  some?: Nullable<MediaItemWhereInput>;
+    every?: Nullable<MediaItemWhereInput>;
+    none?: Nullable<MediaItemWhereInput>;
+    some?: Nullable<MediaItemWhereInput>;
 }
 
 export class MediaItemNameUserIdCompoundUniqueInput {
-  name: string;
-  userId: string;
+    name: string;
+    userId: string;
 }
 
 export class MediaItemOrderByRelationAggregateInput {
-  _count?: Nullable<SortOrder>;
+    _count?: Nullable<SortOrder>;
 }
 
 export class MediaItemOrderByRelevanceInput {
-  fields: MediaItemOrderByRelevanceFieldEnum[];
-  search: string;
-  sort: SortOrder;
+    fields: MediaItemOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
 }
 
 export class MediaItemOrderByWithRelationAndSearchRelevanceInput {
-  _relevance?: Nullable<MediaItemOrderByRelevanceInput>;
-  ariaLabel?: Nullable<SortOrder>;
-  caption?: Nullable<SortOrder>;
-  destination?: Nullable<SortOrder>;
-  fileLastModified?: Nullable<SortOrder>;
-  height?: Nullable<SortOrder>;
-  id?: Nullable<SortOrder>;
-  name?: Nullable<SortOrder>;
-  quality?: Nullable<SortOrder>;
-  size?: Nullable<SortOrder>;
-  src?: Nullable<SortOrder>;
-  srcSet?: Nullable<SortOrder>;
-  title?: Nullable<SortOrder>;
-  type?: Nullable<SortOrder>;
-  updatedAt?: Nullable<SortOrder>;
-  uploadedAt?: Nullable<SortOrder>;
-  user?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
-  userId?: Nullable<SortOrder>;
-  width?: Nullable<SortOrder>;
+    _relevance?: Nullable<MediaItemOrderByRelevanceInput>;
+    ariaLabel?: Nullable<SortOrder>;
+    caption?: Nullable<SortOrder>;
+    destination?: Nullable<SortOrder>;
+    fileLastModified?: Nullable<SortOrder>;
+    height?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    name?: Nullable<SortOrder>;
+    quality?: Nullable<SortOrder>;
+    size?: Nullable<SortOrder>;
+    src?: Nullable<SortOrder>;
+    srcSet?: Nullable<SortOrder>;
+    title?: Nullable<SortOrder>;
+    type?: Nullable<SortOrder>;
+    updatedAt?: Nullable<SortOrder>;
+    uploadedAt?: Nullable<SortOrder>;
+    user?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    userId?: Nullable<SortOrder>;
+    width?: Nullable<SortOrder>;
 }
 
 export class MediaItemScalarWhereInput {
-  AND?: Nullable<MediaItemScalarWhereInput[]>;
-  NOT?: Nullable<MediaItemScalarWhereInput[]>;
-  OR?: Nullable<MediaItemScalarWhereInput[]>;
-  ariaLabel?: Nullable<StringNullableFilter>;
-  caption?: Nullable<StringNullableFilter>;
-  destination?: Nullable<EnumMediaItemDestinationNullableFilter>;
-  fileLastModified?: Nullable<DateTimeNullableFilter>;
-  height?: Nullable<FloatNullableFilter>;
-  id?: Nullable<StringFilter>;
-  name?: Nullable<StringNullableFilter>;
-  quality?: Nullable<IntNullableFilter>;
-  size?: Nullable<StringNullableFilter>;
-  src?: Nullable<StringNullableFilter>;
-  srcSet?: Nullable<StringNullableFilter>;
-  title?: Nullable<StringNullableFilter>;
-  type?: Nullable<EnumMimeTypesNullableFilter>;
-  updatedAt?: Nullable<DateTimeNullableFilter>;
-  uploadedAt?: Nullable<DateTimeFilter>;
-  userId?: Nullable<StringFilter>;
-  width?: Nullable<FloatNullableFilter>;
+    AND?: Nullable<MediaItemScalarWhereInput[]>;
+    NOT?: Nullable<MediaItemScalarWhereInput[]>;
+    OR?: Nullable<MediaItemScalarWhereInput[]>;
+    ariaLabel?: Nullable<StringNullableFilter>;
+    caption?: Nullable<StringNullableFilter>;
+    destination?: Nullable<EnumMediaItemDestinationNullableFilter>;
+    fileLastModified?: Nullable<DateTimeNullableFilter>;
+    height?: Nullable<FloatNullableFilter>;
+    id?: Nullable<StringFilter>;
+    name?: Nullable<StringNullableFilter>;
+    quality?: Nullable<IntNullableFilter>;
+    size?: Nullable<StringNullableFilter>;
+    src?: Nullable<StringNullableFilter>;
+    srcSet?: Nullable<StringNullableFilter>;
+    title?: Nullable<StringNullableFilter>;
+    type?: Nullable<EnumMimeTypesNullableFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
+    uploadedAt?: Nullable<DateTimeFilter>;
+    userId?: Nullable<StringFilter>;
+    width?: Nullable<FloatNullableFilter>;
 }
 
 export class MediaItemUpdateManyMutationInput {
-  ariaLabel?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  caption?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  destination?: Nullable<NullableEnumMediaItemDestinationFieldUpdateOperationsInput>;
-  fileLastModified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  height?: Nullable<NullableFloatFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  name?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  quality?: Nullable<NullableIntFieldUpdateOperationsInput>;
-  size?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  src?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  srcSet?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  title?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  type?: Nullable<NullableEnumMimeTypesFieldUpdateOperationsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  uploadedAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  width?: Nullable<NullableFloatFieldUpdateOperationsInput>;
+    ariaLabel?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    caption?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    destination?: Nullable<NullableEnumMediaItemDestinationFieldUpdateOperationsInput>;
+    fileLastModified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    height?: Nullable<NullableFloatFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    name?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    quality?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    size?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    src?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    srcSet?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    title?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    type?: Nullable<NullableEnumMimeTypesFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    uploadedAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    width?: Nullable<NullableFloatFieldUpdateOperationsInput>;
 }
 
 export class MediaItemUpdateManyWithWhereWithoutUserInput {
-  data: MediaItemUpdateManyMutationInput;
-  where: MediaItemScalarWhereInput;
+    data: MediaItemUpdateManyMutationInput;
+    where: MediaItemScalarWhereInput;
 }
 
 export class MediaItemUpdateManyWithoutUserInput {
-  connect?: Nullable<MediaItemWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<MediaItemCreateOrConnectWithoutUserInput[]>;
-  create?: Nullable<MediaItemCreateWithoutUserInput[]>;
-  createMany?: Nullable<MediaItemCreateManyUserInputEnvelope>;
-  delete?: Nullable<MediaItemWhereUniqueInput[]>;
-  deleteMany?: Nullable<MediaItemScalarWhereInput[]>;
-  disconnect?: Nullable<MediaItemWhereUniqueInput[]>;
-  set?: Nullable<MediaItemWhereUniqueInput[]>;
-  update?: Nullable<MediaItemUpdateWithWhereUniqueWithoutUserInput[]>;
-  updateMany?: Nullable<MediaItemUpdateManyWithWhereWithoutUserInput[]>;
-  upsert?: Nullable<MediaItemUpsertWithWhereUniqueWithoutUserInput[]>;
+    connect?: Nullable<MediaItemWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<MediaItemCreateOrConnectWithoutUserInput[]>;
+    create?: Nullable<MediaItemCreateWithoutUserInput[]>;
+    createMany?: Nullable<MediaItemCreateManyUserInputEnvelope>;
+    delete?: Nullable<MediaItemWhereUniqueInput[]>;
+    deleteMany?: Nullable<MediaItemScalarWhereInput[]>;
+    disconnect?: Nullable<MediaItemWhereUniqueInput[]>;
+    set?: Nullable<MediaItemWhereUniqueInput[]>;
+    update?: Nullable<MediaItemUpdateWithWhereUniqueWithoutUserInput[]>;
+    updateMany?: Nullable<MediaItemUpdateManyWithWhereWithoutUserInput[]>;
+    upsert?: Nullable<MediaItemUpsertWithWhereUniqueWithoutUserInput[]>;
 }
 
 export class MediaItemUpdateWithWhereUniqueWithoutUserInput {
-  data: MediaItemUpdateWithoutUserInput;
-  where: MediaItemWhereUniqueInput;
+    data: MediaItemUpdateWithoutUserInput;
+    where: MediaItemWhereUniqueInput;
 }
 
 export class MediaItemUpdateWithoutUserInput {
-  ariaLabel?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  caption?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  destination?: Nullable<NullableEnumMediaItemDestinationFieldUpdateOperationsInput>;
-  fileLastModified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  height?: Nullable<NullableFloatFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  name?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  quality?: Nullable<NullableIntFieldUpdateOperationsInput>;
-  size?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  src?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  srcSet?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  title?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  type?: Nullable<NullableEnumMimeTypesFieldUpdateOperationsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  uploadedAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  width?: Nullable<NullableFloatFieldUpdateOperationsInput>;
+    ariaLabel?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    caption?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    destination?: Nullable<NullableEnumMediaItemDestinationFieldUpdateOperationsInput>;
+    fileLastModified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    height?: Nullable<NullableFloatFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    name?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    quality?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    size?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    src?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    srcSet?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    title?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    type?: Nullable<NullableEnumMimeTypesFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    uploadedAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    width?: Nullable<NullableFloatFieldUpdateOperationsInput>;
 }
 
 export class MediaItemUpsertWithWhereUniqueWithoutUserInput {
-  create: MediaItemCreateWithoutUserInput;
-  update: MediaItemUpdateWithoutUserInput;
-  where: MediaItemWhereUniqueInput;
+    create: MediaItemCreateWithoutUserInput;
+    update: MediaItemUpdateWithoutUserInput;
+    where: MediaItemWhereUniqueInput;
 }
 
 export class MediaItemWhereInput {
-  AND?: Nullable<MediaItemWhereInput[]>;
-  NOT?: Nullable<MediaItemWhereInput[]>;
-  OR?: Nullable<MediaItemWhereInput[]>;
-  ariaLabel?: Nullable<StringNullableFilter>;
-  caption?: Nullable<StringNullableFilter>;
-  destination?: Nullable<EnumMediaItemDestinationNullableFilter>;
-  fileLastModified?: Nullable<DateTimeNullableFilter>;
-  height?: Nullable<FloatNullableFilter>;
-  id?: Nullable<StringFilter>;
-  name?: Nullable<StringNullableFilter>;
-  quality?: Nullable<IntNullableFilter>;
-  size?: Nullable<StringNullableFilter>;
-  src?: Nullable<StringNullableFilter>;
-  srcSet?: Nullable<StringNullableFilter>;
-  title?: Nullable<StringNullableFilter>;
-  type?: Nullable<EnumMimeTypesNullableFilter>;
-  updatedAt?: Nullable<DateTimeNullableFilter>;
-  uploadedAt?: Nullable<DateTimeFilter>;
-  user?: Nullable<UserRelationFilter>;
-  userId?: Nullable<StringFilter>;
-  width?: Nullable<FloatNullableFilter>;
+    AND?: Nullable<MediaItemWhereInput[]>;
+    NOT?: Nullable<MediaItemWhereInput[]>;
+    OR?: Nullable<MediaItemWhereInput[]>;
+    ariaLabel?: Nullable<StringNullableFilter>;
+    caption?: Nullable<StringNullableFilter>;
+    destination?: Nullable<EnumMediaItemDestinationNullableFilter>;
+    fileLastModified?: Nullable<DateTimeNullableFilter>;
+    height?: Nullable<FloatNullableFilter>;
+    id?: Nullable<StringFilter>;
+    name?: Nullable<StringNullableFilter>;
+    quality?: Nullable<IntNullableFilter>;
+    size?: Nullable<StringNullableFilter>;
+    src?: Nullable<StringNullableFilter>;
+    srcSet?: Nullable<StringNullableFilter>;
+    title?: Nullable<StringNullableFilter>;
+    type?: Nullable<EnumMimeTypesNullableFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
+    uploadedAt?: Nullable<DateTimeFilter>;
+    user?: Nullable<UserRelationFilter>;
+    userId?: Nullable<StringFilter>;
+    width?: Nullable<FloatNullableFilter>;
 }
 
 export class MediaItemWhereUniqueInput {
-  id?: Nullable<string>;
-  name_userId?: Nullable<MediaItemNameUserIdCompoundUniqueInput>;
+    id?: Nullable<string>;
+    name_userId?: Nullable<MediaItemNameUserIdCompoundUniqueInput>;
 }
 
 export class NestedBoolFilter {
-  equals?: Nullable<boolean>;
-  not?: Nullable<NestedBoolFilter>;
+    equals?: Nullable<boolean>;
+    not?: Nullable<NestedBoolFilter>;
 }
 
 export class NestedDateTimeFilter {
-  equals?: Nullable<DateTime>;
-  gt?: Nullable<DateTime>;
-  gte?: Nullable<DateTime>;
-  in?: Nullable<DateTime[]>;
-  lt?: Nullable<DateTime>;
-  lte?: Nullable<DateTime>;
-  not?: Nullable<NestedDateTimeFilter>;
-  notIn?: Nullable<DateTime[]>;
+    equals?: Nullable<DateTime>;
+    gt?: Nullable<DateTime>;
+    gte?: Nullable<DateTime>;
+    in?: Nullable<DateTime[]>;
+    lt?: Nullable<DateTime>;
+    lte?: Nullable<DateTime>;
+    not?: Nullable<NestedDateTimeFilter>;
+    notIn?: Nullable<DateTime[]>;
 }
 
 export class NestedDateTimeNullableFilter {
-  equals?: Nullable<DateTime>;
-  gt?: Nullable<DateTime>;
-  gte?: Nullable<DateTime>;
-  in?: Nullable<DateTime[]>;
-  lt?: Nullable<DateTime>;
-  lte?: Nullable<DateTime>;
-  not?: Nullable<NestedDateTimeNullableFilter>;
-  notIn?: Nullable<DateTime[]>;
+    equals?: Nullable<DateTime>;
+    gt?: Nullable<DateTime>;
+    gte?: Nullable<DateTime>;
+    in?: Nullable<DateTime[]>;
+    lt?: Nullable<DateTime>;
+    lte?: Nullable<DateTime>;
+    not?: Nullable<NestedDateTimeNullableFilter>;
+    notIn?: Nullable<DateTime[]>;
 }
 
 export class NestedEnumGenderNullableFilter {
-  equals?: Nullable<Gender>;
-  in?: Nullable<Gender[]>;
-  not?: Nullable<NestedEnumGenderNullableFilter>;
-  notIn?: Nullable<Gender[]>;
+    equals?: Nullable<Gender>;
+    in?: Nullable<Gender[]>;
+    not?: Nullable<NestedEnumGenderNullableFilter>;
+    notIn?: Nullable<Gender[]>;
 }
 
 export class NestedEnumMediaItemDestinationNullableFilter {
-  equals?: Nullable<MediaItemDestination>;
-  in?: Nullable<MediaItemDestination[]>;
-  not?: Nullable<NestedEnumMediaItemDestinationNullableFilter>;
-  notIn?: Nullable<MediaItemDestination[]>;
+    equals?: Nullable<MediaItemDestination>;
+    in?: Nullable<MediaItemDestination[]>;
+    not?: Nullable<NestedEnumMediaItemDestinationNullableFilter>;
+    notIn?: Nullable<MediaItemDestination[]>;
 }
 
 export class NestedEnumMimeTypesNullableFilter {
-  equals?: Nullable<MimeTypes>;
-  in?: Nullable<MimeTypes[]>;
-  not?: Nullable<NestedEnumMimeTypesNullableFilter>;
-  notIn?: Nullable<MimeTypes[]>;
+    equals?: Nullable<MimeTypes>;
+    in?: Nullable<MimeTypes[]>;
+    not?: Nullable<NestedEnumMimeTypesNullableFilter>;
+    notIn?: Nullable<MimeTypes[]>;
 }
 
 export class NestedEnumPronounsNullableFilter {
-  equals?: Nullable<Pronouns>;
-  in?: Nullable<Pronouns[]>;
-  not?: Nullable<NestedEnumPronounsNullableFilter>;
-  notIn?: Nullable<Pronouns[]>;
+    equals?: Nullable<Pronouns>;
+    in?: Nullable<Pronouns[]>;
+    not?: Nullable<NestedEnumPronounsNullableFilter>;
+    notIn?: Nullable<Pronouns[]>;
 }
 
 export class NestedEnumRoleNullableFilter {
-  equals?: Nullable<Role>;
-  in?: Nullable<Role[]>;
-  not?: Nullable<NestedEnumRoleNullableFilter>;
-  notIn?: Nullable<Role[]>;
+    equals?: Nullable<Role>;
+    in?: Nullable<Role[]>;
+    not?: Nullable<NestedEnumRoleNullableFilter>;
+    notIn?: Nullable<Role[]>;
 }
 
 export class NestedEnumUserStatusNullableFilter {
-  equals?: Nullable<UserStatus>;
-  in?: Nullable<UserStatus[]>;
-  not?: Nullable<NestedEnumUserStatusNullableFilter>;
-  notIn?: Nullable<UserStatus[]>;
+    equals?: Nullable<UserStatus>;
+    in?: Nullable<UserStatus[]>;
+    not?: Nullable<NestedEnumUserStatusNullableFilter>;
+    notIn?: Nullable<UserStatus[]>;
 }
 
 export class NestedFloatNullableFilter {
-  equals?: Nullable<number>;
-  gt?: Nullable<number>;
-  gte?: Nullable<number>;
-  in?: Nullable<number[]>;
-  lt?: Nullable<number>;
-  lte?: Nullable<number>;
-  not?: Nullable<NestedFloatNullableFilter>;
-  notIn?: Nullable<number[]>;
+    equals?: Nullable<number>;
+    gt?: Nullable<number>;
+    gte?: Nullable<number>;
+    in?: Nullable<number[]>;
+    lt?: Nullable<number>;
+    lte?: Nullable<number>;
+    not?: Nullable<NestedFloatNullableFilter>;
+    notIn?: Nullable<number[]>;
 }
 
 export class NestedIntNullableFilter {
-  equals?: Nullable<number>;
-  gt?: Nullable<number>;
-  gte?: Nullable<number>;
-  in?: Nullable<number[]>;
-  lt?: Nullable<number>;
-  lte?: Nullable<number>;
-  not?: Nullable<NestedIntNullableFilter>;
-  notIn?: Nullable<number[]>;
+    equals?: Nullable<number>;
+    gt?: Nullable<number>;
+    gte?: Nullable<number>;
+    in?: Nullable<number[]>;
+    lt?: Nullable<number>;
+    lte?: Nullable<number>;
+    not?: Nullable<NestedIntNullableFilter>;
+    notIn?: Nullable<number[]>;
 }
 
 export class NestedStringFilter {
-  contains?: Nullable<string>;
-  endsWith?: Nullable<string>;
-  equals?: Nullable<string>;
-  gt?: Nullable<string>;
-  gte?: Nullable<string>;
-  in?: Nullable<string[]>;
-  lt?: Nullable<string>;
-  lte?: Nullable<string>;
-  not?: Nullable<NestedStringFilter>;
-  notIn?: Nullable<string[]>;
-  search?: Nullable<string>;
-  startsWith?: Nullable<string>;
+    contains?: Nullable<string>;
+    endsWith?: Nullable<string>;
+    equals?: Nullable<string>;
+    gt?: Nullable<string>;
+    gte?: Nullable<string>;
+    in?: Nullable<string[]>;
+    lt?: Nullable<string>;
+    lte?: Nullable<string>;
+    not?: Nullable<NestedStringFilter>;
+    notIn?: Nullable<string[]>;
+    search?: Nullable<string>;
+    startsWith?: Nullable<string>;
 }
 
 export class NestedStringNullableFilter {
-  contains?: Nullable<string>;
-  endsWith?: Nullable<string>;
-  equals?: Nullable<string>;
-  gt?: Nullable<string>;
-  gte?: Nullable<string>;
-  in?: Nullable<string[]>;
-  lt?: Nullable<string>;
-  lte?: Nullable<string>;
-  not?: Nullable<NestedStringNullableFilter>;
-  notIn?: Nullable<string[]>;
-  search?: Nullable<string>;
-  startsWith?: Nullable<string>;
+    contains?: Nullable<string>;
+    endsWith?: Nullable<string>;
+    equals?: Nullable<string>;
+    gt?: Nullable<string>;
+    gte?: Nullable<string>;
+    in?: Nullable<string[]>;
+    lt?: Nullable<string>;
+    lte?: Nullable<string>;
+    not?: Nullable<NestedStringNullableFilter>;
+    notIn?: Nullable<string[]>;
+    search?: Nullable<string>;
+    startsWith?: Nullable<string>;
 }
 
 export class NullableDateTimeFieldUpdateOperationsInput {
-  set?: Nullable<DateTime>;
+    set?: Nullable<DateTime>;
 }
 
 export class NullableEnumGenderFieldUpdateOperationsInput {
-  set?: Nullable<Gender>;
+    set?: Nullable<Gender>;
 }
 
 export class NullableEnumMediaItemDestinationFieldUpdateOperationsInput {
-  set?: Nullable<MediaItemDestination>;
+    set?: Nullable<MediaItemDestination>;
 }
 
 export class NullableEnumMimeTypesFieldUpdateOperationsInput {
-  set?: Nullable<MimeTypes>;
+    set?: Nullable<MimeTypes>;
 }
 
 export class NullableEnumPronounsFieldUpdateOperationsInput {
-  set?: Nullable<Pronouns>;
+    set?: Nullable<Pronouns>;
 }
 
 export class NullableEnumRoleFieldUpdateOperationsInput {
-  set?: Nullable<Role>;
+    set?: Nullable<Role>;
 }
 
 export class NullableEnumUserStatusFieldUpdateOperationsInput {
-  set?: Nullable<UserStatus>;
+    set?: Nullable<UserStatus>;
 }
 
 export class NullableFloatFieldUpdateOperationsInput {
-  decrement?: Nullable<number>;
-  divide?: Nullable<number>;
-  increment?: Nullable<number>;
-  multiply?: Nullable<number>;
-  set?: Nullable<number>;
+    decrement?: Nullable<number>;
+    divide?: Nullable<number>;
+    increment?: Nullable<number>;
+    multiply?: Nullable<number>;
+    set?: Nullable<number>;
 }
 
 export class NullableIntFieldUpdateOperationsInput {
-  decrement?: Nullable<number>;
-  divide?: Nullable<number>;
-  increment?: Nullable<number>;
-  multiply?: Nullable<number>;
-  set?: Nullable<number>;
+    decrement?: Nullable<number>;
+    divide?: Nullable<number>;
+    increment?: Nullable<number>;
+    multiply?: Nullable<number>;
+    set?: Nullable<number>;
 }
 
 export class NullableStringFieldUpdateOperationsInput {
-  set?: Nullable<string>;
+    set?: Nullable<string>;
 }
 
 export class PaginationArgsInput {
-  after?: Nullable<string>;
-  before?: Nullable<string>;
-  first?: Nullable<number>;
-  last?: Nullable<number>;
+    after?: Nullable<string>;
+    before?: Nullable<string>;
+    first?: Nullable<number>;
+    last?: Nullable<number>;
 }
 
 export class ProfileCreateInput {
-  activiyFeed?: Nullable<string>;
-  bio?: Nullable<string>;
-  city?: Nullable<string>;
-  country?: Nullable<string>;
-  coverPhoto?: Nullable<string>;
-  dob?: Nullable<string>;
-  gender?: Nullable<Gender>;
-  id?: Nullable<string>;
-  lastSeen?: Nullable<DateTime>;
-  memberSince?: Nullable<DateTime>;
-  occupation?: Nullable<string>;
-  phoneNumber?: Nullable<string>;
-  pronouns?: Nullable<Pronouns>;
-  recentActivity?: Nullable<string>;
-  user: UserCreateNestedOneWithoutProfileInput;
+    activiyFeed?: Nullable<string>;
+    bio?: Nullable<string>;
+    city?: Nullable<string>;
+    country?: Nullable<string>;
+    coverPhoto?: Nullable<string>;
+    dob?: Nullable<string>;
+    gender?: Nullable<Gender>;
+    id?: Nullable<string>;
+    lastSeen?: Nullable<DateTime>;
+    memberSince?: Nullable<DateTime>;
+    occupation?: Nullable<string>;
+    phoneNumber?: Nullable<string>;
+    pronouns?: Nullable<Pronouns>;
+    recentActivity?: Nullable<string>;
+    user: UserCreateNestedOneWithoutProfileInput;
 }
 
 export class ProfileCreateNestedOneWithoutUserInput {
-  connect?: Nullable<ProfileWhereUniqueInput>;
-  connectOrCreate?: Nullable<ProfileCreateOrConnectWithoutUserInput>;
-  create?: Nullable<ProfileCreateWithoutUserInput>;
+    connect?: Nullable<ProfileWhereUniqueInput>;
+    connectOrCreate?: Nullable<ProfileCreateOrConnectWithoutUserInput>;
+    create?: Nullable<ProfileCreateWithoutUserInput>;
 }
 
 export class ProfileCreateOrConnectWithoutUserInput {
-  create: ProfileCreateWithoutUserInput;
-  where: ProfileWhereUniqueInput;
+    create: ProfileCreateWithoutUserInput;
+    where: ProfileWhereUniqueInput;
 }
 
 export class ProfileCreateWithoutUserInput {
-  activiyFeed?: Nullable<string>;
-  bio?: Nullable<string>;
-  city?: Nullable<string>;
-  country?: Nullable<string>;
-  coverPhoto?: Nullable<string>;
-  dob?: Nullable<string>;
-  gender?: Nullable<Gender>;
-  id?: Nullable<string>;
-  lastSeen?: Nullable<DateTime>;
-  memberSince?: Nullable<DateTime>;
-  occupation?: Nullable<string>;
-  phoneNumber?: Nullable<string>;
-  pronouns?: Nullable<Pronouns>;
-  recentActivity?: Nullable<string>;
+    activiyFeed?: Nullable<string>;
+    bio?: Nullable<string>;
+    city?: Nullable<string>;
+    country?: Nullable<string>;
+    coverPhoto?: Nullable<string>;
+    dob?: Nullable<string>;
+    gender?: Nullable<Gender>;
+    id?: Nullable<string>;
+    lastSeen?: Nullable<DateTime>;
+    memberSince?: Nullable<DateTime>;
+    occupation?: Nullable<string>;
+    phoneNumber?: Nullable<string>;
+    pronouns?: Nullable<Pronouns>;
+    recentActivity?: Nullable<string>;
 }
 
 export class ProfileOrderByRelevanceInput {
-  fields: ProfileOrderByRelevanceFieldEnum[];
-  search: string;
-  sort: SortOrder;
+    fields: ProfileOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
 }
 
 export class ProfileOrderByWithRelationAndSearchRelevanceInput {
-  _relevance?: Nullable<ProfileOrderByRelevanceInput>;
-  activiyFeed?: Nullable<SortOrder>;
-  bio?: Nullable<SortOrder>;
-  city?: Nullable<SortOrder>;
-  country?: Nullable<SortOrder>;
-  coverPhoto?: Nullable<SortOrder>;
-  dob?: Nullable<SortOrder>;
-  gender?: Nullable<SortOrder>;
-  id?: Nullable<SortOrder>;
-  lastSeen?: Nullable<SortOrder>;
-  memberSince?: Nullable<SortOrder>;
-  occupation?: Nullable<SortOrder>;
-  phoneNumber?: Nullable<SortOrder>;
-  pronouns?: Nullable<SortOrder>;
-  recentActivity?: Nullable<SortOrder>;
-  user?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
-  userId?: Nullable<SortOrder>;
+    _relevance?: Nullable<ProfileOrderByRelevanceInput>;
+    activiyFeed?: Nullable<SortOrder>;
+    bio?: Nullable<SortOrder>;
+    city?: Nullable<SortOrder>;
+    country?: Nullable<SortOrder>;
+    coverPhoto?: Nullable<SortOrder>;
+    dob?: Nullable<SortOrder>;
+    gender?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    lastSeen?: Nullable<SortOrder>;
+    memberSince?: Nullable<SortOrder>;
+    occupation?: Nullable<SortOrder>;
+    phoneNumber?: Nullable<SortOrder>;
+    pronouns?: Nullable<SortOrder>;
+    recentActivity?: Nullable<SortOrder>;
+    user?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    userId?: Nullable<SortOrder>;
 }
 
 export class ProfileRelationFilter {
-  is?: Nullable<ProfileWhereInput>;
-  isNot?: Nullable<ProfileWhereInput>;
+    is?: Nullable<ProfileWhereInput>;
+    isNot?: Nullable<ProfileWhereInput>;
 }
 
 export class ProfileUpdateOneWithoutUserInput {
-  connect?: Nullable<ProfileWhereUniqueInput>;
-  connectOrCreate?: Nullable<ProfileCreateOrConnectWithoutUserInput>;
-  create?: Nullable<ProfileCreateWithoutUserInput>;
-  delete?: Nullable<boolean>;
-  disconnect?: Nullable<boolean>;
-  update?: Nullable<ProfileUpdateWithoutUserInput>;
-  upsert?: Nullable<ProfileUpsertWithoutUserInput>;
+    connect?: Nullable<ProfileWhereUniqueInput>;
+    connectOrCreate?: Nullable<ProfileCreateOrConnectWithoutUserInput>;
+    create?: Nullable<ProfileCreateWithoutUserInput>;
+    delete?: Nullable<boolean>;
+    disconnect?: Nullable<boolean>;
+    update?: Nullable<ProfileUpdateWithoutUserInput>;
+    upsert?: Nullable<ProfileUpsertWithoutUserInput>;
 }
 
 export class ProfileUpdateWithoutUserInput {
-  activiyFeed?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  bio?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  city?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  country?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  coverPhoto?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  dob?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  gender?: Nullable<NullableEnumGenderFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  lastSeen?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  memberSince?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  occupation?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  phoneNumber?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  pronouns?: Nullable<NullableEnumPronounsFieldUpdateOperationsInput>;
-  recentActivity?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    activiyFeed?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    bio?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    city?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    country?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    coverPhoto?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    dob?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    gender?: Nullable<NullableEnumGenderFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    lastSeen?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    memberSince?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    occupation?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    phoneNumber?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    pronouns?: Nullable<NullableEnumPronounsFieldUpdateOperationsInput>;
+    recentActivity?: Nullable<NullableStringFieldUpdateOperationsInput>;
 }
 
 export class ProfileUpsertWithoutUserInput {
-  create: ProfileCreateWithoutUserInput;
-  update: ProfileUpdateWithoutUserInput;
+    create: ProfileCreateWithoutUserInput;
+    update: ProfileUpdateWithoutUserInput;
 }
 
 export class ProfileWhereInput {
-  AND?: Nullable<ProfileWhereInput[]>;
-  NOT?: Nullable<ProfileWhereInput[]>;
-  OR?: Nullable<ProfileWhereInput[]>;
-  activiyFeed?: Nullable<StringNullableFilter>;
-  bio?: Nullable<StringNullableFilter>;
-  city?: Nullable<StringNullableFilter>;
-  country?: Nullable<StringNullableFilter>;
-  coverPhoto?: Nullable<StringNullableFilter>;
-  dob?: Nullable<StringNullableFilter>;
-  gender?: Nullable<EnumGenderNullableFilter>;
-  id?: Nullable<StringFilter>;
-  lastSeen?: Nullable<DateTimeNullableFilter>;
-  memberSince?: Nullable<DateTimeFilter>;
-  occupation?: Nullable<StringNullableFilter>;
-  phoneNumber?: Nullable<StringNullableFilter>;
-  pronouns?: Nullable<EnumPronounsNullableFilter>;
-  recentActivity?: Nullable<StringNullableFilter>;
-  user?: Nullable<UserRelationFilter>;
-  userId?: Nullable<StringFilter>;
+    AND?: Nullable<ProfileWhereInput[]>;
+    NOT?: Nullable<ProfileWhereInput[]>;
+    OR?: Nullable<ProfileWhereInput[]>;
+    activiyFeed?: Nullable<StringNullableFilter>;
+    bio?: Nullable<StringNullableFilter>;
+    city?: Nullable<StringNullableFilter>;
+    country?: Nullable<StringNullableFilter>;
+    coverPhoto?: Nullable<StringNullableFilter>;
+    dob?: Nullable<StringNullableFilter>;
+    gender?: Nullable<EnumGenderNullableFilter>;
+    id?: Nullable<StringFilter>;
+    lastSeen?: Nullable<DateTimeNullableFilter>;
+    memberSince?: Nullable<DateTimeFilter>;
+    occupation?: Nullable<StringNullableFilter>;
+    phoneNumber?: Nullable<StringNullableFilter>;
+    pronouns?: Nullable<EnumPronounsNullableFilter>;
+    recentActivity?: Nullable<StringNullableFilter>;
+    user?: Nullable<UserRelationFilter>;
+    userId?: Nullable<StringFilter>;
 }
 
 export class ProfileWhereUniqueInput {
-  id?: Nullable<string>;
-  userId?: Nullable<string>;
+    id?: Nullable<string>;
+    userId?: Nullable<string>;
 }
 
 export class SessionCreateManyUserInput {
-  accessToken?: Nullable<string>;
-  alg?: Nullable<string>;
-  exp?: Nullable<number>;
-  iat?: Nullable<number>;
-  id?: Nullable<string>;
-  lastVerified?: Nullable<DateTime>;
-  provider?: Nullable<string>;
-  refreshToken?: Nullable<string>;
-  scopes?: Nullable<SessionCreateManyscopesInput>;
-  signature?: Nullable<string>;
-  tokenState?: Nullable<string>;
+    accessToken?: Nullable<string>;
+    alg?: Nullable<string>;
+    exp?: Nullable<number>;
+    iat?: Nullable<number>;
+    id?: Nullable<string>;
+    lastVerified?: Nullable<DateTime>;
+    provider?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+    scopes?: Nullable<SessionCreateManyscopesInput>;
+    signature?: Nullable<string>;
+    tokenState?: Nullable<string>;
 }
 
 export class SessionCreateManyUserInputEnvelope {
-  data: SessionCreateManyUserInput[];
-  skipDuplicates?: Nullable<boolean>;
+    data: SessionCreateManyUserInput[];
+    skipDuplicates?: Nullable<boolean>;
 }
 
 export class SessionCreateManyscopesInput {
-  set: string[];
+    set: string[];
 }
 
 export class SessionCreateNestedManyWithoutUserInput {
-  connect?: Nullable<SessionWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<SessionCreateOrConnectWithoutUserInput[]>;
-  create?: Nullable<SessionCreateWithoutUserInput[]>;
-  createMany?: Nullable<SessionCreateManyUserInputEnvelope>;
+    connect?: Nullable<SessionWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<SessionCreateOrConnectWithoutUserInput[]>;
+    create?: Nullable<SessionCreateWithoutUserInput[]>;
+    createMany?: Nullable<SessionCreateManyUserInputEnvelope>;
 }
 
 export class SessionCreateOrConnectWithoutUserInput {
-  create: SessionCreateWithoutUserInput;
-  where: SessionWhereUniqueInput;
+    create: SessionCreateWithoutUserInput;
+    where: SessionWhereUniqueInput;
 }
 
 export class SessionCreateWithoutUserInput {
-  accessToken?: Nullable<string>;
-  alg?: Nullable<string>;
-  exp?: Nullable<number>;
-  iat?: Nullable<number>;
-  id?: Nullable<string>;
-  lastVerified?: Nullable<DateTime>;
-  provider?: Nullable<string>;
-  refreshToken?: Nullable<string>;
-  scopes?: Nullable<SessionCreatescopesInput>;
-  signature?: Nullable<string>;
-  tokenState?: Nullable<string>;
+    accessToken?: Nullable<string>;
+    alg?: Nullable<string>;
+    exp?: Nullable<number>;
+    iat?: Nullable<number>;
+    id?: Nullable<string>;
+    lastVerified?: Nullable<DateTime>;
+    provider?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+    scopes?: Nullable<SessionCreatescopesInput>;
+    signature?: Nullable<string>;
+    tokenState?: Nullable<string>;
 }
 
 export class SessionCreatescopesInput {
-  set: string[];
+    set: string[];
 }
 
 export class SessionListRelationFilter {
-  every?: Nullable<SessionWhereInput>;
-  none?: Nullable<SessionWhereInput>;
-  some?: Nullable<SessionWhereInput>;
+    every?: Nullable<SessionWhereInput>;
+    none?: Nullable<SessionWhereInput>;
+    some?: Nullable<SessionWhereInput>;
 }
 
 export class SessionOrderByRelationAggregateInput {
-  _count?: Nullable<SortOrder>;
+    _count?: Nullable<SortOrder>;
 }
 
 export class SessionOrderByRelevanceInput {
-  fields: SessionOrderByRelevanceFieldEnum[];
-  search: string;
-  sort: SortOrder;
+    fields: SessionOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
 }
 
 export class SessionOrderByWithRelationAndSearchRelevanceInput {
-  _relevance?: Nullable<SessionOrderByRelevanceInput>;
-  accessToken?: Nullable<SortOrder>;
-  alg?: Nullable<SortOrder>;
-  exp?: Nullable<SortOrder>;
-  iat?: Nullable<SortOrder>;
-  id?: Nullable<SortOrder>;
-  lastVerified?: Nullable<SortOrder>;
-  provider?: Nullable<SortOrder>;
-  refreshToken?: Nullable<SortOrder>;
-  scopes?: Nullable<SortOrder>;
-  signature?: Nullable<SortOrder>;
-  tokenState?: Nullable<SortOrder>;
-  user?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
-  userId?: Nullable<SortOrder>;
+    _relevance?: Nullable<SessionOrderByRelevanceInput>;
+    accessToken?: Nullable<SortOrder>;
+    alg?: Nullable<SortOrder>;
+    exp?: Nullable<SortOrder>;
+    iat?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    lastVerified?: Nullable<SortOrder>;
+    provider?: Nullable<SortOrder>;
+    refreshToken?: Nullable<SortOrder>;
+    scopes?: Nullable<SortOrder>;
+    signature?: Nullable<SortOrder>;
+    tokenState?: Nullable<SortOrder>;
+    user?: Nullable<UserOrderByWithRelationAndSearchRelevanceInput>;
+    userId?: Nullable<SortOrder>;
 }
 
 export class SessionScalarWhereInput {
-  AND?: Nullable<SessionScalarWhereInput[]>;
-  NOT?: Nullable<SessionScalarWhereInput[]>;
-  OR?: Nullable<SessionScalarWhereInput[]>;
-  accessToken?: Nullable<StringNullableFilter>;
-  alg?: Nullable<StringNullableFilter>;
-  exp?: Nullable<IntNullableFilter>;
-  iat?: Nullable<IntNullableFilter>;
-  id?: Nullable<StringFilter>;
-  lastVerified?: Nullable<DateTimeNullableFilter>;
-  provider?: Nullable<StringNullableFilter>;
-  refreshToken?: Nullable<StringNullableFilter>;
-  scopes?: Nullable<StringNullableListFilter>;
-  signature?: Nullable<StringNullableFilter>;
-  tokenState?: Nullable<StringNullableFilter>;
-  userId?: Nullable<StringFilter>;
+    AND?: Nullable<SessionScalarWhereInput[]>;
+    NOT?: Nullable<SessionScalarWhereInput[]>;
+    OR?: Nullable<SessionScalarWhereInput[]>;
+    accessToken?: Nullable<StringNullableFilter>;
+    alg?: Nullable<StringNullableFilter>;
+    exp?: Nullable<IntNullableFilter>;
+    iat?: Nullable<IntNullableFilter>;
+    id?: Nullable<StringFilter>;
+    lastVerified?: Nullable<DateTimeNullableFilter>;
+    provider?: Nullable<StringNullableFilter>;
+    refreshToken?: Nullable<StringNullableFilter>;
+    scopes?: Nullable<StringNullableListFilter>;
+    signature?: Nullable<StringNullableFilter>;
+    tokenState?: Nullable<StringNullableFilter>;
+    userId?: Nullable<StringFilter>;
 }
 
 export class SessionUpdateManyMutationInput {
-  accessToken?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  alg?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  exp?: Nullable<NullableIntFieldUpdateOperationsInput>;
-  iat?: Nullable<NullableIntFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  lastVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  provider?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  refreshToken?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  scopes?: Nullable<SessionUpdatescopesInput>;
-  signature?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  tokenState?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    accessToken?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    alg?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    exp?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    iat?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    lastVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    provider?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    refreshToken?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    scopes?: Nullable<SessionUpdatescopesInput>;
+    signature?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    tokenState?: Nullable<NullableStringFieldUpdateOperationsInput>;
 }
 
 export class SessionUpdateManyWithWhereWithoutUserInput {
-  data: SessionUpdateManyMutationInput;
-  where: SessionScalarWhereInput;
+    data: SessionUpdateManyMutationInput;
+    where: SessionScalarWhereInput;
 }
 
 export class SessionUpdateManyWithoutUserInput {
-  connect?: Nullable<SessionWhereUniqueInput[]>;
-  connectOrCreate?: Nullable<SessionCreateOrConnectWithoutUserInput[]>;
-  create?: Nullable<SessionCreateWithoutUserInput[]>;
-  createMany?: Nullable<SessionCreateManyUserInputEnvelope>;
-  delete?: Nullable<SessionWhereUniqueInput[]>;
-  deleteMany?: Nullable<SessionScalarWhereInput[]>;
-  disconnect?: Nullable<SessionWhereUniqueInput[]>;
-  set?: Nullable<SessionWhereUniqueInput[]>;
-  update?: Nullable<SessionUpdateWithWhereUniqueWithoutUserInput[]>;
-  updateMany?: Nullable<SessionUpdateManyWithWhereWithoutUserInput[]>;
-  upsert?: Nullable<SessionUpsertWithWhereUniqueWithoutUserInput[]>;
+    connect?: Nullable<SessionWhereUniqueInput[]>;
+    connectOrCreate?: Nullable<SessionCreateOrConnectWithoutUserInput[]>;
+    create?: Nullable<SessionCreateWithoutUserInput[]>;
+    createMany?: Nullable<SessionCreateManyUserInputEnvelope>;
+    delete?: Nullable<SessionWhereUniqueInput[]>;
+    deleteMany?: Nullable<SessionScalarWhereInput[]>;
+    disconnect?: Nullable<SessionWhereUniqueInput[]>;
+    set?: Nullable<SessionWhereUniqueInput[]>;
+    update?: Nullable<SessionUpdateWithWhereUniqueWithoutUserInput[]>;
+    updateMany?: Nullable<SessionUpdateManyWithWhereWithoutUserInput[]>;
+    upsert?: Nullable<SessionUpsertWithWhereUniqueWithoutUserInput[]>;
 }
 
 export class SessionUpdateWithWhereUniqueWithoutUserInput {
-  data: SessionUpdateWithoutUserInput;
-  where: SessionWhereUniqueInput;
+    data: SessionUpdateWithoutUserInput;
+    where: SessionWhereUniqueInput;
 }
 
 export class SessionUpdateWithoutUserInput {
-  accessToken?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  alg?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  exp?: Nullable<NullableIntFieldUpdateOperationsInput>;
-  iat?: Nullable<NullableIntFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  lastVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  provider?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  refreshToken?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  scopes?: Nullable<SessionUpdatescopesInput>;
-  signature?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  tokenState?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    accessToken?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    alg?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    exp?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    iat?: Nullable<NullableIntFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    lastVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    provider?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    refreshToken?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    scopes?: Nullable<SessionUpdatescopesInput>;
+    signature?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    tokenState?: Nullable<NullableStringFieldUpdateOperationsInput>;
 }
 
 export class SessionUpdatescopesInput {
-  push?: Nullable<string[]>;
-  set?: Nullable<string[]>;
+    push?: Nullable<string[]>;
+    set?: Nullable<string[]>;
 }
 
 export class SessionUpsertWithWhereUniqueWithoutUserInput {
-  create: SessionCreateWithoutUserInput;
-  update: SessionUpdateWithoutUserInput;
-  where: SessionWhereUniqueInput;
+    create: SessionCreateWithoutUserInput;
+    update: SessionUpdateWithoutUserInput;
+    where: SessionWhereUniqueInput;
 }
 
 export class SessionWhereInput {
-  AND?: Nullable<SessionWhereInput[]>;
-  NOT?: Nullable<SessionWhereInput[]>;
-  OR?: Nullable<SessionWhereInput[]>;
-  accessToken?: Nullable<StringNullableFilter>;
-  alg?: Nullable<StringNullableFilter>;
-  exp?: Nullable<IntNullableFilter>;
-  iat?: Nullable<IntNullableFilter>;
-  id?: Nullable<StringFilter>;
-  lastVerified?: Nullable<DateTimeNullableFilter>;
-  provider?: Nullable<StringNullableFilter>;
-  refreshToken?: Nullable<StringNullableFilter>;
-  scopes?: Nullable<StringNullableListFilter>;
-  signature?: Nullable<StringNullableFilter>;
-  tokenState?: Nullable<StringNullableFilter>;
-  user?: Nullable<UserRelationFilter>;
-  userId?: Nullable<StringFilter>;
+    AND?: Nullable<SessionWhereInput[]>;
+    NOT?: Nullable<SessionWhereInput[]>;
+    OR?: Nullable<SessionWhereInput[]>;
+    accessToken?: Nullable<StringNullableFilter>;
+    alg?: Nullable<StringNullableFilter>;
+    exp?: Nullable<IntNullableFilter>;
+    iat?: Nullable<IntNullableFilter>;
+    id?: Nullable<StringFilter>;
+    lastVerified?: Nullable<DateTimeNullableFilter>;
+    provider?: Nullable<StringNullableFilter>;
+    refreshToken?: Nullable<StringNullableFilter>;
+    scopes?: Nullable<StringNullableListFilter>;
+    signature?: Nullable<StringNullableFilter>;
+    tokenState?: Nullable<StringNullableFilter>;
+    user?: Nullable<UserRelationFilter>;
+    userId?: Nullable<StringFilter>;
 }
 
 export class SessionWhereUniqueInput {
-  id?: Nullable<string>;
-  userId?: Nullable<string>;
+    id?: Nullable<string>;
+    userId?: Nullable<string>;
 }
 
 export class SignupInput {
-  email: string;
-  firstName?: Nullable<string>;
-  image?: Nullable<string>;
-  lastName?: Nullable<string>;
-  password: string;
+    email: string;
+    firstName?: Nullable<string>;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    password: string;
 }
 
 export class StringFieldUpdateOperationsInput {
-  set?: Nullable<string>;
+    set?: Nullable<string>;
 }
 
 export class StringFilter {
-  contains?: Nullable<string>;
-  endsWith?: Nullable<string>;
-  equals?: Nullable<string>;
-  gt?: Nullable<string>;
-  gte?: Nullable<string>;
-  in?: Nullable<string[]>;
-  lt?: Nullable<string>;
-  lte?: Nullable<string>;
-  mode?: Nullable<QueryMode>;
-  not?: Nullable<NestedStringFilter>;
-  notIn?: Nullable<string[]>;
-  search?: Nullable<string>;
-  startsWith?: Nullable<string>;
+    contains?: Nullable<string>;
+    endsWith?: Nullable<string>;
+    equals?: Nullable<string>;
+    gt?: Nullable<string>;
+    gte?: Nullable<string>;
+    in?: Nullable<string[]>;
+    lt?: Nullable<string>;
+    lte?: Nullable<string>;
+    mode?: Nullable<QueryMode>;
+    not?: Nullable<NestedStringFilter>;
+    notIn?: Nullable<string[]>;
+    search?: Nullable<string>;
+    startsWith?: Nullable<string>;
 }
 
 export class StringNullableFilter {
-  contains?: Nullable<string>;
-  endsWith?: Nullable<string>;
-  equals?: Nullable<string>;
-  gt?: Nullable<string>;
-  gte?: Nullable<string>;
-  in?: Nullable<string[]>;
-  lt?: Nullable<string>;
-  lte?: Nullable<string>;
-  mode?: Nullable<QueryMode>;
-  not?: Nullable<NestedStringNullableFilter>;
-  notIn?: Nullable<string[]>;
-  search?: Nullable<string>;
-  startsWith?: Nullable<string>;
+    contains?: Nullable<string>;
+    endsWith?: Nullable<string>;
+    equals?: Nullable<string>;
+    gt?: Nullable<string>;
+    gte?: Nullable<string>;
+    in?: Nullable<string[]>;
+    lt?: Nullable<string>;
+    lte?: Nullable<string>;
+    mode?: Nullable<QueryMode>;
+    not?: Nullable<NestedStringNullableFilter>;
+    notIn?: Nullable<string[]>;
+    search?: Nullable<string>;
+    startsWith?: Nullable<string>;
 }
 
 export class StringNullableListFilter {
-  equals?: Nullable<string[]>;
-  has?: Nullable<string>;
-  hasEvery?: Nullable<string[]>;
-  hasSome?: Nullable<string[]>;
-  isEmpty?: Nullable<boolean>;
+    equals?: Nullable<string[]>;
+    has?: Nullable<string>;
+    hasEvery?: Nullable<string[]>;
+    hasSome?: Nullable<string[]>;
+    isEmpty?: Nullable<boolean>;
 }
 
 export class UserCreateMutationInput {
-  accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
-  categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
-  comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
-  connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
-  createdAt?: Nullable<DateTime>;
-  email: string;
-  emailVerified?: Nullable<DateTime>;
-  entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
-  firstName?: Nullable<string>;
-  id?: Nullable<string>;
-  image?: Nullable<string>;
-  lastName?: Nullable<string>;
-  mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
-  password?: Nullable<string>;
-  profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
-  role?: Nullable<Role>;
-  sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
-  status?: Nullable<UserStatus>;
-  updatedAt?: Nullable<DateTime>;
+    accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
+    categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
+    comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
+    connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTime>;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
+    password?: Nullable<string>;
+    profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
+    role?: Nullable<Role>;
+    sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
+    status?: Nullable<UserStatus>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class UserCreateNestedOneWithoutCategoriesInput {
-  connect?: Nullable<UserWhereUniqueInput>;
-  connectOrCreate?: Nullable<UserCreateOrConnectWithoutCategoriesInput>;
-  create?: Nullable<UserCreateWithoutCategoriesInput>;
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutCategoriesInput>;
+    create?: Nullable<UserCreateWithoutCategoriesInput>;
 }
 
 export class UserCreateNestedOneWithoutCommentsInput {
-  connect?: Nullable<UserWhereUniqueInput>;
-  connectOrCreate?: Nullable<UserCreateOrConnectWithoutCommentsInput>;
-  create?: Nullable<UserCreateWithoutCommentsInput>;
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutCommentsInput>;
+    create?: Nullable<UserCreateWithoutCommentsInput>;
 }
 
 export class UserCreateNestedOneWithoutEntriesInput {
-  connect?: Nullable<UserWhereUniqueInput>;
-  connectOrCreate?: Nullable<UserCreateOrConnectWithoutEntriesInput>;
-  create?: Nullable<UserCreateWithoutEntriesInput>;
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutEntriesInput>;
+    create?: Nullable<UserCreateWithoutEntriesInput>;
 }
 
 export class UserCreateNestedOneWithoutProfileInput {
-  connect?: Nullable<UserWhereUniqueInput>;
-  connectOrCreate?: Nullable<UserCreateOrConnectWithoutProfileInput>;
-  create?: Nullable<UserCreateWithoutProfileInput>;
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutProfileInput>;
+    create?: Nullable<UserCreateWithoutProfileInput>;
 }
 
 export class UserCreateOrConnectWithoutCategoriesInput {
-  create: UserCreateWithoutCategoriesInput;
-  where: UserWhereUniqueInput;
+    create: UserCreateWithoutCategoriesInput;
+    where: UserWhereUniqueInput;
 }
 
 export class UserCreateOrConnectWithoutCommentsInput {
-  create: UserCreateWithoutCommentsInput;
-  where: UserWhereUniqueInput;
+    create: UserCreateWithoutCommentsInput;
+    where: UserWhereUniqueInput;
 }
 
 export class UserCreateOrConnectWithoutEntriesInput {
-  create: UserCreateWithoutEntriesInput;
-  where: UserWhereUniqueInput;
+    create: UserCreateWithoutEntriesInput;
+    where: UserWhereUniqueInput;
 }
 
 export class UserCreateOrConnectWithoutProfileInput {
-  create: UserCreateWithoutProfileInput;
-  where: UserWhereUniqueInput;
+    create: UserCreateWithoutProfileInput;
+    where: UserWhereUniqueInput;
 }
 
 export class UserCreateWithoutCategoriesInput {
-  accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
-  comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
-  connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
-  createdAt?: Nullable<DateTime>;
-  email: string;
-  emailVerified?: Nullable<DateTime>;
-  entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
-  firstName?: Nullable<string>;
-  id?: Nullable<string>;
-  image?: Nullable<string>;
-  lastName?: Nullable<string>;
-  mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
-  password?: Nullable<string>;
-  profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
-  role?: Nullable<Role>;
-  sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
-  status?: Nullable<UserStatus>;
-  updatedAt?: Nullable<DateTime>;
+    accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
+    comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
+    connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTime>;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
+    password?: Nullable<string>;
+    profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
+    role?: Nullable<Role>;
+    sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
+    status?: Nullable<UserStatus>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class UserCreateWithoutCommentsInput {
-  accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
-  categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
-  connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
-  createdAt?: Nullable<DateTime>;
-  email: string;
-  emailVerified?: Nullable<DateTime>;
-  entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
-  firstName?: Nullable<string>;
-  id?: Nullable<string>;
-  image?: Nullable<string>;
-  lastName?: Nullable<string>;
-  mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
-  password?: Nullable<string>;
-  profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
-  role?: Nullable<Role>;
-  sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
-  status?: Nullable<UserStatus>;
-  updatedAt?: Nullable<DateTime>;
+    accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
+    categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
+    connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTime>;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
+    password?: Nullable<string>;
+    profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
+    role?: Nullable<Role>;
+    sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
+    status?: Nullable<UserStatus>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class UserCreateWithoutEntriesInput {
-  accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
-  categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
-  comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
-  connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
-  createdAt?: Nullable<DateTime>;
-  email: string;
-  emailVerified?: Nullable<DateTime>;
-  firstName?: Nullable<string>;
-  id?: Nullable<string>;
-  image?: Nullable<string>;
-  lastName?: Nullable<string>;
-  mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
-  password?: Nullable<string>;
-  profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
-  role?: Nullable<Role>;
-  sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
-  status?: Nullable<UserStatus>;
-  updatedAt?: Nullable<DateTime>;
+    accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
+    categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
+    comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
+    connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTime>;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
+    password?: Nullable<string>;
+    profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
+    role?: Nullable<Role>;
+    sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
+    status?: Nullable<UserStatus>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class UserCreateWithoutProfileInput {
-  accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
-  categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
-  comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
-  connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
-  createdAt?: Nullable<DateTime>;
-  email: string;
-  emailVerified?: Nullable<DateTime>;
-  entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
-  firstName?: Nullable<string>;
-  id?: Nullable<string>;
-  image?: Nullable<string>;
-  lastName?: Nullable<string>;
-  mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
-  password?: Nullable<string>;
-  role?: Nullable<Role>;
-  sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
-  status?: Nullable<UserStatus>;
-  updatedAt?: Nullable<DateTime>;
+    accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
+    categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
+    comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
+    connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTime>;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
+    firstName?: Nullable<string>;
+    id?: Nullable<string>;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
+    password?: Nullable<string>;
+    role?: Nullable<Role>;
+    sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
+    status?: Nullable<UserStatus>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class UserOrderByRelevanceInput {
-  fields: UserOrderByRelevanceFieldEnum[];
-  search: string;
-  sort: SortOrder;
+    fields: UserOrderByRelevanceFieldEnum[];
+    search: string;
+    sort: SortOrder;
 }
 
 export class UserOrderByWithRelationAndSearchRelevanceInput {
-  _relevance?: Nullable<UserOrderByRelevanceInput>;
-  accounts?: Nullable<AccountOrderByRelationAggregateInput>;
-  categories?: Nullable<CategoryOrderByRelationAggregateInput>;
-  comments?: Nullable<CommentOrderByRelationAggregateInput>;
-  connections?: Nullable<ConnectionOrderByRelationAggregateInput>;
-  createdAt?: Nullable<SortOrder>;
-  email?: Nullable<SortOrder>;
-  emailVerified?: Nullable<SortOrder>;
-  entries?: Nullable<EntryOrderByRelationAggregateInput>;
-  firstName?: Nullable<SortOrder>;
-  id?: Nullable<SortOrder>;
-  image?: Nullable<SortOrder>;
-  lastName?: Nullable<SortOrder>;
-  mediaItems?: Nullable<MediaItemOrderByRelationAggregateInput>;
-  password?: Nullable<SortOrder>;
-  profile?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput>;
-  role?: Nullable<SortOrder>;
-  sessions?: Nullable<SessionOrderByRelationAggregateInput>;
-  status?: Nullable<SortOrder>;
-  updatedAt?: Nullable<SortOrder>;
+    _relevance?: Nullable<UserOrderByRelevanceInput>;
+    accounts?: Nullable<AccountOrderByRelationAggregateInput>;
+    categories?: Nullable<CategoryOrderByRelationAggregateInput>;
+    comments?: Nullable<CommentOrderByRelationAggregateInput>;
+    connections?: Nullable<ConnectionOrderByRelationAggregateInput>;
+    createdAt?: Nullable<SortOrder>;
+    email?: Nullable<SortOrder>;
+    emailVerified?: Nullable<SortOrder>;
+    entries?: Nullable<EntryOrderByRelationAggregateInput>;
+    firstName?: Nullable<SortOrder>;
+    id?: Nullable<SortOrder>;
+    image?: Nullable<SortOrder>;
+    lastName?: Nullable<SortOrder>;
+    mediaItems?: Nullable<MediaItemOrderByRelationAggregateInput>;
+    password?: Nullable<SortOrder>;
+    profile?: Nullable<ProfileOrderByWithRelationAndSearchRelevanceInput>;
+    role?: Nullable<SortOrder>;
+    sessions?: Nullable<SessionOrderByRelationAggregateInput>;
+    status?: Nullable<SortOrder>;
+    updatedAt?: Nullable<SortOrder>;
 }
 
 export class UserRelationFilter {
-  is?: Nullable<UserWhereInput>;
-  isNot?: Nullable<UserWhereInput>;
+    is?: Nullable<UserWhereInput>;
+    isNot?: Nullable<UserWhereInput>;
 }
 
 export class UserUpdateOneRequiredWithoutCategoriesInput {
-  connect?: Nullable<UserWhereUniqueInput>;
-  connectOrCreate?: Nullable<UserCreateOrConnectWithoutCategoriesInput>;
-  create?: Nullable<UserCreateWithoutCategoriesInput>;
-  update?: Nullable<UserUpdateWithoutCategoriesInput>;
-  upsert?: Nullable<UserUpsertWithoutCategoriesInput>;
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutCategoriesInput>;
+    create?: Nullable<UserCreateWithoutCategoriesInput>;
+    update?: Nullable<UserUpdateWithoutCategoriesInput>;
+    upsert?: Nullable<UserUpsertWithoutCategoriesInput>;
 }
 
 export class UserUpdateOneRequiredWithoutCommentsInput {
-  connect?: Nullable<UserWhereUniqueInput>;
-  connectOrCreate?: Nullable<UserCreateOrConnectWithoutCommentsInput>;
-  create?: Nullable<UserCreateWithoutCommentsInput>;
-  update?: Nullable<UserUpdateWithoutCommentsInput>;
-  upsert?: Nullable<UserUpsertWithoutCommentsInput>;
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutCommentsInput>;
+    create?: Nullable<UserCreateWithoutCommentsInput>;
+    update?: Nullable<UserUpdateWithoutCommentsInput>;
+    upsert?: Nullable<UserUpsertWithoutCommentsInput>;
 }
 
 export class UserUpdateOneRequiredWithoutEntriesInput {
-  connect?: Nullable<UserWhereUniqueInput>;
-  connectOrCreate?: Nullable<UserCreateOrConnectWithoutEntriesInput>;
-  create?: Nullable<UserCreateWithoutEntriesInput>;
-  update?: Nullable<UserUpdateWithoutEntriesInput>;
-  upsert?: Nullable<UserUpsertWithoutEntriesInput>;
+    connect?: Nullable<UserWhereUniqueInput>;
+    connectOrCreate?: Nullable<UserCreateOrConnectWithoutEntriesInput>;
+    create?: Nullable<UserCreateWithoutEntriesInput>;
+    update?: Nullable<UserUpdateWithoutEntriesInput>;
+    upsert?: Nullable<UserUpsertWithoutEntriesInput>;
 }
 
 export class UserUpdateWithoutCategoriesInput {
-  accounts?: Nullable<AccountUpdateManyWithoutUserInput>;
-  comments?: Nullable<CommentUpdateManyWithoutAuthorInput>;
-  connections?: Nullable<ConnectionUpdateManyWithoutOwnerInput>;
-  createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  email?: Nullable<StringFieldUpdateOperationsInput>;
-  emailVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  entries?: Nullable<EntryUpdateManyWithoutAuthorInput>;
-  firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  image?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  mediaItems?: Nullable<MediaItemUpdateManyWithoutUserInput>;
-  password?: Nullable<StringFieldUpdateOperationsInput>;
-  profile?: Nullable<ProfileUpdateOneWithoutUserInput>;
-  role?: Nullable<NullableEnumRoleFieldUpdateOperationsInput>;
-  sessions?: Nullable<SessionUpdateManyWithoutUserInput>;
-  status?: Nullable<NullableEnumUserStatusFieldUpdateOperationsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    accounts?: Nullable<AccountUpdateManyWithoutUserInput>;
+    comments?: Nullable<CommentUpdateManyWithoutAuthorInput>;
+    connections?: Nullable<ConnectionUpdateManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    email?: Nullable<StringFieldUpdateOperationsInput>;
+    emailVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    entries?: Nullable<EntryUpdateManyWithoutAuthorInput>;
+    firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    image?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    mediaItems?: Nullable<MediaItemUpdateManyWithoutUserInput>;
+    password?: Nullable<StringFieldUpdateOperationsInput>;
+    profile?: Nullable<ProfileUpdateOneWithoutUserInput>;
+    role?: Nullable<NullableEnumRoleFieldUpdateOperationsInput>;
+    sessions?: Nullable<SessionUpdateManyWithoutUserInput>;
+    status?: Nullable<NullableEnumUserStatusFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class UserUpdateWithoutCommentsInput {
-  accounts?: Nullable<AccountUpdateManyWithoutUserInput>;
-  categories?: Nullable<CategoryUpdateManyWithoutCreatorInput>;
-  connections?: Nullable<ConnectionUpdateManyWithoutOwnerInput>;
-  createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  email?: Nullable<StringFieldUpdateOperationsInput>;
-  emailVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  entries?: Nullable<EntryUpdateManyWithoutAuthorInput>;
-  firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  image?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  mediaItems?: Nullable<MediaItemUpdateManyWithoutUserInput>;
-  password?: Nullable<StringFieldUpdateOperationsInput>;
-  profile?: Nullable<ProfileUpdateOneWithoutUserInput>;
-  role?: Nullable<NullableEnumRoleFieldUpdateOperationsInput>;
-  sessions?: Nullable<SessionUpdateManyWithoutUserInput>;
-  status?: Nullable<NullableEnumUserStatusFieldUpdateOperationsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    accounts?: Nullable<AccountUpdateManyWithoutUserInput>;
+    categories?: Nullable<CategoryUpdateManyWithoutCreatorInput>;
+    connections?: Nullable<ConnectionUpdateManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    email?: Nullable<StringFieldUpdateOperationsInput>;
+    emailVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    entries?: Nullable<EntryUpdateManyWithoutAuthorInput>;
+    firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    image?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    mediaItems?: Nullable<MediaItemUpdateManyWithoutUserInput>;
+    password?: Nullable<StringFieldUpdateOperationsInput>;
+    profile?: Nullable<ProfileUpdateOneWithoutUserInput>;
+    role?: Nullable<NullableEnumRoleFieldUpdateOperationsInput>;
+    sessions?: Nullable<SessionUpdateManyWithoutUserInput>;
+    status?: Nullable<NullableEnumUserStatusFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class UserUpdateWithoutEntriesInput {
-  accounts?: Nullable<AccountUpdateManyWithoutUserInput>;
-  categories?: Nullable<CategoryUpdateManyWithoutCreatorInput>;
-  comments?: Nullable<CommentUpdateManyWithoutAuthorInput>;
-  connections?: Nullable<ConnectionUpdateManyWithoutOwnerInput>;
-  createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
-  email?: Nullable<StringFieldUpdateOperationsInput>;
-  emailVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
-  firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  id?: Nullable<StringFieldUpdateOperationsInput>;
-  image?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
-  mediaItems?: Nullable<MediaItemUpdateManyWithoutUserInput>;
-  password?: Nullable<StringFieldUpdateOperationsInput>;
-  profile?: Nullable<ProfileUpdateOneWithoutUserInput>;
-  role?: Nullable<NullableEnumRoleFieldUpdateOperationsInput>;
-  sessions?: Nullable<SessionUpdateManyWithoutUserInput>;
-  status?: Nullable<NullableEnumUserStatusFieldUpdateOperationsInput>;
-  updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    accounts?: Nullable<AccountUpdateManyWithoutUserInput>;
+    categories?: Nullable<CategoryUpdateManyWithoutCreatorInput>;
+    comments?: Nullable<CommentUpdateManyWithoutAuthorInput>;
+    connections?: Nullable<ConnectionUpdateManyWithoutOwnerInput>;
+    createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
+    email?: Nullable<StringFieldUpdateOperationsInput>;
+    emailVerified?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
+    firstName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    id?: Nullable<StringFieldUpdateOperationsInput>;
+    image?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    lastName?: Nullable<NullableStringFieldUpdateOperationsInput>;
+    mediaItems?: Nullable<MediaItemUpdateManyWithoutUserInput>;
+    password?: Nullable<StringFieldUpdateOperationsInput>;
+    profile?: Nullable<ProfileUpdateOneWithoutUserInput>;
+    role?: Nullable<NullableEnumRoleFieldUpdateOperationsInput>;
+    sessions?: Nullable<SessionUpdateManyWithoutUserInput>;
+    status?: Nullable<NullableEnumUserStatusFieldUpdateOperationsInput>;
+    updatedAt?: Nullable<NullableDateTimeFieldUpdateOperationsInput>;
 }
 
 export class UserUpsertWithoutCategoriesInput {
-  create: UserCreateWithoutCategoriesInput;
-  update: UserUpdateWithoutCategoriesInput;
+    create: UserCreateWithoutCategoriesInput;
+    update: UserUpdateWithoutCategoriesInput;
 }
 
 export class UserUpsertWithoutCommentsInput {
-  create: UserCreateWithoutCommentsInput;
-  update: UserUpdateWithoutCommentsInput;
+    create: UserCreateWithoutCommentsInput;
+    update: UserUpdateWithoutCommentsInput;
 }
 
 export class UserUpsertWithoutEntriesInput {
-  create: UserCreateWithoutEntriesInput;
-  update: UserUpdateWithoutEntriesInput;
+    create: UserCreateWithoutEntriesInput;
+    update: UserUpdateWithoutEntriesInput;
 }
 
 export class UserWhereInput {
-  AND?: Nullable<UserWhereInput[]>;
-  NOT?: Nullable<UserWhereInput[]>;
-  OR?: Nullable<UserWhereInput[]>;
-  accounts?: Nullable<AccountListRelationFilter>;
-  categories?: Nullable<CategoryListRelationFilter>;
-  comments?: Nullable<CommentListRelationFilter>;
-  connections?: Nullable<ConnectionListRelationFilter>;
-  createdAt?: Nullable<DateTimeFilter>;
-  email?: Nullable<StringFilter>;
-  emailVerified?: Nullable<DateTimeNullableFilter>;
-  entries?: Nullable<EntryListRelationFilter>;
-  firstName?: Nullable<StringNullableFilter>;
-  id?: Nullable<StringFilter>;
-  image?: Nullable<StringNullableFilter>;
-  lastName?: Nullable<StringNullableFilter>;
-  mediaItems?: Nullable<MediaItemListRelationFilter>;
-  password?: Nullable<StringFilter>;
-  profile?: Nullable<ProfileRelationFilter>;
-  role?: Nullable<EnumRoleNullableFilter>;
-  sessions?: Nullable<SessionListRelationFilter>;
-  status?: Nullable<EnumUserStatusNullableFilter>;
-  updatedAt?: Nullable<DateTimeNullableFilter>;
+    AND?: Nullable<UserWhereInput[]>;
+    NOT?: Nullable<UserWhereInput[]>;
+    OR?: Nullable<UserWhereInput[]>;
+    accounts?: Nullable<AccountListRelationFilter>;
+    categories?: Nullable<CategoryListRelationFilter>;
+    comments?: Nullable<CommentListRelationFilter>;
+    connections?: Nullable<ConnectionListRelationFilter>;
+    createdAt?: Nullable<DateTimeFilter>;
+    email?: Nullable<StringFilter>;
+    emailVerified?: Nullable<DateTimeNullableFilter>;
+    entries?: Nullable<EntryListRelationFilter>;
+    firstName?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    image?: Nullable<StringNullableFilter>;
+    lastName?: Nullable<StringNullableFilter>;
+    mediaItems?: Nullable<MediaItemListRelationFilter>;
+    password?: Nullable<StringFilter>;
+    profile?: Nullable<ProfileRelationFilter>;
+    role?: Nullable<EnumRoleNullableFilter>;
+    sessions?: Nullable<SessionListRelationFilter>;
+    status?: Nullable<EnumUserStatusNullableFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
 }
 
 export class UserWhereUniqueInput {
-  email?: Nullable<string>;
-  id?: Nullable<string>;
+    email?: Nullable<string>;
+    id?: Nullable<string>;
 }
 
 export class ViewerEntriesWhereInput {
-  AND?: Nullable<ViewerEntriesWhereInput[]>;
-  NOT?: Nullable<ViewerEntriesWhereInput[]>;
-  OR?: Nullable<ViewerEntriesWhereInput[]>;
-  categories?: Nullable<CategoryListRelationFilter>;
-  categoryId?: Nullable<StringNullableFilter>;
-  comments?: Nullable<CommentListRelationFilter>;
-  content?: Nullable<StringNullableFilter>;
-  createdAt?: Nullable<DateTimeFilter>;
-  featuredImage?: Nullable<StringNullableFilter>;
-  id?: Nullable<StringFilter>;
-  published?: Nullable<BoolFilter>;
-  title?: Nullable<StringFilter>;
-  updatedAt?: Nullable<DateTimeNullableFilter>;
+    AND?: Nullable<ViewerEntriesWhereInput[]>;
+    NOT?: Nullable<ViewerEntriesWhereInput[]>;
+    OR?: Nullable<ViewerEntriesWhereInput[]>;
+    categories?: Nullable<CategoryListRelationFilter>;
+    categoryId?: Nullable<StringNullableFilter>;
+    comments?: Nullable<CommentListRelationFilter>;
+    content?: Nullable<StringNullableFilter>;
+    createdAt?: Nullable<DateTimeFilter>;
+    featuredImage?: Nullable<StringNullableFilter>;
+    id?: Nullable<StringFilter>;
+    published?: Nullable<BoolFilter>;
+    title?: Nullable<StringFilter>;
+    updatedAt?: Nullable<DateTimeNullableFilter>;
 }
 
 export interface Node {
-  id: string;
+    id: string;
 }
 
 export class Account implements Node {
-  __typename?: "Account";
-  access_token?: Nullable<string>;
-  expires_at?: Nullable<number>;
-  id: string;
-  id_token?: Nullable<string>;
-  oauth_token?: Nullable<string>;
-  oauth_token_secret?: Nullable<string>;
-  provider: string;
-  providerAccountId: string;
-  refresh_secret?: Nullable<string>;
-  refresh_token?: Nullable<string>;
-  scope?: Nullable<string>;
-  session_state?: Nullable<string>;
-  token_type?: Nullable<string>;
-  type: string;
-  user: User;
-  userId: string;
+    __typename?: 'Account';
+    access_token?: Nullable<string>;
+    expires_at?: Nullable<number>;
+    id: string;
+    id_token?: Nullable<string>;
+    oauth_token?: Nullable<string>;
+    oauth_token_secret?: Nullable<string>;
+    provider: string;
+    providerAccountId: string;
+    refresh_secret?: Nullable<string>;
+    refresh_token?: Nullable<string>;
+    scope?: Nullable<string>;
+    session_state?: Nullable<string>;
+    token_type?: Nullable<string>;
+    type: string;
+    user: User;
+    userId: string;
 }
 
 export class Auth {
-  __typename?: "Auth";
-  accessToken?: Nullable<string>;
-  refreshToken?: Nullable<string>;
-  session?: Nullable<Session>;
-  user: User;
+    __typename?: 'Auth';
+    accessToken?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+    session?: Nullable<Session>;
+    user: User;
 }
 
 export class AuthDetailed {
-  __typename?: "AuthDetailed";
-  auth?: Nullable<Auth>;
-  jwt?: Nullable<JwtDecoded>;
+    __typename?: 'AuthDetailed';
+    auth?: Nullable<Auth>;
+    jwt?: Nullable<JwtDecoded>;
 }
 
 export class AuthSansSession {
-  __typename?: "AuthSansSession";
-  accessToken?: Nullable<string>;
-  refreshToken?: Nullable<string>;
-  user?: Nullable<User>;
+    __typename?: 'AuthSansSession';
+    accessToken?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+    user?: Nullable<User>;
 }
 
 export class BaseTypeNodes {
-  __typename?: "BaseTypeNodes";
-  nodes: TypesUnion[];
-  pageInfo?: Nullable<PageInfo>;
-  totalCount: number;
+    __typename?: 'BaseTypeNodes';
+    nodes: TypesUnion[];
+    pageInfo?: Nullable<PageInfo>;
+    totalCount: number;
 }
 
 export class BaseTypesEdge {
-  __typename?: "BaseTypesEdge";
-  cursor: string;
-  node: TypesUnion;
+    __typename?: 'BaseTypesEdge';
+    cursor: string;
+    node: TypesUnion;
 }
 
 export class Category implements Node {
-  __typename?: "Category";
-  _count: CategoryCount;
-  createdAt?: Nullable<DateTime>;
-  creator: User;
-  creatorId: string;
-  entries?: Nullable<Entry[]>;
-  entryId?: Nullable<string>;
-  id: string;
-  name: string;
-  updatedAt?: Nullable<DateTime>;
+    __typename?: 'Category';
+    _count: CategoryCount;
+    createdAt?: Nullable<DateTime>;
+    creator: User;
+    creatorId: string;
+    entries?: Nullable<Entry[]>;
+    entryId?: Nullable<string>;
+    id: string;
+    name: string;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class CategoryConnection {
-  __typename?: "CategoryConnection";
-  edges: CategoryEdge[];
-  pageInfo: PageInfo;
-  totalCount: number;
+    __typename?: 'CategoryConnection';
+    edges: CategoryEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class CategoryCount {
-  __typename?: "CategoryCount";
-  entries: number;
+    __typename?: 'CategoryCount';
+    entries: number;
 }
 
 export class CategoryEdge {
-  __typename?: "CategoryEdge";
-  cursor: string;
-  node: Category;
+    __typename?: 'CategoryEdge';
+    cursor: string;
+    node: Category;
 }
 
 export class Comment implements Node {
-  __typename?: "Comment";
-  author: User;
-  authorId: string;
-  body?: Nullable<string>;
-  createdAt: DateTime;
-  entry: Entry;
-  entryId: string;
-  id: string;
-  position?: Nullable<string>;
-  reactions?: Nullable<CommentReactions[]>;
-  updatedAt?: Nullable<DateTime>;
+    __typename?: 'Comment';
+    author: User;
+    authorId: string;
+    body?: Nullable<string>;
+    createdAt: DateTime;
+    entry: Entry;
+    entryId: string;
+    id: string;
+    position?: Nullable<string>;
+    reactions?: Nullable<CommentReactions[]>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class CommentConnection {
-  __typename?: "CommentConnection";
-  edges: CommentEdge[];
-  pageInfo: PageInfo;
-  totalCount: number;
+    __typename?: 'CommentConnection';
+    edges: CommentEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class CommentEdge {
-  __typename?: "CommentEdge";
-  cursor: string;
-  node: Comment;
+    __typename?: 'CommentEdge';
+    cursor: string;
+    node: Comment;
 }
 
 export class Connection implements Node {
-  __typename?: "Connection";
-  email: string;
-  firstName?: Nullable<string>;
-  id: string;
-  ip?: Nullable<string>;
-  lastModified?: Nullable<DateTime>;
-  lastName?: Nullable<string>;
-  owner: User;
-  ownerId: string;
-  phoneNumber?: Nullable<PhoneNumber>;
+    __typename?: 'Connection';
+    email: string;
+    firstName?: Nullable<string>;
+    id: string;
+    ip?: Nullable<string>;
+    lastModified?: Nullable<DateTime>;
+    lastName?: Nullable<string>;
+    owner: User;
+    ownerId: string;
+    phoneNumber?: Nullable<PhoneNumber>;
 }
 
 export class ConnectionConnection {
-  __typename?: "ConnectionConnection";
-  edges: ConnectionEdge[];
-  pageInfo: PageInfo;
-  totalCount: number;
+    __typename?: 'ConnectionConnection';
+    edges: ConnectionEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class ConnectionEdge {
-  __typename?: "ConnectionEdge";
-  cursor: string;
-  node: Connection;
+    __typename?: 'ConnectionEdge';
+    cursor: string;
+    node: Connection;
 }
 
 export class ContentNodes {
-  __typename?: "ContentNodes";
-  contentNodes: BaseTypeNodes;
+    __typename?: 'ContentNodes';
+    contentNodes: BaseTypeNodes;
 }
 
 export class Entry implements Node {
-  __typename?: "Entry";
-  _count: EntryCount;
-  author: User;
-  authorId: string;
-  categories?: Nullable<Category[]>;
-  categoryId?: Nullable<string>;
-  comments?: Nullable<Comment[]>;
-  content: string;
-  createdAt: DateTime;
-  featuredImage?: Nullable<string>;
-  id: string;
-  published?: Nullable<boolean>;
-  title?: Nullable<string>;
-  updatedAt?: Nullable<DateTime>;
+    __typename?: 'Entry';
+    _count: EntryCount;
+    author: User;
+    authorId: string;
+    categories?: Nullable<Category[]>;
+    categoryId?: Nullable<string>;
+    comments?: Nullable<Comment[]>;
+    content: string;
+    createdAt: DateTime;
+    featuredImage?: Nullable<string>;
+    id: string;
+    published?: Nullable<boolean>;
+    title?: Nullable<string>;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class EntryConnection {
-  __typename?: "EntryConnection";
-  edges: EntryEdge[];
-  pageInfo: PageInfo;
-  totalCount: number;
+    __typename?: 'EntryConnection';
+    edges: EntryEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class EntryCount {
-  __typename?: "EntryCount";
-  categories: number;
-  comments: number;
+    __typename?: 'EntryCount';
+    categories: number;
+    comments: number;
 }
 
 export class EntryEdge {
-  __typename?: "EntryEdge";
-  cursor: string;
-  node: Entry;
+    __typename?: 'EntryEdge';
+    cursor: string;
+    node: Entry;
 }
 
 export class JwtDecoded {
-  __typename?: "JwtDecoded";
-  header: JwtHeaders;
-  payload: JwtPayload;
-  signature: string;
+    __typename?: 'JwtDecoded';
+    header: JwtHeaders;
+    payload: JwtPayload;
+    signature: string;
 }
 
 export class JwtHeaders {
-  __typename?: "JwtHeaders";
-  alg: AlgorithmType;
-  typ: string;
+    __typename?: 'JwtHeaders';
+    alg: AlgorithmType;
+    typ: string;
 }
 
 export class JwtPayload {
-  __typename?: "JwtPayload";
-  exp?: Nullable<BigInt>;
-  iat?: Nullable<BigInt>;
-  userId?: Nullable<string>;
+    __typename?: 'JwtPayload';
+    exp?: Nullable<BigInt>;
+    iat?: Nullable<BigInt>;
+    userId?: Nullable<string>;
 }
 
 export class MediaItem implements Node {
-  __typename?: "MediaItem";
-  fileLastModified?: Nullable<DateTime>;
-  height?: Nullable<number>;
-  id: string;
-  name?: Nullable<string>;
-  quality?: Nullable<number>;
-  size?: Nullable<string>;
-  src?: Nullable<string>;
-  srcSet?: Nullable<string>;
-  type?: Nullable<MimeTypes>;
-  updatedAt?: Nullable<DateTime>;
-  uploadedAt: DateTime;
-  user: User;
-  userId: string;
-  width?: Nullable<number>;
+    __typename?: 'MediaItem';
+    fileLastModified?: Nullable<DateTime>;
+    height?: Nullable<number>;
+    id: string;
+    name?: Nullable<string>;
+    quality?: Nullable<number>;
+    size?: Nullable<string>;
+    src?: Nullable<string>;
+    srcSet?: Nullable<string>;
+    type?: Nullable<MimeTypes>;
+    updatedAt?: Nullable<DateTime>;
+    uploadedAt: DateTime;
+    user: User;
+    userId: string;
+    width?: Nullable<number>;
 }
 
 export class MediaItemConnection {
-  __typename?: "MediaItemConnection";
-  edges: MediaItemEdge[];
-  pageInfo: PageInfo;
-  totalCount: number;
+    __typename?: 'MediaItemConnection';
+    edges: MediaItemEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class MediaItemEdge {
-  __typename?: "MediaItemEdge";
-  cursor: string;
-  node: MediaItem;
+    __typename?: 'MediaItemEdge';
+    cursor: string;
+    node: MediaItem;
 }
 
 export abstract class IMutation {
-  __typename?: "IMutation";
+    __typename?: 'IMutation';
 
-  abstract changePassword(
-    changePasswordInput: ChangePasswordInput
-  ): User | Promise<User>;
+    abstract changePassword(changePasswordInput: ChangePasswordInput): User | Promise<User>;
 
-  abstract createEntry(
-    entryCreateInput: EntryUncheckedCreateInputSansAuthorId
-  ): Entry | Promise<Entry>;
+    abstract createEntry(entryCreateInput: EntryUncheckedCreateInputSansAuthorId): Entry | Promise<Entry>;
 
-  abstract createEntryWithAxios(
-    createNew: EntryUncheckedCreateInputSansAuthorId
-  ): Entry | Promise<Entry>;
+    abstract createEntryWithAxios(createNew: EntryUncheckedCreateInputSansAuthorId): Entry | Promise<Entry>;
 
-  abstract createNewEntry(
-    createNewEntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput
-  ): Entry | Promise<Entry>;
+    abstract createNewEntry(createNewEntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput): Entry | Promise<Entry>;
 
-  abstract createProfile(
-    data: ProfileCreateInput,
-    userId: string
-  ): Profile | Promise<Profile>;
+    abstract createProfile(data: ProfileCreateInput, userId: string): Profile | Promise<Profile>;
 
-  abstract login(data: LoginInput): Token | Promise<Token>;
+    abstract login(data: LoginInput): Token | Promise<Token>;
 
-  abstract nuevoEntry(nuevoEntry: EntryCreateInput): Entry | Promise<Entry>;
+    abstract nuevoEntry(nuevoEntry: EntryCreateInput): Entry | Promise<Entry>;
 
-  abstract register(
-    dataRegister: SignupInput
-  ): AuthSansSession | Promise<AuthSansSession>;
+    abstract register(dataRegister: SignupInput): AuthSansSession | Promise<AuthSansSession>;
 
-  abstract registerNewUser(
-    userCreateInput: UserCreateMutationInput
-  ): AuthDetailed | Promise<AuthDetailed>;
+    abstract registerNewUser(userCreateInput: UserCreateMutationInput): AuthDetailed | Promise<AuthDetailed>;
 
-  abstract signin(
-    userloginInput: LoginInput
-  ): AuthDetailed | Promise<AuthDetailed>;
+    abstract signin(userloginInput: LoginInput): AuthDetailed | Promise<AuthDetailed>;
 
-  abstract signup(data: SignupInput): Token | Promise<Token>;
+    abstract signup(data: SignupInput): Token | Promise<Token>;
 
-  abstract updateUserPassword(
-    passwordInput: ChangePasswordInput
-  ): User | Promise<User>;
+    abstract updateUserPassword(passwordInput: ChangePasswordInput): User | Promise<User>;
 
-  abstract upsertComment(
-    commentUpsertInput: CommentUpsertWithWhereUniqueWithoutAuthorInput
-  ): Comment[] | Promise<Comment[]>;
+    abstract upsertComment(commentUpsertInput: CommentUpsertWithWhereUniqueWithoutAuthorInput): Comment[] | Promise<Comment[]>;
 
-  abstract viewerCreateEntry(
-    viewerEntryCreateInput: EntryUpdateManyWithWhereWithoutAuthorInput
-  ): Entry[] | Promise<Entry[]>;
+    abstract viewerCreateEntry(viewerEntryCreateInput: EntryUpdateManyWithWhereWithoutAuthorInput): Entry[] | Promise<Entry[]>;
 }
 
 export class NodeUnionConnection {
-  __typename?: "NodeUnionConnection";
-  edges: NodeUnionEdge[];
-  pageInfo: PageInfo;
-  totalCount: number;
+    __typename?: 'NodeUnionConnection';
+    edges: NodeUnionEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class NodeUnionEdge {
-  __typename?: "NodeUnionEdge";
-  cursor: string;
-  node: NodeUnion;
+    __typename?: 'NodeUnionEdge';
+    cursor: string;
+    node: NodeUnion;
 }
 
 export class PageInfo {
-  __typename?: "PageInfo";
-  endCursor?: Nullable<string>;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  startCursor?: Nullable<string>;
+    __typename?: 'PageInfo';
+    endCursor?: Nullable<string>;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    startCursor?: Nullable<string>;
 }
 
 export class Profile implements Node {
-  __typename?: "Profile";
-  activiyFeed?: Nullable<string>;
-  bio?: Nullable<string>;
-  city?: Nullable<string>;
-  country?: Nullable<string>;
-  coverPhoto?: Nullable<string>;
-  dob?: Nullable<string>;
-  gender?: Nullable<Gender>;
-  id: string;
-  lastSeen?: Nullable<DateTime>;
-  memberSince: DateTime;
-  occupation?: Nullable<string>;
-  phoneNumber?: Nullable<string>;
-  pronouns?: Nullable<Pronouns>;
-  recentActivity?: Nullable<string>;
-  user: User;
-  userId: string;
-  userInProfile: User;
+    __typename?: 'Profile';
+    activiyFeed?: Nullable<string>;
+    bio?: Nullable<string>;
+    city?: Nullable<string>;
+    country?: Nullable<string>;
+    coverPhoto?: Nullable<string>;
+    dob?: Nullable<string>;
+    gender?: Nullable<Gender>;
+    id: string;
+    lastSeen?: Nullable<DateTime>;
+    memberSince: DateTime;
+    occupation?: Nullable<string>;
+    phoneNumber?: Nullable<string>;
+    pronouns?: Nullable<Pronouns>;
+    recentActivity?: Nullable<string>;
+    user: User;
+    userId: string;
+    userInProfile: User;
 }
 
 export class ProfileConnection {
-  __typename?: "ProfileConnection";
-  edges: ProfileEdge[];
-  pageInfo: PageInfo;
-  totalCount: number;
+    __typename?: 'ProfileConnection';
+    edges: ProfileEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class ProfileEdge {
-  __typename?: "ProfileEdge";
-  cursor: string;
-  node: Profile;
+    __typename?: 'ProfileEdge';
+    cursor: string;
+    node: Profile;
 }
 
 export abstract class IQuery {
-  __typename?: "IQuery";
+    __typename?: 'IQuery';
 
-  abstract categoryByRelayId(cursor: string): Category | Promise<Category>;
+    abstract categoryByRelayId(cursor: string): Category | Promise<Category>;
 
-  abstract commentByRelayId(cursor: string): Comment | Promise<Comment>;
+    abstract commentByRelayId(cursor: string): Comment | Promise<Comment>;
 
-  abstract comprehensiveConnectionUnion(): NodeUnion[] | Promise<NodeUnion[]>;
+    abstract comprehensiveConnectionUnion(): NodeUnion[] | Promise<NodeUnion[]>;
 
-  abstract connectionByRelayId(
-    connectionCursor: string
-  ): Connection | Promise<Connection>;
+    abstract connectionByRelayId(connectionCursor: string): Connection | Promise<Connection>;
 
-  abstract contentNodesUnion(
-    findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput,
-    findManyMediaItemsPaginated?: Nullable<FindManyMediaItemsPaginatedInput>,
-    findManyUsersPaginatedInput?: Nullable<FindManyUsersPaginatedInput>
-  ): ContentNodes | Promise<ContentNodes>;
+    abstract contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput, findManyMediaItemsPaginated?: Nullable<FindManyMediaItemsPaginatedInput>, findManyUsersPaginatedInput?: Nullable<FindManyUsersPaginatedInput>): ContentNodes | Promise<ContentNodes>;
 
-  abstract decodeViewerTokenFromContext(): AuthDetailed | Promise<AuthDetailed>;
+    abstract decodeViewerTokenFromContext(): AuthDetailed | Promise<AuthDetailed>;
 
-  abstract entryById(id: string): Entry | Promise<Entry>;
+    abstract entryById(id: string): Entry | Promise<Entry>;
 
-  abstract findUniqueMediaItem(
-    mediaItemId: string
-  ): MediaItem | Promise<MediaItem>;
+    abstract findUniqueMediaItem(mediaItemId: string): MediaItem | Promise<MediaItem>;
 
-  abstract getUserFromAccessToken(token: string): User | Promise<User>;
+    abstract getUserFromAccessToken(token: string): User | Promise<User>;
 
-  abstract getViewer(): AuthDetailed | Promise<AuthDetailed>;
+    abstract getViewer(): AuthDetailed | Promise<AuthDetailed>;
 
-  abstract hello(name: string): string | Promise<string>;
+    abstract hello(name: string): string | Promise<string>;
 
-  abstract helloWorld(): string | Promise<string>;
+    abstract helloWorld(): string | Promise<string>;
 
-  abstract listCategories(
-    findManyCategoriesPaginatedInput: FindManyCategoriesPaginatedInput
-  ): CategoryConnection | Promise<CategoryConnection>;
+    abstract listCategories(findManyCategoriesPaginatedInput: FindManyCategoriesPaginatedInput): CategoryConnection | Promise<CategoryConnection>;
 
-  abstract listComments(
-    findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput
-  ): CommentConnection | Promise<CommentConnection>;
+    abstract listComments(findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput): CommentConnection | Promise<CommentConnection>;
 
-  abstract listConnections(
-    findManyConnectionsPaginatedInput: FindManyConnectionsPaginatedInput
-  ): ConnectionConnection | Promise<ConnectionConnection>;
+    abstract listConnections(findManyConnectionsPaginatedInput: FindManyConnectionsPaginatedInput): ConnectionConnection | Promise<ConnectionConnection>;
 
-  abstract listEntries(
-    findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput
-  ): EntryConnection | Promise<EntryConnection>;
+    abstract listEntries(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput): EntryConnection | Promise<EntryConnection>;
 
-  abstract listMediaItems(
-    findManyMediaItemsPaginated?: Nullable<FindManyMediaItemsPaginatedInput>
-  ): MediaItemConnection | Promise<MediaItemConnection>;
+    abstract listMediaItems(findManyMediaItemsPaginated?: Nullable<FindManyMediaItemsPaginatedInput>): MediaItemConnection | Promise<MediaItemConnection>;
 
-  abstract listProfiles(
-    profilesArgs: FindManyProfilesPaginatedInput
-  ): ProfileConnection | Promise<ProfileConnection>;
+    abstract listProfiles(profilesArgs: FindManyProfilesPaginatedInput): ProfileConnection | Promise<ProfileConnection>;
 
-  abstract listSessions(
-    findManySessionsPaginatedInput: FindManySessionsPaginatedInput
-  ): SessionConnection | Promise<SessionConnection>;
+    abstract listSessions(findManySessionsPaginatedInput: FindManySessionsPaginatedInput): SessionConnection | Promise<SessionConnection>;
 
-  abstract listUsers(
-    findManyUsersPaginatedInput?: Nullable<FindManyUsersPaginatedInput>
-  ): UserConnection | Promise<UserConnection>;
+    abstract listUsers(findManyUsersPaginatedInput?: Nullable<FindManyUsersPaginatedInput>): UserConnection | Promise<UserConnection>;
 
-  abstract me(): AuthDetailed | Promise<AuthDetailed>;
+    abstract me(): AuthDetailed | Promise<AuthDetailed>;
 
-  abstract node(id: string): Nullable<Node> | Promise<Nullable<Node>>;
+    abstract node(id: string): Nullable<Node> | Promise<Nullable<Node>>;
 
-  abstract nodeUnionResolver(
-    id: string,
-    manyComments: FindManyCommentsPaginatedInput,
-    manyEntries: FindManyEntriessPaginatedInput,
-    manyMediaItems: FindManyMediaItemsPaginatedInput,
-    manyProfiles: FindManyProfilesPaginatedInput,
-    manySessions: FindManySessionsPaginatedInput,
-    manyUsers: FindManyUsersPaginatedInput
-  ): NodeUnionConnection | Promise<NodeUnionConnection>;
+    abstract nodeUnionResolver(id: string, manyComments: FindManyCommentsPaginatedInput, manyEntries: FindManyEntriessPaginatedInput, manyMediaItems: FindManyMediaItemsPaginatedInput, manyProfiles: FindManyProfilesPaginatedInput, manySessions: FindManySessionsPaginatedInput, manyUsers: FindManyUsersPaginatedInput): NodeUnionConnection | Promise<NodeUnionConnection>;
 
-  abstract profileByRelayId(): Profile | Promise<Profile>;
+    abstract profileByRelayId(): Profile | Promise<Profile>;
 
-  abstract sessionByRelayId(cursor: string): Session | Promise<Session>;
+    abstract sessionByRelayId(cursor: string): Session | Promise<Session>;
 
-  abstract siftEntries(
-    entryFindManyInput: FindManyEntriessPaginatedInput
-  ): EntryConnection | Promise<EntryConnection>;
+    abstract siftEntries(entryFindManyInput: FindManyEntriessPaginatedInput): EntryConnection | Promise<EntryConnection>;
 
-  abstract userById(id: string): User | Promise<User>;
+    abstract userById(id: string): User | Promise<User>;
 
-  abstract userByRelayId(cursor: string): User | Promise<User>;
+    abstract userByRelayId(cursor: string): User | Promise<User>;
 
-  abstract userFromAccessTokenDecoded(
-    token: string
-  ): AuthDetailed | Promise<AuthDetailed>;
+    abstract userFromAccessTokenDecoded(token: string): AuthDetailed | Promise<AuthDetailed>;
 
-  abstract viewer(): ViewerDetailed | Promise<ViewerDetailed>;
+    abstract viewer(): ViewerDetailed | Promise<ViewerDetailed>;
 
-  abstract viewerAuthInfoFromContext():
-    | ViewerAuthInfo
-    | Promise<ViewerAuthInfo>;
+    abstract viewerAuthInfoFromContext(): ViewerAuthInfo | Promise<ViewerAuthInfo>;
 
-  abstract viewerEntriesPaginated(
-    viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput
-  ): EntryConnection | Promise<EntryConnection>;
+    abstract viewerEntriesPaginated(viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput): EntryConnection | Promise<EntryConnection>;
 }
 
 export class Session implements Node {
-  __typename?: "Session";
-  accessToken?: Nullable<string>;
-  alg?: Nullable<string>;
-  exp?: Nullable<number>;
-  iat?: Nullable<number>;
-  id: string;
-  lastVerified?: Nullable<DateTime>;
-  provider?: Nullable<string>;
-  refreshToken?: Nullable<string>;
-  scopes?: Nullable<string[]>;
-  signature?: Nullable<string>;
-  tokenState?: Nullable<string>;
-  user?: Nullable<User>;
-  userId: string;
+    __typename?: 'Session';
+    accessToken?: Nullable<string>;
+    alg?: Nullable<string>;
+    exp?: Nullable<number>;
+    iat?: Nullable<number>;
+    id: string;
+    lastVerified?: Nullable<DateTime>;
+    provider?: Nullable<string>;
+    refreshToken?: Nullable<string>;
+    scopes?: Nullable<string[]>;
+    signature?: Nullable<string>;
+    tokenState?: Nullable<string>;
+    user?: Nullable<User>;
+    userId: string;
 }
 
 export class SessionConnection {
-  __typename?: "SessionConnection";
-  edges: SessionEdge[];
-  pageInfo: PageInfo;
-  totalCount: number;
+    __typename?: 'SessionConnection';
+    edges: SessionEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class SessionEdge {
-  __typename?: "SessionEdge";
-  cursor: string;
-  node: Session;
+    __typename?: 'SessionEdge';
+    cursor: string;
+    node: Session;
 }
 
 export abstract class ISubscription {
-  __typename?: "ISubscription";
+    __typename?: 'ISubscription';
 
-  abstract entryCreated(): Entry | Promise<Entry>;
+    abstract entryCreated(): Entry | Promise<Entry>;
 
-  abstract profileCreated(): Profile | Promise<Profile>;
+    abstract profileCreated(): Profile | Promise<Profile>;
 }
 
 export class Token {
-  __typename?: "Token";
-  accessToken?: Nullable<string>;
-  refreshToken?: Nullable<string>;
+    __typename?: 'Token';
+    accessToken?: Nullable<string>;
+    refreshToken?: Nullable<string>;
 }
 
 export class UnionOnEdgeObjectType {
-  __typename?: "UnionOnEdgeObjectType";
-  unionOnEdge: UnionOnEdgeObjectType;
+    __typename?: 'UnionOnEdgeObjectType';
+    unionOnEdge: UnionOnEdgeObjectType;
 }
 
 export class User implements Node {
-  __typename?: "User";
-  _count?: Nullable<UserCount>;
-  accounts?: Nullable<Account[]>;
-  categories?: Nullable<Category[]>;
-  comments?: Nullable<Comment[]>;
-  connections?: Nullable<Connection[]>;
-  createdAt: DateTime;
-  email: string;
-  emailVerified?: Nullable<DateTime>;
-  entries?: Nullable<Entry[]>;
-  firstName?: Nullable<string>;
-  id: string;
-  image?: Nullable<string>;
-  lastName?: Nullable<string>;
-  mediaItems?: Nullable<MediaItem[]>;
-  password: string;
-  profile?: Nullable<Profile>;
-  role?: Nullable<Role>;
-  sessions?: Nullable<Session[]>;
-  status: UserStatus;
-  updatedAt?: Nullable<DateTime>;
+    __typename?: 'User';
+    _count?: Nullable<UserCount>;
+    accounts?: Nullable<Account[]>;
+    categories?: Nullable<Category[]>;
+    comments?: Nullable<Comment[]>;
+    connections?: Nullable<Connection[]>;
+    createdAt: DateTime;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<Entry[]>;
+    firstName?: Nullable<string>;
+    id: string;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItem[]>;
+    password: string;
+    profile?: Nullable<Profile>;
+    role?: Nullable<Role>;
+    sessions?: Nullable<Session[]>;
+    status: UserStatus;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export class UserConnection {
-  __typename?: "UserConnection";
-  edges: UserEdge[];
-  pageInfo: PageInfo;
-  totalCount: number;
+    __typename?: 'UserConnection';
+    edges: UserEdge[];
+    pageInfo: PageInfo;
+    totalCount: number;
 }
 
 export class UserCount {
-  __typename?: "UserCount";
-  accounts: number;
-  categories: number;
-  comments: number;
-  connections: number;
-  entries: number;
-  mediaItems: number;
-  sessions: number;
+    __typename?: 'UserCount';
+    accounts: number;
+    categories: number;
+    comments: number;
+    connections: number;
+    entries: number;
+    mediaItems: number;
+    sessions: number;
 }
 
 export class UserEdge {
-  __typename?: "UserEdge";
-  cursor: string;
-  node: User;
+    __typename?: 'UserEdge';
+    cursor: string;
+    node: User;
 }
 
 export class ViewerAuthInfo {
-  __typename?: "ViewerAuthInfo";
-  accessToken: string;
-  refreshToken: string;
-  viewerJwt: JwtDecoded;
+    __typename?: 'ViewerAuthInfo';
+    accessToken: string;
+    refreshToken: string;
+    viewerJwt: JwtDecoded;
 }
 
 export class ViewerDetailed implements Node {
-  __typename?: "ViewerDetailed";
-  _count?: Nullable<UserCount>;
-  accessToken?: Nullable<string>;
-  accounts?: Nullable<Account[]>;
-  categories?: Nullable<Category[]>;
-  comments?: Nullable<Comment[]>;
-  connections?: Nullable<Connection[]>;
-  createdAt: DateTime;
-  email: string;
-  emailVerified?: Nullable<DateTime>;
-  entries?: Nullable<Entry[]>;
-  firstName?: Nullable<string>;
-  id: string;
-  image?: Nullable<string>;
-  lastName?: Nullable<string>;
-  mediaItems?: Nullable<MediaItem[]>;
-  password: string;
-  profile?: Nullable<Profile>;
-  refreshToken?: Nullable<string>;
-  role?: Nullable<Role>;
-  secret?: Nullable<string>;
-  sessions?: Nullable<Session[]>;
-  status: UserStatus;
-  updatedAt?: Nullable<DateTime>;
+    __typename?: 'ViewerDetailed';
+    _count?: Nullable<UserCount>;
+    accessToken?: Nullable<string>;
+    accounts?: Nullable<Account[]>;
+    categories?: Nullable<Category[]>;
+    comments?: Nullable<Comment[]>;
+    connections?: Nullable<Connection[]>;
+    createdAt: DateTime;
+    email: string;
+    emailVerified?: Nullable<DateTime>;
+    entries?: Nullable<Entry[]>;
+    firstName?: Nullable<string>;
+    id: string;
+    image?: Nullable<string>;
+    lastName?: Nullable<string>;
+    mediaItems?: Nullable<MediaItem[]>;
+    password: string;
+    profile?: Nullable<Profile>;
+    refreshToken?: Nullable<string>;
+    role?: Nullable<Role>;
+    secret?: Nullable<string>;
+    sessions?: Nullable<Session[]>;
+    status: UserStatus;
+    updatedAt?: Nullable<DateTime>;
 }
 
 export type BigInt = any;
 export type DateTime = any;
 export type PhoneNumber = any;
-export type NodeUnion =
-  | CommentConnection
-  | EntryConnection
-  | MediaItemConnection
-  | ProfileConnection
-  | SessionConnection
-  | UserConnection;
+export type NodeUnion = CommentConnection | EntryConnection | MediaItemConnection | ProfileConnection | SessionConnection | UserConnection;
 export type TypesUnion = Entry | MediaItem | User;
 type Nullable<T> = T | null;

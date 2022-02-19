@@ -32,16 +32,17 @@ export const enhancedFetch = async (
   return await fetch((url = uri), {
     ...init,
     headers: {
-    authorization: `Bearer ${
-      req.authorization?.split(/([ ])/)[2]
-        ? req.authorization.split(/([ ])/)[2]
-        : req.cookies
-        ? req.cookies.includes("jwt")
-          ? (req.cookies as string[])
+      authorization: `Bearer ${
+        req.authorization?.split(/([ ])/)[2]
+          ? req.authorization.split(/([ ])/)[2]
+          : req.cookies
+          ? req.cookies.includes("jwt")
+            ? (req.cookies as string[])
+            : ""
           : ""
-        : ""
-    }`,
-      ...init.headers,    },
+      }`,
+      ...init.headers
+    },
     keepalive: true,
     credentials: "include",
     mode: "cors",
@@ -60,8 +61,12 @@ export function createBatch<T extends ResolverContext>(context?: T) {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers": ["access-control-allow-headers"],
       "Access-Control-Expose-Headers": "*, authorization",
-      Authorization:
-        "Bearer " + context?.req?.headers.authorization?.split(/([ ])/)[2]
+      Authorization: `${
+        context?.req?.headers.authorization ??
+        process.env.NEXT_TOKEN_CODEGEN
+          ? process.env.NEXT_TOKEN_CODEGEN
+          : ""
+      }`
     },
     fetchOptions: {
       context: () => ({ ...context })
@@ -102,10 +107,10 @@ export const nextSesh = new ApolloLink((operation, forward) => {
 
     // const header = req?.headers.authorization?.split(/([ ])/)[1];
     const { data, context, errors, extensions } = response as FetchResult<
-    signInUserMutation | unknown,
-    Record<string, any>,
-    Record<string, any>
-  >;
+      signInUserMutation | unknown,
+      Record<string, any>,
+      Record<string, any>
+    >;
 
     console.log("context: " + context ?? "no context");
     console.log("errors: " + errors ?? "no errors");

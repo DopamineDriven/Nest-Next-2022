@@ -147,7 +147,7 @@ export type Context = {
       driver: ApolloDriver,
       useClass: GqlConfigService,
       imports: [AuthModule, ConfigModule],
-      inject: [ConfigService, AuthService]
+      inject: [ConfigService]
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "docs", "prisma-docs-generated")
