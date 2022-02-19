@@ -50,7 +50,7 @@
     "start:db": "pg_ctl -D /var/lib/postgresql/data -l logfile star",
     "start:psql": "docker compose run db bash",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"graphql/**/*.graphql\"",
+    "format": "prettier --write \"src/**/*.ts\" \"seeds/**/*.ts\" \"graphql/**/*.graphql\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
