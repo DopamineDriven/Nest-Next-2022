@@ -1,13 +1,12 @@
 import { ObjectType, Field, ID, createUnionType } from "@nestjs/graphql";
 import { Comment } from "../../comment/model/comment.model";
 import { User } from "../../user/model/user.model";
-import { EntryCount } from "../../.generated/prisma-nestjs-graphql/entry/outputs/entry-count.output";
+import { EntryCount } from "../outputs/entry-count.output";
 import { Category } from "../../category/model/category.model";
 import { Node } from "src/node/model/node.model";
 import { EntryConnection } from "./entry-connection.model";
 import { EntryOperations } from "../enums/entry-operations.enum";
 import { Type } from "@nestjs/common";
-import { Auth } from "src/auth/model";
 import { JwtDecoded } from "src/auth/dto";
 import { MappedType } from "@nestjs/mapped-types";
 import { Edge, Connection } from "@devoxa/prisma-relay-cursor-connection";
@@ -29,8 +28,8 @@ export class Entry implements Node {
   @Field(() => String, { nullable: false })
   authorId?: string;
 
-  @Field(() => String, { nullable: true })
-  content?: string;
+  @Field(() => String)
+  content!: string;
 
   @Field(() => Date, { nullable: false })
   createdAt!: Date;
@@ -54,8 +53,7 @@ export class Entry implements Node {
   categoryId?: string | null;
 
   @Field(() => EntryCount, {
-    nullable: false,
-    defaultValue: { categories: 0, comments: 0 }
+    nullable: false
   })
   _count!: EntryCount;
 }

@@ -1,4 +1,4 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { Prisma } from "@prisma/client";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
@@ -8,7 +8,6 @@ import {
 } from "../pagination/pagination.service";
 import { Entry } from "./model/entry.model";
 import { EntryCreateOneInput } from "./inputs/entry-create.input";
-import { AuthService } from "src/auth/auth-jwt.service";
 import { FindManyEntriesPaginatedInput } from "./inputs/entry-paginated.input";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { EntryCreateManyAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-many-author.input";
@@ -23,17 +22,28 @@ import { EntryUpdateManyWithWhereWithoutAuthorInput } from "src/.generated/prism
 import { EntryWhereInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-where.input";
 import { EntryUpdateOneRequiredWithoutCommentsInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-update-one-required-without-comments.input";
 import { XOR } from "src/common/types/helpers.type";
-import { EntryCreateManyAuthorInputEnvelope } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-many-author-input-envelope.input";
-import { User } from "src/user/model/user.model";
-import { EntryCreateOrConnectWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-or-connect-without-author.input";
 import { EntryCreateWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-without-author.input";
 import { EntryUncheckedCreateNestedManyWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-unchecked-create-nested-many-without-author.input";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import {
+  PrismaClientKnownRequestError,
+  PrismaClientValidationError
+} from "@prisma/client/runtime";
 import { GraphQLError } from "graphql";
-import { PubSub } from "graphql-subscriptions";
-import { valueMatchesCriteria } from "@graphql-tools/utils";
-import { EntryCount } from "src/.generated/prisma-nestjs-graphql/entry/outputs/entry-count.output";
 import { FindViewerEntriesPaginatedInput } from "./inputs/entry-paginated.input";
+import { EntryUncheckedCreateInputSansAuthorId } from "./inputs/entry-unchecked.input";
+import { HttpService, HttpModuleOptions } from "@nestjs/axios";
+import { firstValueFrom } from "rxjs";
+import { AxiosResponse } from "axios";
+
+export const axiosConfig: HttpModuleOptions = {
+  withCredentials: true,
+  headers: {
+    authorization: `Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwZjhlMjQ5MC1mNzU0LTQ4YjktYTA0MS00NTY4NTdhNDIyZjQiLCJpYXQiOjE2NDUxODI5MDMsImV4cCI6MTY0NTI2OTMwM30.SumygyOiyfV9MmHfFl8XVGn7kzn5q5eiSjP_ZK7Gj-l0ehW5Ri6AO41uJ4cT9Teq0UyOccAo54QGcj_KToOW-w`,
+    "Content-Type": "application/json"
+  },
+  baseURL: `http://localhost:3000/entry/`.trim()
+};
+
 @ObjectType("EntryUpdateMapped")
 export class EntryUpdateMapped extends IntersectionType(
   EntryUpdateOneRequiredWithoutCommentsInput,
@@ -52,9 +62,9 @@ export class EntryUpdateInputIntersection {
 @Injectable()
 export class EntryService {
   constructor(
-    @Inject(PrismaService) private readonly prisma: PrismaService,
-    private readonly paginationService: PaginationService,
-    @Inject(AuthService) private readonly authService: AuthService
+    private httpService: HttpService,
+    private readonly prisma: PrismaService,
+    private readonly paginationService: PaginationService
   ) {}
 
   async entry(
@@ -78,11 +88,15 @@ export class EntryService {
 
   async getViewerEntriesPaginated(
     params: FindViewerEntriesPaginatedInput,
-    tokenFromContext: string
+    viewerId: string
   ) {
-    return await this.authService
-      .getUserWithDecodedToken(tokenFromContext)
-      .then(async ({ auth, jwt }) => {
+    return await this.prisma.user
+      .findUnique({
+        where: { id: viewerId },
+        include: { entries: true }
+      })
+      .then(async auth => {
+        const user = auth as unknown as NonNullable<typeof auth>;
         return await findManyCursorConnection(
           args =>
             this.prisma.entry.findMany({
@@ -96,12 +110,12 @@ export class EntryService {
               take: params.take,
               skip: params.skip,
               where: {
-                authorId: { equals: auth.user.id || jwt.payload.userId },
+                authorId: { equals: user.id },
                 id: params.where?.id,
                 ...params.where
               },
               cursor: {
-                authorId: auth.user.id || jwt.payload.userId,
+                authorId: user.id,
                 ...params.cursor
               },
               orderBy: params.orderBy,
@@ -110,13 +124,15 @@ export class EntryService {
           () =>
             this.prisma.entry.count({
               distinct: params.distinct,
+              orderBy: params.orderBy,
+              take: params.take,
               skip: params.skip,
               where: {
-                authorId: auth.user.id || jwt.payload.userId,
+                authorId: user.id,
                 ...params.where
               },
               cursor: {
-                authorId: auth.user.id || jwt.payload.userId,
+                authorId: user.id,
                 ...params.cursor
               }
             }),
@@ -127,18 +143,17 @@ export class EntryService {
             after: params.pagination.after
           },
           {
-            getCursor: (record: { id: string } = auth.user) => {
+            getCursor: (record: { id: string } = user) => {
               return record;
             },
-            decodeCursor: (cursor: string = auth.user.id) =>
-              fromGlobalId(cursor),
-            encodeCursor: (cursor: { id: string } = auth.user) =>
+            decodeCursor: (cursor: string = user.id) => fromGlobalId(cursor),
+            encodeCursor: (cursor: { id: string } = user) =>
               toGlobalId(Entry.name, cursor.id)
           }
         );
       });
   }
-  // [{"subtitle":"Atque est quia assumenda voluptatibus autem atque minima soluta quis. Odio expedita asperiores vel amet cupiditate accusantium."},{"body":"Quisquam similique et nemo quia unde. Rem cupiditate voluptas rerum voluptatum. Ea libero eos qui magni minus. Nemo illum eum minima ratione placeat dolorum earum.\nExpedita in atque culpa vero. Voluptatem corporis eum suscipit laborum reprehenderit. Reiciendis modi ullam dolore. Qui sint occaecati qui voluptatibus. Facilis animi explicabo.\nUt sit reprehenderit natus sit facilis fugiat. Commodi ut aliquid natus est eveniet cum quia iusto. Facere nobis accusantium vero. Et quos quia neque eligendi consequatur temporibus incidunt.\nSapiente dolor laudantium perferendis. Sit sapiente molestiae rerum tempora nulla. Et quia rem. Aut voluptatibus aut non repudiandae voluptatibus non excepturi quam exercitationem. Quia harum vitae ab. Quia cumque sit."}]
+
   async siftEntries(params: FindManyEntriesPaginatedInput) {
     return await findManyCursorConnection(
       args =>
@@ -218,39 +233,39 @@ export class EntryService {
     });
   }
 
-  async createEntry(params: {
-    data: EntryCreateOneInput;
-    accessToken: string;
-  }) {
-    const getAccessTokenFromContext =
-      await this.authService.getUserWithDecodedToken(params.accessToken);
+  async createEntry(params: { data: EntryCreateOneInput; viewerId: string }) {
+    const getUser = await this.prisma.user.findUnique({
+      where: { id: params.viewerId },
+      include: { entries: true }
+    });
+    const user = getUser as unknown as NonNullable<typeof getUser>;
 
-    if (getAccessTokenFromContext) {
+    if (user) {
       const upsertion = await this.prisma.user
         .upsert({
           include: {
             _count: true,
             entries: { include: { _count: true, author: true } }
           },
-          where: { id: getAccessTokenFromContext.jwt.payload.userId },
+          where: { id: user.id },
           create: {
-            email: getAccessTokenFromContext.auth.user.email,
+            email: user.email,
             entries: { create: { ...params.data } }
           },
           update: {
             entries: {
               create: { ...params.data },
-              connect: { authorId: getAccessTokenFromContext.auth.user.id }
+              connect: { authorId: user.id }
             }
           }
         })
         .then(data => {
           return {
-            entry: data.entries[0]
+            entry: data.entries.sort(
+              (a, b) =>
+                a.createdAt.getMilliseconds() - b.createdAt.getMilliseconds()
+            )[0]
           };
-        })
-        .then(data => {
-          return data.entry;
         });
       return upsertion;
     }
@@ -258,114 +273,148 @@ export class EntryService {
 
   async createNewEntry(
     params: EntryUncheckedCreateNestedManyWithoutAuthorInput,
-    accessToken: string
+    viewerId: string
   ) {
-    await this.authService
-      .getUserWithDecodedToken(accessToken)
-      .then(async ({ auth, jwt }) => {
-        return await this.prisma.user.update({
-          include: {
-            entries: {
-              cursor: { authorId: jwt.payload.userId },
-              include: { _count: true, author: true }
-            },
-            _count: true
-          },
-          where: { id: auth.user.id },
-          data: { entries: { ...params } }
-        });
-      });
+    const getUser = await this.prisma.user.findUnique({
+      where: { id: viewerId },
+      include: { entries: true }
+    });
+    const user = getUser as unknown as NonNullable<typeof getUser>;
+
+    return await this.prisma.user.update({
+      include: {
+        entries: {
+          cursor: { authorId: user.id },
+          include: { _count: true, author: true }
+        },
+        _count: true
+      },
+      where: { id: user.id },
+      data: { entries: { ...params } }
+    });
   }
 
-  async newEntry(
-    params: EntryUncheckedCreateNestedManyWithoutAuthorInput,
-    accessToken: string
+  async axiosMediatedEntryCreate(
+    params: EntryUncheckedCreateInputSansAuthorId,
+    viewerId: string
     // pubSubProgation: PubSub
   ) {
+    const validateUser = await this.prisma.user.findUnique({
+      where: { id: viewerId }
+    });
+    if (!validateUser) {
+      return new PrismaClientValidationError(
+        "no valid active viewer -- please sign in"
+      ).message;
+    }
     try {
-      const transactionnn = await this.authService
-        .getUserWithDecodedToken(accessToken)
-        .then(async ({ auth, jwt }) => {
-          return await this.prisma
-            .$transaction([
-              this.prisma.user.update({
-                include: {
-                  entries: {
-                    cursor: {
-                      authorId: jwt.payload.userId
-                    },
-                    include: { _count: true, author: true }
-                  },
-                  _count: true
-                },
-                where: { id: jwt.payload.userId },
-                data: { entries: { ...params } }
-              }),
-              this.prisma.entry.findFirst({
-                include: { author: true, _count: true },
-                orderBy: { createdAt: "asc" },
-                cursor: { authorId: auth.user.id }
-              })
-            ])
-            .then(value => {
-              return {
-                entryTransaction: value[0],
-                entryCountUser: value[1]
-              };
-            });
-        });
-      if (transactionnn != null) {
-        return transactionnn.entryCountUser;
-      } else {
-        const getUserFromToken = await this.authService.getUserWithDecodedToken(
-          accessToken
+      const newEntryCreate = await this.prisma.entry.create({
+        data: { authorId: validateUser.id, ...params },
+        include: {
+          author: { include: { _count: true } },
+          comments: true,
+          categories: true,
+          _count: true
+        }
+      });
+      const axiosConf = this.httpService
+        .post(`createEntry/${viewerId}`, { ...newEntryCreate }, axiosConfig)
+        .pipe();
+
+      if (!newEntryCreate) {
+        throw (
+          new PrismaClientKnownRequestError(
+            `failed newEntry mutation`,
+            "P2019",
+            "3.91"
+          ) && new GraphQLError("error in newEntry of entry service")
         );
-        return await this.prisma.entry.findUnique({
-          include: { _count: true, author: true },
-          where: { authorId: getUserFromToken.jwt.payload.userId }
-        });
       }
+      return (await firstValueFrom(
+        axiosConf
+      )) as AxiosResponse<EntryCreateWithoutAuthorInput>;
     } catch (error) {
       throw new GraphQLError(
         `new error in try.catch blck of newEntry mutation ${error}`
       );
     }
-    // finally {
-    //   pubSubProgation.publish("entryCreated", {
-    //     entryCreated: transactions.entryTransaction.entries[0]
-    //   });
-    //   return {
-    //     entry: transactions.entryCountUser,
-    //     transaction: transactions.entryTransaction
-    //   }
-    // }
+  }
+
+  async newEntry(
+    params: EntryUncheckedCreateInputSansAuthorId,
+    viewerId: string
+    // pubSubProgation: PubSub
+  ) {
+    const validateUser = await this.prisma.user.findUnique({
+      where: { id: viewerId }
+    });
+    if (!validateUser) {
+      return new PrismaClientValidationError(
+        "no valid active viewer -- please sign in"
+      ).message;
+    }
+    try {
+      const newEntryCreate = await this.prisma.entry.create({
+        data: { authorId: validateUser.id, ...params },
+        include: {
+          author: { include: { _count: true } },
+          comments: true,
+          categories: true,
+          _count: true
+        }
+      });
+
+      // const retrieveNewEntryForVerification =
+      //   await this.prisma.entry.findUnique({
+      //     include: {
+      //       author: { include: { _count: true } },
+      //       _count: true,
+      //       comments: true,
+      //       categories: true
+      //     },
+      //     where: { authorId: validateUser.id, id: newEntryCreate.id }
+      //   });
+
+      if (!newEntryCreate) {
+        throw (
+          new PrismaClientKnownRequestError(
+            `failed newEntry mutation`,
+            "P2019",
+            "3.91"
+          ) && new GraphQLError("error in newEntry of entry service")
+        );
+      }
+      return newEntryCreate;
+    } catch (error) {
+      throw new GraphQLError(
+        `new error in try.catch blck of newEntry mutation ${error}`
+      );
+    }
   }
 
   async createManyEntry(
     params: FindManyEntriesPaginatedInput,
     data: EntryCreateManyAuthorInput,
-    token: string
+    viewerId: string
   ) {
-    const getUserFromContext = await this.authService.getUserWithDecodedToken(
-      token
-    );
+    const getUser = await this.prisma.user.findUnique({
+      where: { id: viewerId },
+      include: { _count: true }
+    });
+    const user = getUser as unknown as NonNullable<typeof getUser>;
     return await this.prisma
       .$transaction(
         async (prisma = this.prisma) => {
-          const findUniqueUser = await prisma.user.findUnique({
-            where: { id: getUserFromContext.jwt.payload.userId },
-            include: { entries: true, _count: true }
-          });
           const createManyEntries = await prisma.entry.createMany({
             skipDuplicates: true,
             data: {
-              authorId: getUserFromContext.jwt.payload.userId,
+              authorId: user.id,
               ...data
             }
           });
           const findManyCreatedEntries = await this.siftEntries(params);
           return {
-            user: findUniqueUser,
+            user: user,
             createMany: createManyEntries,
             getPaginatedReturn: findManyCreatedEntries
           };
@@ -381,42 +430,3 @@ export class EntryService {
       });
   }
 }
-//   findManyCursorConnection(
-//   args =>
-//     prisma.entry.findMany({
-//       include: {
-//         _count: true,
-//         author: true,
-//         comments: true,
-//         categories: true
-//       },
-//       distinct: params.distinct,
-//       take: params.take,
-//       skip: params.skip,
-//       where: params.where,
-//       cursor: args.cursor,
-//       orderBy: params.orderBy,
-//       ...args
-//     }),
-//   () =>
-//     prisma.entry.count({
-//       distinct: params.distinct,
-//       skip: params.skip,
-//       where: params.where,
-//       cursor: params.cursor
-//     }),
-//   {
-//     first: params.pagination.first ?? 10,
-//     last: params.pagination.last,
-//     before: params.pagination.before,
-//     after: params.pagination.after
-//   },
-//   {
-//     getCursor: (record: { id: string }) => {
-//       return record;
-//     },
-//     decodeCursor: (cursor: string) => fromGlobalId(cursor),
-//     encodeCursor: (cursor: { id: string }) =>
-//       toGlobalId(Entry.name, cursor.id)
-//   }
-// );

@@ -15,7 +15,7 @@ export const ConfigMappedFunction = ({
   | "swagger"
   | "github"
   | "redis"
-  | "postgres"
+  | "postgres" | "local"
 >) => {
   const {
     cors,
@@ -26,7 +26,8 @@ export const ConfigMappedFunction = ({
     github,
     apollo,
     redis,
-    postgres
+    postgres,
+    local
   } = props;
   return {
     cors,
@@ -37,7 +38,8 @@ export const ConfigMappedFunction = ({
     github,
     apollo,
     redis,
-    postgres
+    postgres,
+    local
   };
 };
 
@@ -51,6 +53,7 @@ export type ConfigCoalesced = {
   redis: RedisConfig;
   security: SecurityConfig;
   github: GitHubConfig;
+  local: LocalConfig;
 };
 
 export interface NestConfig {
@@ -117,4 +120,8 @@ export interface ApolloConfig {
   key: string;
   ref?: string;
   reporting: boolean;
+}
+
+export interface LocalConfig {
+  auth?: string
 }
