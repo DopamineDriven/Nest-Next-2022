@@ -34,15 +34,15 @@ export class EntryCreateOneInput {
   @Field(() => String, { nullable: true })
   categoryId?: string;
 
-  @Field(() =>String, { nullable: true })
+  @Field(() => String, { nullable: true })
   content?: string;
 
   @Field(() => String, { nullable: true })
-  featuredImage?: string
+  featuredImage?: string;
 
   @Field(() => CategoryCreateNestedManyWithoutEntriesInput, { nullable: true })
   categories?: CategoryCreateNestedManyWithoutEntriesInput;
-  @Field(() => UserCreateNestedOneWithoutEntriesInput, {nullable:false})
+  @Field(() => UserCreateNestedOneWithoutEntriesInput, { nullable: false })
   author!: UserCreateNestedOneWithoutEntriesInput;
 }
 

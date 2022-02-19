@@ -22,7 +22,6 @@ export class UserService {
   constructor(
     @Inject(PrismaService) private prismaService: PrismaService,
     private readonly passwordService: PasswordService
-
   ) {}
   async user(params: {
     userWhereUniqueInput: XOR<

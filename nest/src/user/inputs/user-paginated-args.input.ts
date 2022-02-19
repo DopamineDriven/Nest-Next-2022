@@ -25,6 +25,6 @@ export class FindManyUsersPaginatedInput {
   @Field(() => [UserScalarFieldEnum], { nullable: true })
   distinct?: Array<keyof typeof UserScalarFieldEnum>;
 
-  @Field(() => PaginationArgsInput, {defaultValue: { first: 10 }})
+  @Field(() => PaginationArgsInput, { defaultValue: { first: 10 } })
   pagination: PaginationArgsInput;
 }

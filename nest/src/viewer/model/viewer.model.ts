@@ -21,13 +21,18 @@ import { Constructor } from "src/common/types/helpers.type";
 import { Injectable } from "@nestjs/common";
 import { AuthService } from "../../auth/auth-jwt.service";
 import { PrismaService } from "../../prisma/prisma.service";
-import { EmailAddressResolver, EmailAddressTypeDefinition, GraphQLEmailAddress, GraphQLJSONObject } from "graphql-scalars";
+import {
+  EmailAddressResolver,
+  EmailAddressTypeDefinition,
+  GraphQLEmailAddress,
+  GraphQLJSONObject
+} from "graphql-scalars";
 import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
 import { UserStatus } from "src/.generated/prisma-nestjs-graphql/prisma/enums/user-status.enum";
 import { GraphQLEmailAddressConfig } from "graphql-scalars/scalars/EmailAddress";
 import { EmailAddress } from "graphql-scalars/typeDefs";
 type Nullable<T> = T | null;
-@ObjectType("ViewerEntity", {implements: () => Node})
+@ObjectType("ViewerEntity", { implements: () => Node })
 export class ViewerEntity extends AuthDetailed implements Node {
   constructor() {
     super();
@@ -56,10 +61,10 @@ export class Viewer implements User {
   lastName: string | null;
 
   @Field(() => Role, { defaultValue: Role.USER })
-  role: keyof typeof Role
+  role: keyof typeof Role;
 
   @Field(() => UserStatus, { nullable: true })
-  status: Nullable<keyof typeof UserStatus>
+  status: Nullable<keyof typeof UserStatus>;
 
   @Field(() => Date, { nullable: true })
   updatedAt: Date | null;

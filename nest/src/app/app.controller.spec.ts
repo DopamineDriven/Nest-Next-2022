@@ -17,8 +17,14 @@ describe("AppController", () => {
   });
 
   describe("root", () => {
-    it('should return '+`${new Date(Date.now()).toISOString().split(/([T])/)[0]}`, () => {
-      expect(appController.getRedisPing()).toBe( `${new Date(Date.now()).toISOString().split(/([T])/)[0]}`);
-    });
+    it(
+      "should return " +
+        `${new Date(Date.now()).toISOString().split(/([T])/)[0]}`,
+      () => {
+        expect(appController.getRedisPing()).toBe(
+          `${new Date(Date.now()).toISOString().split(/([T])/)[0]}`
+        );
+      }
+    );
   });
 });

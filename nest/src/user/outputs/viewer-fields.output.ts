@@ -21,9 +21,9 @@ export type ViewerConnectionUnion =
   | ProfileConnection
   | SessionConnection;
 
-  type MappUnion<T extends keyof ViewerConnectionUnion> = {
-    [P in T]: ViewerConnectionUnion[P]
-    };
+type MappUnion<T extends keyof ViewerConnectionUnion> = {
+  [P in T]: ViewerConnectionUnion[P];
+};
 
 // let yyyy = (props: MappUnion<"UserConnection">) => {}
 

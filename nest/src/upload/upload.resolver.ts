@@ -1,7 +1,8 @@
 import { Resolver, Args, Mutation } from "@nestjs/graphql";
 import {
   GraphQLUpload,
-  FileUpload,processRequest,
+  FileUpload,
+  processRequest,
   graphqlUploadExpress
 } from "graphql-upload";
 import { createWriteStream, read } from "fs";
@@ -74,14 +75,15 @@ export class UploadResolver implements FileUpload {
                 },
                 null,
                 2
-              ))
-;
-           return resolve(callback(fileReader.result as string) );
+              )
+            );
+            return resolve(callback(fileReader.result as string));
           };
         })
-    ).catch(err => new Error(`${err}`).message).then((val => {
-
-      // graphqlUploadExpress({ maxFieldSize: null, maxFileSize: 1000000, maxFiles: 10 })(request, response, ...prop)=>;
-    }))
+    )
+      .catch(err => new Error(`${err}`).message)
+      .then(val => {
+        // graphqlUploadExpress({ maxFieldSize: null, maxFileSize: 1000000, maxFiles: 10 })(request, response, ...prop)=>;
+      });
   }
 }

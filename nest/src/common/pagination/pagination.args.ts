@@ -26,7 +26,6 @@ export class PaginationArgs implements PaginationArgsShape {
   last?: number | undefined;
   @Field(() => Int, { nullable: true, defaultValue: 10 })
   first?: number | undefined;
-
 }
 
 @InputType()
@@ -39,5 +38,4 @@ export class PaginationArgsInput implements PaginationArgsShape {
   last?: number | undefined;
   @Field(() => Int, { nullable: true, defaultValue: 10 })
   first?: number | undefined;
-
 }

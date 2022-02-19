@@ -18,7 +18,7 @@ export class Auth extends Token {
 @ObjectType("AuthSansSession")
 export class AuthSansSession extends Token {
   constructor() {
-    super()
+    super();
   }
   @Field(() => User, { nullable: true })
   user!: User | null;
@@ -40,9 +40,8 @@ export class ViewerDetailed extends Viewer {
   refreshToken!: string | null;
 
   @Field(_type => String, { nullable: true })
-  secret!: string | null
+  secret!: string | null;
 }
-
 
 @ObjectType("ViewerOutput")
 export class ViewerOutput extends Viewer {
@@ -66,7 +65,7 @@ export async function PrismaViewer<
   authService: K
 ): Promise<
   T & {
-    getViewer(data: GetViewer): any
+    getViewer(data: GetViewer): any;
   }
 > {
   return Object.assign(prisma, {
@@ -75,7 +74,7 @@ export async function PrismaViewer<
         data.accessToken ? data.accessToken : ""
       );
       const findPrismaViewer = await prisma.findFirst({
-        include: {_count: true, mediaItems: true},
+        include: { _count: true, mediaItems: true },
         where: {
           OR: [
             { id: viewer?.id ? viewer.id : "" },

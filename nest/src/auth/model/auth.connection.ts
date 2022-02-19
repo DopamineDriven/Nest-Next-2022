@@ -20,7 +20,7 @@ export class UserOrderBy {}
 @ConnectionNodesObjectType(Auth)
 export class AuthNodes {}
 
-@ConnectionEdgeObjectType(Auth, {id: v4()})
+@ConnectionEdgeObjectType(Auth, { id: v4() })
 export class AuthEdge {}
 
 @ConnectionObjectType(AuthEdge)

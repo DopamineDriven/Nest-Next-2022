@@ -20,7 +20,6 @@ export interface PaginationType<T = any> extends Function {
   new (...args: any[]): T extends infer U ? U : T;
 }
 
-
 interface IEdgeType<T> {
   cursor: string;
   node: T;
@@ -33,26 +32,25 @@ export interface IPaginatedType<T> {
   hasNextPage: boolean;
 }
 
-
 export function Paginated<T>(classRef: Type<T>): Type<IPaginatedType<T>> {
   @ObjectType(`${classRef.name}Edge`)
   abstract class EdgeType {
-    @Field((type) => String)
+    @Field(type => String)
     cursor: string;
 
-    @Field((type) => classRef)
+    @Field(type => classRef)
     node: T;
   }
 
   @ObjectType({ isAbstract: true })
   abstract class PaginatedType implements IPaginatedType<T> {
-    @Field((type) => [EdgeType], { nullable: true })
+    @Field(type => [EdgeType], { nullable: true })
     edges: EdgeType[];
 
-    @Field((type) => [classRef], { nullable: true })
+    @Field(type => [classRef], { nullable: true })
     nodes: T[];
 
-    @Field((type) => Int)
+    @Field(type => Int)
     totalCount: number;
 
     @Field()
@@ -131,7 +129,7 @@ export function ConnectionOrderingInputType<
 
 export function ConnectionEdgeObjectType<
   T extends Constructor,
-  U extends {id: string},
+  U extends { id: string },
   V extends ReturnTypeFuncValue
 >(nodeType: V, idRef: U): (target: T) => Constructor {
   return (target: T): Constructor => {
@@ -141,8 +139,8 @@ export function ConnectionEdgeObjectType<
       node: V;
 
       @Field(() => String)
-      cursor(id: U['id'], __typename: string): ConnectionCursor {
-       return toGlobalId(target.name, id)
+      cursor(id: U["id"], __typename: string): ConnectionCursor {
+        return toGlobalId(target.name, id);
       }
     }
     return ConnectionEdgeObjectType;
@@ -164,7 +162,6 @@ export function ConnectionObjectType<
 
       @Field(() => [edgeType])
       edges: V[];
-
     }
 
     return ConnectionObjectType;
@@ -177,7 +174,7 @@ export function ConnectionNodesObjectType<
   return (target: T): Constructor => {
     @ObjectType(target.name)
     class NodesObjectType extends target {
-      @Field(() => PageInfo, {defaultValue: null, nullable: true})
+      @Field(() => PageInfo, { defaultValue: null, nullable: true })
       pageInfo: PageInfo;
 
       @Field(() => Int, { defaultValue: 0 })

@@ -2,7 +2,7 @@
 # import SessionPartial from "../fragments/session-partial.graphql";
 # import UserPartial from "../fragments/user-partial.graphql";
 # import ProfilePartial from "../fragments/profile-partial.graphql";
-
+# import EntryPartial from "../fragments/entry-partial.graphql";
 query userDecodedFromToken($userFromToken: String!) {
   getUserFromAccessToken(token: $userFromToken) {
     _count {
@@ -13,6 +13,9 @@ query userDecodedFromToken($userFromToken: String!) {
     }
     profile {
       ...ProfilePartial
+    }
+    entries {
+      ...EntryPartial
     }
     ...UserPartial
   }

@@ -1,9 +1,6 @@
 import { Strategy, ExtractJwt, JwtFromRequestFunction } from "passport-jwt";
 import { PassportStrategy } from "@nestjs/passport";
-import {
-  Injectable,
-  UnauthorizedException
-} from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { ConfigService } from "@nestjs/config";
 import { jwtConstants } from "./constants/auth-jwt.constant";
@@ -81,6 +78,6 @@ export class AuthJwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException();
     }
-    return user
+    return user;
   }
 }

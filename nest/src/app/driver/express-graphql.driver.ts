@@ -37,9 +37,7 @@ export class ExpressGraphQLDriver extends AbstractGraphQLDriver {
   constructor() {
     super();
   }
-  async start(
-    options: GqlModuleOptions<ExpressGraphQLDriver>
-  ): Promise<void> {
+  async start(options: GqlModuleOptions<ExpressGraphQLDriver>): Promise<void> {
     options = await this.graphQlFactory.mergeWithSchema(options);
     //     // @ts-ignore
     const rootSchema = await loadSchema("src/schema.gql", {
@@ -55,7 +53,12 @@ export class ExpressGraphQLDriver extends AbstractGraphQLDriver {
         request: ExpressGraphQLRequest,
         response: ExpressGraphQLResponse,
         params?: GraphQLParams
-      ): Promise<{ request: ExpressGraphQLRequest; response: ExpressGraphQLResponse; params: GraphQLParams | undefined; token: string | null; }> => {
+      ): Promise<{
+        request: ExpressGraphQLRequest;
+        response: ExpressGraphQLResponse;
+        params: GraphQLParams | undefined;
+        token: string | null;
+      }> => {
         const token = request.headers.authorization?.split(/([ ])/)[2] ?? null;
         const ctx = {
           request,
@@ -80,7 +83,7 @@ export class ExpressGraphQLDriver extends AbstractGraphQLDriver {
       graphiql: {
         headerEditorEnabled: true
       }
-    }
+    };
 
     //   token != null && token.length > 0
     //     ? response.headers.set("authorization", `Bearer ${token}`)

@@ -100,7 +100,10 @@ export class EntryService {
                 id: params.where?.id,
                 ...params.where
               },
-              cursor: {authorId: auth.user.id || jwt.payload.userId, ...params.cursor},
+              cursor: {
+                authorId: auth.user.id || jwt.payload.userId,
+                ...params.cursor
+              },
               orderBy: params.orderBy,
               ...args
             }),
@@ -112,7 +115,10 @@ export class EntryService {
                 authorId: auth.user.id || jwt.payload.userId,
                 ...params.where
               },
-              cursor: {authorId: auth.user.id || jwt.payload.userId, ...params.cursor}
+              cursor: {
+                authorId: auth.user.id || jwt.payload.userId,
+                ...params.cursor
+              }
             }),
           {
             first: params.pagination.first ?? 10,
@@ -132,7 +138,7 @@ export class EntryService {
         );
       });
   }
-// [{"subtitle":"Atque est quia assumenda voluptatibus autem atque minima soluta quis. Odio expedita asperiores vel amet cupiditate accusantium."},{"body":"Quisquam similique et nemo quia unde. Rem cupiditate voluptas rerum voluptatum. Ea libero eos qui magni minus. Nemo illum eum minima ratione placeat dolorum earum.\nExpedita in atque culpa vero. Voluptatem corporis eum suscipit laborum reprehenderit. Reiciendis modi ullam dolore. Qui sint occaecati qui voluptatibus. Facilis animi explicabo.\nUt sit reprehenderit natus sit facilis fugiat. Commodi ut aliquid natus est eveniet cum quia iusto. Facere nobis accusantium vero. Et quos quia neque eligendi consequatur temporibus incidunt.\nSapiente dolor laudantium perferendis. Sit sapiente molestiae rerum tempora nulla. Et quia rem. Aut voluptatibus aut non repudiandae voluptatibus non excepturi quam exercitationem. Quia harum vitae ab. Quia cumque sit."}]
+  // [{"subtitle":"Atque est quia assumenda voluptatibus autem atque minima soluta quis. Odio expedita asperiores vel amet cupiditate accusantium."},{"body":"Quisquam similique et nemo quia unde. Rem cupiditate voluptas rerum voluptatum. Ea libero eos qui magni minus. Nemo illum eum minima ratione placeat dolorum earum.\nExpedita in atque culpa vero. Voluptatem corporis eum suscipit laborum reprehenderit. Reiciendis modi ullam dolore. Qui sint occaecati qui voluptatibus. Facilis animi explicabo.\nUt sit reprehenderit natus sit facilis fugiat. Commodi ut aliquid natus est eveniet cum quia iusto. Facere nobis accusantium vero. Et quos quia neque eligendi consequatur temporibus incidunt.\nSapiente dolor laudantium perferendis. Sit sapiente molestiae rerum tempora nulla. Et quia rem. Aut voluptatibus aut non repudiandae voluptatibus non excepturi quam exercitationem. Quia harum vitae ab. Quia cumque sit."}]
   async siftEntries(params: FindManyEntriesPaginatedInput) {
     return await findManyCursorConnection(
       args =>

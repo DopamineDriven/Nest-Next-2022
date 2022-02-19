@@ -1,7 +1,4 @@
-import {
-  Inject,
-  Injectable
-} from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { RedisService } from "@liaoliaots/nestjs-redis";
 import { Redis } from "ioredis";
 import { ConfigService } from "@nestjs/config";
@@ -32,9 +29,6 @@ export class AppService {
     );
     return await this.redis.ping(redisPing);
   }
-
-
-
 
   // async getLoginParam<T extends Request>(
   //   authorization: string | null,
@@ -72,19 +66,19 @@ export class AppService {
   //   }
   // }
 }
-  // async getToken<
-  //   T = ExecutionContextHost extends infer U ? U : ExecutionContextHost
-  // >(req: Context<T>["req"]) {
-  //   const httpReq =
-  //     this.executionContextHost.getType<GqlContextType>() === "http"
-  //       ? this.executionContextHost.switchToHttp().getRequest<Request>()
-  //       : this.executionContextHost.getType<GqlContextType>() === "http"
-  //       ? (this.executionContextHost.getType() as unknown as string)
-  //       : (this.executionContextHost.getType() as unknown as User);
-  //   const accessToken = req.headers.authorization
-  //     ? req.headers.authorization.split(/([ ])/)[1]
-  //     : req.header("authorization")?.split
-  //     ? req.header("authorization")?.split(/[ ]/)[1]
-  //       : null;
-  //   return {accessToken: accessToken, context: httpReq}
-  // }
+// async getToken<
+//   T = ExecutionContextHost extends infer U ? U : ExecutionContextHost
+// >(req: Context<T>["req"]) {
+//   const httpReq =
+//     this.executionContextHost.getType<GqlContextType>() === "http"
+//       ? this.executionContextHost.switchToHttp().getRequest<Request>()
+//       : this.executionContextHost.getType<GqlContextType>() === "http"
+//       ? (this.executionContextHost.getType() as unknown as string)
+//       : (this.executionContextHost.getType() as unknown as User);
+//   const accessToken = req.headers.authorization
+//     ? req.headers.authorization.split(/([ ])/)[1]
+//     : req.header("authorization")?.split
+//     ? req.header("authorization")?.split(/[ ]/)[1]
+//       : null;
+//   return {accessToken: accessToken, context: httpReq}
+// }

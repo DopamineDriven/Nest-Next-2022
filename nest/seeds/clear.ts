@@ -14,19 +14,18 @@ export const clearData = async <
     "7": profile,
     "8": session,
     "9": user
-  } = await prisma
-    .$transaction([
-      prisma.verificationToken.deleteMany({}),
-      prisma.mediaItem.deleteMany({}),
-      prisma.comment.deleteMany({}),
-      prisma.connection.deleteMany({}),
-      prisma.category.deleteMany({}),
-      prisma.entry.deleteMany({}),
-      prisma.account.deleteMany({}),
-      prisma.profile.deleteMany({}),
-      prisma.session.deleteMany({}),
-      prisma.user.deleteMany({})
-    ]);
+  } = await prisma.$transaction([
+    prisma.verificationToken.deleteMany({}),
+    prisma.mediaItem.deleteMany({}),
+    prisma.comment.deleteMany({}),
+    prisma.connection.deleteMany({}),
+    prisma.category.deleteMany({}),
+    prisma.entry.deleteMany({}),
+    prisma.account.deleteMany({}),
+    prisma.profile.deleteMany({}),
+    prisma.session.deleteMany({}),
+    prisma.user.deleteMany({})
+  ]);
 
   return {
     verificationToken,
@@ -92,10 +91,9 @@ async function main() {
       .then(() => console.log("[clearing]: db connection opened"));
     const s = async (): Promise<ClearInferred> =>
       await clearData(prisma).then(data => {
-          console.log(
-            `[clearing]: there are ${data.user.count} users, ${data.account.count} accounts, ${data.comment.count} comments, ${data.connection.count} connections, ${data.category.count} categories, ${data.entry.count} entries, ${data.profile.count} profiles, ${data.session.count} sessions, ${data.mediaItem.count} media items, and ${data.verificationToken.count} verification requests remaining`
-
-          );
+        console.log(
+          `[clearing]: there are ${data.user.count} users, ${data.account.count} accounts, ${data.comment.count} comments, ${data.connection.count} connections, ${data.category.count} categories, ${data.entry.count} entries, ${data.profile.count} profiles, ${data.session.count} sessions, ${data.mediaItem.count} media items, and ${data.verificationToken.count} verification requests remaining`
+        );
 
         console.log();
         return data;

@@ -3,9 +3,12 @@ import { hash, compare, hashSync, compareSync } from "bcrypt";
 import { ConfigService } from "@nestjs/config";
 import { SecurityConfig } from "../common/config/config-interfaces.config";
 import { createBrotliCompress } from "zlib";
-import crypto, { Cipher } from 'crypto';
+import crypto, { Cipher } from "crypto";
 import { nanoid } from "nanoid";
-import { BufferEncodingOptions, BufferScaffold } from "./enums/buffer-encoding.enum";
+import {
+  BufferEncodingOptions,
+  BufferScaffold
+} from "./enums/buffer-encoding.enum";
 import { createReadStream, createWriteStream } from "fs";
 import { pipeline } from "stream";
 
@@ -21,14 +24,14 @@ export class PasswordService {
       : this.bcryptSaltRounds;
   }
   toBase64(str: string) {
-    return BufferScaffold(str, "base64")
+    return BufferScaffold(str, "base64");
   }
 
   // node_modules/@types/node/crypto.d.ts/cipher namespace
   async customsalter(password: string) {
     const { scrypt, randomFill, createCipheriv } = await import("crypto");
 
-    const algorithm = 'aes-192-cbc';
+    const algorithm = "aes-192-cbc";
     scrypt(password, "salt", 24, (error, key) => {
       if (error) throw error;
 
@@ -41,15 +44,15 @@ export class PasswordService {
 
         const output = createWriteStream("test-custom-salt-en");
 
-        pipeline(input, cipher, output, (error) => {
+        pipeline(input, cipher, output, error => {
           if (error) throw error;
-        })
-      })
-    })
-    const salt = crypto.randomBytes(16).toString()
+        });
+      });
+    });
+    const salt = crypto.randomBytes(16).toString();
     const hash = crypto
-    .pbkdf2Sync(password, salt, 1000, 64, 'sha512')
-    .toString('hex')
+      .pbkdf2Sync(password, salt, 1000, 64, "sha512")
+      .toString("hex");
   }
 
   constructor(
@@ -61,7 +64,10 @@ export class PasswordService {
     encryptedPassword: string;
   }): Promise<boolean> {
     return await (async () => {
-      return await compare(validateInput.password, validateInput.encryptedPassword);
+      return await compare(
+        validateInput.password,
+        validateInput.encryptedPassword
+      );
     })()
       .finally(() => Promise.resolve({}))
       .then(val => val);

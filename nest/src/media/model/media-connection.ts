@@ -18,7 +18,7 @@ export class MediaItemOrderBy {}
 @ConnectionNodesObjectType(MediaItem)
 export class MediaItemNodes {}
 
-@ConnectionEdgeObjectType(MediaItem, {id: new MediaItem().id})
+@ConnectionEdgeObjectType(MediaItem, { id: new MediaItem().id })
 export class MediaItemEdge extends MediaItem {
   constructor() {
     super();
