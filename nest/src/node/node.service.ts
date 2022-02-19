@@ -61,8 +61,7 @@ export interface RootTypes<
 }
 
 @Injectable()
-export class NodeService
-{
+export class NodeService {
   node: (
     id: string
   ) => RootTypes<
@@ -76,7 +75,7 @@ export class NodeService
     | Account
     | Viewer
   >;
-  __typename:keyof typeof ModelsEnum
+  __typename: keyof typeof ModelsEnum;
   id:
     | User["id"]
     | Entry["id"]
@@ -87,9 +86,11 @@ export class NodeService
     | Category["id"]
     | Account["id"]
     | Viewer["id"];
-  nodehandler<T extends ReturnTypeFuncValue, V extends Constructor,   U extends {id: string}>(
-    nodeType: T, cursor: U
-  ): (target: V) => Constructor {
+  nodehandler<
+    T extends ReturnTypeFuncValue,
+    V extends Constructor,
+    U extends { id: string }
+  >(nodeType: T, cursor: U): (target: V) => Constructor {
     return (target: V): Constructor => {
       @ObjectType(target.name)
       class NodeDefs extends target {
@@ -100,8 +101,11 @@ export class NodeService
         cursor(): ResolvedGlobalId {
           return {
             id: cursor.id,
-            type: this.__typename.valueOf() === target.name ? target.name : this.__typename
-          }
+            type:
+              this.__typename.valueOf() === target.name
+                ? target.name
+                : this.__typename
+          };
         }
 
         @Field(() => ModelsEnum)

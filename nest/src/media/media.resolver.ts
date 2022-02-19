@@ -52,11 +52,12 @@ export class MediaResolver {
         after: params.pagination.after
       },
       {
-        getCursor: (record: {id: string}) => {
-          return record
+        getCursor: (record: { id: string }) => {
+          return record;
         },
         decodeCursor: (cursor: string) => fromGlobalId(cursor),
-        encodeCursor: (cursor: { id: string }) => toGlobalId(MediaItem.name, cursor.id)
+        encodeCursor: (cursor: { id: string }) =>
+          toGlobalId(MediaItem.name, cursor.id)
       }
     );
   }

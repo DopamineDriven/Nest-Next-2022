@@ -11,17 +11,24 @@ import {
   graphqlUploadExpress,
   UploadOptions,
   processRequest,
-  Upload,GraphQLOperation
+  Upload,
+  GraphQLOperation
 } from "graphql-upload";
 import { createWriteStream } from "fs";
 import { ReadStream } from "fs-capacitor";
 import { Inject, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma";
-import { GraphQLJSON, JSONObjectResolver, GraphQLJSONObject } from "graphql-scalars";
+import {
+  GraphQLJSON,
+  JSONObjectResolver,
+  GraphQLJSONObject
+} from "graphql-scalars";
 import { Context as LocalContext } from "../app.module";
 
 @Injectable()
-export class UploadService implements GraphQLOperation, FileUpload, UploadOptions {
+export class UploadService
+  implements GraphQLOperation, FileUpload, UploadOptions
+{
   operationName?: string | null | undefined;
   query: string;
   variables?: unknown;

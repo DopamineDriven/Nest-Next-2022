@@ -5,10 +5,9 @@ import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection
 import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { Connection } from "./model";
 
-
 @Injectable()
 export class ConnectionService {
-  constructor(private prismaService: PrismaService) { }
+  constructor(private prismaService: PrismaService) {}
 
   async relayFindUniqueConnection(params: { id: string }) {
     const connection = await this.prismaService.connection.findUnique({

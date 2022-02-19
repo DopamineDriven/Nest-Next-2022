@@ -17,17 +17,15 @@ export class EntryOrderBy {}
 @ConnectionNodesObjectType(Entry)
 export class EntryNodes {}
 
-@ConnectionEdgeObjectType(Entry, {id: new Entry().id})
+@ConnectionEdgeObjectType(Entry, { id: new Entry().id })
 export class EntryEdge extends Entry {
   constructor() {
     super();
   }
-
 }
 
 @ConnectionObjectType(EntryEdge)
-export class EntryConnection {
-}
+export class EntryConnection {}
 
 // const EntryUnion = (func: ResolveTypeFn<EntryOpsUnion, ExecutionContext>) =>
 //   createUnionType({

@@ -12,8 +12,7 @@ import {
 import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
 import { EntryService } from "src/entry/entry.service";
 import { Comment } from "./model/comment.model";
-import {
-  CommentService} from "./comment.service";
+import { CommentService } from "./comment.service";
 import { PrismaService } from "src/prisma";
 import { AuthService } from "src/auth/auth-jwt.service";
 import { CommentConnection } from "./model/comment-connection.model";
@@ -30,7 +29,7 @@ import { AuthGuard } from "src/common/guards/gql-context.guard";
 @Resolver(() => Comment)
 export class CommentResolver {
   constructor(
-    @Inject(PrismaService) private  prismaService: PrismaService,
+    @Inject(PrismaService) private prismaService: PrismaService,
     @Inject(CommentService) private commentService: CommentService,
     @Inject(AuthService) private readonly authService: AuthService
   ) {}

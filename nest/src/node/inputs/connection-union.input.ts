@@ -12,8 +12,8 @@ import { EntryWhereInput } from "src/.generated/prisma-nestjs-graphql/entry/inpu
 import { EntryOrderByWithRelationAndSearchRelevanceInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-order-by-with-relation-and-search-relevance.input";
 import { EntryWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-where-unique.input";
 import { EntryScalarFieldEnum } from "src/.generated/prisma-nestjs-graphql/entry/enums/entry-scalar-field.enum";
-import { ProfileWhereInput } from 'src/.generated/prisma-nestjs-graphql/profile/inputs/profile-where.input';
-import { ProfileOrderByWithRelationAndSearchRelevanceInput } from 'src/.generated/prisma-nestjs-graphql/profile/inputs/profile-order-by-with-relation-and-search-relevance.input';
+import { ProfileWhereInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-where.input";
+import { ProfileOrderByWithRelationAndSearchRelevanceInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-order-by-with-relation-and-search-relevance.input";
 import { ProfileWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-where-unique.input";
 import { ProfileScalarFieldEnum } from "src/.generated/prisma-nestjs-graphql/profile/enums/profile-scalar-field.enum";
 import { SessionWhereInput } from "src/.generated/prisma-nestjs-graphql/session/inputs/session-where.input";
@@ -54,7 +54,6 @@ export class ManyCommentsPartialInput {
   pagination: PaginationArgsInput;
 }
 
-
 @InputType("ManySessionsPartialInput")
 export class ManySessionsPartialInput {
   @Field(() => SessionWhereInput, { nullable: true })
@@ -66,7 +65,7 @@ export class ManySessionsPartialInput {
   orderBy?: Array<SessionOrderByWithRelationAndSearchRelevanceInput>;
 
   @Field(() => SessionWhereUniqueInput, { nullable: false })
-  cursor?: SessionWhereUniqueInput
+  cursor?: SessionWhereUniqueInput;
 
   @Field(() => Int, { nullable: true })
   take?: number;
@@ -86,32 +85,31 @@ export class ManySessionsPartialInput {
 
 @InputType("ManyProfilesPartialInput")
 export class ManyProfilesPartialInput {
-
-  @Field(() => ProfileWhereInput, {nullable:true})
+  @Field(() => ProfileWhereInput, { nullable: true })
   where?: ProfileWhereInput;
 
-  @Field(() => [ProfileOrderByWithRelationAndSearchRelevanceInput], {nullable:true})
+  @Field(() => [ProfileOrderByWithRelationAndSearchRelevanceInput], {
+    nullable: true
+  })
   orderBy?: Array<ProfileOrderByWithRelationAndSearchRelevanceInput>;
 
-  @Field(() => ProfileWhereUniqueInput, {nullable:true})
+  @Field(() => ProfileWhereUniqueInput, { nullable: true })
   cursor?: ProfileWhereUniqueInput;
 
-  @Field(() => Int, {nullable:true})
+  @Field(() => Int, { nullable: true })
   take?: number;
 
-  @Field(() => Int, {nullable:true})
+  @Field(() => Int, { nullable: true })
   skip?: number;
 
-  @Field(() => [ProfileScalarFieldEnum], {nullable:true})
+  @Field(() => [ProfileScalarFieldEnum], { nullable: true })
   distinct?: Array<keyof typeof ProfileScalarFieldEnum>;
   @Field(() => PaginationArgsInput, {
     defaultValue: { first: 10 },
     nullable: true
   })
   pagination?: PaginationArgsInput | null;
-  }
-
-
+}
 
 @InputType("ManyEntriesPartialInput")
 export class ManyEntriesPartialInput {
@@ -197,7 +195,6 @@ export class ManyMediaItemsPartialInput {
   })
   pagination?: PaginationArgsInput | null;
 }
-
 
 @InputType("ComprehensiveConnectionUnionPartialInput")
 export class ComprehensiveConnectionUnionPartialInput {

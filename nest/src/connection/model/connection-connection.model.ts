@@ -12,7 +12,9 @@ import { ConnectionListRelationFilter } from "src/.generated/prisma-nestjs-graph
 @ConnectionFilterArgsType(ConnectionListRelationFilter)
 export class ConnectionFilter {}
 
-@ConnectionOrderingInputType(ConnectionOrderByWithRelationAndSearchRelevanceInput)
+@ConnectionOrderingInputType(
+  ConnectionOrderByWithRelationAndSearchRelevanceInput
+)
 export class ConnectionOrderBy {}
 
 @ConnectionNodesObjectType(Connection)

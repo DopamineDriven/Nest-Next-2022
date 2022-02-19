@@ -31,12 +31,7 @@ import { PasswordModule } from "./password.module";
       inject: [ConfigService]
     })
   ],
-  providers: [
-    AuthResolver,
-    AuthService,
-    AuthJwtStrategy,
-    GraphqlAuthGuard
-  ],
+  providers: [AuthResolver, AuthService, AuthJwtStrategy, GraphqlAuthGuard],
   controllers: [AuthJwtController],
   exports: [GraphqlAuthGuard, AuthService]
 })

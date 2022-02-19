@@ -9,15 +9,13 @@ import { EntryOperations } from "../enums/entry-operations.enum";
 import { Type } from "@nestjs/common";
 import { Auth } from "src/auth/model";
 import { JwtDecoded } from "src/auth/dto";
-import {
-  MappedType
-} from "@nestjs/mapped-types";
+import { MappedType } from "@nestjs/mapped-types";
 import { Edge, Connection } from "@devoxa/prisma-relay-cursor-connection";
 import { Session } from "src/session/model/session.model";
 
 //function IntersectionType<A, B>(target: Type<A>, source: Type<B>): MappedType<A & B>;
 
-@ObjectType("Entry", {implements: () => Node})
+@ObjectType("Entry", { implements: () => Node })
 export class Entry implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
@@ -32,7 +30,7 @@ export class Entry implements Node {
   authorId?: string;
 
   @Field(() => String, { nullable: true })
-  content?: string
+  content?: string;
 
   @Field(() => Date, { nullable: false })
   createdAt!: Date;
@@ -106,7 +104,10 @@ export interface ClassType<T = any> {
 export type EntryOpsUnion = AuthDetailedExtended | EntryConnectionExtended;
 export const EntryOperationsUnion = createUnionType<Type<EntryOpsUnion>[]>({
   name: "EntryOperationsUnion",
-  types: (): (typeof AuthDetailedExtended | typeof EntryConnectionExtended)[] => [AuthDetailedExtended, EntryConnectionExtended],
+  types: (): (
+    | typeof AuthDetailedExtended
+    | typeof EntryConnectionExtended
+  )[] => [AuthDetailedExtended, EntryConnectionExtended],
   resolveType: (
     {},
     {},

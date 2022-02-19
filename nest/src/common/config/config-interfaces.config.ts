@@ -7,10 +7,38 @@ export type ConfigMapped<T extends keyof ConfigCoalesced> = {
 export const ConfigMappedFunction = ({
   ...props
 }: ConfigMapped<
-  "cors" | "apollo" | "graphql" | "nest" | "security" | "swagger" | "github" | "redis" | "postgres"
+  | "cors"
+  | "apollo"
+  | "graphql"
+  | "nest"
+  | "security"
+  | "swagger"
+  | "github"
+  | "redis"
+  | "postgres"
 >) => {
-  const { cors, graphql, nest, security, swagger, github, apollo, redis, postgres } = props;
-  return { cors, graphql, nest, security, swagger, github, apollo, redis, postgres };
+  const {
+    cors,
+    graphql,
+    nest,
+    security,
+    swagger,
+    github,
+    apollo,
+    redis,
+    postgres
+  } = props;
+  return {
+    cors,
+    graphql,
+    nest,
+    security,
+    swagger,
+    github,
+    apollo,
+    redis,
+    postgres
+  };
 };
 
 export type ConfigCoalesced = {

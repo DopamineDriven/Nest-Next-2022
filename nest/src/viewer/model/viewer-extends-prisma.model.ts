@@ -24,4 +24,3 @@ export class GetViewer {
   @Field(() => String, { nullable: true })
   accessToken: string | null;
 }
-

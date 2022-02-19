@@ -26,13 +26,7 @@ export const UserEntity = createParamDecorator(
 );
 
 export const UserMeta = createParamDecorator(
-  <
-    T extends User extends infer U
-      ? U
-      : T extends User
-      ? User
-      : T
-  >(
+  <T extends User extends infer U ? U : T extends User ? User : T>(
     data: T,
     ctx: ExecutionContext
   ) => {
@@ -40,6 +34,6 @@ export const UserMeta = createParamDecorator(
   }
 );
 // user.decorator.ts
-export const CURRENT_USER_KEY = ("currentUser");
+export const CURRENT_USER_KEY = "currentUser";
 export const CurrentUser = (...user: User[]) =>
   SetMetadata<string, User[]>(CURRENT_USER_KEY, user);

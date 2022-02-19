@@ -7,7 +7,7 @@ import { EntryScalarFieldEnum } from "src/.generated/prisma-nestjs-graphql/entry
 import { EntryMinAggregateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-min-aggregate.input";
 import { EntryMaxAggregateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-max-aggregate.input";
 import { EntryCountAggregateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-count-aggregate.input";
-import { MappedType } from "@nestjs/mapped-types"
+import { MappedType } from "@nestjs/mapped-types";
 
 @InputType("EntryAggregate")
 export class EntryAggregate {

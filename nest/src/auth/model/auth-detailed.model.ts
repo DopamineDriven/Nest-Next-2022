@@ -30,13 +30,15 @@ export class AuthDetailed {
 }
 
 @ObjectType("AuthIntersected")
-export class AuthIntersected extends IntersectionType<
+export class AuthIntersected extends IntersectionType<Auth, JwtDecoded>(
   Auth,
-  JwtDecoded
-    >(Auth, JwtDecoded, ObjectType) {
+  JwtDecoded,
+  ObjectType
+) {
   constructor() {
     super();
-}}
+  }
+}
 
 IntersectionType(EntryConnection, MediaItemConnection);
 export class Intersected {}

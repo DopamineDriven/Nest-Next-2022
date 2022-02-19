@@ -1,7 +1,8 @@
 import {
   createUnionType,
   Field,
-  GqlExecutionContext,  InterfaceType,
+  GqlExecutionContext,
+  InterfaceType,
   ObjectType
 } from "@nestjs/graphql";
 import { Injectable, Type, Inject, ExecutionContext } from "@nestjs/common";
@@ -97,7 +98,8 @@ export class CommentService {
   constructor(
     @Inject(PrismaService) private prismaService: PrismaService,
     @Inject(AuthService) private authService: AuthService,
-    @Inject(EntryService) private entryService: EntryService  ) {}
+    @Inject(EntryService) private entryService: EntryService
+  ) {}
   async siftComments(params: FindManyCommentsPaginatedInput) {
     return await findManyCursorConnection(
       args =>

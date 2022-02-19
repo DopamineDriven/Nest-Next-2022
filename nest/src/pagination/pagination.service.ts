@@ -23,7 +23,9 @@ export class PaginationService extends PaginationArgs {
   constructor() {
     super();
   }
-  async relayToPrismaPagination<T extends PaginationArgs>(args: T): Promise<{
+  async relayToPrismaPagination<T extends PaginationArgs>(
+    args: T
+  ): Promise<{
     cursor?: { id: string };
     take?: number;
     skip?: number;

@@ -7,10 +7,9 @@ import { SessionWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/se
 import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { Session } from "./model";
 
-
 @Injectable()
 export class SessionService {
-  constructor(private prismaService: PrismaService) { }
+  constructor(private prismaService: PrismaService) {}
 
   async relayFindUniqueSession(params: { id: string }) {
     const session = await this.prismaService.session.findUnique({

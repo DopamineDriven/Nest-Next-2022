@@ -1,5 +1,12 @@
 import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
-import { Resolver, Query, Args, Mutation, ResolveField, Context } from "@nestjs/graphql";
+import {
+  Resolver,
+  Query,
+  Args,
+  Mutation,
+  ResolveField,
+  Context
+} from "@nestjs/graphql";
 import { AuthService } from "src/auth/auth-jwt.service";
 import { AuthDetailed } from "src/auth/model/auth-detailed.model";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
@@ -77,7 +84,9 @@ export class AppResolver {
   @UseGuards(AuthGuard)
   @Query(() => AuthDetailed)
   async decodeViewerTokenFromContext(@Context("token") ctx: ExecutionContext) {
-    return await this.authService.getUserWithDecodedToken(ctx as unknown as string);
+    return await this.authService.getUserWithDecodedToken(
+      ctx as unknown as string
+    );
   }
 
   @UseGuards(AuthGuard)

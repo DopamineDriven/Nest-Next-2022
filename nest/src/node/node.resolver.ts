@@ -63,14 +63,16 @@ export const UnionNode: UnionOnNode = createUnionType<Type<UnionOnNode>[]>({
     CommentConnection
   ],
   resolveType(
-    options: UnionOptions<Type<
-      | UserConnection
-      | EntryConnection
-      | MediaItemConnection
-      | ProfileConnection
-      | SessionConnection
-      | CommentConnection
-    >[]>
+    options: UnionOptions<
+      Type<
+        | UserConnection
+        | EntryConnection
+        | MediaItemConnection
+        | ProfileConnection
+        | SessionConnection
+        | CommentConnection
+      >[]
+    >
   ) {
     // resolve
     /**

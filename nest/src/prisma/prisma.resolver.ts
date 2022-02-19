@@ -17,8 +17,10 @@ import { PaginationService } from "src/pagination";
 @Resolver("PrismaResolver")
 export class PrismaResolver {
   constructor(
-    @Inject(forwardRef(() => PrismaService)) private readonly prismaService: PrismaService,
-    @Inject(forwardRef(() => PaginationService)) private readonly paginationService: PaginationService
+    @Inject(forwardRef(() => PrismaService))
+    private readonly prismaService: PrismaService,
+    @Inject(forwardRef(() => PaginationService))
+    private readonly paginationService: PaginationService
   ) {}
 
   @ResolveField(() => UserConnection)

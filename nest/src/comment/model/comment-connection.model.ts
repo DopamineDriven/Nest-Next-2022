@@ -19,12 +19,11 @@ export class CommentOrderBy {}
 @ConnectionNodesObjectType(Comment)
 export class CommentNodes {}
 
-@ConnectionEdgeObjectType(Comment, {id: new Comment().id})
+@ConnectionEdgeObjectType(Comment, { id: new Comment().id })
 export class CommentEdge extends Comment {
   constructor() {
     super();
   }
-
 }
 
 @ConnectionObjectType(CommentEdge)

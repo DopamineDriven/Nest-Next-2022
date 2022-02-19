@@ -21,7 +21,7 @@ export class Profile implements Node {
   @Field(() => Pronouns, { nullable: true, defaultValue: "NOT_LISTED" })
   pronouns?: keyof typeof Pronouns | null;
 
-  @Field(() => String, {nullable: true})
+  @Field(() => String, { nullable: true })
   coverPhoto: string | null;
 
   @Field(() => Date, { nullable: true })
