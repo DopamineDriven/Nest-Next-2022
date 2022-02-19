@@ -94,9 +94,7 @@ const FileUploadComponent: FC<FileUploadFieldProps> = ({
   const [type, setType] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [modified, setModified] = useState<number>(0);
-  const [description, setDescription] = useState<string | null>(
-    "you're doing great"
-  );
+  const [description, setDescription] = useState<string | null>("");
   const fileValue = DEFAULT_FILE_STATE;
 
   const [fieldValueState, setFieldValueState] = useState<

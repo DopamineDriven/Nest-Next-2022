@@ -47,7 +47,54 @@ export class GqlConfigService implements GqlOptionsFactory {
       playground: true,
       debug: true,
       introspection: true,
-      cors: false,
+      cors: {
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+        maxAge: 0,
+        origin: true, // reflects dynamic origin -- Vary
+        allowedHeaders: [
+          "Access-Control-Allow-Methods",
+          "Access-Control-Expose-Headers",
+          "apollographql-client-name",
+          "access-control-allow-headers",
+          "Access-Control-Allow-Origin",
+          "Origin",
+          "X-Requested-With",
+          "Content-Type",
+          "Accept",
+          "Apollo-Federation-Include-Trace",
+          "Authorization",
+          "Cache-Control",
+          "Vary",
+          "Content-Length",
+          "Cookie",
+          "Accept-Encoding",
+          "Transfer-Encoding",
+          "Connection",
+          "Referrer",
+          "Referrer-Policy",
+          "X-Csrf-Token",
+          "Woocommerce-Session",
+          "Accept-Charset",
+          "Forwarded",
+          "Host",
+          "From",
+          "ETag",
+          "Retry-After",
+          "Server",
+          "Set-Cookie",
+          "Trailer",
+          "User-Agent",
+          "Upgrade",
+          "X-XSS-Protection",
+          "Upgrade-Insecure-Requests",
+          "Session",
+          "authorization"
+        ],
+        credentials: true,
+        exposedHeaders: ["*", "authorization", "Authorization"],
+        optionsSuccessStatus: 204,
+        preflightContinue: false
+      },
       // plugins: [
       //   ApolloServerPluginLandingPageLocalDefault(),
       //   ApolloServerPluginInlineTrace()
@@ -65,7 +112,6 @@ export class GqlConfigService implements GqlOptionsFactory {
                 token
               )) as AuthDetailed
             ).jwt.payload.userId;
-            console.log(token ?? "no token");
             res.setHeader("authorization", `Bearer ${token}`);
             return {
               req,
