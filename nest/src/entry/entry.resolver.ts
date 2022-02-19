@@ -8,8 +8,7 @@ import {
   Context,
   Parent
 } from "@nestjs/graphql";
-import { Inject, UseGuards, ExecutionContext } from "@nestjs/common";
-import { AuthService } from "src/auth/auth-jwt.service";
+import { UseGuards, ExecutionContext } from "@nestjs/common";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { Entry } from "./model/entry.model";
 import { PrismaService } from "../prisma/prisma.service";
@@ -22,18 +21,18 @@ import {
 } from "./inputs/entry-paginated.input";
 import { User } from "src/user/model/user.model";
 import { EntryUncheckedCreateNestedManyWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-unchecked-create-nested-many-without-author.input";
+import { EntryUncheckedCreateInputSansAuthorId } from "./inputs/entry-unchecked.input";
+import { NewEntryOutput } from "./outputs/new-entry.output";
+import { EntryCreateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create.input";
+import { GraphqlAuthGuard } from "src/auth/gql-auth.guard";
+
 const pubSub = new PubSub();
 
 @Resolver(() => Entry)
 export class EntryResolver {
-  // public h = class IntersectedResult extends IntersectionType(
-  //       OmitType(EntryCreateOneInput, ["author", "title"] as const),
-  //       EntryCreateIntersectedTitle
-  //     ){}
   constructor(
-    @Inject(PrismaService) private prisma: PrismaService,
-    @Inject(AuthService) private authService: AuthService,
-    @Inject(EntryService) private entryService: EntryService
+    private readonly prisma: PrismaService,
+    private readonly entryService: EntryService
   ) {}
 
   @Subscription(() => Entry)
@@ -41,24 +40,21 @@ export class EntryResolver {
     return pubSub.asyncIterator("ENTRY_CREATED");
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => Entry)
   async createEntry(
-    @Context("token") ctx: ExecutionContext,
-    @Args("EntryInput", {
-      type: () => EntryUncheckedCreateNestedManyWithoutAuthorInput
+    @Context("viewerId") ctx: ExecutionContext,
+    @Args("entryCreateInput", {
+      type: () => EntryUncheckedCreateInputSansAuthorId
     })
-    data: EntryUncheckedCreateNestedManyWithoutAuthorInput
+    data: EntryUncheckedCreateInputSansAuthorId
   ) {
-    return await this.entryService
-      .newEntry(data, ctx as unknown as string)
-      .then(data => {
-        return data;
-      });
+    return await this.entryService.newEntry(data, ctx as unknown as string);
   }
-
+  @UseGuards(AuthGuard)
   @Mutation(() => Entry)
   async createNewEntry(
-    @Context("token") ctx: ExecutionContext,
+    @Context("viewerId") ctx: ExecutionContext,
     @Args("createNewEntryInput", {
       type: () => EntryUncheckedCreateNestedManyWithoutAuthorInput
     })
@@ -68,6 +64,33 @@ export class EntryResolver {
       createNewEntryInput,
       ctx as unknown as string
     );
+  }
+  @Mutation(() => Entry)
+  async nuevoEntry(@Args("nuevoEntry") data: EntryCreateInput): Promise<Entry> {
+    const newEntry = await this.prisma.entry.create({
+      data,
+      include: { _count: true }
+    });
+    pubSub.publish("ENTRY_CREATED", { entryCreated: newEntry });
+    return newEntry as unknown as Entry;
+  }
+  @UseGuards(AuthGuard)
+  @UseGuards(GraphqlAuthGuard)
+  @Mutation(() => Entry)
+  async createEntryWithAxios(
+    @Context("viewerId") ctx: ExecutionContext,
+    @Args("createNew", { type: () => EntryUncheckedCreateInputSansAuthorId })
+    createNew: EntryUncheckedCreateInputSansAuthorId
+  ) {
+    const getViewerId = ctx as unknown as string;
+    if (getViewerId) {
+      ctx.switchToHttp();
+      return await this.entryService
+        .axiosMediatedEntryCreate(createNew, getViewerId)
+        .then(data => {
+          return data.valueOf() as NewEntryOutput;
+        });
+    }
   }
 
   @Query(() => EntryConnection)
@@ -87,7 +110,7 @@ export class EntryResolver {
   @Query(() => EntryConnection)
   @UseGuards(AuthGuard)
   async viewerEntriesPaginated(
-    @Context("token") ctx: ExecutionContext,
+    @Context("viewerId") ctx: ExecutionContext,
     @Args("viewerEntriesPaginatedInput", {
       type: () => FindViewerEntriesPaginatedInput
     })
@@ -101,16 +124,6 @@ export class EntryResolver {
       .then(entryConnection => entryConnection);
   }
 
-  // @ResolveField()
-  // async author(@HostParam() entry: Entry) {
-  //   return await this.prisma.entry
-  //     .findUnique({
-  //       where: { id: entry.id },
-  //       include: { author: true }
-  //     })
-  //     .author();
-  // }
-
   @Query(() => Entry)
   async entryById(@Args("id") id: string) {
     return this.prisma.entry.findUnique({
@@ -123,49 +136,3 @@ export class EntryResolver {
     return this.prisma.entry.findUnique({ where: { id: entry.id } }).author();
   }
 }
-// @Query(() => EntryOperationsUnionOutput)
-// async viewerEntriesPaginated(
-//   @Context("token") ctx: ExecutionContext,
-//   @Args("viewerEntriesInput", { type: () => ViewerEntriesInput })
-//   viewerEntriesInput: ViewerEntriesInput
-// ): Promise<EntryOperationsUnionOutput> {
-//   return await this.authService
-//     .getUserWithDecodedToken(ctx as unknown as string)
-//     .then(async data => {
-//       const getEntriesPaginated = await this.listEntries({
-//         ...viewerEntriesInput
-//       });
-
-//       const output = {
-//         connect: {
-
-//           accessToken: data.auth.accessToken,
-//           refreshToken: data.auth.refreshToken,
-//           session: data.auth.session,
-//           user: data.auth?.user ? data.auth.user : null,
-//           jwt: { ...data.jwt },
-//           connection: { ...getEntriesPaginated }
-//         }
-//       }
-//       return output as EntryOperationsUnionOutput;
-//     })
-// }
-/**
- *   @Subscription(() => Entry, {name: ENTRY_CREATED_KEY.toString()})
-  entryCreated() {
-    return this.pubSub.asyncIterator(ENTRY_CREATED_KEY.toString());
-  }
-
-  @UseGuards(GraphqlAuthGuard)
-  @Mutation(() => Entry)
-  async createEntry(
-    @Args("createInput", { type: () => EntryCreateInput })
-    data: EntryCreateInput
-  ) {
-    const newEntry = await this.prisma.entry.create({ data }).then((entry) => {
-      this.pubSub.publish(ENTRY_CREATED_KEY.toString(), { [ENTRY_CREATED]: { entry } })
-    })    @Inject("PUB_SUB") pubSub: PubSubEngine,
-    this.pubSub.publish("entryCreated", { entryCreated: newEntry });
-    return newEntry;
-  }
- */

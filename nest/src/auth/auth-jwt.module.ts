@@ -9,7 +9,6 @@ import { GraphqlAuthGuard } from "./gql-auth.guard";
 import { AuthService } from "./auth-jwt.service";
 import { PrismaModule } from "../prisma/prisma.module";
 import AuthJwtController from "./auth-jwt.controller";
-import { PasswordService } from "./password.service";
 import { PasswordModule } from "./password.module";
 
 @Module({

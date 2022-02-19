@@ -3,9 +3,12 @@ import {
   Args,
   createUnionType,
   Field,
+  GqlExecutionContext,
   ID,
+  ObjectType,
   Query,
   Resolver,
+  Union,
   UnionOptions
 } from "@nestjs/graphql";
 import { fromGlobalId, globalIdField, toGlobalId } from "graphql-relay";
@@ -22,17 +25,32 @@ import { ProfileService } from "../profile/profile.service";
 // import { SessionService } from "../Services/SessionService/session.service";
 import { Node } from "./model/node.model";
 import { NodeService } from "./node.service";
-import { Inject, Type } from "@nestjs/common";
-import { CommentConnection } from "../comment/model/comment-connection.model";
+import { ExecutionContext, Inject, Type } from "@nestjs/common";
+import {
+  CommentConnection,
+  CommentEdge
+} from "../comment/model/comment-connection.model";
 import { CommentService } from "src/comment/comment.service";
-import { UserConnection } from "src/user/model/user-connection.model";
-import { EntryConnection } from "src/entry/model/entry-connection.model";
-import { ProfileConnection } from "src/profile/model/profile-connection.model";
+import { UserConnection, UserEdge } from "src/user/model/user-connection.model";
+import {
+  EntryConnection,
+  EntryEdge
+} from "src/entry/model/entry-connection.model";
+import {
+  ProfileConnection,
+  ProfileEdge
+} from "src/profile/model/profile-connection.model";
 import { SessionService } from "src/session/session.service";
-import { SessionConnection } from "src/session/model/session-connection.model";
+import {
+  SessionConnection,
+  SessionEdge
+} from "src/session/model/session-connection.model";
 import { Session } from "src/session/model/session.model";
-import { MediaItemConnection } from "src/media/model/media-connection";
-import { ConnectionObjectType } from "src/common";
+import {
+  MediaItemConnection,
+  MediaItemEdge
+} from "src/media/model/media-connection";
+import { ConnectionObjectType, ConnectionEdgeObjectType } from "src/common";
 import { InstanceWrapper } from "@nestjs/core/injector/instance-wrapper";
 import { FindManyUsersPaginatedInput } from "src/user/inputs/user-paginated-args.input";
 import { FindManyEntriesPaginatedInput } from "src/entry/inputs/entry-paginated.input";
@@ -42,7 +60,66 @@ import { FindManySessionsPaginatedInput } from "src/session/inputs/sessions-pagi
 import { FindManyMediaItemsPaginatedInput } from "src/media/inputs/find-many-media-items-paginated.input";
 import { ComprehensiveConnectionUnionPartialInput } from "./inputs/connection-union.input";
 import { createContextId } from "@nestjs/core";
-import { GraphQLError } from "graphql";
+import {
+  GraphQLError,
+  GraphQLObjectType,
+  GraphQLUnionType,
+  isTypeSubTypeOf,
+  Thunk,
+  defaultTypeResolver,
+  GraphQLAbstractType
+} from "graphql";
+import {
+  DirectiveNode,
+  Location,
+  NamedTypeNode,
+  NameNode,
+  StringValueNode,
+  UnionTypeDefinitionNode
+} from "graphql/language";
+import {
+  GraphQLIsTypeOfFn,
+  GraphQLTypeResolver,
+  GraphQLUnionTypeConfig,
+  GraphQLUnionTypeExtensions,
+  GraphQLResolveInfo
+} from "graphql/type";
+
+export type Maybe<T> = T | null;
+export type UnionOnEdge =
+  | UserEdge
+  | EntryEdge
+  | MediaItemEdge
+  | ProfileEdge
+  | SessionEdge
+  | CommentEdge;
+
+export interface UnionOnEdgeExtended<T extends UnionOnEdge> {
+  unionOnEdge: T;
+}
+@ObjectType("UnionOnEdgeObjectType")
+export class UnionOnEdgeObjectType implements UnionOnEdgeExtended<UnionOnEdge> {
+  @Field(() => UnionOnEdgeObjectType)
+  unionOnEdge: UnionOnEdge;
+}
+
+class UnionTypeDef implements UnionTypeDefinitionNode {
+  kind: "UnionTypeDefinition";
+  description?: StringValueNode | undefined;
+  directives?: readonly DirectiveNode[] | undefined;
+  loc?: Location | undefined;
+  name: NameNode;
+  types?: readonly NamedTypeNode[] | undefined;
+}
+
+new GraphQLUnionType({
+  name: "UnionEdge",
+  types: <
+    Thunk<GraphQLObjectType<UnionOnEdgeObjectType, GqlExecutionContext>[]>
+  >{},
+  astNode: <Union<UnionOnEdgeExtended<UnionOnEdge>[]>>{},
+  description: "Top Level Union"
+});
 
 export type UnionOnNode =
   | UserConnection
@@ -52,7 +129,7 @@ export type UnionOnNode =
   | SessionConnection
   | CommentConnection;
 
-export const UnionNode: UnionOnNode = createUnionType<Type<UnionOnNode>[]>({
+export const UnionNode = createUnionType<Type<UnionOnNode>[]>({
   name: "NodeUnion",
   types: () => [
     UserConnection,
@@ -63,30 +140,41 @@ export const UnionNode: UnionOnNode = createUnionType<Type<UnionOnNode>[]>({
     CommentConnection
   ],
   resolveType(
-    options: UnionOptions<
-      Type<
-        | UserConnection
-        | EntryConnection
-        | MediaItemConnection
-        | ProfileConnection
-        | SessionConnection
-        | CommentConnection
-      >[]
-    >
+    options: Type<
+      | UserConnection
+      | EntryConnection
+      | MediaItemConnection
+      | ProfileConnection
+      | SessionConnection
+      | CommentConnection
+    >[],
+    context: GqlExecutionContext,
+    info: GraphQLResolveInfo,
+    abstractType: GraphQLAbstractType
   ) {
-    // resolve
-    /**
-     *           "message": "Abstract type \"NodeUnion\" must resolve to an Object type at runtime for field \"Query.comprehensiveConnectionUnion\". Either the \"NodeUnion\" type should provide a \"resolveType\" function or each possible type should provide an \"isTypeOf\" function.",
-     */
     if (!options) {
       return new GraphQLError(`no ${options} returned`);
     }
-    return options;
+    return (resolving: GraphQLIsTypeOfFn<UnionOnNode, GqlExecutionContext>) =>
+      resolving(options, context, info).valueOf() ===
+      (CommentConnection && abstractType.name === CommentConnection.name
+        ? new CommentConnection()
+        : UserConnection && abstractType.name === UserConnection.name
+        ? new UserConnection()
+        : ProfileConnection && abstractType.name === ProfileConnection.name
+        ? new ProfileConnection()
+        : SessionConnection && abstractType.name === SessionConnection.name
+        ? new SessionConnection()
+        : MediaItemConnection && abstractType.name === MediaItemConnection.name
+        ? new MediaItemConnection()
+        : EntryConnection && abstractType.name === EntryConnection.name
+        ? new EntryConnection()
+        : undefined);
   }
 });
 
-@ConnectionObjectType(UnionNode)
-export class NodeUnionConnection extends InstanceWrapper<
+@ConnectionEdgeObjectType(UnionNode, { id: new Node().id })
+export class NodeUnionEdge extends InstanceWrapper<
   Type<
     | UserConnection
     | EntryConnection
@@ -107,6 +195,13 @@ export class NodeUnionConnection extends InstanceWrapper<
     | ProfileConnection
     | SessionConnection
     | CommentConnection;
+}
+
+@ConnectionObjectType(NodeUnionEdge)
+export class NodeUnionConnection extends NodeUnionEdge {
+  constructor() {
+    super();
+  }
 }
 
 @Resolver(() => Node)

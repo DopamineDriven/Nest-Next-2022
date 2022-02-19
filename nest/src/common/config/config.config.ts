@@ -87,6 +87,9 @@ const config = {
     disconnectTimeout: process.env.REDIS_DISCONNECT_TIMEOUT
       ? Number.parseInt(process.env.REDIS_DISCONNECT_TIMEOUT, 10)
       : 2000
+  },
+  local: {
+    auth: process.env.LOCAL_AUTH ? process.env.LOCAL_AUTH : ""
   }
 };
 

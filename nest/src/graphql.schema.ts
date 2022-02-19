@@ -811,6 +811,13 @@ export class CommentScalarWhereInput {
   updatedAt?: Nullable<DateTimeNullableFilter>;
 }
 
+export class CommentUncheckedCreateNestedManyWithoutEntryInput {
+  connect?: Nullable<CommentWhereUniqueInput[]>;
+  connectOrCreate?: Nullable<CommentCreateOrConnectWithoutEntryInput[]>;
+  create?: Nullable<CommentCreateWithoutEntryInput[]>;
+  createMany?: Nullable<CommentCreateManyEntryInputEnvelope>;
+}
+
 export class CommentUpdateManyMutationInput {
   body?: Nullable<NullableStringFieldUpdateOperationsInput>;
   createdAt?: Nullable<DateTimeFieldUpdateOperationsInput>;
@@ -1101,6 +1108,20 @@ export class DateTimeNullableFilter {
   notIn?: Nullable<DateTime[]>;
 }
 
+export class EntryCreateInput {
+  author: UserCreateNestedOneWithoutEntriesInput;
+  categories?: Nullable<CategoryCreateNestedManyWithoutEntriesInput>;
+  categoryId?: Nullable<string>;
+  comments?: Nullable<CommentCreateNestedManyWithoutEntryInput>;
+  content?: Nullable<string>;
+  createdAt?: Nullable<DateTime>;
+  featuredImage?: Nullable<string>;
+  id?: Nullable<string>;
+  published?: Nullable<boolean>;
+  title: string;
+  updatedAt?: Nullable<DateTime>;
+}
+
 export class EntryCreateManyAuthorInput {
   categoryId?: Nullable<string>;
   content?: Nullable<string>;
@@ -1240,6 +1261,18 @@ export class EntryScalarWhereInput {
   published?: Nullable<BoolFilter>;
   title?: Nullable<StringFilter>;
   updatedAt?: Nullable<DateTimeNullableFilter>;
+}
+
+export class EntryUncheckedCreateInputSansAuthorId {
+  categoryId?: Nullable<string>;
+  comments?: Nullable<CommentUncheckedCreateNestedManyWithoutEntryInput>;
+  content?: Nullable<string>;
+  createdAt?: Nullable<DateTime>;
+  featuredImage?: Nullable<string>;
+  id?: Nullable<string>;
+  published?: Nullable<boolean>;
+  title: string;
+  updatedAt?: Nullable<DateTime>;
 }
 
 export class EntryUncheckedCreateNestedManyWithoutAuthorInput {
@@ -2822,7 +2855,7 @@ export class Entry implements Node {
   categories?: Nullable<Category[]>;
   categoryId?: Nullable<string>;
   comments?: Nullable<Comment[]>;
-  content?: Nullable<string>;
+  content: string;
   createdAt: DateTime;
   featuredImage?: Nullable<string>;
   id: string;
@@ -2909,7 +2942,11 @@ export abstract class IMutation {
   ): User | Promise<User>;
 
   abstract createEntry(
-    EntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput
+    entryCreateInput: EntryUncheckedCreateInputSansAuthorId
+  ): Entry | Promise<Entry>;
+
+  abstract createEntryWithAxios(
+    createNew: EntryUncheckedCreateInputSansAuthorId
   ): Entry | Promise<Entry>;
 
   abstract createNewEntry(
@@ -2922,6 +2959,8 @@ export abstract class IMutation {
   ): Profile | Promise<Profile>;
 
   abstract login(data: LoginInput): Token | Promise<Token>;
+
+  abstract nuevoEntry(nuevoEntry: EntryCreateInput): Entry | Promise<Entry>;
 
   abstract register(
     dataRegister: SignupInput
@@ -2952,9 +2991,15 @@ export abstract class IMutation {
 
 export class NodeUnionConnection {
   __typename?: "NodeUnionConnection";
-  edges: NodeUnion[];
+  edges: NodeUnionEdge[];
   pageInfo: PageInfo;
   totalCount: number;
+}
+
+export class NodeUnionEdge {
+  __typename?: "NodeUnionEdge";
+  cursor: string;
+  node: NodeUnion;
 }
 
 export class PageInfo {
@@ -3149,6 +3194,11 @@ export class Token {
   __typename?: "Token";
   accessToken?: Nullable<string>;
   refreshToken?: Nullable<string>;
+}
+
+export class UnionOnEdgeObjectType {
+  __typename?: "UnionOnEdgeObjectType";
+  unionOnEdge: UnionOnEdgeObjectType;
 }
 
 export class User implements Node {

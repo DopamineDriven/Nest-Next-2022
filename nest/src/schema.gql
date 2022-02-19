@@ -219,10 +219,14 @@ enum AlgorithmType {
 }
 
 type Auth {
-  """JWT access token"""
+  """
+  JWT access token
+  """
   accessToken: String
 
-  """JWT refresh token"""
+  """
+  JWT refresh token
+  """
   refreshToken: String
   session: Session
   user: User!
@@ -234,10 +238,14 @@ type AuthDetailed {
 }
 
 type AuthSansSession {
-  """JWT access token"""
+  """
+  JWT access token
+  """
   accessToken: String
 
-  """JWT refresh token"""
+  """
+  JWT refresh token
+  """
   refreshToken: String
   user: User
 }
@@ -701,6 +709,13 @@ input CommentScalarWhereInput {
   updatedAt: DateTimeNullableFilter
 }
 
+input CommentUncheckedCreateNestedManyWithoutEntryInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutEntryInput!]
+  create: [CommentCreateWithoutEntryInput!]
+  createMany: CommentCreateManyEntryInputEnvelope
+}
+
 input CommentUpdateManyMutationInput {
   body: NullableStringFieldUpdateOperationsInput
   createdAt: DateTimeFieldUpdateOperationsInput
@@ -1051,7 +1066,7 @@ type Entry implements Node {
   categories: [Category!]
   categoryId: String
   comments: [Comment!]
-  content: String
+  content: String!
   createdAt: DateTime!
   featuredImage: String
   id: ID!
@@ -1069,6 +1084,20 @@ type EntryConnection {
 type EntryCount {
   categories: Int!
   comments: Int!
+}
+
+input EntryCreateInput {
+  author: UserCreateNestedOneWithoutEntriesInput!
+  categories: CategoryCreateNestedManyWithoutEntriesInput
+  categoryId: String
+  comments: CommentCreateNestedManyWithoutEntryInput
+  content: String
+  createdAt: DateTime
+  featuredImage: String
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
 }
 
 input EntryCreateManyAuthorInput {
@@ -1236,6 +1265,18 @@ input EntryScalarWhereInput {
   published: BoolFilter
   title: StringFilter
   updatedAt: DateTimeNullableFilter
+}
+
+input EntryUncheckedCreateInputSansAuthorId {
+  categoryId: String
+  comments: CommentUncheckedCreateNestedManyWithoutEntryInput
+  content: String
+  createdAt: DateTime
+  featuredImage: String
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
 }
 
 input EntryUncheckedCreateNestedManyWithoutAuthorInput {
@@ -1484,7 +1525,7 @@ input FindManyMediaItemsPaginatedInput {
   cursor: MediaItemWhereUniqueInput
   distinct: [MediaItemScalarFieldEnum!]
   orderBy: [MediaItemOrderByWithRelationAndSearchRelevanceInput!]
-  pagination: PaginationArgsInput = {first: 10}
+  pagination: PaginationArgsInput = { first: 10 }
   skip: Int
   take: Int
   where: MediaItemWhereInput
@@ -1514,7 +1555,7 @@ input FindManyUsersPaginatedInput {
   cursor: UserWhereUniqueInput
   distinct: [UserScalarFieldEnum!]
   orderBy: [UserOrderByWithRelationAndSearchRelevanceInput!]!
-  pagination: PaginationArgsInput = {first: 10}
+  pagination: PaginationArgsInput = { first: 10 }
   skip: Int
   take: Int
   where: UserWhereInput
@@ -1881,17 +1922,27 @@ enum MimeTypes {
 
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
-  createEntry(EntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput!): Entry!
-  createNewEntry(createNewEntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput!): Entry!
+  createEntry(entryCreateInput: EntryUncheckedCreateInputSansAuthorId!): Entry!
+  createEntryWithAxios(
+    createNew: EntryUncheckedCreateInputSansAuthorId!
+  ): Entry!
+  createNewEntry(
+    createNewEntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput!
+  ): Entry!
   createProfile(data: ProfileCreateInput!, userId: String!): Profile!
   login(data: LoginInput!): Token!
+  nuevoEntry(nuevoEntry: EntryCreateInput!): Entry!
   register(dataRegister: SignupInput!): AuthSansSession!
   registerNewUser(userCreateInput: UserCreateMutationInput!): AuthDetailed!
   signin(userloginInput: LoginInput!): AuthDetailed!
   signup(data: SignupInput!): Token!
   updateUserPassword(passwordInput: ChangePasswordInput!): User!
-  upsertComment(commentUpsertInput: CommentUpsertWithWhereUniqueWithoutAuthorInput!): [Comment!]!
-  viewerCreateEntry(viewerEntryCreateInput: EntryUpdateManyWithWhereWithoutAuthorInput!): [Entry!]!
+  upsertComment(
+    commentUpsertInput: CommentUpsertWithWhereUniqueWithoutAuthorInput!
+  ): [Comment!]!
+  viewerCreateEntry(
+    viewerEntryCreateInput: EntryUpdateManyWithWhereWithoutAuthorInput!
+  ): [Entry!]!
 }
 
 input NestedBoolFilter {
@@ -2019,12 +2070,23 @@ interface Node {
   id: ID!
 }
 
-union NodeUnion = CommentConnection | EntryConnection | MediaItemConnection | ProfileConnection | SessionConnection | UserConnection
+union NodeUnion =
+    CommentConnection
+  | EntryConnection
+  | MediaItemConnection
+  | ProfileConnection
+  | SessionConnection
+  | UserConnection
 
 type NodeUnionConnection {
-  edges: [NodeUnion!]!
+  edges: [NodeUnionEdge!]!
   pageInfo: PageInfo!
   totalCount: Int!
+}
+
+type NodeUnionEdge {
+  cursor: String!
+  node: NodeUnion!
 }
 
 input NullableDateTimeFieldUpdateOperationsInput {
@@ -2306,7 +2368,11 @@ type Query {
   commentByRelayId(cursor: String!): Comment!
   comprehensiveConnectionUnion: [NodeUnion!]!
   connectionByRelayId(connectionCursor: String!): Connection!
-  contentNodesUnion(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!, findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput, findManyUsersPaginatedInput: FindManyUsersPaginatedInput): ContentNodes!
+  contentNodesUnion(
+    findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!
+    findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput
+    findManyUsersPaginatedInput: FindManyUsersPaginatedInput
+  ): ContentNodes!
   decodeViewerTokenFromContext: AuthDetailed!
   entryById(id: String!): Entry!
   findUniqueMediaItem(mediaItemId: String!): MediaItem!
@@ -2314,26 +2380,54 @@ type Query {
   getViewer: AuthDetailed!
   hello(name: String!): String!
   helloWorld: String!
-  listCategories(findManyCategoriesPaginatedInput: FindManyCategoriesPaginatedInput!): CategoryConnection!
-  listComments(findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput!): CommentConnection!
-  listConnections(findManyConnectionsPaginatedInput: FindManyConnectionsPaginatedInput!): ConnectionConnection!
-  listEntries(findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!): EntryConnection!
-  listMediaItems(findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput): MediaItemConnection!
-  listProfiles(profilesArgs: FindManyProfilesPaginatedInput!): ProfileConnection!
-  listSessions(findManySessionsPaginatedInput: FindManySessionsPaginatedInput!): SessionConnection!
-  listUsers(findManyUsersPaginatedInput: FindManyUsersPaginatedInput = {}): UserConnection!
+  listCategories(
+    findManyCategoriesPaginatedInput: FindManyCategoriesPaginatedInput!
+  ): CategoryConnection!
+  listComments(
+    findManyCommentsPaginatedInput: FindManyCommentsPaginatedInput!
+  ): CommentConnection!
+  listConnections(
+    findManyConnectionsPaginatedInput: FindManyConnectionsPaginatedInput!
+  ): ConnectionConnection!
+  listEntries(
+    findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!
+  ): EntryConnection!
+  listMediaItems(
+    findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput
+  ): MediaItemConnection!
+  listProfiles(
+    profilesArgs: FindManyProfilesPaginatedInput!
+  ): ProfileConnection!
+  listSessions(
+    findManySessionsPaginatedInput: FindManySessionsPaginatedInput!
+  ): SessionConnection!
+  listUsers(
+    findManyUsersPaginatedInput: FindManyUsersPaginatedInput = {}
+  ): UserConnection!
   me: AuthDetailed!
   node(id: ID!): Node
-  nodeUnionResolver(id: String!, manyComments: FindManyCommentsPaginatedInput!, manyEntries: FindManyEntriessPaginatedInput!, manyMediaItems: FindManyMediaItemsPaginatedInput!, manyProfiles: FindManyProfilesPaginatedInput!, manySessions: FindManySessionsPaginatedInput!, manyUsers: FindManyUsersPaginatedInput!): NodeUnionConnection!
+  nodeUnionResolver(
+    id: String!
+    manyComments: FindManyCommentsPaginatedInput!
+    manyEntries: FindManyEntriessPaginatedInput!
+    manyMediaItems: FindManyMediaItemsPaginatedInput!
+    manyProfiles: FindManyProfilesPaginatedInput!
+    manySessions: FindManySessionsPaginatedInput!
+    manyUsers: FindManyUsersPaginatedInput!
+  ): NodeUnionConnection!
   profileByRelayId: Profile!
   sessionByRelayId(cursor: String!): Session!
-  siftEntries(entryFindManyInput: FindManyEntriessPaginatedInput!): EntryConnection!
+  siftEntries(
+    entryFindManyInput: FindManyEntriessPaginatedInput!
+  ): EntryConnection!
   userById(id: String!): User!
   userByRelayId(cursor: String!): User!
   userFromAccessTokenDecoded(token: String!): AuthDetailed!
   viewer: ViewerDetailed!
   viewerAuthInfoFromContext: ViewerAuthInfo!
-  viewerEntriesPaginated(viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput!): EntryConnection!
+  viewerEntriesPaginated(
+    viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput!
+  ): EntryConnection!
 }
 
 enum QueryMode {
@@ -2656,14 +2750,22 @@ type Subscription {
 }
 
 type Token {
-  """JWT access token"""
+  """
+  JWT access token
+  """
   accessToken: String
 
-  """JWT refresh token"""
+  """
+  JWT refresh token
+  """
   refreshToken: String
 }
 
 union TypesUnion = Entry | MediaItem | User
+
+type UnionOnEdgeObjectType {
+  unionOnEdge: UnionOnEdgeObjectType!
+}
 
 type User implements Node {
   _count: UserCount
@@ -2672,7 +2774,9 @@ type User implements Node {
   comments: [Comment!]
   connections: [Connection!]
 
-  """Identifies the date and time when the user was created."""
+  """
+  Identifies the date and time when the user was created.
+  """
   createdAt: DateTime!
   email: String!
   emailVerified: DateTime
@@ -2688,7 +2792,9 @@ type User implements Node {
   sessions: [Session!]
   status: UserStatus!
 
-  """Identifies the date and time when the user was last updated."""
+  """
+  Identifies the date and time when the user was last updated.
+  """
   updatedAt: DateTime
 }
 
@@ -3075,7 +3181,9 @@ type ViewerDetailed implements Node {
   comments: [Comment!]
   connections: [Connection!]
 
-  """Identifies the date and time when the user was created."""
+  """
+  Identifies the date and time when the user was created.
+  """
   createdAt: DateTime!
   email: String!
   emailVerified: DateTime
@@ -3093,7 +3201,9 @@ type ViewerDetailed implements Node {
   sessions: [Session!]
   status: UserStatus!
 
-  """Identifies the date and time when the user was last updated."""
+  """
+  Identifies the date and time when the user was last updated.
+  """
   updatedAt: DateTime
 }
 
