@@ -15,7 +15,8 @@ export const ConfigMappedFunction = ({
   | "swagger"
   | "github"
   | "redis"
-  | "postgres" | "local"
+  | "postgres"
+  | "local"
 >) => {
   const {
     cors,
@@ -123,5 +124,5 @@ export interface ApolloConfig {
 }
 
 export interface LocalConfig {
-  auth?: string
+  auth?: string;
 }

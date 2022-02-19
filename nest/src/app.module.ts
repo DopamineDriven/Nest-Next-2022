@@ -33,8 +33,8 @@ import { GqlConfigService } from "./gql-config.service";
 import { SessionModule } from "./session/session.module";
 import { CategoryModule } from "./category/category.module";
 import { ConnectionModule } from "./connection/connection.module";
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
 export type RecordContiional<T> =
   | Record<keyof T, T>
   | Array<T>
