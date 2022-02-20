@@ -11,8 +11,8 @@ export class Session implements Node {
   @Field(() => String, { nullable: true })
   accessToken: string | null;
 
-  @Field(() => String, { nullable: false })
-  userId!: string;
+  @Field(() => String, { nullable: true })
+  userId!: string | null;
 
   @Field(() => Int, { nullable: true })
   exp: number | null;

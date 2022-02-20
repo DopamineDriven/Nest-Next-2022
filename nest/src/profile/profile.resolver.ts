@@ -1,4 +1,4 @@
-import { HostParam, Inject, UseGuards } from "@nestjs/common";
+import { ExecutionContext, HostParam, Inject, UseGuards } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { ProfileService } from "./profile.service";
 import {
@@ -8,7 +8,8 @@ import {
   Subscription,
   Mutation,
   Args,
-  ResolveField
+  ResolveField,
+  Context
 } from "@nestjs/graphql";
 import { Profile } from "../profile/model/profile.model";
 import { PubSub } from "graphql-subscriptions";
@@ -65,10 +66,15 @@ export class ProfileResolver {
   }
 
   @ResolveField(() => User)
-  async userInProfile(@HostParam() profile: Profile) {
+  async userInProfile(
+    @HostParam() profile: Profile,
+    @Context("viewerId") ctx: ExecutionContext
+  ) {
     return await this.prismaService.user
       .findUnique({
-        where: { id: profile.userId }
+        where: {
+          id: profile.userId ? profile.userId : (ctx as unknown as string)
+        }
       })
       .profile()
       .user();

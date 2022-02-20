@@ -3,36 +3,36 @@ import {
   Query,
   Mutation,
   Context,
-  Info,
   Args,
-  ResolveField,
-  ResolveFieldOptions,
-  MiddlewareContext
+  Subscription,
+  Info
 } from "@nestjs/graphql";
 import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
-import { EntryService } from "src/entry/entry.service";
 import { Comment } from "./model/comment.model";
 import { CommentService } from "./comment.service";
 import { PrismaService } from "src/prisma";
-import { AuthService } from "src/auth/auth-jwt.service";
 import { CommentConnection } from "./model/comment-connection.model";
 import { FindManyCommentsPaginatedInput } from "./inputs/comment-paginated.input";
-import {
-  EntryConnection,
-  EntryEdge
-} from "src/entry/model/entry-connection.model";
-import { FindManyEntriesPaginatedInput } from "src/entry/inputs/entry-paginated.input";
-import { FieldResolverMetadata } from "@nestjs/graphql/dist/schema-builder/metadata";
-import { CommentUpsertWithWhereUniqueWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/comment/inputs/comment-upsert-with-where-unique-without-author.input";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
-
+import { CreateNewCommentInput } from "./inputs/create-comment.input";
+import { PubSub } from "graphql-subscriptions";
+import { GraphQLResolveInfo } from "graphql";
+const pubSub = new PubSub();
 @Resolver(() => Comment)
 export class CommentResolver {
   constructor(
     @Inject(PrismaService) private prismaService: PrismaService,
-    @Inject(CommentService) private commentService: CommentService,
-    @Inject(AuthService) private readonly authService: AuthService
+    @Inject(CommentService) private commentService: CommentService
   ) {}
+  @Subscription(() => Comment)
+  commentCreated(@Info() info: GraphQLResolveInfo) {
+    console.log(
+      "pubSub createCommentSubscription Triggered: " +
+        info.returnType.toJSON() ?? "no info"
+    );
+
+    return pubSub.asyncIterator("COMMENT_CREATED");
+  }
 
   @Query(() => CommentConnection)
   async listComments(
@@ -42,34 +42,6 @@ export class CommentResolver {
     return await this.commentService.siftComments(params);
   }
 
-  // @ResolveField("unionField", () => [createEntryCommentUnion], {
-  //   name: "unionField"
-  // })
-  // async resolveUnionField({ typeOptions, kind, schemaName, target, objectTypeFn }: FieldResolverMetadata) {
-  //   objectTypeFn(EntryConnection.name === target.name && schemaName === EntryConnection.name ? typeOptions?.defaultValue === EntryConnection : typeOptions?.defaultValue: ({unionField= CommentConnection }))
-
-  // }
-
-  // @Query(() => [createEntryCommentUnion])
-  // async commentConnectionUnion(
-  //   { unionField }: EntryCommentUnionobj,
-  //   @Args("findManyCommentsPaginatedInput", {
-  //     type: () => FindManyCommentsPaginatedInput
-  //   })
-  //   commentParams: FindManyCommentsPaginatedInput,
-  //   @Args("findManyEntriesPaginatedInput", {
-  //     type: () => FindManyEntriesPaginatedInput
-  //   })
-  //   entryParams: FindManyEntriesPaginatedInput
-  // ): Promise<EntryConnection | CommentConnection> {
-  //   return await this.commentService
-  //     .entryCommentUnion({ unionField: unionField }, entryParams, commentParams)
-  //     .then(async data => {
-  //       // const resolve = data.id in EntryConnection ? data.id in EntryConnection : data.id in CommentConnection;
-  //       return data;
-  //     });
-  // }
-
   @Query(() => Comment)
   async commentByRelayId(
     @Args("cursor", { type: () => String }) cursor: string
@@ -77,18 +49,20 @@ export class CommentResolver {
     return await this.commentService.relayFindUniqueComment({ id: cursor });
   }
 
-  @Mutation(() => [Comment])
+  @Mutation(() => Comment)
   @UseGuards(AuthGuard)
-  async upsertComment(
-    @Args("commentUpsertInput", {
-      type: () => CommentUpsertWithWhereUniqueWithoutAuthorInput
+  async createNewComment(
+    @Args("commentCreateInput", {
+      type: () => CreateNewCommentInput
     })
-    params: CommentUpsertWithWhereUniqueWithoutAuthorInput,
-    @Context("token") ctx: ExecutionContext
+    params: CreateNewCommentInput,
+    @Context("viewerId") ctx: ExecutionContext
   ) {
-    return await this.commentService.createOrUpdateComment(
+    const newComment = this.commentService.createComment(
       params,
       ctx as unknown as string
     );
+    pubSub.publish("COMMENT_CREATED", { entryCreated: newComment });
+    return await newComment;
   }
 }

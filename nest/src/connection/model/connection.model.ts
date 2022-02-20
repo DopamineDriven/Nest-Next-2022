@@ -13,8 +13,8 @@ export class Connection implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
 
-  @Field(() => String, { nullable: false })
-  ownerId!: string;
+  @Field(() => String, { nullable: true })
+  ownerId!: string | null;
 
   @Field(() => String, { nullable: true })
   firstName?: string | null;
@@ -35,5 +35,5 @@ export class Connection implements Node {
   lastModified!: Date | null;
 
   @Field(_type => User, { nullable: false })
-  owner!: User;
+  owner?: User;
 }

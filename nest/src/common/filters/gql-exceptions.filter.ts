@@ -8,10 +8,10 @@ import {
 import { User } from "src/user/model/user.model";
 
 @Catch(HttpException)
-export class AllExceptionsFilter implements GqlExceptionFilter {
+export class GqlAllExceptionsFilter implements GqlExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const gqlHost = GqlArgumentsHost.create(host);
-    return exception;
+    return HttpException;
     // const userFromContext = GqlExecutionContext.create(ctx).getContext<{user: User}>().user;
   }
 }

@@ -9,10 +9,10 @@ Project "2022 Nesting" {
 
 Table MediaItem {
   id String [pk]
-  userId String [not null]
+  userId String
   uploadedAt DateTime [default: `now()`, not null]
   updatedAt DateTime
-  user User [not null]
+  user User
   name String
   size String
   type MimeTypes
@@ -56,7 +56,7 @@ Table User {
 
 Table Profile {
   id String [pk]
-  userId String [unique, not null]
+  userId String [unique]
   memberSince DateTime [default: `now()`, not null]
   gender Gender [default: 'OTHER']
   pronouns Pronouns [default: 'NOT_LISTED']
@@ -69,13 +69,13 @@ Table Profile {
   country String
   bio String
   activiyFeed String
-  user User [not null]
+  user User
   recentActivity String
 }
 
 Table Session {
   id String [pk]
-  userId String [unique, not null]
+  userId String
   accessToken String
   alg String
   refreshToken String
@@ -86,20 +86,20 @@ Table Session {
   lastVerified DateTime
   iat Int
   exp Int
-  user User [not null]
+  user User
 }
 
 Table Comment {
   id String [pk]
-  authorId String [not null]
-  entryId String [not null]
+  authorId String
+  entryId String
   body String
   position String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime
   reactions CommentReactions [not null]
-  entry Entry [not null]
-  author User [not null]
+  entry Entry
+  author User
 
   indexes {
     (authorId, entryId) [unique]
@@ -108,27 +108,27 @@ Table Comment {
 
 Table Connection {
   id String [pk]
-  ownerId String [not null]
+  ownerId String
   firstName String
   lastName String
   email String [not null]
   phoneNumber String
   ip String
   lastModified DateTime
-  owner User [not null]
+  owner User
 }
 
 Table Entry {
   id String [pk]
   title String [not null]
   published Boolean [not null, default: false]
-  authorId String [unique, not null]
+  authorId String
   content String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime
   featuredImage String
   categories Category [not null]
-  author User [not null]
+  author User
   comments Comment [not null]
   categoryId String
 }
@@ -158,13 +158,13 @@ Table Account {
 
 Table Category {
   id String [pk]
-  creatorId String [not null]
+  creatorId String
   createdAt DateTime [default: `now()`]
   updatedAt DateTime
-  name String [unique, not null]
+  name String [not null]
   entries Entry [not null]
   entryId String
-  creator User [not null]
+  creator User
 }
 
 Table VerificationToken {

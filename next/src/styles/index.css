@@ -21,10 +21,6 @@
     min-height: 100vh;
   }
 
-  :root {
-    @apply overflow-x-hidden;
-  }
-
   *,
   *:before,
   *:after {

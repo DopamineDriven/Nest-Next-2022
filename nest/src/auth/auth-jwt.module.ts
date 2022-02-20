@@ -20,9 +20,10 @@ import { PasswordModule } from "./password.module";
       useFactory: async (configService: ConfigService) => {
         const securityConfig = configService.get<SecurityConfig>("security");
         return {
-          secret: configService.get<string>("JWT_ACCESS_SECRET"),
+          secret: configService.get<string>("JWT_ACCESS_SECRET") ?? "",
           signOptions: {
             algorithm: "HS512",
+
             expiresIn: securityConfig?.expiresIn
           }
         };

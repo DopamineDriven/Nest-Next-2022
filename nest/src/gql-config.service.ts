@@ -10,6 +10,20 @@ import { AuthService } from "./auth/auth-jwt.service";
 import { Context } from "src/app.module";
 import { AuthDetailed } from "./auth/model/auth-detailed.model";
 import internal from "stream";
+import { AuthModule } from "./auth/auth-jwt.module";
+import { PasswordModule } from "./auth/password.module";
+import { JwtModule } from "@nestjs/jwt";
+import { UserModule } from "./user/user.module";
+import { CategoryModule } from "./category/category.module";
+import { ConnectionModule } from "./connection/connection.module";
+import { CommentModule } from "./comment/comment.module";
+import { EntryModule } from "./entry/entry.module";
+import { MediaModule } from "./media/media.module";
+import { NodeModule } from "./node/node.module";
+import { PaginationModule } from "./pagination";
+import { PrismaModule } from "./prisma";
+import { ProfileModule } from "./profile/profile.module";
+import { SessionModule } from "./session/session.module";
 
 export type ParsedUrlQuery<
   T extends string,
@@ -20,8 +34,7 @@ export type ParsedUrlQuery<
 export class GqlConfigService implements GqlOptionsFactory {
   constructor(
     private configService: ConfigService,
-    @Inject<typeof AuthService>(AuthService)
-    private readonly authService: AuthService
+    private authService: AuthService
   ) {}
   createGqlOptions(): ApolloDriverConfig {
     const graphqlConfig = this.configService.get<GraphqlConfig>("graphql");
@@ -128,7 +141,24 @@ export class GqlConfigService implements GqlOptionsFactory {
         // finally {
         //   res.emit("pipe", new internal.Readable({ emitClose: true }))
         // }
-      }
+      },
+      include: [
+        AuthModule,
+        PasswordModule,
+        JwtModule,
+        UserModule,
+        CategoryModule,
+        ConnectionModule,
+        CommentModule,
+        EntryModule,
+        MediaModule,
+        NodeModule,
+        PaginationModule,
+        PrismaModule,
+        ProfileModule,
+        SessionModule
+      ],
+      bodyParserConfig: {}
     };
   }
 }

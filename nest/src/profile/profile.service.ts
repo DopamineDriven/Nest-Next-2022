@@ -136,8 +136,7 @@ export class ProfileService {
   ): Promise<Profile> {
     return await this.prismaService.profile.update({
       data: { ...params },
-      where: { userId: userId },
-      include: { user: true }
+      where: { userId: userId }
     });
   }
 

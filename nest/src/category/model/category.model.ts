@@ -10,7 +10,7 @@ export class Category implements Node {
   id!: string;
 
   @Field(() => String, { nullable: false })
-  creatorId!: string;
+  creatorId!: string | null;
 
   @Field(() => Date, { nullable: true })
   createdAt!: Date | null;

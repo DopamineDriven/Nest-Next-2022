@@ -20,11 +20,13 @@ import { ContentNodes } from "./outputs/content-nodes.output";
 import { EntryUpdateManyWithWhereWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-update-many-with-where-without-author.input";
 import { GraphqlAuthGuard } from "src/auth/gql-auth.guard";
 import { Context as AppContext } from "src/app.module";
+import { EntryCreateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create.input";
+import { EntryUncheckedCreateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-unchecked-create.input";
 
 @Resolver(() => User)
 export class UserResolver {
   constructor(
-    @Inject(PrismaService) private prismaService: PrismaService,
+    private prismaService: PrismaService,
     private authService: AuthService,
     private userService: UserService
   ) {}
@@ -226,28 +228,31 @@ export class UserResolver {
         return changePW;
       });
   }
-  @UseGuards(AuthGuard)
-  @Mutation(() => [Entry])
-  async viewerCreateEntry(
-    @Context("viewerId") ctx: ExecutionContext,
-    @Args("viewerEntryCreateInput", {
-      type: () => EntryUpdateManyWithWhereWithoutAuthorInput
-    })
-    viewerEntryCreateInput: EntryUpdateManyWithWhereWithoutAuthorInput
-  ) {
-    const getUpdate = await this.prismaService.user
-      .update({
-        data: {
-          entries: { updateMany: viewerEntryCreateInput }
-        },
-        where: { id: ctx as unknown as string },
-        include: {
-          entries: { include: { _count: true, author: true } },
-          _count: true
-        }
-      })
-      .entries();
-
-    return getUpdate;
-  }
+  // @UseGuards(AuthGuard)
+  // @Mutation(() => Entry)
+  // async viewerCreateEntry(
+  //   @Context("viewerId") ctx: ExecutionContext,
+  //   @Args("viewerEntryCreateInput", {
+  //     type: () => EntryUncheckedCreateInput
+  //   })
+  //   viewerEntryCreateInput: EntryUncheckedCreateInput
+  // ) {
+  //   const viewerId = ctx as unknown as string;
+  //   console.log(
+  //     `[viewerId in viewerCreateEntry of UserResolver]: ${viewerId}` ??
+  //       "no viewer Id"
+  //   );
+  //   return await this.prismaService.entry.create({
+  //     data: { ...viewerEntryCreateInput },
+  //     include: { _count: true, author: true }
+  //     // data: {
+  //     //   entries: { updateMany: [viewerEntryCreateInput] }
+  //     // },
+  //     // where: { id: ctx as unknown as string },
+  //     // include: {
+  //     //   entries: { include: { _count: true, author: true } },
+  //     //   _count: true
+  //     // }
+  //   });
+  // }
 }

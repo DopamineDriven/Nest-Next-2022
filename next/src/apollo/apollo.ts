@@ -1,7 +1,8 @@
 import {
   ApolloClient,
   InMemoryCache,
-  NormalizedCacheObject
+  NormalizedCacheObject,
+  TypedDocumentNode
 } from "@apollo/client";
 import {
   createBatch,
@@ -19,7 +20,11 @@ import {
   JwtDecodedFieldPolicy
 } from "./helpers";
 import emittedIntrospection from "./fragment-matcher";
-
+export type DocumentType<
+  TDocumentNode extends TypedDocumentNode<any, any>
+> = TDocumentNode extends TypedDocumentNode<infer TType, any>
+  ? TType
+  : never;
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 function createApolloClient(

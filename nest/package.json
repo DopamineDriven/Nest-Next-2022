@@ -58,6 +58,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@apollo/gateway": "^0.48.1",
     "@devoxa/prisma-relay-cursor-connection": "^2.1.0",
     "@graphql-tools/graphql-file-loader": "^7.3.3",
     "@graphql-tools/load": "^7.5.1",

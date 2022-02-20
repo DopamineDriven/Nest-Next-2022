@@ -37,7 +37,7 @@ export class ViewerDetailed extends Viewer {
   }
 
   @Field(_type => String, { nullable: true })
-  refreshToken!: string | null;
+  refreshToken?: string | null;
 
   @Field(_type => String, { nullable: true })
   secret!: string | null;
