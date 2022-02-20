@@ -70,6 +70,9 @@ module.exports = withSuperjson()({
     productionBrowserSourceMaps: true
   },
   experimental: {
+    optimizeCss: true,
+    optimizeImages: true,
+    isrFlushToDisk: true,
     outputStandalone: true
   },
   images: {
@@ -78,6 +81,7 @@ module.exports = withSuperjson()({
       "avatars.githubusercontent.com",
       "secure.gravatar.com",
       "en.gravatar.com",
+      "c.tenor.com",
       "unsplash.com",
       "images.unsplash.com",
       "tailwindui.com",

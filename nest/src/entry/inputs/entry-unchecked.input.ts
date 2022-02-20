@@ -4,26 +4,20 @@ import { CommentUncheckedCreateNestedManyWithoutEntryInput } from "src/.generate
 
 @InputType("EntryUncheckedCreateInputSansAuthorId")
 export class EntryUncheckedCreateInputSansAuthorId {
-  @Field(() => String, { nullable: true })
-  id?: string;
+  @Field(() => String)
+  id!: string;
 
   @Field(() => String, { nullable: false })
   title!: string;
 
   @Field(() => Boolean, { nullable: true })
-  published?: boolean;
+  published!: boolean;
 
   @Field(() => String, { nullable: true })
-  content?: string;
-
-  @Field(() => Date, { nullable: true })
-  createdAt?: Date | string;
-
-  @Field(() => Date, { nullable: true })
-  updatedAt?: Date | string;
+  content!: string | null;
 
   @Field(() => String, { nullable: true })
-  featuredImage?: string;
+  featuredImage!: string | null;
 
   @Field(() => String, { nullable: true })
   categoryId?: string;

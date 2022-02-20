@@ -533,13 +533,13 @@ export const toBase64 = (
  * @function localDateTimeFormatter
  * @returns a human readable timestamp with extended locale/TZ options
  */
- export interface ClassType<T = any> {
+export interface ClassType<T = any> {
   new (...args: any[]): T;
 }
 export const localDateTimeFormatter = (
   dateField: Date,
-  tz: typeof Intl.DateTimeFormat[keyof typeof Intl.DateTimeFormat],
-  date?: { new (args: Date[keyof typeof Date.prototype]): any }
+  tz: typeof Intl.DateTimeFormat[keyof typeof Intl.DateTimeFormat]
+  // date?: { new (args: Date[keyof typeof Date.prototype]): any }
 ): string => {
   const newDateTZOffset = new Date(dateField).toLocaleString(typeof tz);
   const fragment = fractionateDateTime(newDateTZOffset);

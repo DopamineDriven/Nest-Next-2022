@@ -5,7 +5,8 @@ import {
   NotFoundException,
   BadRequestException,
   ConflictException,
-  UnauthorizedException
+  UnauthorizedException,
+  ExecutionContext
 } from "@nestjs/common";
 import { User } from "../user/model/user.model";
 import { JwtService } from "@nestjs/jwt";
@@ -26,6 +27,8 @@ import { PrismaClientValidationError } from "@prisma/client/runtime";
 import { MimeTypes } from "src/.generated/prisma-nestjs-graphql/prisma/enums/mime-types.enum";
 import { serialize, parse } from "cookie";
 import { Response } from "express";
+import { EntryCreateNuevoInput } from "./inputs/entry-create-nuevo.input";
+import { Entry } from "src/entry";
 
 @Injectable()
 export class AuthService {
@@ -108,11 +111,23 @@ export class AuthService {
   async getViewerFromContext(viewerId: string) {
     return await this.validateUser(viewerId);
   }
-
+  async createEntryNuevoService(params: {
+    input: EntryCreateNuevoInput;
+    viewerId: string;
+  }) {
+    return await this.prismaService.entry
+      .create({
+        data: params.input
+      })
+      .then(entry => entry);
+  }
   async getUserWithDecodedToken(token: string) {
     const { header, payload, signature } = this.jwtService.decode(token, {
       complete: true
     }) as JwtDecoded;
+    const { refreshToken, accessToken } = this.generateTokens({
+      userId: payload.userId
+    });
     const user = await this.validateUser(payload.userId);
     const { auth, jwt } = {
       jwt: {
@@ -122,15 +137,7 @@ export class AuthService {
       },
       auth: {
         accessToken: token,
-        refreshToken: user?.sessions.sort(
-          (a, b) =>
-            (a.lastVerified
-              ? a.lastVerified.getMilliseconds()
-              : payload.exp.valueOf()) -
-            (b.lastVerified
-              ? b.lastVerified?.getMilliseconds()
-              : payload.iat.valueOf())
-        )[0].refreshToken,
+        refreshToken: refreshToken ?? "",
         user: {
           sessions: user?.sessions.sort(
             (a, b) =>
@@ -166,57 +173,25 @@ export class AuthService {
           status: { set: "ONLINE" },
           updatedAt: { set: new Date(Date.now()) },
           sessions: {
-            upsert: [
-              {
-                update: {
-                  accessToken: auth.accessToken,
-                  alg: { set: header.alg },
-                  exp: {
-                    set: payload.exp
-                  },
-                  iat: {
-                    set: payload.iat
-                  },
-                  refreshToken: { set: auth.refreshToken },
-                  signature: { set: signature },
-                  provider: {
-                    set: header.typ
-                  },
-                  lastVerified: { set: new Date(Date.now()) },
-                  scopes: {
-                    set:
-                      user?.role === "SUPERADMIN"
-                        ? ["read", "write", "edit", "administer", "impersonate"]
-                        : user?.role === "ADMIN"
-                        ? ["read", "write", "edit", "administer"]
-                        : user?.role === "MAINTAINER"
-                        ? ["read", "write", "edit"]
-                        : ["read", "write"]
-                  },
-                  tokenState: { set: "valid" }
-                },
-                where: { userId: payload.userId },
-                create: {
-                  accessToken: auth.accessToken,
-                  alg: header.alg,
-                  exp: payload.exp,
-                  iat: payload.iat,
-                  refreshToken: auth.refreshToken,
-                  signature: signature,
-                  provider: header.typ,
-                  lastVerified: new Date(Date.now()),
-                  scopes:
-                    user?.role === "SUPERADMIN"
-                      ? ["read", "write", "edit", "administer", "impersonate"]
-                      : user?.role === "ADMIN"
-                      ? ["read", "write", "edit", "administer"]
-                      : user?.role === "MAINTAINER"
-                      ? ["read", "write", "edit"]
-                      : ["read", "write"],
-                  tokenState: "valid"
-                }
-              }
-            ]
+            create: {
+              accessToken: auth.accessToken,
+              alg: header.alg,
+              exp: payload.exp,
+              iat: payload.iat,
+              refreshToken: refreshToken ?? "",
+              signature: signature,
+              provider: header.typ,
+              lastVerified: new Date(Date.now()),
+              scopes:
+                user?.role === "SUPERADMIN"
+                  ? ["read", "write", "edit", "administer", "impersonate"]
+                  : user?.role === "ADMIN"
+                  ? ["read", "write", "edit", "administer"]
+                  : user?.role === "MAINTAINER"
+                  ? ["read", "write", "edit"]
+                  : ["read", "write"],
+              tokenState: "valid"
+            }
           }
         }
       })
@@ -229,7 +204,7 @@ export class AuthService {
       .then(async results => ({
         auth: {
           accessToken: auth.accessToken,
-          refreshToken: auth.refreshToken,
+          refreshToken: refreshToken,
           session: results.session[0],
           user: results.user
         },
@@ -281,23 +256,25 @@ export class AuthService {
           updatedAt: new Date(Date.now()),
           status: "ONLINE",
           sessions: {
-            connectOrCreate: [
-              {
-                where: { userId: jwt.payload.userId },
-                create: {
-                  accessToken: userInfoo ?? auth.accessToken,
-                  alg: jwt.header.alg,
-                  exp: jwt.payload.exp,
-                  iat: jwt.payload.iat,
-                  refreshToken: auth.refreshToken,
-                  signature: jwt.signature,
-                  provider: jwt.header.typ,
-                  lastVerified: new Date(Date.now()),
-                  scopes: ["read", "write"],
-                  tokenState: "VALID"
-                }
-              }
-            ]
+            create: {
+              accessToken: userInfoo ?? auth.accessToken,
+              alg: jwt.header.alg,
+              exp: jwt.payload.exp,
+              iat: jwt.payload.iat,
+              refreshToken: auth.refreshToken,
+              signature: jwt.signature,
+              provider: jwt.header.typ,
+              lastVerified: new Date(Date.now()),
+              scopes:
+                auth.user?.role === "SUPERADMIN"
+                  ? ["read", "write", "edit", "administer", "impersonate"]
+                  : auth.user?.role === "ADMIN"
+                  ? ["read", "write", "edit", "administer"]
+                  : auth.user?.role === "MAINTAINER"
+                  ? ["read", "write", "edit"]
+                  : ["read", "write"],
+              tokenState: "VALID"
+            }
           }
         }
       })
@@ -388,11 +365,8 @@ export class AuthService {
   private generateRefreshToken(payload: { userId: string }): string {
     const securityConfig = this.configService.get<SecurityConfig>("security");
     return this.jwtService.sign(payload, {
-      secret: securityConfig?.secret
-        ? securityConfig.secret
-        : process.env.JWT_ACCESS_SECRET
-        ? process.env.JWT_ACCESS_SECRET
-        : ""
+      secret: this.configService.get("JWT_REFRESH_SECRET"),
+      expiresIn: securityConfig?.refreshIn ?? "7d"
     });
   }
 
@@ -432,27 +406,21 @@ export class AuthService {
       .then(user => user);
   }
 
-  async refreshToken(id: string) {
+  refreshToken(token: string) {
     try {
-      const secuityConfig = this.configService.get<SecurityConfig>("security");
-      const user = await this.jwtService.verifyAsync(id, {
-        secret: this.configService.get(
-          secuityConfig?.refreshSecret
-            ? secuityConfig.refreshSecret
-            : process.env.JWT_REFRESH_SECRET
-            ? process.env.JWT_REFRESH_SECRET
-            : "JWT_REFRESH_SECRET"
-        )
+      const { userId } = this.jwtService.verify(token, {
+        secret: this.configService.get("JWT_REFRESH_SECRET")
       });
-      console.log(user ?? "");
+
       return this.generateTokens({
-        userId: user.userId
+        userId
       });
     } catch (e) {
       throw new UnauthorizedException();
     }
   }
 }
+
 // async PrismaViewer(
 //   prisma: PrismaService["user"] = this.prismaService.user,
 //   authService: AuthService

@@ -16,6 +16,7 @@ import LoginComponent from "@/components/Auth/Login/login-component";
 import UnAuthContext from "../context/unauth-context";
 import { useCallback, useEffect, useState } from "react";
 import useAuth from "src/hooks/use-auth";
+import Layout from "@/components/Layout/layout";
 
 // export type LoginProps = {
 //   nav: DynamicNavQuery;

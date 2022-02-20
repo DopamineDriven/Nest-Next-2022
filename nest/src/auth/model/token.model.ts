@@ -6,5 +6,5 @@ export class Token {
   accessToken!: string | null;
 
   @Field(() => String, { nullable: true, description: "JWT refresh token" })
-  refreshToken!: string | null;
+  refreshToken?: string | null;
 }

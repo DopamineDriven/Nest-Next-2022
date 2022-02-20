@@ -16,11 +16,11 @@ export class Comment implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
 
-  @Field(() => String, { nullable: false })
-  authorId!: string;
+  @Field(() => String, { nullable: true })
+  authorId: string | null;
 
-  @Field(() => String, { nullable: false })
-  entryId!: string;
+  @Field(() => String, { nullable: true })
+  entryId: string | null;
 
   @Field(() => String, { nullable: true })
   body?: string | null;
@@ -41,5 +41,5 @@ export class Comment implements Node {
   entry?: Entry;
 
   @Field(() => User, { nullable: false })
-  author!: User;
+  author?: User;
 }

@@ -1,7 +1,7 @@
 import { ObjectType, Field, ID, createUnionType } from "@nestjs/graphql";
 import { Comment } from "../../comment/model/comment.model";
 import { User } from "../../user/model/user.model";
-import { EntryCount } from "../outputs/entry-count.output";
+import { EntryCount } from "src/.generated/prisma-nestjs-graphql/entry/outputs/entry-count.output";
 import { Category } from "../../category/model/category.model";
 import { Node } from "src/node/model/node.model";
 import { EntryConnection } from "./entry-connection.model";
@@ -25,12 +25,11 @@ export class Entry implements Node {
   @Field(() => Boolean, { nullable: true, defaultValue: false })
   published?: boolean;
 
-  @Field(() => String, { nullable: false })
-  authorId?: string;
+  @Field(() => String, { nullable: true })
+  authorId!: string | null;
 
-  @Field(() => String)
-  content!: string;
-
+  @Field(() => String, { nullable: true })
+  content!: string | null;
   @Field(() => Date, { nullable: false })
   createdAt!: Date;
 
@@ -38,7 +37,7 @@ export class Entry implements Node {
   updatedAt?: Date | null;
 
   @Field(() => String, { nullable: true })
-  featuredImage?: string;
+  featuredImage!: string | null;
 
   @Field(() => [Category], { nullable: true })
   categories?: Array<Category>;
@@ -50,12 +49,12 @@ export class Entry implements Node {
   comments?: Array<Comment>;
 
   @Field(() => String, { nullable: true })
-  categoryId?: string | null;
+  categoryId!: string | null;
 
   @Field(() => EntryCount, {
     nullable: false
   })
-  _count!: EntryCount;
+  _count?: EntryCount;
 }
 
 @ObjectType("AuthDetailedExtended")

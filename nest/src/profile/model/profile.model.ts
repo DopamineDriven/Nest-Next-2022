@@ -9,8 +9,8 @@ export class Profile implements Node {
   @Field(() => ID, { nullable: false })
   id!: string;
 
-  @Field(() => String, { nullable: false })
-  userId!: string;
+  @Field(() => String, { nullable: true })
+  userId!: string | null;
 
   @Field(() => Date, { nullable: false })
   memberSince!: Date;

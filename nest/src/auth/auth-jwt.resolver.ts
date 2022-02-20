@@ -41,6 +41,10 @@ import { ChangePasswordInput } from "src/user/inputs/change-passsword.input";
 import { ViewerDetailed } from "./model";
 import { pipe } from "rxjs";
 import { ViewerAuthInfo } from "./model/jwt-auth.model";
+import { Entry } from "src/entry";
+import { EntryCreateNuevoInput } from "./inputs/entry-create-nuevo.input";
+import { UserUncheckedCreateInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-unchecked-create.input";
+import { CreateOneUserArgs } from "src/.generated/prisma-nestjs-graphql/user/args/create-one-user.args";
 @Resolver(() => Auth)
 export class AuthResolver {
   constructor(
@@ -64,15 +68,12 @@ export class AuthResolver {
   }
   @Mutation(() => AuthDetailed)
   async registerNewUser(
-    @Args("userCreateInput", { type: () => UserCreateMutationInput })
-    params: UserCreateMutationInput
-  ): Promise<AuthDetailed> {
-    const uploadDate = new Date(Date.now()).toUTCString();
+    @Args("userCreateInput", { type: () => SignupInput })
+    params: SignupInput
+  ) {
     try {
       const userCreate = await this.prismaService.user.create({
-        include: {
-          _count: true
-        },
+        include: { _count: true, sessions: true, mediaItems: true },
         data: {
           ...params,
           email: params.email,
@@ -116,7 +117,7 @@ export class AuthResolver {
           //       }
           //     ]
           //   }
-        } as UserCreateMutationInput
+        }
       });
 
       const getTokes = this.auth.generateTokens({ userId: userCreate.id });
@@ -166,11 +167,14 @@ export class AuthResolver {
       userId: registerUser.id ? registerUser.id : ""
     });
 
+    const getRefreshToken = this.auth.refreshToken(registerUser.id);
+
     console.log(registerUser);
     const createUserResult = {
       user: registerUser,
       accessToken: getToken.accessToken,
-      refreshToken: getToken.refreshToken
+      refreshToken:
+        getToken.refreshToken ?? (await getRefreshToken).refreshToken
     } as AuthSansSession;
     return createUserResult;
   }
@@ -241,6 +245,21 @@ export class AuthResolver {
       });
   }
 
+  @Mutation(() => Entry)
+  @UseGuards(AuthGuard)
+  async createNuevoEntryMutation(
+    @Args("createNuevoEntryInput", { type: () => EntryCreateNuevoInput })
+    params: EntryCreateNuevoInput,
+    @Context("viewerId") ctx: ExecutionContext
+  ): Promise<Entry> {
+    const newEntry = this.auth.createEntryNuevoService({
+      input: params,
+      viewerId: ctx as unknown as string
+    });
+
+    return newEntry;
+  }
+
   @Query(() => User)
   async getUserFromAccessToken(
     @Args() { token }: TokenInput
@@ -264,7 +283,7 @@ export class AuthResolver {
           viewer: {
             accessToken: user.auth.accessToken,
             secret: user.jwt.signature,
-            refreshToken: user.auth.refreshToken,
+            refreshToken: user.auth?.refreshToken,
             ...user.auth.user
           }
         };

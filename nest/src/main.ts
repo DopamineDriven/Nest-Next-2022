@@ -126,14 +126,14 @@ async function bootstrap() {
   });
 
   const app = await NestFactory.create(AppModule, { ...options });
-  app.use(bodyParser.json({ limit: "50mb" }));
-  app.use(
-    bodyParser.urlencoded({
-      limit: "50mb",
-      extended: true,
-      parameterLimit: 50000
-    })
-  );
+  // app.use(bodyParser.json({ limit: "50mb" }));
+  // app.use(
+  //   bodyParser.urlencoded({
+  //     limit: "50mb",
+  //     extended: true,
+  //     parameterLimit: 50000
+  //   })
+  // );
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.use(cookieParser());
 

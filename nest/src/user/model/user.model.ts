@@ -6,7 +6,6 @@ import { Comment } from "../../comment/model/comment.model";
 import { Account } from "../../account/model/account.model";
 import { Entry } from "../../entry/model/entry.model";
 import { Session } from "../../session/model/session.model";
-import { UserCount } from "../outputs/user-count.output";
 import { Profile } from "../../profile/model/profile.model";
 import { Category } from "../../category/model/category.model";
 import { NullLiteral } from "ts-morph";
@@ -14,6 +13,7 @@ import { GraphQLJSON, JSONObjectResolver, JSONResolver } from "graphql-scalars";
 import { MediaItem } from "src/media/model/media.model";
 import { Prisma } from "@prisma/client";
 import { Node } from "src/node/model/node.model";
+import { UserCount } from "src/.generated/prisma-nestjs-graphql/user/outputs/user-count.output";
 type Nullable<T> = T | null;
 
 @ObjectType("User", { implements: () => Node })
@@ -97,7 +97,7 @@ export class User implements Node {
       sessions: 0,
       mediaItems: 0
     },
-    nullable: true
+    nullable: false
   })
-  _count?: UserCount | null;
+  _count?: UserCount;
 }

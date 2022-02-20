@@ -20,7 +20,12 @@ import {
   NormalizedCacheObject
 } from "@apollo/client";
 import { useRouter } from "next/router";
-import useAuth, { AuthData, AuthProvider, ViewerState } from "../hooks/use-auth";
+import Layout from "@/components/Layout/layout";
+import useAuth, {
+  AuthData,
+  AuthProvider,
+  ViewerState
+} from "../hooks/use-auth";
 import Router from "next/dist/server/router";
 import { NextPageContext } from "next";
 import { request } from "http";
@@ -30,7 +35,11 @@ import Link, { LinkProps } from "next/link";
 import NextNodeServer from "next/dist/server/next-server";
 import { BaseRouter } from "next/dist/shared/lib/router/router";
 import { error } from "console";
-import { Viewer, ViewerQuery, ViewerQueryVariables } from "@/graphql/generated/graphql";
+import {
+  Viewer,
+  ViewerQuery,
+  ViewerQueryVariables
+} from "@/graphql/generated/graphql";
 
 const Noop: FC<{}> = ({ children }) => <>{children}</>;
 // const envVars = {
@@ -117,7 +126,13 @@ export default function NestNextApp<T extends AppProps>({
       <ApolloProvider client={apolloClient}>
         <AuthProvider authData={pageProps.authData}>
           <LayoutNoop pageProps={pageProps}>
-            <Component {...pageProps} />
+            <Layout
+              loggedIn={Boolean(pageProps.authData?.loggedIn)}
+              loading={Boolean(pageProps.authData?.loading)}
+              viewer={pageProps.authData?.viewer}
+              error={pageProps.authData?.error}>
+              <Component {...pageProps} />
+            </Layout>
           </LayoutNoop>
         </AuthProvider>
       </ApolloProvider>

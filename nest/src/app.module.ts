@@ -143,15 +143,6 @@ export type Context = {
       load: [config],
       envFilePath: "./.env"
     }),
-    GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      useClass: GqlConfigService,
-      imports: [AuthModule, ConfigModule],
-      inject: [ConfigService]
-    }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "..", "docs", "prisma-docs-generated")
-    }),
     PrismaModule,
     AuthModule,
     PasswordModule,
@@ -164,16 +155,19 @@ export type Context = {
     SessionModule,
     CategoryModule,
     ConnectionModule,
-    ProfileModule
+    ProfileModule,
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      useClass: GqlConfigService,
+      imports: [AuthModule, ConfigModule],
+
+      inject: [ConfigService]
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, "..", "docs", "prisma-docs-generated")
+    })
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    AppResolver,
-    {
-      provide: APP_FILTER,
-      useClass: AllExceptionsFilter
-    }
-  ]
+  providers: [AppService, AppResolver]
 })
 export class AppModule {}

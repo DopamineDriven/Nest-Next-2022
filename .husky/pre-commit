@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-cd nest && yarn format && cd ../next && yarn lint && yarn pretty:quick && yarn find:unused && yarn tsconfig:effective && cd ..
+cd nest && yarn format && cd ../next && yarn pretty:quick && yarn tsconfig:effective && cd ..

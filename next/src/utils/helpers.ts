@@ -19,6 +19,11 @@ export async function fetchGetJSON(url: string) {
   }
 }
 
+export function n(min: number, max: number) {
+  const { round, random } = Math;
+  return round(random() * (max - min) + min);
+}
+
 export async function fetchPostJSON(url: string, data?: {}) {
   try {
     // Default options are marked with *

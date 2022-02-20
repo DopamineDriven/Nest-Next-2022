@@ -1,4 +1,15 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  createElement,
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  DetailedHTMLProps,
+  DetailedReactHTMLElement,
+  HTMLAttributes,
+  JSXElementConstructor
+} from "react";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
 import cn from "classnames";
@@ -10,7 +21,10 @@ import {
   useallUsersLazyQuery
 } from "@/graphql/generated/graphql";
 import { DeepPartial } from "utility-types";
-
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { n } from "@/utils/helpers";
+import { Anchor } from "../UI";
 export type DirectoryProps = {
   people: allUsersQuery["listUsers"];
 };
@@ -139,6 +153,14 @@ export default function Directory({ people }: DirectoryProps) {
           return fullName?.toLowerCase().includes(query.toLowerCase());
         });
 
+  const router = useRouter();
+  const fullNameRouteFormatter = ({
+    firstName,
+    lastName
+  }: {
+    firstName: string | null | undefined;
+    lastName: string | null | undefined;
+  }) => `${firstName?.toLowerCase()}-${lastName?.toLowerCase()}`;
   return (
     <Transition.Root
       show={open}
@@ -156,7 +178,7 @@ export default function Directory({ people }: DirectoryProps) {
           leave='ease-in duration-200'
           leaveFrom='opacity-100'
           leaveTo='opacity-0'>
-          <Dialog.Overlay className='fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity' />
+          <Dialog.Overlay className='fixed flex-grow inset-0 bg-gray-500 bg-opacity-25 transition-opacity' />
         </Transition.Child>
 
         <Transition.Child
@@ -171,12 +193,14 @@ export default function Directory({ people }: DirectoryProps) {
             value={people}
             as='div'
             className='mx-auto max-w-3xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all'
+            aria-sort='ascending'
             onChange={person =>
-              (window.location.pathname = `${person.edges
-                .find(firstName => firstName)
-                ?.node.firstName?.toLowerCase()}-${person.edges
-                .find(lastName => lastName)
-                ?.node.lastName?.toLowerCase()}`)
+              (router.pathname = `${fullNameRouteFormatter({
+                firstName: person?.edges?.find(firstName => firstName)
+                  ?.node?.firstName,
+                lastName: person?.edges?.find(lastName => lastName)?.node
+                  ?.lastName
+              })}`)
             }>
             {({ activeOption }) => (
               <>
@@ -193,7 +217,7 @@ export default function Directory({ people }: DirectoryProps) {
                 </div>
 
                 {(query === "" || filteredPeople.length > 0) && (
-                  <div className='flex divide-x divide-gray-100'>
+                  <div className='flex !divide-x divide-gray-100 z-40'>
                     <div
                       className={cn(
                         "max-h-96 min-w-0 flex-auto overflow-y-auto px-6 py-4",
@@ -209,16 +233,19 @@ export default function Directory({ people }: DirectoryProps) {
                         </h2>
                       )}
                       <Combobox.Options
+                        typeof='button'
                         static
                         hold
                         className='-mx-2 text-sm text-gray-700'>
                         {query === "" ? (
                           <Image
                             src={`${
-                              people.edges[0]?.node.image ?? "/archer.gif"
+                              people.edges[n(0, people.edges.length)]?.node
+                                .image ?? "/archer.gif"
                             }`}
                             alt='/archer.gif'
                             width={64}
+                            objectFit='cover'
                             height={64}
                             className='mx-auto h-16 w-16 rounded-full'
                           />
@@ -227,10 +254,12 @@ export default function Directory({ people }: DirectoryProps) {
                             <Combobox.Option
                               key={person.node.id}
                               value={person}
+                              onMouseOver={() => setOpen(true)}
                               className={({ active }) =>
                                 cn(
                                   "flex cursor-default select-none items-center rounded-md p-2",
-                                  active && "bg-gray-100 text-gray-900"
+                                  active &&
+                                    "bg-gray-100 text-gray-900 ease-linear "
                                 )
                               }>
                               {({ active }) => (
@@ -261,8 +290,8 @@ export default function Directory({ people }: DirectoryProps) {
                       </Combobox.Options>
                     </div>
 
-                    {people === activeOption && (
-                      <div className='hidden h-96 w-1/2 flex-none flex-col divide-y divide-gray-100 overflow-y-auto sm:flex'>
+                    {activeOption === people && activeOption != null && (
+                      <div className='sr-only h-96 w-1/2 flex-none flex-col divide-y divide-gray-100 overflow-y-auto sm:flex sm:not-sr-only sm:relative'>
                         <div className='flex-none p-6 text-center'>
                           <Image
                             src={`${
@@ -271,24 +300,23 @@ export default function Directory({ people }: DirectoryProps) {
                                     ?.node.image
                                 : "/archer.gif"
                             }`}
-                            width='64'
-                            height='64'
+                            width='16'
+                            height='16'
                             alt='/archer.gif'
                             className='mx-auto h-16 w-16 rounded-full'
                           />
-                          <h2 className='mt-3 font-semibold text-gray-900'>{`${activeOption.edges.map(
+                          <h2 className='mt-3 font-semibold text-gray-900'>{`${activeOption.edges?.map(
                             firstName => {
-                              return firstName.node.firstName;
+                              return firstName?.node?.firstName;
                             }
                           )} ${
                             activeOption.edges.find(lastName => lastName)
                               ?.node.lastName
                           }`}</h2>
                           <p className='text-sm leading-6 text-gray-500'>
-                            {
-                              activeOption.edges.find(role => role)?.node
-                                .role
-                            }
+                            {activeOption.edges?.map(role => {
+                              return role?.node?.role;
+                            })}
                           </p>
                         </div>
                         <div className='flex flex-auto flex-col justify-between p-6'>
@@ -306,23 +334,54 @@ export default function Directory({ people }: DirectoryProps) {
                               URL
                             </dt>
                             <dd className='truncate'>
-                              <a
-                                href={`http://localhost:3000/${activeOption.edges
-                                  .find(firstName => firstName)
-                                  ?.node.firstName?.toLowerCase()}-${activeOption.edges
-                                  .find(lastName => lastName)
-                                  ?.node.lastName?.toLowerCase()}`}
-                                className='text-indigo-600 underline'>
-                                {`${
-                                  activeOption.edges.find(
-                                    firstName => firstName
-                                  )?.node.firstName
-                                }-${
-                                  activeOption.edges.find(
-                                    lastName => lastName
-                                  )?.node.lastName
-                                }`}
-                              </a>
+                              <Link
+                                passHref={true}
+                                href={
+                                  `/` +
+                                  fullNameRouteFormatter({
+                                    firstName: activeOption.edges.find(
+                                      firstName => firstName
+                                    )?.node.firstName,
+                                    lastName: activeOption.edges.find(
+                                      lastName => lastName
+                                    )?.node.lastName
+                                  })
+                                }
+                                as={
+                                  `/` +
+                                  fullNameRouteFormatter({
+                                    firstName: activeOption.edges.find(
+                                      firstName => firstName
+                                    )?.node.firstName,
+                                    lastName: activeOption.edges.find(
+                                      lastName => lastName
+                                    )?.node.lastName
+                                  })
+                                }>
+                                <Anchor
+                                  id={
+                                    `/#` +
+                                    fullNameRouteFormatter({
+                                      firstName: activeOption.edges.find(
+                                        firstName => firstName
+                                      )?.node.firstName,
+                                      lastName: activeOption.edges.find(
+                                        lastName => lastName
+                                      )?.node.lastName
+                                    })
+                                  }
+                                  className='text-indigo-600 underline'>
+                                  {`${
+                                    activeOption.edges.find(
+                                      firstName => firstName
+                                    )?.node.firstName
+                                  }-${
+                                    activeOption.edges.find(
+                                      lastName => lastName
+                                    )?.node.lastName
+                                  }`}
+                                </Anchor>
+                              </Link>
                             </dd>
                             <dt className='col-end-1 font-semibold text-gray-900'>
                               Email
@@ -362,8 +421,8 @@ export default function Directory({ people }: DirectoryProps) {
                       No people found
                     </p>
                     <p className='mt-2 text-gray-500'>
-                      We couldn’t find anything with that term. Please try
-                      again.
+                      We couldn&apos;t find anything with that term. Please
+                      try again.
                     </p>
                   </div>
                 )}
@@ -375,3 +434,4 @@ export default function Directory({ people }: DirectoryProps) {
     </Transition.Root>
   );
 }
+//{createElement<JSXElementConstructor<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>>>("div", (...children: React.ReactNode[]))}

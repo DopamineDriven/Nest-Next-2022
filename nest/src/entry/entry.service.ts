@@ -11,7 +11,6 @@ import { EntryCreateOneInput } from "./inputs/entry-create.input";
 import { FindManyEntriesPaginatedInput } from "./inputs/entry-paginated.input";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { EntryCreateManyAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-many-author.input";
-import { EntryWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-where-unique.input";
 import {
   Field,
   InputType,
@@ -23,22 +22,21 @@ import { EntryWhereInput } from "src/.generated/prisma-nestjs-graphql/entry/inpu
 import { EntryUpdateOneRequiredWithoutCommentsInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-update-one-required-without-comments.input";
 import { XOR } from "src/common/types/helpers.type";
 import { EntryCreateWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create-without-author.input";
-import { EntryUncheckedCreateNestedManyWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-unchecked-create-nested-many-without-author.input";
 import {
   PrismaClientKnownRequestError,
   PrismaClientValidationError
 } from "@prisma/client/runtime";
 import { GraphQLError } from "graphql";
 import { FindViewerEntriesPaginatedInput } from "./inputs/entry-paginated.input";
-import { EntryUncheckedCreateInputSansAuthorId } from "./inputs/entry-unchecked.input";
 import { HttpService, HttpModuleOptions } from "@nestjs/axios";
 import { firstValueFrom } from "rxjs";
 import { AxiosResponse } from "axios";
+import { EntryDeleteUno } from "./inputs/entry-delete.input";
 
 export const axiosConfig: HttpModuleOptions = {
   withCredentials: true,
   headers: {
-    authorization: `Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwZjhlMjQ5MC1mNzU0LTQ4YjktYTA0MS00NTY4NTdhNDIyZjQiLCJpYXQiOjE2NDUxODI5MDMsImV4cCI6MTY0NTI2OTMwM30.SumygyOiyfV9MmHfFl8XVGn7kzn5q5eiSjP_ZK7Gj-l0ehW5Ri6AO41uJ4cT9Teq0UyOccAo54QGcj_KToOW-w`,
+    authorization: `${process.env.LOCAL_AUTH}`,
     "Content-Type": "application/json"
   },
   baseURL: `http://localhost:3000/entry/`.trim()
@@ -115,7 +113,7 @@ export class EntryService {
                 ...params.where
               },
               cursor: {
-                authorId: user.id,
+                id: auth?.entries?.find(id => id)?.id,
                 ...params.cursor
               },
               orderBy: params.orderBy,
@@ -132,7 +130,7 @@ export class EntryService {
                 ...params.where
               },
               cursor: {
-                authorId: user.id,
+                id: auth?.entries?.find(id => id)?.id,
                 ...params.cursor
               }
             }),
@@ -205,10 +203,10 @@ export class EntryService {
     });
   }
 
-  async deleteEntry(where: EntryWhereUniqueInput, authorIdFallback?: string) {
+  async deleteEntry(where: EntryDeleteUno) {
     return await this.prisma.entry
       .delete({
-        where: where.id ? { id: where.id } : { authorId: `${authorIdFallback}` }
+        where: { id: where.id }
       })
       .then(data => data);
   }
@@ -234,68 +232,33 @@ export class EntryService {
   }
 
   async createEntry(params: { data: EntryCreateOneInput; viewerId: string }) {
-    const getUser = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id: params.viewerId },
       include: { entries: true }
     });
-    const user = getUser as unknown as NonNullable<typeof getUser>;
 
     if (user) {
-      const upsertion = await this.prisma.user
-        .upsert({
-          include: {
-            _count: true,
-            entries: { include: { _count: true, author: true } }
-          },
-          where: { id: user.id },
-          create: {
-            email: user.email,
-            entries: { create: { ...params.data } }
-          },
-          update: {
-            entries: {
-              create: { ...params.data },
-              connect: { authorId: user.id }
-            }
-          }
-        })
-        .then(data => {
-          return {
-            entry: data.entries.sort(
-              (a, b) =>
-                a.createdAt.getMilliseconds() - b.createdAt.getMilliseconds()
-            )[0]
-          };
-        });
-      return upsertion;
+      return await this.prisma.entry.create({
+        data: {
+          author: { connect: { id: user.id } },
+          title: params.data.title,
+          content: params.data.content,
+          featuredImage: params.data.featuredImage
+        }
+      });
     }
   }
-
-  async createNewEntry(
-    params: EntryUncheckedCreateNestedManyWithoutAuthorInput,
-    viewerId: string
-  ) {
-    const getUser = await this.prisma.user.findUnique({
-      where: { id: viewerId },
-      include: { entries: true }
+  async findUniqueEntryByEncodedCursor(params: { id: string }) {
+    const entry = await this.prisma.entry.findUnique({
+      where: { id: fromGlobalId(params.id).id }
     });
-    const user = getUser as unknown as NonNullable<typeof getUser>;
-
-    return await this.prisma.user.update({
-      include: {
-        entries: {
-          cursor: { authorId: user.id },
-          include: { _count: true, author: true }
-        },
-        _count: true
-      },
-      where: { id: user.id },
-      data: { entries: { ...params } }
-    });
+    if (!entry) {
+      throw new Error("could not find entry with id " + params.id);
+    }
+    return entry;
   }
-
   async axiosMediatedEntryCreate(
-    params: EntryUncheckedCreateInputSansAuthorId,
+    params: EntryCreateOneInput,
     viewerId: string
     // pubSubProgation: PubSub
   ) {
@@ -309,12 +272,13 @@ export class EntryService {
     }
     try {
       const newEntryCreate = await this.prisma.entry.create({
-        data: { authorId: validateUser.id, ...params },
-        include: {
-          author: { include: { _count: true } },
-          comments: true,
-          categories: true,
-          _count: true
+        data: {
+          author: {
+            connect: { id: validateUser.id, email: validateUser.email }
+          },
+          title: params.title,
+          content: params.content,
+          featuredImage: params.featuredImage
         }
       });
       const axiosConf = this.httpService
@@ -333,58 +297,6 @@ export class EntryService {
       return (await firstValueFrom(
         axiosConf
       )) as AxiosResponse<EntryCreateWithoutAuthorInput>;
-    } catch (error) {
-      throw new GraphQLError(
-        `new error in try.catch blck of newEntry mutation ${error}`
-      );
-    }
-  }
-
-  async newEntry(
-    params: EntryUncheckedCreateInputSansAuthorId,
-    viewerId: string
-    // pubSubProgation: PubSub
-  ) {
-    const validateUser = await this.prisma.user.findUnique({
-      where: { id: viewerId }
-    });
-    if (!validateUser) {
-      return new PrismaClientValidationError(
-        "no valid active viewer -- please sign in"
-      ).message;
-    }
-    try {
-      const newEntryCreate = await this.prisma.entry.create({
-        data: { authorId: validateUser.id, ...params },
-        include: {
-          author: { include: { _count: true } },
-          comments: true,
-          categories: true,
-          _count: true
-        }
-      });
-
-      // const retrieveNewEntryForVerification =
-      //   await this.prisma.entry.findUnique({
-      //     include: {
-      //       author: { include: { _count: true } },
-      //       _count: true,
-      //       comments: true,
-      //       categories: true
-      //     },
-      //     where: { authorId: validateUser.id, id: newEntryCreate.id }
-      //   });
-
-      if (!newEntryCreate) {
-        throw (
-          new PrismaClientKnownRequestError(
-            `failed newEntry mutation`,
-            "P2019",
-            "3.91"
-          ) && new GraphQLError("error in newEntry of entry service")
-        );
-      }
-      return newEntryCreate;
     } catch (error) {
       throw new GraphQLError(
         `new error in try.catch blck of newEntry mutation ${error}`
