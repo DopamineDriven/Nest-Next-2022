@@ -68,7 +68,7 @@ const options: Options = {
   logger: ["debug", "error", "log", "warn", "verbose"],
   cors: {
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-    maxAge: 0,
+    maxAge: 60,
     origin: true, // reflects dynamic origin -- Vary
     allowedHeaders: [
       "Access-Control-Allow-Methods",
@@ -152,11 +152,6 @@ async function bootstrap() {
       .addBearerAuth()
       .setDescription(swaggerConfig.description || "The nestjs API description")
       .setVersion(swaggerConfig.version || "1.0")
-      // .addServer(
-      //   "http://localhost:3000/graphql" ||
-      //     "http://[::1]/graphql" ||
-      //     "http://localhost:3040"
-      // )
       .build();
 
     const docOptions: SwaggerDocumentOptions = {
@@ -193,7 +188,7 @@ async function bootstrap() {
     .listen(process.env.PORT ?? nestConfig?.port ?? 3000)
     .then(async () => {
       console.log(
-        `[GraphQL Playground]: ${await app.getUrl()}/graphql  \n[Swagger Api]: ${await app.getUrl()}/api`
+        `[GraphQL Playground]: ${await app.getUrl()}/graphql  \r[Swagger Api]: ${await app.getUrl()}/api`
       );
     });
 }

@@ -62,7 +62,7 @@ export class GqlConfigService implements GqlOptionsFactory {
       introspection: true,
       cors: {
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-        maxAge: 0,
+        maxAge: 60,
         origin: true, // reflects dynamic origin -- Vary
         allowedHeaders: [
           "Access-Control-Allow-Methods",
