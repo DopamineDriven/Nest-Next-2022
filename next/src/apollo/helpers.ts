@@ -385,32 +385,34 @@ export type MediaItemEdgeFieldPolicy = {
 };
 export type MutationKeySpecifier = (
   | "changePassword"
-  | "createEntry"
+  | "createEntryWithAxios"
+  | "createNewComment"
   | "createNewEntry"
-  | "createProfile"
+  | "createNewProfile"
+  | "createNuevoEntryMutation"
   | "login"
+  | "nuevoEntry"
   | "register"
   | "registerNewUser"
   | "signin"
   | "signup"
   | "updateUserPassword"
-  | "upsertComment"
-  | "viewerCreateEntry"
   | MutationKeySpecifier
 )[];
 export type MutationFieldPolicy = {
   changePassword?: FieldPolicy<any> | FieldReadFunction<any>;
-  createEntry?: FieldPolicy<any> | FieldReadFunction<any>;
+  createEntryWithAxios?: FieldPolicy<any> | FieldReadFunction<any>;
+  createNewComment?: FieldPolicy<any> | FieldReadFunction<any>;
   createNewEntry?: FieldPolicy<any> | FieldReadFunction<any>;
-  createProfile?: FieldPolicy<any> | FieldReadFunction<any>;
+  createNewProfile?: FieldPolicy<any> | FieldReadFunction<any>;
+  createNuevoEntryMutation?: FieldPolicy<any> | FieldReadFunction<any>;
   login?: FieldPolicy<any> | FieldReadFunction<any>;
+  nuevoEntry?: FieldPolicy<any> | FieldReadFunction<any>;
   register?: FieldPolicy<any> | FieldReadFunction<any>;
   registerNewUser?: FieldPolicy<any> | FieldReadFunction<any>;
   signin?: FieldPolicy<any> | FieldReadFunction<any>;
   signup?: FieldPolicy<any> | FieldReadFunction<any>;
   updateUserPassword?: FieldPolicy<any> | FieldReadFunction<any>;
-  upsertComment?: FieldPolicy<any> | FieldReadFunction<any>;
-  viewerCreateEntry?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type NodeKeySpecifier = ("id" | NodeKeySpecifier)[];
 export type NodeFieldPolicy = {
@@ -426,6 +428,15 @@ export type NodeUnionConnectionFieldPolicy = {
   edges?: FieldPolicy<any> | FieldReadFunction<any>;
   pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
   totalCount?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type NodeUnionEdgeKeySpecifier = (
+  | "cursor"
+  | "node"
+  | NodeUnionEdgeKeySpecifier
+)[];
+export type NodeUnionEdgeFieldPolicy = {
+  cursor?: FieldPolicy<any> | FieldReadFunction<any>;
+  node?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type PageInfoKeySpecifier = (
   | "endCursor"
@@ -505,13 +516,11 @@ export type QueryKeySpecifier = (
   | "comprehensiveConnectionUnion"
   | "connectionByRelayId"
   | "contentNodesUnion"
-  | "decodeViewerTokenFromContext"
   | "entryById"
+  | "entryByRelayId"
   | "findUniqueMediaItem"
   | "getUserFromAccessToken"
   | "getViewer"
-  | "hello"
-  | "helloWorld"
   | "listCategories"
   | "listComments"
   | "listConnections"
@@ -522,13 +531,13 @@ export type QueryKeySpecifier = (
   | "listUsers"
   | "me"
   | "node"
+  | "nodeField"
   | "nodeUnionResolver"
   | "profileByRelayId"
   | "sessionByRelayId"
   | "siftEntries"
   | "userById"
   | "userByRelayId"
-  | "userFromAccessTokenDecoded"
   | "viewer"
   | "viewerAuthInfoFromContext"
   | "viewerEntriesPaginated"
@@ -540,13 +549,11 @@ export type QueryFieldPolicy = {
   comprehensiveConnectionUnion?: FieldPolicy<any> | FieldReadFunction<any>;
   connectionByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
   contentNodesUnion?: FieldPolicy<any> | FieldReadFunction<any>;
-  decodeViewerTokenFromContext?: FieldPolicy<any> | FieldReadFunction<any>;
   entryById?: FieldPolicy<any> | FieldReadFunction<any>;
+  entryByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
   findUniqueMediaItem?: FieldPolicy<any> | FieldReadFunction<any>;
   getUserFromAccessToken?: FieldPolicy<any> | FieldReadFunction<any>;
   getViewer?: FieldPolicy<any> | FieldReadFunction<any>;
-  hello?: FieldPolicy<any> | FieldReadFunction<any>;
-  helloWorld?: FieldPolicy<any> | FieldReadFunction<any>;
   listCategories?: FieldPolicy<any> | FieldReadFunction<any>;
   listComments?: FieldPolicy<any> | FieldReadFunction<any>;
   listConnections?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -557,13 +564,13 @@ export type QueryFieldPolicy = {
   listUsers?: FieldPolicy<any> | FieldReadFunction<any>;
   me?: FieldPolicy<any> | FieldReadFunction<any>;
   node?: FieldPolicy<any> | FieldReadFunction<any>;
+  nodeField?: FieldPolicy<any> | FieldReadFunction<any>;
   nodeUnionResolver?: FieldPolicy<any> | FieldReadFunction<any>;
   profileByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
   sessionByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
   siftEntries?: FieldPolicy<any> | FieldReadFunction<any>;
   userById?: FieldPolicy<any> | FieldReadFunction<any>;
   userByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
-  userFromAccessTokenDecoded?: FieldPolicy<any> | FieldReadFunction<any>;
   viewer?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerAuthInfoFromContext?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerEntriesPaginated?: FieldPolicy<any> | FieldReadFunction<any>;
@@ -620,11 +627,13 @@ export type SessionEdgeFieldPolicy = {
   node?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type SubscriptionKeySpecifier = (
+  | "commentCreated"
   | "entryCreated"
   | "profileCreated"
   | SubscriptionKeySpecifier
 )[];
 export type SubscriptionFieldPolicy = {
+  commentCreated?: FieldPolicy<any> | FieldReadFunction<any>;
   entryCreated?: FieldPolicy<any> | FieldReadFunction<any>;
   profileCreated?: FieldPolicy<any> | FieldReadFunction<any>;
 };
@@ -636,6 +645,13 @@ export type TokenKeySpecifier = (
 export type TokenFieldPolicy = {
   accessToken?: FieldPolicy<any> | FieldReadFunction<any>;
   refreshToken?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type UnionOnEdgeObjectTypeKeySpecifier = (
+  | "unionOnEdge"
+  | UnionOnEdgeObjectTypeKeySpecifier
+)[];
+export type UnionOnEdgeObjectTypeFieldPolicy = {
+  unionOnEdge?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type UserKeySpecifier = (
   | "_count"
@@ -994,6 +1010,13 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | NodeUnionConnectionKeySpecifier);
     fields?: NodeUnionConnectionFieldPolicy;
   };
+  NodeUnionEdge?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | NodeUnionEdgeKeySpecifier
+      | (() => undefined | NodeUnionEdgeKeySpecifier);
+    fields?: NodeUnionEdgeFieldPolicy;
+  };
   PageInfo?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
@@ -1063,6 +1086,13 @@ export type StrictTypedTypePolicies = {
       | TokenKeySpecifier
       | (() => undefined | TokenKeySpecifier);
     fields?: TokenFieldPolicy;
+  };
+  UnionOnEdgeObjectType?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | UnionOnEdgeObjectTypeKeySpecifier
+      | (() => undefined | UnionOnEdgeObjectTypeKeySpecifier);
+    fields?: UnionOnEdgeObjectTypeFieldPolicy;
   };
   User?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:

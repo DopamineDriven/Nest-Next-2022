@@ -121,95 +121,6 @@ export type AccountProviderProviderAccountIdCompoundUniqueInput = {
   providerAccountId: Scalars["String"];
 };
 
-export type AccountScalarWhereInput = {
-  AND?: InputMaybe<Array<AccountScalarWhereInput>>;
-  NOT?: InputMaybe<Array<AccountScalarWhereInput>>;
-  OR?: InputMaybe<Array<AccountScalarWhereInput>>;
-  access_token?: InputMaybe<StringNullableFilter>;
-  expires_at?: InputMaybe<IntNullableFilter>;
-  id?: InputMaybe<StringFilter>;
-  id_token?: InputMaybe<StringNullableFilter>;
-  oauth_token?: InputMaybe<StringNullableFilter>;
-  oauth_token_secret?: InputMaybe<StringNullableFilter>;
-  provider?: InputMaybe<StringFilter>;
-  providerAccountId?: InputMaybe<StringFilter>;
-  refresh_secret?: InputMaybe<StringNullableFilter>;
-  refresh_token?: InputMaybe<StringNullableFilter>;
-  scope?: InputMaybe<StringNullableFilter>;
-  session_state?: InputMaybe<StringNullableFilter>;
-  token_type?: InputMaybe<StringNullableFilter>;
-  type?: InputMaybe<StringFilter>;
-  userId?: InputMaybe<StringFilter>;
-};
-
-export type AccountUpdateManyMutationInput = {
-  access_token?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  expires_at?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  id_token?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  oauth_token?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  oauth_token_secret?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  provider?: InputMaybe<StringFieldUpdateOperationsInput>;
-  providerAccountId?: InputMaybe<StringFieldUpdateOperationsInput>;
-  refresh_secret?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  refresh_token?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  scope?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  session_state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  token_type?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  type?: InputMaybe<StringFieldUpdateOperationsInput>;
-};
-
-export type AccountUpdateManyWithWhereWithoutUserInput = {
-  data: AccountUpdateManyMutationInput;
-  where: AccountScalarWhereInput;
-};
-
-export type AccountUpdateManyWithoutUserInput = {
-  connect?: InputMaybe<Array<AccountWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<
-    Array<AccountCreateOrConnectWithoutUserInput>
-  >;
-  create?: InputMaybe<Array<AccountCreateWithoutUserInput>>;
-  createMany?: InputMaybe<AccountCreateManyUserInputEnvelope>;
-  delete?: InputMaybe<Array<AccountWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<AccountScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<AccountWhereUniqueInput>>;
-  set?: InputMaybe<Array<AccountWhereUniqueInput>>;
-  update?: InputMaybe<Array<AccountUpdateWithWhereUniqueWithoutUserInput>>;
-  updateMany?: InputMaybe<
-    Array<AccountUpdateManyWithWhereWithoutUserInput>
-  >;
-  upsert?: InputMaybe<Array<AccountUpsertWithWhereUniqueWithoutUserInput>>;
-};
-
-export type AccountUpdateWithWhereUniqueWithoutUserInput = {
-  data: AccountUpdateWithoutUserInput;
-  where: AccountWhereUniqueInput;
-};
-
-export type AccountUpdateWithoutUserInput = {
-  access_token?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  expires_at?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  id_token?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  oauth_token?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  oauth_token_secret?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  provider?: InputMaybe<StringFieldUpdateOperationsInput>;
-  providerAccountId?: InputMaybe<StringFieldUpdateOperationsInput>;
-  refresh_secret?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  refresh_token?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  scope?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  session_state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  token_type?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  type?: InputMaybe<StringFieldUpdateOperationsInput>;
-};
-
-export type AccountUpsertWithWhereUniqueWithoutUserInput = {
-  create: AccountCreateWithoutUserInput;
-  update: AccountUpdateWithoutUserInput;
-  where: AccountWhereUniqueInput;
-};
-
 export type AccountWhereInput = {
   AND?: InputMaybe<Array<AccountWhereInput>>;
   NOT?: InputMaybe<Array<AccountWhereInput>>;
@@ -294,10 +205,6 @@ export type BaseTypesEdge = {
   node: TypesUnion;
 };
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: InputMaybe<Scalars["Boolean"]>;
-};
-
 export type BoolFilter = {
   equals?: InputMaybe<Scalars["Boolean"]>;
   not?: InputMaybe<NestedBoolFilter>;
@@ -379,7 +286,7 @@ export type CategoryCreateWithoutCreatorInput = {
 
 export type CategoryCreateWithoutEntriesInput = {
   createdAt?: InputMaybe<Scalars["DateTime"]>;
-  creator: UserCreateNestedOneWithoutCategoriesInput;
+  creator?: InputMaybe<UserCreateNestedOneWithoutCategoriesInput>;
   entryId?: InputMaybe<Scalars["String"]>;
   id?: InputMaybe<Scalars["String"]>;
   name: Scalars["String"];
@@ -436,126 +343,13 @@ export enum CategoryScalarFieldEnum {
   UpdatedAt = "updatedAt"
 }
 
-export type CategoryScalarWhereInput = {
-  AND?: InputMaybe<Array<CategoryScalarWhereInput>>;
-  NOT?: InputMaybe<Array<CategoryScalarWhereInput>>;
-  OR?: InputMaybe<Array<CategoryScalarWhereInput>>;
-  createdAt?: InputMaybe<DateTimeNullableFilter>;
-  creatorId?: InputMaybe<StringFilter>;
-  entryId?: InputMaybe<StringNullableFilter>;
-  id?: InputMaybe<StringFilter>;
-  name?: InputMaybe<StringFilter>;
-  updatedAt?: InputMaybe<DateTimeNullableFilter>;
-};
-
-export type CategoryUpdateManyMutationInput = {
-  createdAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  entryId?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  name?: InputMaybe<StringFieldUpdateOperationsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type CategoryUpdateManyWithWhereWithoutCreatorInput = {
-  data: CategoryUpdateManyMutationInput;
-  where: CategoryScalarWhereInput;
-};
-
-export type CategoryUpdateManyWithWhereWithoutEntriesInput = {
-  data: CategoryUpdateManyMutationInput;
-  where: CategoryScalarWhereInput;
-};
-
-export type CategoryUpdateManyWithoutCreatorInput = {
-  connect?: InputMaybe<Array<CategoryWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<
-    Array<CategoryCreateOrConnectWithoutCreatorInput>
-  >;
-  create?: InputMaybe<Array<CategoryCreateWithoutCreatorInput>>;
-  createMany?: InputMaybe<CategoryCreateManyCreatorInputEnvelope>;
-  delete?: InputMaybe<Array<CategoryWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<CategoryScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<CategoryWhereUniqueInput>>;
-  set?: InputMaybe<Array<CategoryWhereUniqueInput>>;
-  update?: InputMaybe<
-    Array<CategoryUpdateWithWhereUniqueWithoutCreatorInput>
-  >;
-  updateMany?: InputMaybe<
-    Array<CategoryUpdateManyWithWhereWithoutCreatorInput>
-  >;
-  upsert?: InputMaybe<
-    Array<CategoryUpsertWithWhereUniqueWithoutCreatorInput>
-  >;
-};
-
-export type CategoryUpdateManyWithoutEntriesInput = {
-  connect?: InputMaybe<Array<CategoryWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<
-    Array<CategoryCreateOrConnectWithoutEntriesInput>
-  >;
-  create?: InputMaybe<Array<CategoryCreateWithoutEntriesInput>>;
-  delete?: InputMaybe<Array<CategoryWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<CategoryScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<CategoryWhereUniqueInput>>;
-  set?: InputMaybe<Array<CategoryWhereUniqueInput>>;
-  update?: InputMaybe<
-    Array<CategoryUpdateWithWhereUniqueWithoutEntriesInput>
-  >;
-  updateMany?: InputMaybe<
-    Array<CategoryUpdateManyWithWhereWithoutEntriesInput>
-  >;
-  upsert?: InputMaybe<
-    Array<CategoryUpsertWithWhereUniqueWithoutEntriesInput>
-  >;
-};
-
-export type CategoryUpdateWithWhereUniqueWithoutCreatorInput = {
-  data: CategoryUpdateWithoutCreatorInput;
-  where: CategoryWhereUniqueInput;
-};
-
-export type CategoryUpdateWithWhereUniqueWithoutEntriesInput = {
-  data: CategoryUpdateWithoutEntriesInput;
-  where: CategoryWhereUniqueInput;
-};
-
-export type CategoryUpdateWithoutCreatorInput = {
-  createdAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  entries?: InputMaybe<EntryUpdateManyWithoutCategoriesInput>;
-  entryId?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  name?: InputMaybe<StringFieldUpdateOperationsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type CategoryUpdateWithoutEntriesInput = {
-  createdAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  creator?: InputMaybe<UserUpdateOneRequiredWithoutCategoriesInput>;
-  entryId?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  name?: InputMaybe<StringFieldUpdateOperationsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type CategoryUpsertWithWhereUniqueWithoutCreatorInput = {
-  create: CategoryCreateWithoutCreatorInput;
-  update: CategoryUpdateWithoutCreatorInput;
-  where: CategoryWhereUniqueInput;
-};
-
-export type CategoryUpsertWithWhereUniqueWithoutEntriesInput = {
-  create: CategoryCreateWithoutEntriesInput;
-  update: CategoryUpdateWithoutEntriesInput;
-  where: CategoryWhereUniqueInput;
-};
-
 export type CategoryWhereInput = {
   AND?: InputMaybe<Array<CategoryWhereInput>>;
   NOT?: InputMaybe<Array<CategoryWhereInput>>;
   OR?: InputMaybe<Array<CategoryWhereInput>>;
   createdAt?: InputMaybe<DateTimeNullableFilter>;
   creator?: InputMaybe<UserRelationFilter>;
-  creatorId?: InputMaybe<StringFilter>;
+  creatorId?: InputMaybe<StringNullableFilter>;
   entries?: InputMaybe<EntryListRelationFilter>;
   entryId?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<StringFilter>;
@@ -565,7 +359,6 @@ export type CategoryWhereInput = {
 
 export type CategoryWhereUniqueInput = {
   id?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
 };
 
 export type ChangePasswordInput = {
@@ -576,11 +369,11 @@ export type ChangePasswordInput = {
 export type Comment = Node & {
   __typename?: "Comment";
   author: User;
-  authorId: Scalars["String"];
+  authorId?: Maybe<Scalars["String"]>;
   body?: Maybe<Scalars["String"]>;
   createdAt: Scalars["DateTime"];
   entry: Entry;
-  entryId: Scalars["String"];
+  entryId?: Maybe<Scalars["String"]>;
   id: Scalars["ID"];
   position?: Maybe<Scalars["String"]>;
   reactions?: Maybe<Array<CommentReactions>>;
@@ -602,7 +395,7 @@ export type CommentConnection = {
 export type CommentCreateManyAuthorInput = {
   body?: InputMaybe<Scalars["String"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]>;
-  entryId: Scalars["String"];
+  entryId?: InputMaybe<Scalars["String"]>;
   id?: InputMaybe<Scalars["String"]>;
   position?: InputMaybe<Scalars["String"]>;
   reactions?: InputMaybe<CommentCreateManyreactionsInput>;
@@ -615,7 +408,7 @@ export type CommentCreateManyAuthorInputEnvelope = {
 };
 
 export type CommentCreateManyEntryInput = {
-  authorId: Scalars["String"];
+  authorId?: InputMaybe<Scalars["String"]>;
   body?: InputMaybe<Scalars["String"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]>;
   id?: InputMaybe<Scalars["String"]>;
@@ -664,7 +457,7 @@ export type CommentCreateOrConnectWithoutEntryInput = {
 export type CommentCreateWithoutAuthorInput = {
   body?: InputMaybe<Scalars["String"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]>;
-  entry: EntryCreateNestedOneWithoutCommentsInput;
+  entry?: InputMaybe<EntryCreateNestedOneWithoutCommentsInput>;
   id?: InputMaybe<Scalars["String"]>;
   position?: InputMaybe<Scalars["String"]>;
   reactions?: InputMaybe<CommentCreatereactionsInput>;
@@ -672,7 +465,7 @@ export type CommentCreateWithoutAuthorInput = {
 };
 
 export type CommentCreateWithoutEntryInput = {
-  author: UserCreateNestedOneWithoutCommentsInput;
+  author?: InputMaybe<UserCreateNestedOneWithoutCommentsInput>;
   body?: InputMaybe<Scalars["String"]>;
   createdAt?: InputMaybe<Scalars["DateTime"]>;
   id?: InputMaybe<Scalars["String"]>;
@@ -754,140 +547,16 @@ export enum CommentScalarFieldEnum {
   UpdatedAt = "updatedAt"
 }
 
-export type CommentScalarWhereInput = {
-  AND?: InputMaybe<Array<CommentScalarWhereInput>>;
-  NOT?: InputMaybe<Array<CommentScalarWhereInput>>;
-  OR?: InputMaybe<Array<CommentScalarWhereInput>>;
-  authorId?: InputMaybe<StringFilter>;
-  body?: InputMaybe<StringNullableFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  entryId?: InputMaybe<StringFilter>;
-  id?: InputMaybe<StringFilter>;
-  position?: InputMaybe<StringNullableFilter>;
-  reactions?: InputMaybe<EnumCommentReactionsNullableListFilter>;
-  updatedAt?: InputMaybe<DateTimeNullableFilter>;
-};
-
-export type CommentUpdateManyMutationInput = {
-  body?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  position?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  reactions?: InputMaybe<CommentUpdatereactionsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type CommentUpdateManyWithWhereWithoutAuthorInput = {
-  data: CommentUpdateManyMutationInput;
-  where: CommentScalarWhereInput;
-};
-
-export type CommentUpdateManyWithWhereWithoutEntryInput = {
-  data: CommentUpdateManyMutationInput;
-  where: CommentScalarWhereInput;
-};
-
-export type CommentUpdateManyWithoutAuthorInput = {
-  connect?: InputMaybe<Array<CommentWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<
-    Array<CommentCreateOrConnectWithoutAuthorInput>
-  >;
-  create?: InputMaybe<Array<CommentCreateWithoutAuthorInput>>;
-  createMany?: InputMaybe<CommentCreateManyAuthorInputEnvelope>;
-  delete?: InputMaybe<Array<CommentWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<CommentScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<CommentWhereUniqueInput>>;
-  set?: InputMaybe<Array<CommentWhereUniqueInput>>;
-  update?: InputMaybe<
-    Array<CommentUpdateWithWhereUniqueWithoutAuthorInput>
-  >;
-  updateMany?: InputMaybe<
-    Array<CommentUpdateManyWithWhereWithoutAuthorInput>
-  >;
-  upsert?: InputMaybe<
-    Array<CommentUpsertWithWhereUniqueWithoutAuthorInput>
-  >;
-};
-
-export type CommentUpdateManyWithoutEntryInput = {
-  connect?: InputMaybe<Array<CommentWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<
-    Array<CommentCreateOrConnectWithoutEntryInput>
-  >;
-  create?: InputMaybe<Array<CommentCreateWithoutEntryInput>>;
-  createMany?: InputMaybe<CommentCreateManyEntryInputEnvelope>;
-  delete?: InputMaybe<Array<CommentWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<CommentScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<CommentWhereUniqueInput>>;
-  set?: InputMaybe<Array<CommentWhereUniqueInput>>;
-  update?: InputMaybe<
-    Array<CommentUpdateWithWhereUniqueWithoutEntryInput>
-  >;
-  updateMany?: InputMaybe<
-    Array<CommentUpdateManyWithWhereWithoutEntryInput>
-  >;
-  upsert?: InputMaybe<
-    Array<CommentUpsertWithWhereUniqueWithoutEntryInput>
-  >;
-};
-
-export type CommentUpdateWithWhereUniqueWithoutAuthorInput = {
-  data: CommentUpdateWithoutAuthorInput;
-  where: CommentWhereUniqueInput;
-};
-
-export type CommentUpdateWithWhereUniqueWithoutEntryInput = {
-  data: CommentUpdateWithoutEntryInput;
-  where: CommentWhereUniqueInput;
-};
-
-export type CommentUpdateWithoutAuthorInput = {
-  body?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  entry?: InputMaybe<EntryUpdateOneRequiredWithoutCommentsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  position?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  reactions?: InputMaybe<CommentUpdatereactionsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type CommentUpdateWithoutEntryInput = {
-  author?: InputMaybe<UserUpdateOneRequiredWithoutCommentsInput>;
-  body?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  position?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  reactions?: InputMaybe<CommentUpdatereactionsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type CommentUpdatereactionsInput = {
-  push?: InputMaybe<Array<CommentReactions>>;
-  set?: InputMaybe<Array<CommentReactions>>;
-};
-
-export type CommentUpsertWithWhereUniqueWithoutAuthorInput = {
-  create: CommentCreateWithoutAuthorInput;
-  update: CommentUpdateWithoutAuthorInput;
-  where: CommentWhereUniqueInput;
-};
-
-export type CommentUpsertWithWhereUniqueWithoutEntryInput = {
-  create: CommentCreateWithoutEntryInput;
-  update: CommentUpdateWithoutEntryInput;
-  where: CommentWhereUniqueInput;
-};
-
 export type CommentWhereInput = {
   AND?: InputMaybe<Array<CommentWhereInput>>;
   NOT?: InputMaybe<Array<CommentWhereInput>>;
   OR?: InputMaybe<Array<CommentWhereInput>>;
   author?: InputMaybe<UserRelationFilter>;
-  authorId?: InputMaybe<StringFilter>;
+  authorId?: InputMaybe<StringNullableFilter>;
   body?: InputMaybe<StringNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   entry?: InputMaybe<EntryRelationFilter>;
-  entryId?: InputMaybe<StringFilter>;
+  entryId?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<StringFilter>;
   position?: InputMaybe<StringNullableFilter>;
   reactions?: InputMaybe<EnumCommentReactionsNullableListFilter>;
@@ -908,7 +577,7 @@ export type Connection = Node & {
   lastModified?: Maybe<Scalars["DateTime"]>;
   lastName?: Maybe<Scalars["String"]>;
   owner: User;
-  ownerId: Scalars["String"];
+  ownerId?: Maybe<Scalars["String"]>;
   phoneNumber?: Maybe<Scalars["PhoneNumber"]>;
 };
 
@@ -1014,78 +683,6 @@ export enum ConnectionScalarFieldEnum {
   PhoneNumber = "phoneNumber"
 }
 
-export type ConnectionScalarWhereInput = {
-  AND?: InputMaybe<Array<ConnectionScalarWhereInput>>;
-  NOT?: InputMaybe<Array<ConnectionScalarWhereInput>>;
-  OR?: InputMaybe<Array<ConnectionScalarWhereInput>>;
-  email?: InputMaybe<StringFilter>;
-  firstName?: InputMaybe<StringNullableFilter>;
-  id?: InputMaybe<StringFilter>;
-  ip?: InputMaybe<StringNullableFilter>;
-  lastModified?: InputMaybe<DateTimeNullableFilter>;
-  lastName?: InputMaybe<StringNullableFilter>;
-  ownerId?: InputMaybe<StringFilter>;
-  phoneNumber?: InputMaybe<StringNullableFilter>;
-};
-
-export type ConnectionUpdateManyMutationInput = {
-  email?: InputMaybe<StringFieldUpdateOperationsInput>;
-  firstName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  ip?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  lastModified?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  lastName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  phoneNumber?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-};
-
-export type ConnectionUpdateManyWithWhereWithoutOwnerInput = {
-  data: ConnectionUpdateManyMutationInput;
-  where: ConnectionScalarWhereInput;
-};
-
-export type ConnectionUpdateManyWithoutOwnerInput = {
-  connect?: InputMaybe<Array<ConnectionWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<
-    Array<ConnectionCreateOrConnectWithoutOwnerInput>
-  >;
-  create?: InputMaybe<Array<ConnectionCreateWithoutOwnerInput>>;
-  createMany?: InputMaybe<ConnectionCreateManyOwnerInputEnvelope>;
-  delete?: InputMaybe<Array<ConnectionWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<ConnectionScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<ConnectionWhereUniqueInput>>;
-  set?: InputMaybe<Array<ConnectionWhereUniqueInput>>;
-  update?: InputMaybe<
-    Array<ConnectionUpdateWithWhereUniqueWithoutOwnerInput>
-  >;
-  updateMany?: InputMaybe<
-    Array<ConnectionUpdateManyWithWhereWithoutOwnerInput>
-  >;
-  upsert?: InputMaybe<
-    Array<ConnectionUpsertWithWhereUniqueWithoutOwnerInput>
-  >;
-};
-
-export type ConnectionUpdateWithWhereUniqueWithoutOwnerInput = {
-  data: ConnectionUpdateWithoutOwnerInput;
-  where: ConnectionWhereUniqueInput;
-};
-
-export type ConnectionUpdateWithoutOwnerInput = {
-  email?: InputMaybe<StringFieldUpdateOperationsInput>;
-  firstName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  ip?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  lastModified?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  lastName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  phoneNumber?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-};
-
-export type ConnectionUpsertWithWhereUniqueWithoutOwnerInput = {
-  create: ConnectionCreateWithoutOwnerInput;
-  update: ConnectionUpdateWithoutOwnerInput;
-  where: ConnectionWhereUniqueInput;
-};
-
 export type ConnectionWhereInput = {
   AND?: InputMaybe<Array<ConnectionWhereInput>>;
   NOT?: InputMaybe<Array<ConnectionWhereInput>>;
@@ -1097,7 +694,7 @@ export type ConnectionWhereInput = {
   lastModified?: InputMaybe<DateTimeNullableFilter>;
   lastName?: InputMaybe<StringNullableFilter>;
   owner?: InputMaybe<UserRelationFilter>;
-  ownerId?: InputMaybe<StringFilter>;
+  ownerId?: InputMaybe<StringNullableFilter>;
   phoneNumber?: InputMaybe<StringNullableFilter>;
 };
 
@@ -1110,8 +707,27 @@ export type ContentNodes = {
   contentNodes: BaseTypeNodes;
 };
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: InputMaybe<Scalars["DateTime"]>;
+export type CreatNewCommentInput = {
+  body: Scalars["String"];
+  entryId: Scalars["String"];
+  position: Scalars["String"];
+  reactions: Array<CommentReactions>;
+};
+
+export type CreateNewProfileInput = {
+  bio?: InputMaybe<Scalars["String"]>;
+  city?: InputMaybe<Scalars["String"]>;
+  country?: InputMaybe<Scalars["String"]>;
+  coverPhoto?: InputMaybe<Scalars["String"]>;
+  dob?: InputMaybe<Scalars["String"]>;
+  gender?: InputMaybe<Gender>;
+  occupation?: InputMaybe<Scalars["String"]>;
+  phoneNumber?: InputMaybe<Scalars["String"]>;
+  pronouns?: InputMaybe<Pronouns>;
+};
+
+export type CreateOneProfile = {
+  data: CreateNewProfileInput;
 };
 
 export type DateTimeFilter = {
@@ -1140,7 +756,7 @@ export type Entry = Node & {
   __typename?: "Entry";
   _count: EntryCount;
   author: User;
-  authorId: Scalars["String"];
+  authorId?: Maybe<Scalars["String"]>;
   categories?: Maybe<Array<Category>>;
   categoryId?: Maybe<Scalars["String"]>;
   comments?: Maybe<Array<Comment>>;
@@ -1205,6 +821,26 @@ export type EntryCreateNestedOneWithoutCommentsInput = {
   create?: InputMaybe<EntryCreateWithoutCommentsInput>;
 };
 
+export type EntryCreateNuevoInput = {
+  content?: InputMaybe<Scalars["String"]>;
+  featuredImage?: InputMaybe<Scalars["String"]>;
+  published?: InputMaybe<Scalars["Boolean"]>;
+  title: Scalars["String"];
+};
+
+export type EntryCreateOneInput = {
+  author: UserCreateNestedOneWithoutEntriesInput;
+  categories?: InputMaybe<CategoryCreateNestedManyWithoutEntriesInput>;
+  categoryId?: InputMaybe<Scalars["String"]>;
+  content?: InputMaybe<Scalars["String"]>;
+  createdAt?: InputMaybe<Scalars["DateTime"]>;
+  featuredImage?: InputMaybe<Scalars["String"]>;
+  id?: InputMaybe<Scalars["String"]>;
+  published?: InputMaybe<Scalars["Boolean"]>;
+  title: Scalars["String"];
+  updatedAt?: InputMaybe<Scalars["DateTime"]>;
+};
+
 export type EntryCreateOrConnectWithoutAuthorInput = {
   create: EntryCreateWithoutAuthorInput;
   where: EntryWhereUniqueInput;
@@ -1234,7 +870,7 @@ export type EntryCreateWithoutAuthorInput = {
 };
 
 export type EntryCreateWithoutCategoriesInput = {
-  author: UserCreateNestedOneWithoutEntriesInput;
+  author?: InputMaybe<UserCreateNestedOneWithoutEntriesInput>;
   categoryId?: InputMaybe<Scalars["String"]>;
   comments?: InputMaybe<CommentCreateNestedManyWithoutEntryInput>;
   content?: InputMaybe<Scalars["String"]>;
@@ -1247,7 +883,7 @@ export type EntryCreateWithoutCategoriesInput = {
 };
 
 export type EntryCreateWithoutCommentsInput = {
-  author: UserCreateNestedOneWithoutEntriesInput;
+  author?: InputMaybe<UserCreateNestedOneWithoutEntriesInput>;
   categories?: InputMaybe<CategoryCreateNestedManyWithoutEntriesInput>;
   categoryId?: InputMaybe<Scalars["String"]>;
   content?: InputMaybe<Scalars["String"]>;
@@ -1323,170 +959,12 @@ export enum EntryScalarFieldEnum {
   UpdatedAt = "updatedAt"
 }
 
-export type EntryScalarWhereInput = {
-  AND?: InputMaybe<Array<EntryScalarWhereInput>>;
-  NOT?: InputMaybe<Array<EntryScalarWhereInput>>;
-  OR?: InputMaybe<Array<EntryScalarWhereInput>>;
-  authorId?: InputMaybe<StringFilter>;
-  categoryId?: InputMaybe<StringNullableFilter>;
-  content?: InputMaybe<StringNullableFilter>;
-  createdAt?: InputMaybe<DateTimeFilter>;
-  featuredImage?: InputMaybe<StringNullableFilter>;
-  id?: InputMaybe<StringFilter>;
-  published?: InputMaybe<BoolFilter>;
-  title?: InputMaybe<StringFilter>;
-  updatedAt?: InputMaybe<DateTimeNullableFilter>;
-};
-
-export type EntryUncheckedCreateNestedManyWithoutAuthorInput = {
-  connect?: InputMaybe<Array<EntryWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<
-    Array<EntryCreateOrConnectWithoutAuthorInput>
-  >;
-  create?: InputMaybe<Array<EntryCreateWithoutAuthorInput>>;
-  createMany?: InputMaybe<EntryCreateManyAuthorInputEnvelope>;
-};
-
-export type EntryUpdateManyMutationInput = {
-  categoryId?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  content?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  featuredImage?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  published?: InputMaybe<BoolFieldUpdateOperationsInput>;
-  title?: InputMaybe<StringFieldUpdateOperationsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type EntryUpdateManyWithWhereWithoutAuthorInput = {
-  data: EntryUpdateManyMutationInput;
-  where: EntryScalarWhereInput;
-};
-
-export type EntryUpdateManyWithWhereWithoutCategoriesInput = {
-  data: EntryUpdateManyMutationInput;
-  where: EntryScalarWhereInput;
-};
-
-export type EntryUpdateManyWithoutAuthorInput = {
-  connect?: InputMaybe<Array<EntryWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<
-    Array<EntryCreateOrConnectWithoutAuthorInput>
-  >;
-  create?: InputMaybe<Array<EntryCreateWithoutAuthorInput>>;
-  createMany?: InputMaybe<EntryCreateManyAuthorInputEnvelope>;
-  delete?: InputMaybe<Array<EntryWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<EntryScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<EntryWhereUniqueInput>>;
-  set?: InputMaybe<Array<EntryWhereUniqueInput>>;
-  update?: InputMaybe<Array<EntryUpdateWithWhereUniqueWithoutAuthorInput>>;
-  updateMany?: InputMaybe<
-    Array<EntryUpdateManyWithWhereWithoutAuthorInput>
-  >;
-  upsert?: InputMaybe<Array<EntryUpsertWithWhereUniqueWithoutAuthorInput>>;
-};
-
-export type EntryUpdateManyWithoutCategoriesInput = {
-  connect?: InputMaybe<Array<EntryWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<
-    Array<EntryCreateOrConnectWithoutCategoriesInput>
-  >;
-  create?: InputMaybe<Array<EntryCreateWithoutCategoriesInput>>;
-  delete?: InputMaybe<Array<EntryWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<EntryScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<EntryWhereUniqueInput>>;
-  set?: InputMaybe<Array<EntryWhereUniqueInput>>;
-  update?: InputMaybe<
-    Array<EntryUpdateWithWhereUniqueWithoutCategoriesInput>
-  >;
-  updateMany?: InputMaybe<
-    Array<EntryUpdateManyWithWhereWithoutCategoriesInput>
-  >;
-  upsert?: InputMaybe<
-    Array<EntryUpsertWithWhereUniqueWithoutCategoriesInput>
-  >;
-};
-
-export type EntryUpdateOneRequiredWithoutCommentsInput = {
-  connect?: InputMaybe<EntryWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<EntryCreateOrConnectWithoutCommentsInput>;
-  create?: InputMaybe<EntryCreateWithoutCommentsInput>;
-  update?: InputMaybe<EntryUpdateWithoutCommentsInput>;
-  upsert?: InputMaybe<EntryUpsertWithoutCommentsInput>;
-};
-
-export type EntryUpdateWithWhereUniqueWithoutAuthorInput = {
-  data: EntryUpdateWithoutAuthorInput;
-  where: EntryWhereUniqueInput;
-};
-
-export type EntryUpdateWithWhereUniqueWithoutCategoriesInput = {
-  data: EntryUpdateWithoutCategoriesInput;
-  where: EntryWhereUniqueInput;
-};
-
-export type EntryUpdateWithoutAuthorInput = {
-  categories?: InputMaybe<CategoryUpdateManyWithoutEntriesInput>;
-  categoryId?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  comments?: InputMaybe<CommentUpdateManyWithoutEntryInput>;
-  content?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  featuredImage?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  published?: InputMaybe<BoolFieldUpdateOperationsInput>;
-  title?: InputMaybe<StringFieldUpdateOperationsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type EntryUpdateWithoutCategoriesInput = {
-  author?: InputMaybe<UserUpdateOneRequiredWithoutEntriesInput>;
-  categoryId?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  comments?: InputMaybe<CommentUpdateManyWithoutEntryInput>;
-  content?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  featuredImage?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  published?: InputMaybe<BoolFieldUpdateOperationsInput>;
-  title?: InputMaybe<StringFieldUpdateOperationsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type EntryUpdateWithoutCommentsInput = {
-  author?: InputMaybe<UserUpdateOneRequiredWithoutEntriesInput>;
-  categories?: InputMaybe<CategoryUpdateManyWithoutEntriesInput>;
-  categoryId?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  content?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  featuredImage?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  published?: InputMaybe<BoolFieldUpdateOperationsInput>;
-  title?: InputMaybe<StringFieldUpdateOperationsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type EntryUpsertWithWhereUniqueWithoutAuthorInput = {
-  create: EntryCreateWithoutAuthorInput;
-  update: EntryUpdateWithoutAuthorInput;
-  where: EntryWhereUniqueInput;
-};
-
-export type EntryUpsertWithWhereUniqueWithoutCategoriesInput = {
-  create: EntryCreateWithoutCategoriesInput;
-  update: EntryUpdateWithoutCategoriesInput;
-  where: EntryWhereUniqueInput;
-};
-
-export type EntryUpsertWithoutCommentsInput = {
-  create: EntryCreateWithoutCommentsInput;
-  update: EntryUpdateWithoutCommentsInput;
-};
-
 export type EntryWhereInput = {
   AND?: InputMaybe<Array<EntryWhereInput>>;
   NOT?: InputMaybe<Array<EntryWhereInput>>;
   OR?: InputMaybe<Array<EntryWhereInput>>;
   author?: InputMaybe<UserRelationFilter>;
-  authorId?: InputMaybe<StringFilter>;
+  authorId?: InputMaybe<StringNullableFilter>;
   categories?: InputMaybe<CategoryListRelationFilter>;
   categoryId?: InputMaybe<StringNullableFilter>;
   comments?: InputMaybe<CommentListRelationFilter>;
@@ -1500,7 +978,6 @@ export type EntryWhereInput = {
 };
 
 export type EntryWhereUniqueInput = {
-  authorId?: InputMaybe<Scalars["String"]>;
   id?: InputMaybe<Scalars["String"]>;
 };
 
@@ -1729,7 +1206,7 @@ export type MediaItem = Node & {
   updatedAt?: Maybe<Scalars["DateTime"]>;
   uploadedAt: Scalars["DateTime"];
   user: User;
-  userId: Scalars["String"];
+  userId?: Maybe<Scalars["String"]>;
   width?: Maybe<Scalars["Float"]>;
 };
 
@@ -1886,105 +1363,6 @@ export enum MediaItemScalarFieldEnum {
   Width = "width"
 }
 
-export type MediaItemScalarWhereInput = {
-  AND?: InputMaybe<Array<MediaItemScalarWhereInput>>;
-  NOT?: InputMaybe<Array<MediaItemScalarWhereInput>>;
-  OR?: InputMaybe<Array<MediaItemScalarWhereInput>>;
-  ariaLabel?: InputMaybe<StringNullableFilter>;
-  caption?: InputMaybe<StringNullableFilter>;
-  destination?: InputMaybe<EnumMediaItemDestinationNullableFilter>;
-  fileLastModified?: InputMaybe<DateTimeNullableFilter>;
-  height?: InputMaybe<FloatNullableFilter>;
-  id?: InputMaybe<StringFilter>;
-  name?: InputMaybe<StringNullableFilter>;
-  quality?: InputMaybe<IntNullableFilter>;
-  size?: InputMaybe<StringNullableFilter>;
-  src?: InputMaybe<StringNullableFilter>;
-  srcSet?: InputMaybe<StringNullableFilter>;
-  title?: InputMaybe<StringNullableFilter>;
-  type?: InputMaybe<EnumMimeTypesNullableFilter>;
-  updatedAt?: InputMaybe<DateTimeNullableFilter>;
-  uploadedAt?: InputMaybe<DateTimeFilter>;
-  userId?: InputMaybe<StringFilter>;
-  width?: InputMaybe<FloatNullableFilter>;
-};
-
-export type MediaItemUpdateManyMutationInput = {
-  ariaLabel?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  caption?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  destination?: InputMaybe<NullableEnumMediaItemDestinationFieldUpdateOperationsInput>;
-  fileLastModified?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  height?: InputMaybe<NullableFloatFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  name?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  quality?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
-  size?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  src?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  srcSet?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  title?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  type?: InputMaybe<NullableEnumMimeTypesFieldUpdateOperationsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  uploadedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  width?: InputMaybe<NullableFloatFieldUpdateOperationsInput>;
-};
-
-export type MediaItemUpdateManyWithWhereWithoutUserInput = {
-  data: MediaItemUpdateManyMutationInput;
-  where: MediaItemScalarWhereInput;
-};
-
-export type MediaItemUpdateManyWithoutUserInput = {
-  connect?: InputMaybe<Array<MediaItemWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<
-    Array<MediaItemCreateOrConnectWithoutUserInput>
-  >;
-  create?: InputMaybe<Array<MediaItemCreateWithoutUserInput>>;
-  createMany?: InputMaybe<MediaItemCreateManyUserInputEnvelope>;
-  delete?: InputMaybe<Array<MediaItemWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<MediaItemScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<MediaItemWhereUniqueInput>>;
-  set?: InputMaybe<Array<MediaItemWhereUniqueInput>>;
-  update?: InputMaybe<
-    Array<MediaItemUpdateWithWhereUniqueWithoutUserInput>
-  >;
-  updateMany?: InputMaybe<
-    Array<MediaItemUpdateManyWithWhereWithoutUserInput>
-  >;
-  upsert?: InputMaybe<
-    Array<MediaItemUpsertWithWhereUniqueWithoutUserInput>
-  >;
-};
-
-export type MediaItemUpdateWithWhereUniqueWithoutUserInput = {
-  data: MediaItemUpdateWithoutUserInput;
-  where: MediaItemWhereUniqueInput;
-};
-
-export type MediaItemUpdateWithoutUserInput = {
-  ariaLabel?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  caption?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  destination?: InputMaybe<NullableEnumMediaItemDestinationFieldUpdateOperationsInput>;
-  fileLastModified?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  height?: InputMaybe<NullableFloatFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  name?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  quality?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
-  size?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  src?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  srcSet?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  title?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  type?: InputMaybe<NullableEnumMimeTypesFieldUpdateOperationsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  uploadedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  width?: InputMaybe<NullableFloatFieldUpdateOperationsInput>;
-};
-
-export type MediaItemUpsertWithWhereUniqueWithoutUserInput = {
-  create: MediaItemCreateWithoutUserInput;
-  update: MediaItemUpdateWithoutUserInput;
-  where: MediaItemWhereUniqueInput;
-};
-
 export type MediaItemWhereInput = {
   AND?: InputMaybe<Array<MediaItemWhereInput>>;
   NOT?: InputMaybe<Array<MediaItemWhereInput>>;
@@ -2005,7 +1383,7 @@ export type MediaItemWhereInput = {
   updatedAt?: InputMaybe<DateTimeNullableFilter>;
   uploadedAt?: InputMaybe<DateTimeFilter>;
   user?: InputMaybe<UserRelationFilter>;
-  userId?: InputMaybe<StringFilter>;
+  userId?: InputMaybe<StringNullableFilter>;
   width?: InputMaybe<FloatNullableFilter>;
 };
 
@@ -2028,38 +1406,50 @@ export enum MimeTypes {
 export type Mutation = {
   __typename?: "Mutation";
   changePassword: User;
-  createEntry: Entry;
+  createEntryWithAxios: Entry;
+  createNewComment: Comment;
   createNewEntry: Entry;
-  createProfile: Profile;
+  createNewProfile: Profile;
+  createNuevoEntryMutation: Entry;
   login: Token;
+  nuevoEntry: Entry;
   register: AuthSansSession;
   registerNewUser: AuthDetailed;
   signin: AuthDetailed;
   signup: Token;
   updateUserPassword: User;
-  upsertComment: Array<Comment>;
-  viewerCreateEntry: Array<Entry>;
 };
 
 export type MutationChangePasswordArgs = {
   changePasswordInput: ChangePasswordInput;
 };
 
-export type MutationCreateEntryArgs = {
-  EntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput;
+export type MutationCreateEntryWithAxiosArgs = {
+  createNew: EntryCreateOneInput;
+};
+
+export type MutationCreateNewCommentArgs = {
+  commentCreateInput: CreatNewCommentInput;
 };
 
 export type MutationCreateNewEntryArgs = {
-  createNewEntryInput: EntryUncheckedCreateNestedManyWithoutAuthorInput;
+  entryCreateInput: EntryCreateOneInput;
 };
 
-export type MutationCreateProfileArgs = {
-  data: ProfileCreateInput;
-  userId: Scalars["String"];
+export type MutationCreateNewProfileArgs = {
+  createNewProfileInput: CreateOneProfile;
+};
+
+export type MutationCreateNuevoEntryMutationArgs = {
+  createNuevoEntryInput: EntryCreateNuevoInput;
 };
 
 export type MutationLoginArgs = {
   data: LoginInput;
+};
+
+export type MutationNuevoEntryArgs = {
+  nuevoEntry: EntryCreateOneInput;
 };
 
 export type MutationRegisterArgs = {
@@ -2067,7 +1457,7 @@ export type MutationRegisterArgs = {
 };
 
 export type MutationRegisterNewUserArgs = {
-  userCreateInput: UserCreateMutationInput;
+  userCreateInput: SignupInput;
 };
 
 export type MutationSigninArgs = {
@@ -2080,14 +1470,6 @@ export type MutationSignupArgs = {
 
 export type MutationUpdateUserPasswordArgs = {
   passwordInput: ChangePasswordInput;
-};
-
-export type MutationUpsertCommentArgs = {
-  commentUpsertInput: CommentUpsertWithWhereUniqueWithoutAuthorInput;
-};
-
-export type MutationViewerCreateEntryArgs = {
-  viewerEntryCreateInput: EntryUpdateManyWithWhereWithoutAuthorInput;
 };
 
 export type NestedBoolFilter = {
@@ -2215,6 +1597,17 @@ export type Node = {
   id: Scalars["ID"];
 };
 
+export type NodeBaseFieldUnion =
+  | Account
+  | Category
+  | Comment
+  | Connection
+  | Entry
+  | MediaItem
+  | Profile
+  | Session
+  | User;
+
 export type NodeUnion =
   | CommentConnection
   | EntryConnection
@@ -2225,57 +1618,15 @@ export type NodeUnion =
 
 export type NodeUnionConnection = {
   __typename?: "NodeUnionConnection";
-  edges: Array<NodeUnion>;
+  edges: Array<NodeUnionEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars["Int"];
 };
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: InputMaybe<Scalars["DateTime"]>;
-};
-
-export type NullableEnumGenderFieldUpdateOperationsInput = {
-  set?: InputMaybe<Gender>;
-};
-
-export type NullableEnumMediaItemDestinationFieldUpdateOperationsInput = {
-  set?: InputMaybe<MediaItemDestination>;
-};
-
-export type NullableEnumMimeTypesFieldUpdateOperationsInput = {
-  set?: InputMaybe<MimeTypes>;
-};
-
-export type NullableEnumPronounsFieldUpdateOperationsInput = {
-  set?: InputMaybe<Pronouns>;
-};
-
-export type NullableEnumRoleFieldUpdateOperationsInput = {
-  set?: InputMaybe<Role>;
-};
-
-export type NullableEnumUserStatusFieldUpdateOperationsInput = {
-  set?: InputMaybe<UserStatus>;
-};
-
-export type NullableFloatFieldUpdateOperationsInput = {
-  decrement?: InputMaybe<Scalars["Float"]>;
-  divide?: InputMaybe<Scalars["Float"]>;
-  increment?: InputMaybe<Scalars["Float"]>;
-  multiply?: InputMaybe<Scalars["Float"]>;
-  set?: InputMaybe<Scalars["Float"]>;
-};
-
-export type NullableIntFieldUpdateOperationsInput = {
-  decrement?: InputMaybe<Scalars["Int"]>;
-  divide?: InputMaybe<Scalars["Int"]>;
-  increment?: InputMaybe<Scalars["Int"]>;
-  multiply?: InputMaybe<Scalars["Int"]>;
-  set?: InputMaybe<Scalars["Int"]>;
-};
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: InputMaybe<Scalars["String"]>;
+export type NodeUnionEdge = {
+  __typename?: "NodeUnionEdge";
+  cursor: Scalars["String"];
+  node: NodeUnion;
 };
 
 export type PageInfo = {
@@ -2310,7 +1661,7 @@ export type Profile = Node & {
   pronouns?: Maybe<Pronouns>;
   recentActivity?: Maybe<Scalars["String"]>;
   user: User;
-  userId: Scalars["String"];
+  userId?: Maybe<Scalars["String"]>;
   userInProfile: User;
 };
 
@@ -2319,24 +1670,6 @@ export type ProfileConnection = {
   edges: Array<ProfileEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars["Int"];
-};
-
-export type ProfileCreateInput = {
-  activiyFeed?: InputMaybe<Scalars["String"]>;
-  bio?: InputMaybe<Scalars["String"]>;
-  city?: InputMaybe<Scalars["String"]>;
-  country?: InputMaybe<Scalars["String"]>;
-  coverPhoto?: InputMaybe<Scalars["String"]>;
-  dob?: InputMaybe<Scalars["String"]>;
-  gender?: InputMaybe<Gender>;
-  id?: InputMaybe<Scalars["String"]>;
-  lastSeen?: InputMaybe<Scalars["DateTime"]>;
-  memberSince?: InputMaybe<Scalars["DateTime"]>;
-  occupation?: InputMaybe<Scalars["String"]>;
-  phoneNumber?: InputMaybe<Scalars["String"]>;
-  pronouns?: InputMaybe<Pronouns>;
-  recentActivity?: InputMaybe<Scalars["String"]>;
-  user: UserCreateNestedOneWithoutProfileInput;
 };
 
 export type ProfileCreateNestedOneWithoutUserInput = {
@@ -2436,38 +1769,6 @@ export enum ProfileScalarFieldEnum {
   UserId = "userId"
 }
 
-export type ProfileUpdateOneWithoutUserInput = {
-  connect?: InputMaybe<ProfileWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<ProfileCreateOrConnectWithoutUserInput>;
-  create?: InputMaybe<ProfileCreateWithoutUserInput>;
-  delete?: InputMaybe<Scalars["Boolean"]>;
-  disconnect?: InputMaybe<Scalars["Boolean"]>;
-  update?: InputMaybe<ProfileUpdateWithoutUserInput>;
-  upsert?: InputMaybe<ProfileUpsertWithoutUserInput>;
-};
-
-export type ProfileUpdateWithoutUserInput = {
-  activiyFeed?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  bio?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  country?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  coverPhoto?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  dob?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  gender?: InputMaybe<NullableEnumGenderFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  lastSeen?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  memberSince?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  occupation?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  phoneNumber?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  pronouns?: InputMaybe<NullableEnumPronounsFieldUpdateOperationsInput>;
-  recentActivity?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-};
-
-export type ProfileUpsertWithoutUserInput = {
-  create: ProfileCreateWithoutUserInput;
-  update: ProfileUpdateWithoutUserInput;
-};
-
 export type ProfileWhereInput = {
   AND?: InputMaybe<Array<ProfileWhereInput>>;
   NOT?: InputMaybe<Array<ProfileWhereInput>>;
@@ -2487,7 +1788,7 @@ export type ProfileWhereInput = {
   pronouns?: InputMaybe<EnumPronounsNullableFilter>;
   recentActivity?: InputMaybe<StringNullableFilter>;
   user?: InputMaybe<UserRelationFilter>;
-  userId?: InputMaybe<StringFilter>;
+  userId?: InputMaybe<StringNullableFilter>;
 };
 
 export type ProfileWhereUniqueInput = {
@@ -2510,13 +1811,11 @@ export type Query = {
   comprehensiveConnectionUnion: Array<NodeUnion>;
   connectionByRelayId: Connection;
   contentNodesUnion: ContentNodes;
-  decodeViewerTokenFromContext: AuthDetailed;
   entryById: Entry;
+  entryByRelayId: Entry;
   findUniqueMediaItem: MediaItem;
   getUserFromAccessToken: User;
   getViewer: AuthDetailed;
-  hello: Scalars["String"];
-  helloWorld: Scalars["String"];
   listCategories: CategoryConnection;
   listComments: CommentConnection;
   listConnections: ConnectionConnection;
@@ -2527,13 +1826,13 @@ export type Query = {
   listUsers: UserConnection;
   me: AuthDetailed;
   node?: Maybe<Node>;
+  nodeField: NodeBaseFieldUnion;
   nodeUnionResolver: NodeUnionConnection;
   profileByRelayId: Profile;
   sessionByRelayId: Session;
   siftEntries: EntryConnection;
   userById: User;
   userByRelayId: User;
-  userFromAccessTokenDecoded: AuthDetailed;
   viewer: ViewerDetailed;
   viewerAuthInfoFromContext: ViewerAuthInfo;
   viewerEntriesPaginated: EntryConnection;
@@ -2561,16 +1860,16 @@ export type QueryEntryByIdArgs = {
   id: Scalars["String"];
 };
 
+export type QueryEntryByRelayIdArgs = {
+  entryCursor: Scalars["String"];
+};
+
 export type QueryFindUniqueMediaItemArgs = {
   mediaItemId: Scalars["String"];
 };
 
 export type QueryGetUserFromAccessTokenArgs = {
   token: Scalars["String"];
-};
-
-export type QueryHelloArgs = {
-  name: Scalars["String"];
 };
 
 export type QueryListCategoriesArgs = {
@@ -2609,6 +1908,10 @@ export type QueryNodeArgs = {
   id: Scalars["ID"];
 };
 
+export type QueryNodeFieldArgs = {
+  cursor: Scalars["String"];
+};
+
 export type QueryNodeUnionResolverArgs = {
   id: Scalars["String"];
   manyComments: FindManyCommentsPaginatedInput;
@@ -2633,10 +1936,6 @@ export type QueryUserByIdArgs = {
 
 export type QueryUserByRelayIdArgs = {
   cursor: Scalars["String"];
-};
-
-export type QueryUserFromAccessTokenDecodedArgs = {
-  token: Scalars["String"];
 };
 
 export type QueryViewerEntriesPaginatedArgs = {
@@ -2669,7 +1968,7 @@ export type Session = Node & {
   signature?: Maybe<Scalars["String"]>;
   tokenState?: Maybe<Scalars["String"]>;
   user?: Maybe<User>;
-  userId: Scalars["String"];
+  userId?: Maybe<Scalars["String"]>;
 };
 
 export type SessionConnection = {
@@ -2800,91 +2099,6 @@ export enum SessionScalarFieldEnum {
   UserId = "userId"
 }
 
-export type SessionScalarWhereInput = {
-  AND?: InputMaybe<Array<SessionScalarWhereInput>>;
-  NOT?: InputMaybe<Array<SessionScalarWhereInput>>;
-  OR?: InputMaybe<Array<SessionScalarWhereInput>>;
-  accessToken?: InputMaybe<StringNullableFilter>;
-  alg?: InputMaybe<StringNullableFilter>;
-  exp?: InputMaybe<IntNullableFilter>;
-  iat?: InputMaybe<IntNullableFilter>;
-  id?: InputMaybe<StringFilter>;
-  lastVerified?: InputMaybe<DateTimeNullableFilter>;
-  provider?: InputMaybe<StringNullableFilter>;
-  refreshToken?: InputMaybe<StringNullableFilter>;
-  scopes?: InputMaybe<StringNullableListFilter>;
-  signature?: InputMaybe<StringNullableFilter>;
-  tokenState?: InputMaybe<StringNullableFilter>;
-  userId?: InputMaybe<StringFilter>;
-};
-
-export type SessionUpdateManyMutationInput = {
-  accessToken?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  alg?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  exp?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
-  iat?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  lastVerified?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  provider?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  refreshToken?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  scopes?: InputMaybe<SessionUpdatescopesInput>;
-  signature?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  tokenState?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-};
-
-export type SessionUpdateManyWithWhereWithoutUserInput = {
-  data: SessionUpdateManyMutationInput;
-  where: SessionScalarWhereInput;
-};
-
-export type SessionUpdateManyWithoutUserInput = {
-  connect?: InputMaybe<Array<SessionWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<
-    Array<SessionCreateOrConnectWithoutUserInput>
-  >;
-  create?: InputMaybe<Array<SessionCreateWithoutUserInput>>;
-  createMany?: InputMaybe<SessionCreateManyUserInputEnvelope>;
-  delete?: InputMaybe<Array<SessionWhereUniqueInput>>;
-  deleteMany?: InputMaybe<Array<SessionScalarWhereInput>>;
-  disconnect?: InputMaybe<Array<SessionWhereUniqueInput>>;
-  set?: InputMaybe<Array<SessionWhereUniqueInput>>;
-  update?: InputMaybe<Array<SessionUpdateWithWhereUniqueWithoutUserInput>>;
-  updateMany?: InputMaybe<
-    Array<SessionUpdateManyWithWhereWithoutUserInput>
-  >;
-  upsert?: InputMaybe<Array<SessionUpsertWithWhereUniqueWithoutUserInput>>;
-};
-
-export type SessionUpdateWithWhereUniqueWithoutUserInput = {
-  data: SessionUpdateWithoutUserInput;
-  where: SessionWhereUniqueInput;
-};
-
-export type SessionUpdateWithoutUserInput = {
-  accessToken?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  alg?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  exp?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
-  iat?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  lastVerified?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  provider?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  refreshToken?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  scopes?: InputMaybe<SessionUpdatescopesInput>;
-  signature?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  tokenState?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-};
-
-export type SessionUpdatescopesInput = {
-  push?: InputMaybe<Array<Scalars["String"]>>;
-  set?: InputMaybe<Array<Scalars["String"]>>;
-};
-
-export type SessionUpsertWithWhereUniqueWithoutUserInput = {
-  create: SessionCreateWithoutUserInput;
-  update: SessionUpdateWithoutUserInput;
-  where: SessionWhereUniqueInput;
-};
-
 export type SessionWhereInput = {
   AND?: InputMaybe<Array<SessionWhereInput>>;
   NOT?: InputMaybe<Array<SessionWhereInput>>;
@@ -2901,12 +2115,11 @@ export type SessionWhereInput = {
   signature?: InputMaybe<StringNullableFilter>;
   tokenState?: InputMaybe<StringNullableFilter>;
   user?: InputMaybe<UserRelationFilter>;
-  userId?: InputMaybe<StringFilter>;
+  userId?: InputMaybe<StringNullableFilter>;
 };
 
 export type SessionWhereUniqueInput = {
   id?: InputMaybe<Scalars["String"]>;
-  userId?: InputMaybe<Scalars["String"]>;
 };
 
 export type SignupInput = {
@@ -2921,10 +2134,6 @@ export enum SortOrder {
   Asc = "asc",
   Desc = "desc"
 }
-
-export type StringFieldUpdateOperationsInput = {
-  set?: InputMaybe<Scalars["String"]>;
-};
 
 export type StringFilter = {
   contains?: InputMaybe<Scalars["String"]>;
@@ -2968,6 +2177,7 @@ export type StringNullableListFilter = {
 
 export type Subscription = {
   __typename?: "Subscription";
+  commentCreated: Comment;
   entryCreated: Entry;
   profileCreated: Profile;
 };
@@ -2982,9 +2192,14 @@ export type Token = {
 
 export type TypesUnion = Entry | MediaItem | User;
 
+export type UnionOnEdgeObjectType = {
+  __typename?: "UnionOnEdgeObjectType";
+  unionOnEdge: UnionOnEdgeObjectType;
+};
+
 export type User = Node & {
   __typename?: "User";
-  _count?: Maybe<UserCount>;
+  _count: UserCount;
   accounts?: Maybe<Array<Account>>;
   categories?: Maybe<Array<Category>>;
   comments?: Maybe<Array<Comment>>;
@@ -3026,28 +2241,6 @@ export type UserCount = {
   sessions: Scalars["Int"];
 };
 
-export type UserCreateMutationInput = {
-  accounts?: InputMaybe<AccountCreateNestedManyWithoutUserInput>;
-  categories?: InputMaybe<CategoryCreateNestedManyWithoutCreatorInput>;
-  comments?: InputMaybe<CommentCreateNestedManyWithoutAuthorInput>;
-  connections?: InputMaybe<ConnectionCreateNestedManyWithoutOwnerInput>;
-  createdAt?: InputMaybe<Scalars["DateTime"]>;
-  email: Scalars["String"];
-  emailVerified?: InputMaybe<Scalars["DateTime"]>;
-  entries?: InputMaybe<EntryCreateNestedManyWithoutAuthorInput>;
-  firstName?: InputMaybe<Scalars["String"]>;
-  id?: InputMaybe<Scalars["ID"]>;
-  image?: InputMaybe<Scalars["String"]>;
-  lastName?: InputMaybe<Scalars["String"]>;
-  mediaItems?: InputMaybe<MediaItemCreateNestedManyWithoutUserInput>;
-  password?: InputMaybe<Scalars["String"]>;
-  profile?: InputMaybe<ProfileCreateNestedOneWithoutUserInput>;
-  role?: InputMaybe<Role>;
-  sessions?: InputMaybe<SessionCreateNestedManyWithoutUserInput>;
-  status?: InputMaybe<UserStatus>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]>;
-};
-
 export type UserCreateNestedOneWithoutCategoriesInput = {
   connect?: InputMaybe<UserWhereUniqueInput>;
   connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutCategoriesInput>;
@@ -3066,12 +2259,6 @@ export type UserCreateNestedOneWithoutEntriesInput = {
   create?: InputMaybe<UserCreateWithoutEntriesInput>;
 };
 
-export type UserCreateNestedOneWithoutProfileInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutProfileInput>;
-  create?: InputMaybe<UserCreateWithoutProfileInput>;
-};
-
 export type UserCreateOrConnectWithoutCategoriesInput = {
   create: UserCreateWithoutCategoriesInput;
   where: UserWhereUniqueInput;
@@ -3084,11 +2271,6 @@ export type UserCreateOrConnectWithoutCommentsInput = {
 
 export type UserCreateOrConnectWithoutEntriesInput = {
   create: UserCreateWithoutEntriesInput;
-  where: UserWhereUniqueInput;
-};
-
-export type UserCreateOrConnectWithoutProfileInput = {
-  create: UserCreateWithoutProfileInput;
   where: UserWhereUniqueInput;
 };
 
@@ -3149,27 +2331,6 @@ export type UserCreateWithoutEntriesInput = {
   mediaItems?: InputMaybe<MediaItemCreateNestedManyWithoutUserInput>;
   password?: InputMaybe<Scalars["String"]>;
   profile?: InputMaybe<ProfileCreateNestedOneWithoutUserInput>;
-  role?: InputMaybe<Role>;
-  sessions?: InputMaybe<SessionCreateNestedManyWithoutUserInput>;
-  status?: InputMaybe<UserStatus>;
-  updatedAt?: InputMaybe<Scalars["DateTime"]>;
-};
-
-export type UserCreateWithoutProfileInput = {
-  accounts?: InputMaybe<AccountCreateNestedManyWithoutUserInput>;
-  categories?: InputMaybe<CategoryCreateNestedManyWithoutCreatorInput>;
-  comments?: InputMaybe<CommentCreateNestedManyWithoutAuthorInput>;
-  connections?: InputMaybe<ConnectionCreateNestedManyWithoutOwnerInput>;
-  createdAt?: InputMaybe<Scalars["DateTime"]>;
-  email: Scalars["String"];
-  emailVerified?: InputMaybe<Scalars["DateTime"]>;
-  entries?: InputMaybe<EntryCreateNestedManyWithoutAuthorInput>;
-  firstName?: InputMaybe<Scalars["String"]>;
-  id?: InputMaybe<Scalars["String"]>;
-  image?: InputMaybe<Scalars["String"]>;
-  lastName?: InputMaybe<Scalars["String"]>;
-  mediaItems?: InputMaybe<MediaItemCreateNestedManyWithoutUserInput>;
-  password?: InputMaybe<Scalars["String"]>;
   role?: InputMaybe<Role>;
   sessions?: InputMaybe<SessionCreateNestedManyWithoutUserInput>;
   status?: InputMaybe<UserStatus>;
@@ -3248,108 +2409,6 @@ export enum UserStatus {
   Suspended = "SUSPENDED"
 }
 
-export type UserUpdateOneRequiredWithoutCategoriesInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutCategoriesInput>;
-  create?: InputMaybe<UserCreateWithoutCategoriesInput>;
-  update?: InputMaybe<UserUpdateWithoutCategoriesInput>;
-  upsert?: InputMaybe<UserUpsertWithoutCategoriesInput>;
-};
-
-export type UserUpdateOneRequiredWithoutCommentsInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutCommentsInput>;
-  create?: InputMaybe<UserCreateWithoutCommentsInput>;
-  update?: InputMaybe<UserUpdateWithoutCommentsInput>;
-  upsert?: InputMaybe<UserUpsertWithoutCommentsInput>;
-};
-
-export type UserUpdateOneRequiredWithoutEntriesInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutEntriesInput>;
-  create?: InputMaybe<UserCreateWithoutEntriesInput>;
-  update?: InputMaybe<UserUpdateWithoutEntriesInput>;
-  upsert?: InputMaybe<UserUpsertWithoutEntriesInput>;
-};
-
-export type UserUpdateWithoutCategoriesInput = {
-  accounts?: InputMaybe<AccountUpdateManyWithoutUserInput>;
-  comments?: InputMaybe<CommentUpdateManyWithoutAuthorInput>;
-  connections?: InputMaybe<ConnectionUpdateManyWithoutOwnerInput>;
-  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  email?: InputMaybe<StringFieldUpdateOperationsInput>;
-  emailVerified?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  entries?: InputMaybe<EntryUpdateManyWithoutAuthorInput>;
-  firstName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  image?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  lastName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  mediaItems?: InputMaybe<MediaItemUpdateManyWithoutUserInput>;
-  password?: InputMaybe<StringFieldUpdateOperationsInput>;
-  profile?: InputMaybe<ProfileUpdateOneWithoutUserInput>;
-  role?: InputMaybe<NullableEnumRoleFieldUpdateOperationsInput>;
-  sessions?: InputMaybe<SessionUpdateManyWithoutUserInput>;
-  status?: InputMaybe<NullableEnumUserStatusFieldUpdateOperationsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type UserUpdateWithoutCommentsInput = {
-  accounts?: InputMaybe<AccountUpdateManyWithoutUserInput>;
-  categories?: InputMaybe<CategoryUpdateManyWithoutCreatorInput>;
-  connections?: InputMaybe<ConnectionUpdateManyWithoutOwnerInput>;
-  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  email?: InputMaybe<StringFieldUpdateOperationsInput>;
-  emailVerified?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  entries?: InputMaybe<EntryUpdateManyWithoutAuthorInput>;
-  firstName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  image?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  lastName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  mediaItems?: InputMaybe<MediaItemUpdateManyWithoutUserInput>;
-  password?: InputMaybe<StringFieldUpdateOperationsInput>;
-  profile?: InputMaybe<ProfileUpdateOneWithoutUserInput>;
-  role?: InputMaybe<NullableEnumRoleFieldUpdateOperationsInput>;
-  sessions?: InputMaybe<SessionUpdateManyWithoutUserInput>;
-  status?: InputMaybe<NullableEnumUserStatusFieldUpdateOperationsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type UserUpdateWithoutEntriesInput = {
-  accounts?: InputMaybe<AccountUpdateManyWithoutUserInput>;
-  categories?: InputMaybe<CategoryUpdateManyWithoutCreatorInput>;
-  comments?: InputMaybe<CommentUpdateManyWithoutAuthorInput>;
-  connections?: InputMaybe<ConnectionUpdateManyWithoutOwnerInput>;
-  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  email?: InputMaybe<StringFieldUpdateOperationsInput>;
-  emailVerified?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-  firstName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  id?: InputMaybe<StringFieldUpdateOperationsInput>;
-  image?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  lastName?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
-  mediaItems?: InputMaybe<MediaItemUpdateManyWithoutUserInput>;
-  password?: InputMaybe<StringFieldUpdateOperationsInput>;
-  profile?: InputMaybe<ProfileUpdateOneWithoutUserInput>;
-  role?: InputMaybe<NullableEnumRoleFieldUpdateOperationsInput>;
-  sessions?: InputMaybe<SessionUpdateManyWithoutUserInput>;
-  status?: InputMaybe<NullableEnumUserStatusFieldUpdateOperationsInput>;
-  updatedAt?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
-};
-
-export type UserUpsertWithoutCategoriesInput = {
-  create: UserCreateWithoutCategoriesInput;
-  update: UserUpdateWithoutCategoriesInput;
-};
-
-export type UserUpsertWithoutCommentsInput = {
-  create: UserCreateWithoutCommentsInput;
-  update: UserUpdateWithoutCommentsInput;
-};
-
-export type UserUpsertWithoutEntriesInput = {
-  create: UserCreateWithoutEntriesInput;
-  update: UserUpdateWithoutEntriesInput;
-};
-
 export type UserWhereInput = {
   AND?: InputMaybe<Array<UserWhereInput>>;
   NOT?: InputMaybe<Array<UserWhereInput>>;
@@ -3389,7 +2448,7 @@ export type ViewerAuthInfo = {
 
 export type ViewerDetailed = Node & {
   __typename?: "ViewerDetailed";
-  _count?: Maybe<UserCount>;
+  _count: UserCount;
   accessToken?: Maybe<Scalars["String"]>;
   accounts?: Maybe<Array<Account>>;
   categories?: Maybe<Array<Category>>;
@@ -3556,13 +2615,6 @@ export type ResolversTypes = ResolversObject<{
   AccountListRelationFilter: AccountListRelationFilter;
   AccountOrderByRelationAggregateInput: AccountOrderByRelationAggregateInput;
   AccountProviderProviderAccountIdCompoundUniqueInput: AccountProviderProviderAccountIdCompoundUniqueInput;
-  AccountScalarWhereInput: AccountScalarWhereInput;
-  AccountUpdateManyMutationInput: AccountUpdateManyMutationInput;
-  AccountUpdateManyWithWhereWithoutUserInput: AccountUpdateManyWithWhereWithoutUserInput;
-  AccountUpdateManyWithoutUserInput: AccountUpdateManyWithoutUserInput;
-  AccountUpdateWithWhereUniqueWithoutUserInput: AccountUpdateWithWhereUniqueWithoutUserInput;
-  AccountUpdateWithoutUserInput: AccountUpdateWithoutUserInput;
-  AccountUpsertWithWhereUniqueWithoutUserInput: AccountUpsertWithWhereUniqueWithoutUserInput;
   AccountWhereInput: AccountWhereInput;
   AccountWhereUniqueInput: AccountWhereUniqueInput;
   AlgorithmType: AlgorithmType;
@@ -3578,7 +2630,6 @@ export type ResolversTypes = ResolversObject<{
     Omit<BaseTypesEdge, "node"> & { node: ResolversTypes["TypesUnion"] }
   >;
   BigInt: ResolverTypeWrapper<Scalars["BigInt"]>;
-  BoolFieldUpdateOperationsInput: BoolFieldUpdateOperationsInput;
   BoolFilter: BoolFilter;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   Category: ResolverTypeWrapper<Category>;
@@ -3599,18 +2650,6 @@ export type ResolversTypes = ResolversObject<{
   CategoryOrderByRelevanceInput: CategoryOrderByRelevanceInput;
   CategoryOrderByWithRelationAndSearchRelevanceInput: CategoryOrderByWithRelationAndSearchRelevanceInput;
   CategoryScalarFieldEnum: CategoryScalarFieldEnum;
-  CategoryScalarWhereInput: CategoryScalarWhereInput;
-  CategoryUpdateManyMutationInput: CategoryUpdateManyMutationInput;
-  CategoryUpdateManyWithWhereWithoutCreatorInput: CategoryUpdateManyWithWhereWithoutCreatorInput;
-  CategoryUpdateManyWithWhereWithoutEntriesInput: CategoryUpdateManyWithWhereWithoutEntriesInput;
-  CategoryUpdateManyWithoutCreatorInput: CategoryUpdateManyWithoutCreatorInput;
-  CategoryUpdateManyWithoutEntriesInput: CategoryUpdateManyWithoutEntriesInput;
-  CategoryUpdateWithWhereUniqueWithoutCreatorInput: CategoryUpdateWithWhereUniqueWithoutCreatorInput;
-  CategoryUpdateWithWhereUniqueWithoutEntriesInput: CategoryUpdateWithWhereUniqueWithoutEntriesInput;
-  CategoryUpdateWithoutCreatorInput: CategoryUpdateWithoutCreatorInput;
-  CategoryUpdateWithoutEntriesInput: CategoryUpdateWithoutEntriesInput;
-  CategoryUpsertWithWhereUniqueWithoutCreatorInput: CategoryUpsertWithWhereUniqueWithoutCreatorInput;
-  CategoryUpsertWithWhereUniqueWithoutEntriesInput: CategoryUpsertWithWhereUniqueWithoutEntriesInput;
   CategoryWhereInput: CategoryWhereInput;
   CategoryWhereUniqueInput: CategoryWhereUniqueInput;
   ChangePasswordInput: ChangePasswordInput;
@@ -3637,19 +2676,6 @@ export type ResolversTypes = ResolversObject<{
   CommentOrderByWithRelationAndSearchRelevanceInput: CommentOrderByWithRelationAndSearchRelevanceInput;
   CommentReactions: CommentReactions;
   CommentScalarFieldEnum: CommentScalarFieldEnum;
-  CommentScalarWhereInput: CommentScalarWhereInput;
-  CommentUpdateManyMutationInput: CommentUpdateManyMutationInput;
-  CommentUpdateManyWithWhereWithoutAuthorInput: CommentUpdateManyWithWhereWithoutAuthorInput;
-  CommentUpdateManyWithWhereWithoutEntryInput: CommentUpdateManyWithWhereWithoutEntryInput;
-  CommentUpdateManyWithoutAuthorInput: CommentUpdateManyWithoutAuthorInput;
-  CommentUpdateManyWithoutEntryInput: CommentUpdateManyWithoutEntryInput;
-  CommentUpdateWithWhereUniqueWithoutAuthorInput: CommentUpdateWithWhereUniqueWithoutAuthorInput;
-  CommentUpdateWithWhereUniqueWithoutEntryInput: CommentUpdateWithWhereUniqueWithoutEntryInput;
-  CommentUpdateWithoutAuthorInput: CommentUpdateWithoutAuthorInput;
-  CommentUpdateWithoutEntryInput: CommentUpdateWithoutEntryInput;
-  CommentUpdatereactionsInput: CommentUpdatereactionsInput;
-  CommentUpsertWithWhereUniqueWithoutAuthorInput: CommentUpsertWithWhereUniqueWithoutAuthorInput;
-  CommentUpsertWithWhereUniqueWithoutEntryInput: CommentUpsertWithWhereUniqueWithoutEntryInput;
   CommentWhereInput: CommentWhereInput;
   CommentWhereUniqueInput: CommentWhereUniqueInput;
   Connection: ResolverTypeWrapper<Connection>;
@@ -3666,18 +2692,13 @@ export type ResolversTypes = ResolversObject<{
   ConnectionOrderByRelevanceInput: ConnectionOrderByRelevanceInput;
   ConnectionOrderByWithRelationAndSearchRelevanceInput: ConnectionOrderByWithRelationAndSearchRelevanceInput;
   ConnectionScalarFieldEnum: ConnectionScalarFieldEnum;
-  ConnectionScalarWhereInput: ConnectionScalarWhereInput;
-  ConnectionUpdateManyMutationInput: ConnectionUpdateManyMutationInput;
-  ConnectionUpdateManyWithWhereWithoutOwnerInput: ConnectionUpdateManyWithWhereWithoutOwnerInput;
-  ConnectionUpdateManyWithoutOwnerInput: ConnectionUpdateManyWithoutOwnerInput;
-  ConnectionUpdateWithWhereUniqueWithoutOwnerInput: ConnectionUpdateWithWhereUniqueWithoutOwnerInput;
-  ConnectionUpdateWithoutOwnerInput: ConnectionUpdateWithoutOwnerInput;
-  ConnectionUpsertWithWhereUniqueWithoutOwnerInput: ConnectionUpsertWithWhereUniqueWithoutOwnerInput;
   ConnectionWhereInput: ConnectionWhereInput;
   ConnectionWhereUniqueInput: ConnectionWhereUniqueInput;
   ContentNodes: ResolverTypeWrapper<ContentNodes>;
+  CreatNewCommentInput: CreatNewCommentInput;
+  CreateNewProfileInput: CreateNewProfileInput;
+  CreateOneProfile: CreateOneProfile;
   DateTime: ResolverTypeWrapper<Scalars["DateTime"]>;
-  DateTimeFieldUpdateOperationsInput: DateTimeFieldUpdateOperationsInput;
   DateTimeFilter: DateTimeFilter;
   DateTimeNullableFilter: DateTimeNullableFilter;
   Entry: ResolverTypeWrapper<Entry>;
@@ -3688,6 +2709,8 @@ export type ResolversTypes = ResolversObject<{
   EntryCreateNestedManyWithoutAuthorInput: EntryCreateNestedManyWithoutAuthorInput;
   EntryCreateNestedManyWithoutCategoriesInput: EntryCreateNestedManyWithoutCategoriesInput;
   EntryCreateNestedOneWithoutCommentsInput: EntryCreateNestedOneWithoutCommentsInput;
+  EntryCreateNuevoInput: EntryCreateNuevoInput;
+  EntryCreateOneInput: EntryCreateOneInput;
   EntryCreateOrConnectWithoutAuthorInput: EntryCreateOrConnectWithoutAuthorInput;
   EntryCreateOrConnectWithoutCategoriesInput: EntryCreateOrConnectWithoutCategoriesInput;
   EntryCreateOrConnectWithoutCommentsInput: EntryCreateOrConnectWithoutCommentsInput;
@@ -3702,22 +2725,6 @@ export type ResolversTypes = ResolversObject<{
   EntryOrderByWithRelationAndSearchRelevanceInput: EntryOrderByWithRelationAndSearchRelevanceInput;
   EntryRelationFilter: EntryRelationFilter;
   EntryScalarFieldEnum: EntryScalarFieldEnum;
-  EntryScalarWhereInput: EntryScalarWhereInput;
-  EntryUncheckedCreateNestedManyWithoutAuthorInput: EntryUncheckedCreateNestedManyWithoutAuthorInput;
-  EntryUpdateManyMutationInput: EntryUpdateManyMutationInput;
-  EntryUpdateManyWithWhereWithoutAuthorInput: EntryUpdateManyWithWhereWithoutAuthorInput;
-  EntryUpdateManyWithWhereWithoutCategoriesInput: EntryUpdateManyWithWhereWithoutCategoriesInput;
-  EntryUpdateManyWithoutAuthorInput: EntryUpdateManyWithoutAuthorInput;
-  EntryUpdateManyWithoutCategoriesInput: EntryUpdateManyWithoutCategoriesInput;
-  EntryUpdateOneRequiredWithoutCommentsInput: EntryUpdateOneRequiredWithoutCommentsInput;
-  EntryUpdateWithWhereUniqueWithoutAuthorInput: EntryUpdateWithWhereUniqueWithoutAuthorInput;
-  EntryUpdateWithWhereUniqueWithoutCategoriesInput: EntryUpdateWithWhereUniqueWithoutCategoriesInput;
-  EntryUpdateWithoutAuthorInput: EntryUpdateWithoutAuthorInput;
-  EntryUpdateWithoutCategoriesInput: EntryUpdateWithoutCategoriesInput;
-  EntryUpdateWithoutCommentsInput: EntryUpdateWithoutCommentsInput;
-  EntryUpsertWithWhereUniqueWithoutAuthorInput: EntryUpsertWithWhereUniqueWithoutAuthorInput;
-  EntryUpsertWithWhereUniqueWithoutCategoriesInput: EntryUpsertWithWhereUniqueWithoutCategoriesInput;
-  EntryUpsertWithoutCommentsInput: EntryUpsertWithoutCommentsInput;
   EntryWhereInput: EntryWhereInput;
   EntryWhereUniqueInput: EntryWhereUniqueInput;
   EnumCommentReactionsNullableListFilter: EnumCommentReactionsNullableListFilter;
@@ -3762,13 +2769,6 @@ export type ResolversTypes = ResolversObject<{
   MediaItemOrderByRelevanceInput: MediaItemOrderByRelevanceInput;
   MediaItemOrderByWithRelationAndSearchRelevanceInput: MediaItemOrderByWithRelationAndSearchRelevanceInput;
   MediaItemScalarFieldEnum: MediaItemScalarFieldEnum;
-  MediaItemScalarWhereInput: MediaItemScalarWhereInput;
-  MediaItemUpdateManyMutationInput: MediaItemUpdateManyMutationInput;
-  MediaItemUpdateManyWithWhereWithoutUserInput: MediaItemUpdateManyWithWhereWithoutUserInput;
-  MediaItemUpdateManyWithoutUserInput: MediaItemUpdateManyWithoutUserInput;
-  MediaItemUpdateWithWhereUniqueWithoutUserInput: MediaItemUpdateWithWhereUniqueWithoutUserInput;
-  MediaItemUpdateWithoutUserInput: MediaItemUpdateWithoutUserInput;
-  MediaItemUpsertWithWhereUniqueWithoutUserInput: MediaItemUpsertWithWhereUniqueWithoutUserInput;
   MediaItemWhereInput: MediaItemWhereInput;
   MediaItemWhereUniqueInput: MediaItemWhereUniqueInput;
   MimeTypes: MimeTypes;
@@ -3797,6 +2797,16 @@ export type ResolversTypes = ResolversObject<{
     | ResolversTypes["Session"]
     | ResolversTypes["User"]
     | ResolversTypes["ViewerDetailed"];
+  NodeBaseFieldUnion:
+    | ResolversTypes["Account"]
+    | ResolversTypes["Category"]
+    | ResolversTypes["Comment"]
+    | ResolversTypes["Connection"]
+    | ResolversTypes["Entry"]
+    | ResolversTypes["MediaItem"]
+    | ResolversTypes["Profile"]
+    | ResolversTypes["Session"]
+    | ResolversTypes["User"];
   NodeUnion:
     | ResolversTypes["CommentConnection"]
     | ResolversTypes["EntryConnection"]
@@ -3804,27 +2814,15 @@ export type ResolversTypes = ResolversObject<{
     | ResolversTypes["ProfileConnection"]
     | ResolversTypes["SessionConnection"]
     | ResolversTypes["UserConnection"];
-  NodeUnionConnection: ResolverTypeWrapper<
-    Omit<NodeUnionConnection, "edges"> & {
-      edges: Array<ResolversTypes["NodeUnion"]>;
-    }
+  NodeUnionConnection: ResolverTypeWrapper<NodeUnionConnection>;
+  NodeUnionEdge: ResolverTypeWrapper<
+    Omit<NodeUnionEdge, "node"> & { node: ResolversTypes["NodeUnion"] }
   >;
-  NullableDateTimeFieldUpdateOperationsInput: NullableDateTimeFieldUpdateOperationsInput;
-  NullableEnumGenderFieldUpdateOperationsInput: NullableEnumGenderFieldUpdateOperationsInput;
-  NullableEnumMediaItemDestinationFieldUpdateOperationsInput: NullableEnumMediaItemDestinationFieldUpdateOperationsInput;
-  NullableEnumMimeTypesFieldUpdateOperationsInput: NullableEnumMimeTypesFieldUpdateOperationsInput;
-  NullableEnumPronounsFieldUpdateOperationsInput: NullableEnumPronounsFieldUpdateOperationsInput;
-  NullableEnumRoleFieldUpdateOperationsInput: NullableEnumRoleFieldUpdateOperationsInput;
-  NullableEnumUserStatusFieldUpdateOperationsInput: NullableEnumUserStatusFieldUpdateOperationsInput;
-  NullableFloatFieldUpdateOperationsInput: NullableFloatFieldUpdateOperationsInput;
-  NullableIntFieldUpdateOperationsInput: NullableIntFieldUpdateOperationsInput;
-  NullableStringFieldUpdateOperationsInput: NullableStringFieldUpdateOperationsInput;
   PageInfo: ResolverTypeWrapper<PageInfo>;
   PaginationArgsInput: PaginationArgsInput;
   PhoneNumber: ResolverTypeWrapper<Scalars["PhoneNumber"]>;
   Profile: ResolverTypeWrapper<Profile>;
   ProfileConnection: ResolverTypeWrapper<ProfileConnection>;
-  ProfileCreateInput: ProfileCreateInput;
   ProfileCreateNestedOneWithoutUserInput: ProfileCreateNestedOneWithoutUserInput;
   ProfileCreateOrConnectWithoutUserInput: ProfileCreateOrConnectWithoutUserInput;
   ProfileCreateWithoutUserInput: ProfileCreateWithoutUserInput;
@@ -3834,9 +2832,6 @@ export type ResolversTypes = ResolversObject<{
   ProfileOrderByWithRelationAndSearchRelevanceInput: ProfileOrderByWithRelationAndSearchRelevanceInput;
   ProfileRelationFilter: ProfileRelationFilter;
   ProfileScalarFieldEnum: ProfileScalarFieldEnum;
-  ProfileUpdateOneWithoutUserInput: ProfileUpdateOneWithoutUserInput;
-  ProfileUpdateWithoutUserInput: ProfileUpdateWithoutUserInput;
-  ProfileUpsertWithoutUserInput: ProfileUpsertWithoutUserInput;
   ProfileWhereInput: ProfileWhereInput;
   ProfileWhereUniqueInput: ProfileWhereUniqueInput;
   Pronouns: Pronouns;
@@ -3859,20 +2854,11 @@ export type ResolversTypes = ResolversObject<{
   SessionOrderByRelevanceInput: SessionOrderByRelevanceInput;
   SessionOrderByWithRelationAndSearchRelevanceInput: SessionOrderByWithRelationAndSearchRelevanceInput;
   SessionScalarFieldEnum: SessionScalarFieldEnum;
-  SessionScalarWhereInput: SessionScalarWhereInput;
-  SessionUpdateManyMutationInput: SessionUpdateManyMutationInput;
-  SessionUpdateManyWithWhereWithoutUserInput: SessionUpdateManyWithWhereWithoutUserInput;
-  SessionUpdateManyWithoutUserInput: SessionUpdateManyWithoutUserInput;
-  SessionUpdateWithWhereUniqueWithoutUserInput: SessionUpdateWithWhereUniqueWithoutUserInput;
-  SessionUpdateWithoutUserInput: SessionUpdateWithoutUserInput;
-  SessionUpdatescopesInput: SessionUpdatescopesInput;
-  SessionUpsertWithWhereUniqueWithoutUserInput: SessionUpsertWithWhereUniqueWithoutUserInput;
   SessionWhereInput: SessionWhereInput;
   SessionWhereUniqueInput: SessionWhereUniqueInput;
   SignupInput: SignupInput;
   SortOrder: SortOrder;
   String: ResolverTypeWrapper<Scalars["String"]>;
-  StringFieldUpdateOperationsInput: StringFieldUpdateOperationsInput;
   StringFilter: StringFilter;
   StringNullableFilter: StringNullableFilter;
   StringNullableListFilter: StringNullableListFilter;
@@ -3882,22 +2868,19 @@ export type ResolversTypes = ResolversObject<{
     | ResolversTypes["Entry"]
     | ResolversTypes["MediaItem"]
     | ResolversTypes["User"];
+  UnionOnEdgeObjectType: ResolverTypeWrapper<UnionOnEdgeObjectType>;
   User: ResolverTypeWrapper<User>;
   UserConnection: ResolverTypeWrapper<UserConnection>;
   UserCount: ResolverTypeWrapper<UserCount>;
-  UserCreateMutationInput: UserCreateMutationInput;
   UserCreateNestedOneWithoutCategoriesInput: UserCreateNestedOneWithoutCategoriesInput;
   UserCreateNestedOneWithoutCommentsInput: UserCreateNestedOneWithoutCommentsInput;
   UserCreateNestedOneWithoutEntriesInput: UserCreateNestedOneWithoutEntriesInput;
-  UserCreateNestedOneWithoutProfileInput: UserCreateNestedOneWithoutProfileInput;
   UserCreateOrConnectWithoutCategoriesInput: UserCreateOrConnectWithoutCategoriesInput;
   UserCreateOrConnectWithoutCommentsInput: UserCreateOrConnectWithoutCommentsInput;
   UserCreateOrConnectWithoutEntriesInput: UserCreateOrConnectWithoutEntriesInput;
-  UserCreateOrConnectWithoutProfileInput: UserCreateOrConnectWithoutProfileInput;
   UserCreateWithoutCategoriesInput: UserCreateWithoutCategoriesInput;
   UserCreateWithoutCommentsInput: UserCreateWithoutCommentsInput;
   UserCreateWithoutEntriesInput: UserCreateWithoutEntriesInput;
-  UserCreateWithoutProfileInput: UserCreateWithoutProfileInput;
   UserEdge: ResolverTypeWrapper<UserEdge>;
   UserOrderByRelevanceFieldEnum: UserOrderByRelevanceFieldEnum;
   UserOrderByRelevanceInput: UserOrderByRelevanceInput;
@@ -3905,15 +2888,6 @@ export type ResolversTypes = ResolversObject<{
   UserRelationFilter: UserRelationFilter;
   UserScalarFieldEnum: UserScalarFieldEnum;
   UserStatus: UserStatus;
-  UserUpdateOneRequiredWithoutCategoriesInput: UserUpdateOneRequiredWithoutCategoriesInput;
-  UserUpdateOneRequiredWithoutCommentsInput: UserUpdateOneRequiredWithoutCommentsInput;
-  UserUpdateOneRequiredWithoutEntriesInput: UserUpdateOneRequiredWithoutEntriesInput;
-  UserUpdateWithoutCategoriesInput: UserUpdateWithoutCategoriesInput;
-  UserUpdateWithoutCommentsInput: UserUpdateWithoutCommentsInput;
-  UserUpdateWithoutEntriesInput: UserUpdateWithoutEntriesInput;
-  UserUpsertWithoutCategoriesInput: UserUpsertWithoutCategoriesInput;
-  UserUpsertWithoutCommentsInput: UserUpsertWithoutCommentsInput;
-  UserUpsertWithoutEntriesInput: UserUpsertWithoutEntriesInput;
   UserWhereInput: UserWhereInput;
   UserWhereUniqueInput: UserWhereUniqueInput;
   ViewerAuthInfo: ResolverTypeWrapper<ViewerAuthInfo>;
@@ -3932,13 +2906,6 @@ export type ResolversParentTypes = ResolversObject<{
   AccountListRelationFilter: AccountListRelationFilter;
   AccountOrderByRelationAggregateInput: AccountOrderByRelationAggregateInput;
   AccountProviderProviderAccountIdCompoundUniqueInput: AccountProviderProviderAccountIdCompoundUniqueInput;
-  AccountScalarWhereInput: AccountScalarWhereInput;
-  AccountUpdateManyMutationInput: AccountUpdateManyMutationInput;
-  AccountUpdateManyWithWhereWithoutUserInput: AccountUpdateManyWithWhereWithoutUserInput;
-  AccountUpdateManyWithoutUserInput: AccountUpdateManyWithoutUserInput;
-  AccountUpdateWithWhereUniqueWithoutUserInput: AccountUpdateWithWhereUniqueWithoutUserInput;
-  AccountUpdateWithoutUserInput: AccountUpdateWithoutUserInput;
-  AccountUpsertWithWhereUniqueWithoutUserInput: AccountUpsertWithWhereUniqueWithoutUserInput;
   AccountWhereInput: AccountWhereInput;
   AccountWhereUniqueInput: AccountWhereUniqueInput;
   Auth: Auth;
@@ -3951,7 +2918,6 @@ export type ResolversParentTypes = ResolversObject<{
     node: ResolversParentTypes["TypesUnion"];
   };
   BigInt: Scalars["BigInt"];
-  BoolFieldUpdateOperationsInput: BoolFieldUpdateOperationsInput;
   BoolFilter: BoolFilter;
   Boolean: Scalars["Boolean"];
   Category: Category;
@@ -3970,18 +2936,6 @@ export type ResolversParentTypes = ResolversObject<{
   CategoryOrderByRelationAggregateInput: CategoryOrderByRelationAggregateInput;
   CategoryOrderByRelevanceInput: CategoryOrderByRelevanceInput;
   CategoryOrderByWithRelationAndSearchRelevanceInput: CategoryOrderByWithRelationAndSearchRelevanceInput;
-  CategoryScalarWhereInput: CategoryScalarWhereInput;
-  CategoryUpdateManyMutationInput: CategoryUpdateManyMutationInput;
-  CategoryUpdateManyWithWhereWithoutCreatorInput: CategoryUpdateManyWithWhereWithoutCreatorInput;
-  CategoryUpdateManyWithWhereWithoutEntriesInput: CategoryUpdateManyWithWhereWithoutEntriesInput;
-  CategoryUpdateManyWithoutCreatorInput: CategoryUpdateManyWithoutCreatorInput;
-  CategoryUpdateManyWithoutEntriesInput: CategoryUpdateManyWithoutEntriesInput;
-  CategoryUpdateWithWhereUniqueWithoutCreatorInput: CategoryUpdateWithWhereUniqueWithoutCreatorInput;
-  CategoryUpdateWithWhereUniqueWithoutEntriesInput: CategoryUpdateWithWhereUniqueWithoutEntriesInput;
-  CategoryUpdateWithoutCreatorInput: CategoryUpdateWithoutCreatorInput;
-  CategoryUpdateWithoutEntriesInput: CategoryUpdateWithoutEntriesInput;
-  CategoryUpsertWithWhereUniqueWithoutCreatorInput: CategoryUpsertWithWhereUniqueWithoutCreatorInput;
-  CategoryUpsertWithWhereUniqueWithoutEntriesInput: CategoryUpsertWithWhereUniqueWithoutEntriesInput;
   CategoryWhereInput: CategoryWhereInput;
   CategoryWhereUniqueInput: CategoryWhereUniqueInput;
   ChangePasswordInput: ChangePasswordInput;
@@ -4005,19 +2959,6 @@ export type ResolversParentTypes = ResolversObject<{
   CommentOrderByRelationAggregateInput: CommentOrderByRelationAggregateInput;
   CommentOrderByRelevanceInput: CommentOrderByRelevanceInput;
   CommentOrderByWithRelationAndSearchRelevanceInput: CommentOrderByWithRelationAndSearchRelevanceInput;
-  CommentScalarWhereInput: CommentScalarWhereInput;
-  CommentUpdateManyMutationInput: CommentUpdateManyMutationInput;
-  CommentUpdateManyWithWhereWithoutAuthorInput: CommentUpdateManyWithWhereWithoutAuthorInput;
-  CommentUpdateManyWithWhereWithoutEntryInput: CommentUpdateManyWithWhereWithoutEntryInput;
-  CommentUpdateManyWithoutAuthorInput: CommentUpdateManyWithoutAuthorInput;
-  CommentUpdateManyWithoutEntryInput: CommentUpdateManyWithoutEntryInput;
-  CommentUpdateWithWhereUniqueWithoutAuthorInput: CommentUpdateWithWhereUniqueWithoutAuthorInput;
-  CommentUpdateWithWhereUniqueWithoutEntryInput: CommentUpdateWithWhereUniqueWithoutEntryInput;
-  CommentUpdateWithoutAuthorInput: CommentUpdateWithoutAuthorInput;
-  CommentUpdateWithoutEntryInput: CommentUpdateWithoutEntryInput;
-  CommentUpdatereactionsInput: CommentUpdatereactionsInput;
-  CommentUpsertWithWhereUniqueWithoutAuthorInput: CommentUpsertWithWhereUniqueWithoutAuthorInput;
-  CommentUpsertWithWhereUniqueWithoutEntryInput: CommentUpsertWithWhereUniqueWithoutEntryInput;
   CommentWhereInput: CommentWhereInput;
   CommentWhereUniqueInput: CommentWhereUniqueInput;
   Connection: Connection;
@@ -4032,18 +2973,13 @@ export type ResolversParentTypes = ResolversObject<{
   ConnectionOrderByRelationAggregateInput: ConnectionOrderByRelationAggregateInput;
   ConnectionOrderByRelevanceInput: ConnectionOrderByRelevanceInput;
   ConnectionOrderByWithRelationAndSearchRelevanceInput: ConnectionOrderByWithRelationAndSearchRelevanceInput;
-  ConnectionScalarWhereInput: ConnectionScalarWhereInput;
-  ConnectionUpdateManyMutationInput: ConnectionUpdateManyMutationInput;
-  ConnectionUpdateManyWithWhereWithoutOwnerInput: ConnectionUpdateManyWithWhereWithoutOwnerInput;
-  ConnectionUpdateManyWithoutOwnerInput: ConnectionUpdateManyWithoutOwnerInput;
-  ConnectionUpdateWithWhereUniqueWithoutOwnerInput: ConnectionUpdateWithWhereUniqueWithoutOwnerInput;
-  ConnectionUpdateWithoutOwnerInput: ConnectionUpdateWithoutOwnerInput;
-  ConnectionUpsertWithWhereUniqueWithoutOwnerInput: ConnectionUpsertWithWhereUniqueWithoutOwnerInput;
   ConnectionWhereInput: ConnectionWhereInput;
   ConnectionWhereUniqueInput: ConnectionWhereUniqueInput;
   ContentNodes: ContentNodes;
+  CreatNewCommentInput: CreatNewCommentInput;
+  CreateNewProfileInput: CreateNewProfileInput;
+  CreateOneProfile: CreateOneProfile;
   DateTime: Scalars["DateTime"];
-  DateTimeFieldUpdateOperationsInput: DateTimeFieldUpdateOperationsInput;
   DateTimeFilter: DateTimeFilter;
   DateTimeNullableFilter: DateTimeNullableFilter;
   Entry: Entry;
@@ -4054,6 +2990,8 @@ export type ResolversParentTypes = ResolversObject<{
   EntryCreateNestedManyWithoutAuthorInput: EntryCreateNestedManyWithoutAuthorInput;
   EntryCreateNestedManyWithoutCategoriesInput: EntryCreateNestedManyWithoutCategoriesInput;
   EntryCreateNestedOneWithoutCommentsInput: EntryCreateNestedOneWithoutCommentsInput;
+  EntryCreateNuevoInput: EntryCreateNuevoInput;
+  EntryCreateOneInput: EntryCreateOneInput;
   EntryCreateOrConnectWithoutAuthorInput: EntryCreateOrConnectWithoutAuthorInput;
   EntryCreateOrConnectWithoutCategoriesInput: EntryCreateOrConnectWithoutCategoriesInput;
   EntryCreateOrConnectWithoutCommentsInput: EntryCreateOrConnectWithoutCommentsInput;
@@ -4066,22 +3004,6 @@ export type ResolversParentTypes = ResolversObject<{
   EntryOrderByRelevanceInput: EntryOrderByRelevanceInput;
   EntryOrderByWithRelationAndSearchRelevanceInput: EntryOrderByWithRelationAndSearchRelevanceInput;
   EntryRelationFilter: EntryRelationFilter;
-  EntryScalarWhereInput: EntryScalarWhereInput;
-  EntryUncheckedCreateNestedManyWithoutAuthorInput: EntryUncheckedCreateNestedManyWithoutAuthorInput;
-  EntryUpdateManyMutationInput: EntryUpdateManyMutationInput;
-  EntryUpdateManyWithWhereWithoutAuthorInput: EntryUpdateManyWithWhereWithoutAuthorInput;
-  EntryUpdateManyWithWhereWithoutCategoriesInput: EntryUpdateManyWithWhereWithoutCategoriesInput;
-  EntryUpdateManyWithoutAuthorInput: EntryUpdateManyWithoutAuthorInput;
-  EntryUpdateManyWithoutCategoriesInput: EntryUpdateManyWithoutCategoriesInput;
-  EntryUpdateOneRequiredWithoutCommentsInput: EntryUpdateOneRequiredWithoutCommentsInput;
-  EntryUpdateWithWhereUniqueWithoutAuthorInput: EntryUpdateWithWhereUniqueWithoutAuthorInput;
-  EntryUpdateWithWhereUniqueWithoutCategoriesInput: EntryUpdateWithWhereUniqueWithoutCategoriesInput;
-  EntryUpdateWithoutAuthorInput: EntryUpdateWithoutAuthorInput;
-  EntryUpdateWithoutCategoriesInput: EntryUpdateWithoutCategoriesInput;
-  EntryUpdateWithoutCommentsInput: EntryUpdateWithoutCommentsInput;
-  EntryUpsertWithWhereUniqueWithoutAuthorInput: EntryUpsertWithWhereUniqueWithoutAuthorInput;
-  EntryUpsertWithWhereUniqueWithoutCategoriesInput: EntryUpsertWithWhereUniqueWithoutCategoriesInput;
-  EntryUpsertWithoutCommentsInput: EntryUpsertWithoutCommentsInput;
   EntryWhereInput: EntryWhereInput;
   EntryWhereUniqueInput: EntryWhereUniqueInput;
   EnumCommentReactionsNullableListFilter: EnumCommentReactionsNullableListFilter;
@@ -4122,13 +3044,6 @@ export type ResolversParentTypes = ResolversObject<{
   MediaItemOrderByRelationAggregateInput: MediaItemOrderByRelationAggregateInput;
   MediaItemOrderByRelevanceInput: MediaItemOrderByRelevanceInput;
   MediaItemOrderByWithRelationAndSearchRelevanceInput: MediaItemOrderByWithRelationAndSearchRelevanceInput;
-  MediaItemScalarWhereInput: MediaItemScalarWhereInput;
-  MediaItemUpdateManyMutationInput: MediaItemUpdateManyMutationInput;
-  MediaItemUpdateManyWithWhereWithoutUserInput: MediaItemUpdateManyWithWhereWithoutUserInput;
-  MediaItemUpdateManyWithoutUserInput: MediaItemUpdateManyWithoutUserInput;
-  MediaItemUpdateWithWhereUniqueWithoutUserInput: MediaItemUpdateWithWhereUniqueWithoutUserInput;
-  MediaItemUpdateWithoutUserInput: MediaItemUpdateWithoutUserInput;
-  MediaItemUpsertWithWhereUniqueWithoutUserInput: MediaItemUpsertWithWhereUniqueWithoutUserInput;
   MediaItemWhereInput: MediaItemWhereInput;
   MediaItemWhereUniqueInput: MediaItemWhereUniqueInput;
   Mutation: {};
@@ -4156,6 +3071,16 @@ export type ResolversParentTypes = ResolversObject<{
     | ResolversParentTypes["Session"]
     | ResolversParentTypes["User"]
     | ResolversParentTypes["ViewerDetailed"];
+  NodeBaseFieldUnion:
+    | ResolversParentTypes["Account"]
+    | ResolversParentTypes["Category"]
+    | ResolversParentTypes["Comment"]
+    | ResolversParentTypes["Connection"]
+    | ResolversParentTypes["Entry"]
+    | ResolversParentTypes["MediaItem"]
+    | ResolversParentTypes["Profile"]
+    | ResolversParentTypes["Session"]
+    | ResolversParentTypes["User"];
   NodeUnion:
     | ResolversParentTypes["CommentConnection"]
     | ResolversParentTypes["EntryConnection"]
@@ -4163,25 +3088,15 @@ export type ResolversParentTypes = ResolversObject<{
     | ResolversParentTypes["ProfileConnection"]
     | ResolversParentTypes["SessionConnection"]
     | ResolversParentTypes["UserConnection"];
-  NodeUnionConnection: Omit<NodeUnionConnection, "edges"> & {
-    edges: Array<ResolversParentTypes["NodeUnion"]>;
+  NodeUnionConnection: NodeUnionConnection;
+  NodeUnionEdge: Omit<NodeUnionEdge, "node"> & {
+    node: ResolversParentTypes["NodeUnion"];
   };
-  NullableDateTimeFieldUpdateOperationsInput: NullableDateTimeFieldUpdateOperationsInput;
-  NullableEnumGenderFieldUpdateOperationsInput: NullableEnumGenderFieldUpdateOperationsInput;
-  NullableEnumMediaItemDestinationFieldUpdateOperationsInput: NullableEnumMediaItemDestinationFieldUpdateOperationsInput;
-  NullableEnumMimeTypesFieldUpdateOperationsInput: NullableEnumMimeTypesFieldUpdateOperationsInput;
-  NullableEnumPronounsFieldUpdateOperationsInput: NullableEnumPronounsFieldUpdateOperationsInput;
-  NullableEnumRoleFieldUpdateOperationsInput: NullableEnumRoleFieldUpdateOperationsInput;
-  NullableEnumUserStatusFieldUpdateOperationsInput: NullableEnumUserStatusFieldUpdateOperationsInput;
-  NullableFloatFieldUpdateOperationsInput: NullableFloatFieldUpdateOperationsInput;
-  NullableIntFieldUpdateOperationsInput: NullableIntFieldUpdateOperationsInput;
-  NullableStringFieldUpdateOperationsInput: NullableStringFieldUpdateOperationsInput;
   PageInfo: PageInfo;
   PaginationArgsInput: PaginationArgsInput;
   PhoneNumber: Scalars["PhoneNumber"];
   Profile: Profile;
   ProfileConnection: ProfileConnection;
-  ProfileCreateInput: ProfileCreateInput;
   ProfileCreateNestedOneWithoutUserInput: ProfileCreateNestedOneWithoutUserInput;
   ProfileCreateOrConnectWithoutUserInput: ProfileCreateOrConnectWithoutUserInput;
   ProfileCreateWithoutUserInput: ProfileCreateWithoutUserInput;
@@ -4189,9 +3104,6 @@ export type ResolversParentTypes = ResolversObject<{
   ProfileOrderByRelevanceInput: ProfileOrderByRelevanceInput;
   ProfileOrderByWithRelationAndSearchRelevanceInput: ProfileOrderByWithRelationAndSearchRelevanceInput;
   ProfileRelationFilter: ProfileRelationFilter;
-  ProfileUpdateOneWithoutUserInput: ProfileUpdateOneWithoutUserInput;
-  ProfileUpdateWithoutUserInput: ProfileUpdateWithoutUserInput;
-  ProfileUpsertWithoutUserInput: ProfileUpsertWithoutUserInput;
   ProfileWhereInput: ProfileWhereInput;
   ProfileWhereUniqueInput: ProfileWhereUniqueInput;
   Query: {};
@@ -4209,19 +3121,10 @@ export type ResolversParentTypes = ResolversObject<{
   SessionOrderByRelationAggregateInput: SessionOrderByRelationAggregateInput;
   SessionOrderByRelevanceInput: SessionOrderByRelevanceInput;
   SessionOrderByWithRelationAndSearchRelevanceInput: SessionOrderByWithRelationAndSearchRelevanceInput;
-  SessionScalarWhereInput: SessionScalarWhereInput;
-  SessionUpdateManyMutationInput: SessionUpdateManyMutationInput;
-  SessionUpdateManyWithWhereWithoutUserInput: SessionUpdateManyWithWhereWithoutUserInput;
-  SessionUpdateManyWithoutUserInput: SessionUpdateManyWithoutUserInput;
-  SessionUpdateWithWhereUniqueWithoutUserInput: SessionUpdateWithWhereUniqueWithoutUserInput;
-  SessionUpdateWithoutUserInput: SessionUpdateWithoutUserInput;
-  SessionUpdatescopesInput: SessionUpdatescopesInput;
-  SessionUpsertWithWhereUniqueWithoutUserInput: SessionUpsertWithWhereUniqueWithoutUserInput;
   SessionWhereInput: SessionWhereInput;
   SessionWhereUniqueInput: SessionWhereUniqueInput;
   SignupInput: SignupInput;
   String: Scalars["String"];
-  StringFieldUpdateOperationsInput: StringFieldUpdateOperationsInput;
   StringFilter: StringFilter;
   StringNullableFilter: StringNullableFilter;
   StringNullableListFilter: StringNullableListFilter;
@@ -4231,35 +3134,23 @@ export type ResolversParentTypes = ResolversObject<{
     | ResolversParentTypes["Entry"]
     | ResolversParentTypes["MediaItem"]
     | ResolversParentTypes["User"];
+  UnionOnEdgeObjectType: UnionOnEdgeObjectType;
   User: User;
   UserConnection: UserConnection;
   UserCount: UserCount;
-  UserCreateMutationInput: UserCreateMutationInput;
   UserCreateNestedOneWithoutCategoriesInput: UserCreateNestedOneWithoutCategoriesInput;
   UserCreateNestedOneWithoutCommentsInput: UserCreateNestedOneWithoutCommentsInput;
   UserCreateNestedOneWithoutEntriesInput: UserCreateNestedOneWithoutEntriesInput;
-  UserCreateNestedOneWithoutProfileInput: UserCreateNestedOneWithoutProfileInput;
   UserCreateOrConnectWithoutCategoriesInput: UserCreateOrConnectWithoutCategoriesInput;
   UserCreateOrConnectWithoutCommentsInput: UserCreateOrConnectWithoutCommentsInput;
   UserCreateOrConnectWithoutEntriesInput: UserCreateOrConnectWithoutEntriesInput;
-  UserCreateOrConnectWithoutProfileInput: UserCreateOrConnectWithoutProfileInput;
   UserCreateWithoutCategoriesInput: UserCreateWithoutCategoriesInput;
   UserCreateWithoutCommentsInput: UserCreateWithoutCommentsInput;
   UserCreateWithoutEntriesInput: UserCreateWithoutEntriesInput;
-  UserCreateWithoutProfileInput: UserCreateWithoutProfileInput;
   UserEdge: UserEdge;
   UserOrderByRelevanceInput: UserOrderByRelevanceInput;
   UserOrderByWithRelationAndSearchRelevanceInput: UserOrderByWithRelationAndSearchRelevanceInput;
   UserRelationFilter: UserRelationFilter;
-  UserUpdateOneRequiredWithoutCategoriesInput: UserUpdateOneRequiredWithoutCategoriesInput;
-  UserUpdateOneRequiredWithoutCommentsInput: UserUpdateOneRequiredWithoutCommentsInput;
-  UserUpdateOneRequiredWithoutEntriesInput: UserUpdateOneRequiredWithoutEntriesInput;
-  UserUpdateWithoutCategoriesInput: UserUpdateWithoutCategoriesInput;
-  UserUpdateWithoutCommentsInput: UserUpdateWithoutCommentsInput;
-  UserUpdateWithoutEntriesInput: UserUpdateWithoutEntriesInput;
-  UserUpsertWithoutCategoriesInput: UserUpsertWithoutCategoriesInput;
-  UserUpsertWithoutCommentsInput: UserUpsertWithoutCommentsInput;
-  UserUpsertWithoutEntriesInput: UserUpsertWithoutEntriesInput;
   UserWhereInput: UserWhereInput;
   UserWhereUniqueInput: UserWhereUniqueInput;
   ViewerAuthInfo: ViewerAuthInfo;
@@ -4492,7 +3383,11 @@ export type CommentResolvers<
   ParentType extends ResolversParentTypes["Comment"] = ResolversParentTypes["Comment"]
 > = ResolversObject<{
   author?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
-  authorId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  authorId?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   body?: Resolver<
     Maybe<ResolversTypes["String"]>,
     ParentType,
@@ -4504,7 +3399,11 @@ export type CommentResolvers<
     ContextType
   >;
   entry?: Resolver<ResolversTypes["Entry"], ParentType, ContextType>;
-  entryId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  entryId?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   position?: Resolver<
     Maybe<ResolversTypes["String"]>,
@@ -4570,7 +3469,11 @@ export type ConnectionResolvers<
     ContextType
   >;
   owner?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
-  ownerId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  ownerId?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   phoneNumber?: Resolver<
     Maybe<ResolversTypes["PhoneNumber"]>,
     ParentType,
@@ -4625,7 +3528,11 @@ export type EntryResolvers<
 > = ResolversObject<{
   _count?: Resolver<ResolversTypes["EntryCount"], ParentType, ContextType>;
   author?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
-  authorId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  authorId?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   categories?: Resolver<
     Maybe<Array<ResolversTypes["Category"]>>,
     ParentType,
@@ -4796,7 +3703,11 @@ export type MediaItemResolvers<
     ContextType
   >;
   user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
-  userId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  userId?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   width?: Resolver<
     Maybe<ResolversTypes["Float"]>,
     ParentType,
@@ -4838,29 +3749,50 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationChangePasswordArgs, "changePasswordInput">
   >;
-  createEntry?: Resolver<
+  createEntryWithAxios?: Resolver<
     ResolversTypes["Entry"],
     ParentType,
     ContextType,
-    RequireFields<MutationCreateEntryArgs, "EntryInput">
+    RequireFields<MutationCreateEntryWithAxiosArgs, "createNew">
+  >;
+  createNewComment?: Resolver<
+    ResolversTypes["Comment"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateNewCommentArgs, "commentCreateInput">
   >;
   createNewEntry?: Resolver<
     ResolversTypes["Entry"],
     ParentType,
     ContextType,
-    RequireFields<MutationCreateNewEntryArgs, "createNewEntryInput">
+    RequireFields<MutationCreateNewEntryArgs, "entryCreateInput">
   >;
-  createProfile?: Resolver<
+  createNewProfile?: Resolver<
     ResolversTypes["Profile"],
     ParentType,
     ContextType,
-    RequireFields<MutationCreateProfileArgs, "data" | "userId">
+    RequireFields<MutationCreateNewProfileArgs, "createNewProfileInput">
+  >;
+  createNuevoEntryMutation?: Resolver<
+    ResolversTypes["Entry"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      MutationCreateNuevoEntryMutationArgs,
+      "createNuevoEntryInput"
+    >
   >;
   login?: Resolver<
     ResolversTypes["Token"],
     ParentType,
     ContextType,
     RequireFields<MutationLoginArgs, "data">
+  >;
+  nuevoEntry?: Resolver<
+    ResolversTypes["Entry"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationNuevoEntryArgs, "nuevoEntry">
   >;
   register?: Resolver<
     ResolversTypes["AuthSansSession"],
@@ -4892,18 +3824,6 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationUpdateUserPasswordArgs, "passwordInput">
   >;
-  upsertComment?: Resolver<
-    Array<ResolversTypes["Comment"]>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationUpsertCommentArgs, "commentUpsertInput">
-  >;
-  viewerCreateEntry?: Resolver<
-    Array<ResolversTypes["Entry"]>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationViewerCreateEntryArgs, "viewerEntryCreateInput">
-  >;
 }>;
 
 export type NodeResolvers<
@@ -4927,6 +3847,25 @@ export type NodeResolvers<
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
 }>;
 
+export type NodeBaseFieldUnionResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["NodeBaseFieldUnion"] = ResolversParentTypes["NodeBaseFieldUnion"]
+> = ResolversObject<{
+  __resolveType: TypeResolveFn<
+    | "Account"
+    | "Category"
+    | "Comment"
+    | "Connection"
+    | "Entry"
+    | "MediaItem"
+    | "Profile"
+    | "Session"
+    | "User",
+    ParentType,
+    ContextType
+  >;
+}>;
+
 export type NodeUnionResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["NodeUnion"] = ResolversParentTypes["NodeUnion"]
@@ -4948,12 +3887,21 @@ export type NodeUnionConnectionResolvers<
   ParentType extends ResolversParentTypes["NodeUnionConnection"] = ResolversParentTypes["NodeUnionConnection"]
 > = ResolversObject<{
   edges?: Resolver<
-    Array<ResolversTypes["NodeUnion"]>,
+    Array<ResolversTypes["NodeUnionEdge"]>,
     ParentType,
     ContextType
   >;
   pageInfo?: Resolver<ResolversTypes["PageInfo"], ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type NodeUnionEdgeResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["NodeUnionEdge"] = ResolversParentTypes["NodeUnionEdge"]
+> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes["NodeUnion"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -5052,7 +4000,11 @@ export type ProfileResolvers<
     ContextType
   >;
   user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
-  userId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  userId?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   userInProfile?: Resolver<
     ResolversTypes["User"],
     ParentType,
@@ -5120,16 +4072,17 @@ export type QueryResolvers<
       "findManyEntriesPaginatedInput"
     >
   >;
-  decodeViewerTokenFromContext?: Resolver<
-    ResolversTypes["AuthDetailed"],
-    ParentType,
-    ContextType
-  >;
   entryById?: Resolver<
     ResolversTypes["Entry"],
     ParentType,
     ContextType,
     RequireFields<QueryEntryByIdArgs, "id">
+  >;
+  entryByRelayId?: Resolver<
+    ResolversTypes["Entry"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryEntryByRelayIdArgs, "entryCursor">
   >;
   findUniqueMediaItem?: Resolver<
     ResolversTypes["MediaItem"],
@@ -5148,13 +4101,6 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
-  hello?: Resolver<
-    ResolversTypes["String"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryHelloArgs, "name">
-  >;
-  helloWorld?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   listCategories?: Resolver<
     ResolversTypes["CategoryConnection"],
     ParentType,
@@ -5216,6 +4162,12 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryNodeArgs, "id">
   >;
+  nodeField?: Resolver<
+    ResolversTypes["NodeBaseFieldUnion"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryNodeFieldArgs, "cursor">
+  >;
   nodeUnionResolver?: Resolver<
     ResolversTypes["NodeUnionConnection"],
     ParentType,
@@ -5259,12 +4211,6 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryUserByRelayIdArgs, "cursor">
-  >;
-  userFromAccessTokenDecoded?: Resolver<
-    ResolversTypes["AuthDetailed"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryUserFromAccessTokenDecodedArgs, "token">
   >;
   viewer?: Resolver<
     ResolversTypes["ViewerDetailed"],
@@ -5331,7 +4277,11 @@ export type SessionResolvers<
     ContextType
   >;
   user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-  userId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  userId?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -5362,6 +4312,12 @@ export type SubscriptionResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["Subscription"] = ResolversParentTypes["Subscription"]
 > = ResolversObject<{
+  commentCreated?: SubscriptionResolver<
+    ResolversTypes["Comment"],
+    "commentCreated",
+    ParentType,
+    ContextType
+  >;
   entryCreated?: SubscriptionResolver<
     ResolversTypes["Entry"],
     "entryCreated",
@@ -5404,15 +4360,23 @@ export type TypesUnionResolvers<
   >;
 }>;
 
+export type UnionOnEdgeObjectTypeResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["UnionOnEdgeObjectType"] = ResolversParentTypes["UnionOnEdgeObjectType"]
+> = ResolversObject<{
+  unionOnEdge?: Resolver<
+    ResolversTypes["UnionOnEdgeObjectType"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type UserResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
 > = ResolversObject<{
-  _count?: Resolver<
-    Maybe<ResolversTypes["UserCount"]>,
-    ParentType,
-    ContextType
-  >;
+  _count?: Resolver<ResolversTypes["UserCount"], ParentType, ContextType>;
   accounts?: Resolver<
     Maybe<Array<ResolversTypes["Account"]>>,
     ParentType,
@@ -5554,11 +4518,7 @@ export type ViewerDetailedResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["ViewerDetailed"] = ResolversParentTypes["ViewerDetailed"]
 > = ResolversObject<{
-  _count?: Resolver<
-    Maybe<ResolversTypes["UserCount"]>,
-    ParentType,
-    ContextType
-  >;
+  _count?: Resolver<ResolversTypes["UserCount"], ParentType, ContextType>;
   accessToken?: Resolver<
     Maybe<ResolversTypes["String"]>,
     ParentType,
@@ -5684,8 +4644,10 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   MediaItemEdge?: MediaItemEdgeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Node?: NodeResolvers<ContextType>;
+  NodeBaseFieldUnion?: NodeBaseFieldUnionResolvers<ContextType>;
   NodeUnion?: NodeUnionResolvers<ContextType>;
   NodeUnionConnection?: NodeUnionConnectionResolvers<ContextType>;
+  NodeUnionEdge?: NodeUnionEdgeResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   PhoneNumber?: GraphQLScalarType;
   Profile?: ProfileResolvers<ContextType>;
@@ -5698,6 +4660,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Subscription?: SubscriptionResolvers<ContextType>;
   Token?: TokenResolvers<ContextType>;
   TypesUnion?: TypesUnionResolvers<ContextType>;
+  UnionOnEdgeObjectType?: UnionOnEdgeObjectTypeResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserConnection?: UserConnectionResolvers<ContextType>;
   UserCount?: UserCountResolvers<ContextType>;

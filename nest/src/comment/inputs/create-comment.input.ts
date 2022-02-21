@@ -50,7 +50,7 @@ export class CommentCreateReactionsInput {
   set!: Array<keyof typeof CommentReactions>;
 }
 
-@InputType("CreateewCommentInput")
+@InputType("CreatNewCommentInput")
 export class CreateNewCommentInput {
   @Field(() => String)
   entryId: string;

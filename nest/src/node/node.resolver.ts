@@ -6,7 +6,9 @@ import {
   GqlExecutionContext,
   ID,
   ObjectType,
+  Parent,
   Query,
+  ResolveField,
   Resolver,
   Union,
   UnionOptions
@@ -23,7 +25,7 @@ import { Profile } from "../profile/model/profile.model";
 import { ProfileService } from "../profile/profile.service";
 // import { AccountService } from "../Services/AccountService/account.service";
 // import { SessionService } from "../Services/SessionService/session.service";
-import { Node } from "./model/node.model";
+import { Node, NodeImplementedUnion } from "./model/node.model";
 import { NodeService } from "./node.service";
 import { ExecutionContext, Inject, Type } from "@nestjs/common";
 import {
@@ -77,14 +79,12 @@ import {
   StringValueNode,
   UnionTypeDefinitionNode
 } from "graphql/language";
-import {
-  GraphQLIsTypeOfFn,
-  GraphQLTypeResolver,
-  GraphQLUnionTypeConfig,
-  GraphQLUnionTypeExtensions,
-  GraphQLResolveInfo
-} from "graphql/type";
-
+import { GraphQLIsTypeOfFn, GraphQLResolveInfo } from "graphql/type";
+import { Connection } from "src/connection";
+import { Account } from "src/account";
+import { Category } from "src/category";
+import { PrismaService } from "src/prisma/prisma.service";
+import { UnwrapPromise } from "@prisma/client";
 export type Maybe<T> = T | null;
 export type UnionOnEdge =
   | UserEdge
@@ -173,6 +173,55 @@ export const UnionNode = createUnionType<Type<UnionOnNode>[]>({
   }
 });
 
+export const NodeImplementedUnionConst = createUnionType<
+  Type<NodeImplementedUnion>[]
+>({
+  name: "NodeBaseFieldUnion",
+  types: () => [
+    Account,
+    Category,
+    Comment,
+    Connection,
+    Entry,
+    MediaItem,
+    Profile,
+    Session,
+    User
+  ],
+  resolveType(
+    { id }: NodeImplementedUnion,
+    { getInfo }: GqlExecutionContext,
+    info: GraphQLResolveInfo,
+    abstract: GraphQLAbstractType
+  ) {
+    return id in User && abstract.name === User.name
+      ? User
+      : id in Entry && abstract.name === Entry.name
+      ? Entry
+      : id in Account && abstract.name === Account.name
+      ? Account
+      : id in Connection && abstract.name === Connection.name
+      ? Connection
+      : id in Category && abstract.name === Category.name
+      ? Category
+      : id in Comment && abstract.name === Comment.name
+      ? Comment
+      : id in Session && abstract.name === Session.name
+      ? Session
+      : id in Profile && abstract.name === Profile.name
+      ? Profile
+      : User ||
+        Entry ||
+        MediaItem ||
+        Session ||
+        Comment ||
+        Connection ||
+        Category ||
+        Profile ||
+        Account;
+  }
+});
+
 @ConnectionEdgeObjectType(UnionNode, { id: new Node().id })
 export class NodeUnionEdge extends InstanceWrapper<
   Type<
@@ -203,10 +252,11 @@ export class NodeUnionConnection extends NodeUnionEdge {
     super();
   }
 }
-
+type Nullable<T> = T | null;
 @Resolver(() => Node)
 export class NodeResolver {
   constructor(
+    private prismaService: PrismaService,
     @Inject(MediaItemService)
     private readonly mediaItemService: MediaItemService,
     @Inject(SessionService) private readonly sessionService: SessionService,
@@ -215,6 +265,86 @@ export class NodeResolver {
     @Inject(CommentService) private readonly commentService: CommentService,
     @Inject(ProfileService) private readonly profileService: ProfileService // private readonly sessionService: SessionService
   ) {}
+  assertAllTypesCovered(_x: never, id: string): never {
+    throw new Error("could not find any resource with id: " + id);
+  }
+
+  @Query(() => NodeImplementedUnionConst, { name: "nodeField" })
+  async nodeField(
+    @Args("cursor", { type: () => String }) cursor: string
+  ): Promise<Nullable<NodeImplementedUnion>> {
+    const { type, id } = fromGlobalId(cursor) as {
+      type:
+        | "User"
+        | "Entry"
+        | "Connection"
+        | "Account"
+        | "Category"
+        | "MediaItem"
+        | "Comment"
+        | "Session"
+        | "Profile";
+      id: string;
+    };
+
+    if (type === "User") {
+      const user = await this.prismaService.user.findUnique({
+        where: { id: cursor || id }
+      });
+      return user;
+    }
+    if (type === "Profile") {
+      const profile = await this.prismaService.profile.findUnique({
+        where: { id: cursor || id }
+      });
+      return profile;
+    }
+
+    if (type === "Entry") {
+      const entry = await this.prismaService.entry.findUnique({
+        where: { id: cursor || id }
+      });
+      return entry;
+    }
+
+    if (type === "MediaItem") {
+      const mediaItem = await this.prismaService.mediaItem.findUnique({
+        where: { id: cursor || id }
+      });
+
+      return mediaItem;
+    }
+
+    if (type === "Session") {
+      const session = await this.prismaService.session.findUnique({
+        where: { id: cursor || id }
+      });
+      return session;
+    }
+
+    if (type === "Comment") {
+      const comment = await this.prismaService.comment.findUnique({
+        where: { id: cursor }
+      });
+      return comment;
+    }
+
+    if (type === "Connection") {
+      const connection = await this.prismaService.connection.findUnique({
+        where: { id: cursor || id }
+      });
+      return connection;
+    }
+    if (type === "Category") {
+      const category = await this.prismaService.category
+        .findUnique({
+          where: { id: cursor || id }
+        })
+        .then(category => category);
+      return category;
+    }
+    return this.assertAllTypesCovered(type as unknown as never, id);
+  }
 
   @Query(_returns => Node, { nullable: true })
   async node(@Args({ name: "id", type: () => ID }) id: string) {
@@ -262,44 +392,6 @@ export class NodeResolver {
           | typeof Session.name
           | typeof MediaItem.name)
       : null;
-    // switch (toGlobalId(type, cursor)) {
-    //   case typeof User:
-    //     return await this.userService.relayFindUniqueUser({
-    //       id: toGlobalId(type, cursor) in UserConnection ? await this.userService.relayFindUniqueUser({id: cursor}).then((val) => val as User)
-    //     })
-    //   case typeof Entry:
-    //     return await this.entryService.relayFindUniqueEntry({
-    //       id: resolvedGlobalId.id
-    //     });
-    //   case typeof MediaItem:
-    //     return await this.mediaItemService.relayFindUniqueMediaItem({
-    //       id: resolvedGlobalId.id
-    //     });
-    //   case typeof Profile:
-    //     return await this.profileService.relayFindUniqueProfile({
-    //       id: resolvedGlobalId.id
-    //     });
-    //   case toGlobalId("Comment", id).toString():
-    //     return await this.commentService.relayFindUniqueComment({id: id})
-    //   // case typeof Contact:
-    //   //   return await this.contactService.relayFindUniqueEntry({
-    //   //     id: resolvedGlobalId.id
-    //   //   });
-    //   // case AccountScalarFieldEnum.id:
-    //   //   return await this.accountService.relayFindUniqueAccount({
-    //   //     id: resolvedGlobalId.id
-    //   //   });
-    //   // case SessionScalarFieldEnum.id:
-    //   //   return await this.sessionService.realyFindUniqueSession({
-    //   //     id: resolvedGlobalId.id
-    //   //   });
-    //   default:
-    //     break;
-    // }
-    // return toGlobalId(
-    //   "User" || "Entry" || "Profile" || "MediaItem" || resolvedGlobalId.type,
-    //   resolvedGlobalId.id
-    // );
   }
 
   @Query(() => NodeUnionConnection)
@@ -353,26 +445,3 @@ export class NodeResolver {
     ];
   }
 }
-
-/**
-   // resolveType({prototype, name}:  | typeof UserEdge
-  //   | typeof EntryEdge
-  //   | typeof MediaEdge
-  //   | typeof ProfileEdge
-  //   |typeof SessionEdge
-  //   | typeof CommentEdge, context: Node) {
-  //  return ((fromGlobalId(context.id).id in UserEdge && fromGlobalId(context.id).type === name as "User"
-  //   ? UserEdge
-  //   : fromGlobalId(context.id).id in EntryEdge && fromGlobalId(context.id).type === name as "Entry"
-  //   ? EntryEdge
-  //   : fromGlobalId(context.id).id in ProfileEdge && fromGlobalId(context.id).type === name as "Entry"
-  //   ? ProfileEdge
-  //   : fromGlobalId(context.id).id === (prototype as MediaEdge).id
-  //   ? MediaEdge
-  //   : fromGlobalId(context.id).id === (prototype as SessionEdge).id
-  //   ? SessionEdge
-  //   : fromGlobalId(context.id).id === (prototype as CommentEdge).id
-  //   ? new CommentEdge()
-  //   : undefined))
-  // }
- */

@@ -17,7 +17,7 @@ export class FindManySessionsPaginatedInput {
   })
   orderBy?: Array<SessionOrderByWithRelationAndSearchRelevanceInput>;
 
-  @Field(() => SessionWhereUniqueInput, { nullable: false })
+  @Field(() => SessionWhereUniqueInput, { nullable: true })
   cursor?: Prisma.SessionWhereUniqueInput;
 
   @Field(() => Int, { nullable: true })

@@ -716,11 +716,27 @@ export class ConnectionWhereUniqueInput {
   id?: Nullable<string>;
 }
 
-export class CreateewCommentInput {
+export class CreatNewCommentInput {
   body: string;
   entryId: string;
   position: string;
   reactions: CommentReactions[];
+}
+
+export class CreateNewProfileInput {
+  bio?: Nullable<string>;
+  city?: Nullable<string>;
+  country?: Nullable<string>;
+  coverPhoto?: Nullable<string>;
+  dob?: Nullable<string>;
+  gender?: Nullable<Gender>;
+  occupation?: Nullable<string>;
+  phoneNumber?: Nullable<string>;
+  pronouns?: Nullable<Pronouns>;
+}
+
+export class CreateOneProfile {
+  data: CreateNewProfileInput;
 }
 
 export class DateTimeFilter {
@@ -778,13 +794,6 @@ export class EntryCreateNestedOneWithoutCommentsInput {
   connect?: Nullable<EntryWhereUniqueInput>;
   connectOrCreate?: Nullable<EntryCreateOrConnectWithoutCommentsInput>;
   create?: Nullable<EntryCreateWithoutCommentsInput>;
-}
-
-export class EntryCreateNuevoInput {
-  content?: Nullable<string>;
-  featuredImage?: Nullable<string>;
-  published?: Nullable<boolean>;
-  title: string;
 }
 
 export class EntryCreateOneInput {
@@ -1024,7 +1033,7 @@ export class FindManyProfilesPaginatedInput {
 }
 
 export class FindManySessionsPaginatedInput {
-  cursor: SessionWhereUniqueInput;
+  cursor?: Nullable<SessionWhereUniqueInput>;
   distinct?: Nullable<SessionScalarFieldEnum[]>;
   orderBy?: Nullable<SessionOrderByWithRelationAndSearchRelevanceInput[]>;
   pagination: PaginationArgsInput;
@@ -1336,24 +1345,6 @@ export class PaginationArgsInput {
   last?: Nullable<number>;
 }
 
-export class ProfileCreateInput {
-  activiyFeed?: Nullable<string>;
-  bio?: Nullable<string>;
-  city?: Nullable<string>;
-  country?: Nullable<string>;
-  coverPhoto?: Nullable<string>;
-  dob?: Nullable<string>;
-  gender?: Nullable<Gender>;
-  id?: Nullable<string>;
-  lastSeen?: Nullable<DateTime>;
-  memberSince?: Nullable<DateTime>;
-  occupation?: Nullable<string>;
-  phoneNumber?: Nullable<string>;
-  pronouns?: Nullable<Pronouns>;
-  recentActivity?: Nullable<string>;
-  user?: Nullable<UserCreateNestedOneWithoutProfileInput>;
-}
-
 export class ProfileCreateNestedOneWithoutUserInput {
   connect?: Nullable<ProfileWhereUniqueInput>;
   connectOrCreate?: Nullable<ProfileCreateOrConnectWithoutUserInput>;
@@ -1615,12 +1606,6 @@ export class UserCreateNestedOneWithoutEntriesInput {
   create?: Nullable<UserCreateWithoutEntriesInput>;
 }
 
-export class UserCreateNestedOneWithoutProfileInput {
-  connect?: Nullable<UserWhereUniqueInput>;
-  connectOrCreate?: Nullable<UserCreateOrConnectWithoutProfileInput>;
-  create?: Nullable<UserCreateWithoutProfileInput>;
-}
-
 export class UserCreateOrConnectWithoutCategoriesInput {
   create: UserCreateWithoutCategoriesInput;
   where: UserWhereUniqueInput;
@@ -1633,11 +1618,6 @@ export class UserCreateOrConnectWithoutCommentsInput {
 
 export class UserCreateOrConnectWithoutEntriesInput {
   create: UserCreateWithoutEntriesInput;
-  where: UserWhereUniqueInput;
-}
-
-export class UserCreateOrConnectWithoutProfileInput {
-  create: UserCreateWithoutProfileInput;
   where: UserWhereUniqueInput;
 }
 
@@ -1698,27 +1678,6 @@ export class UserCreateWithoutEntriesInput {
   mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
   password?: Nullable<string>;
   profile?: Nullable<ProfileCreateNestedOneWithoutUserInput>;
-  role?: Nullable<Role>;
-  sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
-  status?: Nullable<UserStatus>;
-  updatedAt?: Nullable<DateTime>;
-}
-
-export class UserCreateWithoutProfileInput {
-  accounts?: Nullable<AccountCreateNestedManyWithoutUserInput>;
-  categories?: Nullable<CategoryCreateNestedManyWithoutCreatorInput>;
-  comments?: Nullable<CommentCreateNestedManyWithoutAuthorInput>;
-  connections?: Nullable<ConnectionCreateNestedManyWithoutOwnerInput>;
-  createdAt?: Nullable<DateTime>;
-  email: string;
-  emailVerified?: Nullable<DateTime>;
-  entries?: Nullable<EntryCreateNestedManyWithoutAuthorInput>;
-  firstName?: Nullable<string>;
-  id?: Nullable<string>;
-  image?: Nullable<string>;
-  lastName?: Nullable<string>;
-  mediaItems?: Nullable<MediaItemCreateNestedManyWithoutUserInput>;
-  password?: Nullable<string>;
   role?: Nullable<Role>;
   sessions?: Nullable<SessionCreateNestedManyWithoutUserInput>;
   status?: Nullable<UserStatus>;
@@ -2046,25 +2005,20 @@ export abstract class IMutation {
     changePasswordInput: ChangePasswordInput
   ): User | Promise<User>;
 
-  abstract createEntry(
-    entryCreateInput: EntryCreateOneInput
-  ): Entry | Promise<Entry>;
-
   abstract createEntryWithAxios(
     createNew: EntryCreateOneInput
   ): Entry | Promise<Entry>;
 
   abstract createNewComment(
-    commentCreateInput: CreateewCommentInput
+    commentCreateInput: CreatNewCommentInput
   ): Comment | Promise<Comment>;
 
-  abstract createNuevoEntryMutation(
-    createNuevoEntryInput: EntryCreateNuevoInput
+  abstract createNewEntry(
+    entryCreateInput: EntryCreateOneInput
   ): Entry | Promise<Entry>;
 
-  abstract createProfile(
-    data: ProfileCreateInput,
-    userId: string
+  abstract createNewProfile(
+    createNewProfileInput: CreateOneProfile
   ): Profile | Promise<Profile>;
 
   abstract login(data: LoginInput): Token | Promise<Token>;
@@ -2212,6 +2166,10 @@ export abstract class IQuery {
 
   abstract node(id: string): Nullable<Node> | Promise<Nullable<Node>>;
 
+  abstract nodeField(
+    cursor: string
+  ): NodeBaseFieldUnion | Promise<NodeBaseFieldUnion>;
+
   abstract nodeUnionResolver(
     id: string,
     manyComments: FindManyCommentsPaginatedInput,
@@ -2240,9 +2198,17 @@ export abstract class IQuery {
     | ViewerAuthInfo
     | Promise<ViewerAuthInfo>;
 
+  abstract viewerCommentsPaginated(
+    viewerCommentsPaginatedInput: FindManyCommentsPaginatedInput
+  ): CommentConnection | Promise<CommentConnection>;
+
   abstract viewerEntriesPaginated(
     viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput
   ): EntryConnection | Promise<EntryConnection>;
+
+  abstract viewerSessionsPaginated(
+    viewerSessionssPaginatedInput: FindManySessionsPaginatedInput
+  ): SessionConnection | Promise<SessionConnection>;
 }
 
 export class Session implements Node {
@@ -2381,6 +2347,16 @@ export class ViewerDetailed implements Node {
 export type BigInt = any;
 export type DateTime = any;
 export type PhoneNumber = any;
+export type NodeBaseFieldUnion =
+  | Account
+  | Category
+  | Comment
+  | Connection
+  | Entry
+  | MediaItem
+  | Profile
+  | Session
+  | User;
 export type NodeUnion =
   | CommentConnection
   | EntryConnection

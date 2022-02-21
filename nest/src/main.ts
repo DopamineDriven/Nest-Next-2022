@@ -188,7 +188,7 @@ async function bootstrap() {
     .listen(process.env.PORT ?? nestConfig?.port ?? 3000)
     .then(async () => {
       console.log(
-        `[GraphQL Playground]: ${await app.getUrl()}/graphql  \r[Swagger Api]: ${await app.getUrl()}/api`
+        `[GraphQL Playground]: ${await app.getUrl()}/graphql  \n [Swagger Api]: ${await app.getUrl()}/api`
       );
     });
 }

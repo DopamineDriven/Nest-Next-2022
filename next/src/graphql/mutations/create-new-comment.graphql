@@ -1,0 +1,7 @@
+# import CommentPartial from "../fragments/comment-partial.graphql";
+
+mutation createNewComment($createNewCommentInput: CreatNewCommentInput!) {
+  createNewComment(commentCreateInput: $createNewCommentInput) {
+    ...CommentPartial
+  }
+}

@@ -26,7 +26,7 @@ export class Connection implements Node {
   email!: string;
 
   @Field(_type => PhoneNumberResolver, { nullable: true })
-  phoneNumber!: typeof PhoneNumberTypeDefinition | null;
+  phoneNumber!: string | null;
 
   @Field(_type => String, { nullable: true })
   ip!: string | null;

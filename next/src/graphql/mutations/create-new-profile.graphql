@@ -1,0 +1,7 @@
+# import ProfilePartial from "../fragments/profile-partial.graphql";
+
+mutation createNewProfile($newProfileInput: CreateOneProfile!) {
+  createNewProfile(createNewProfileInput: $newProfileInput) {
+    ...ProfilePartial
+  }
+}

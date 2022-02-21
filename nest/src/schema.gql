@@ -662,11 +662,27 @@ type ContentNodes {
   contentNodes: BaseTypeNodes!
 }
 
-input CreateewCommentInput {
+input CreatNewCommentInput {
   body: String!
   entryId: String!
   position: String!
   reactions: [CommentReactions!]!
+}
+
+input CreateNewProfileInput {
+  bio: String
+  city: String
+  country: String
+  coverPhoto: String
+  dob: String
+  gender: Gender
+  occupation: String
+  phoneNumber: String
+  pronouns: Pronouns
+}
+
+input CreateOneProfile {
+  data: CreateNewProfileInput!
 }
 
 """
@@ -756,13 +772,6 @@ input EntryCreateNestedOneWithoutCommentsInput {
   connect: EntryWhereUniqueInput
   connectOrCreate: EntryCreateOrConnectWithoutCommentsInput
   create: EntryCreateWithoutCommentsInput
-}
-
-input EntryCreateNuevoInput {
-  content: String
-  featuredImage: String
-  published: Boolean
-  title: String!
 }
 
 input EntryCreateOneInput {
@@ -1028,7 +1037,7 @@ input FindManyProfilesPaginatedInput {
 }
 
 input FindManySessionsPaginatedInput {
-  cursor: SessionWhereUniqueInput!
+  cursor: SessionWhereUniqueInput
   distinct: [SessionScalarFieldEnum!]
   orderBy: [SessionOrderByWithRelationAndSearchRelevanceInput!]
   pagination: PaginationArgsInput!
@@ -1317,13 +1326,10 @@ enum MimeTypes {
 
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
-  createEntry(entryCreateInput: EntryCreateOneInput!): Entry!
   createEntryWithAxios(createNew: EntryCreateOneInput!): Entry!
-  createNewComment(commentCreateInput: CreateewCommentInput!): Comment!
-  createNuevoEntryMutation(
-    createNuevoEntryInput: EntryCreateNuevoInput!
-  ): Entry!
-  createProfile(data: ProfileCreateInput!, userId: String!): Profile!
+  createNewComment(commentCreateInput: CreatNewCommentInput!): Comment!
+  createNewEntry(entryCreateInput: EntryCreateOneInput!): Entry!
+  createNewProfile(createNewProfileInput: CreateOneProfile!): Profile!
   login(data: LoginInput!): Token!
   nuevoEntry(nuevoEntry: EntryCreateOneInput!): Entry!
   register(dataRegister: SignupInput!): AuthSansSession!
@@ -1458,6 +1464,17 @@ interface Node {
   id: ID!
 }
 
+union NodeBaseFieldUnion =
+    Account
+  | Category
+  | Comment
+  | Connection
+  | Entry
+  | MediaItem
+  | Profile
+  | Session
+  | User
+
 union NodeUnion =
     CommentConnection
   | EntryConnection
@@ -1520,24 +1537,6 @@ type ProfileConnection {
   edges: [ProfileEdge!]!
   pageInfo: PageInfo!
   totalCount: Int!
-}
-
-input ProfileCreateInput {
-  activiyFeed: String
-  bio: String
-  city: String
-  country: String
-  coverPhoto: String
-  dob: String
-  gender: Gender
-  id: String
-  lastSeen: DateTime
-  memberSince: DateTime
-  occupation: String
-  phoneNumber: String
-  pronouns: Pronouns
-  recentActivity: String
-  user: UserCreateNestedOneWithoutProfileInput
 }
 
 input ProfileCreateNestedOneWithoutUserInput {
@@ -1712,6 +1711,7 @@ type Query {
   ): UserConnection!
   me: AuthDetailed!
   node(id: ID!): Node
+  nodeField(cursor: String!): NodeBaseFieldUnion!
   nodeUnionResolver(
     id: String!
     manyComments: FindManyCommentsPaginatedInput!
@@ -1730,9 +1730,15 @@ type Query {
   userByRelayId(cursor: String!): User!
   viewer: ViewerDetailed!
   viewerAuthInfoFromContext: ViewerAuthInfo!
+  viewerCommentsPaginated(
+    viewerCommentsPaginatedInput: FindManyCommentsPaginatedInput!
+  ): CommentConnection!
   viewerEntriesPaginated(
     viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput!
   ): EntryConnection!
+  viewerSessionsPaginated(
+    viewerSessionssPaginatedInput: FindManySessionsPaginatedInput!
+  ): SessionConnection!
 }
 
 enum QueryMode {
@@ -2052,12 +2058,6 @@ input UserCreateNestedOneWithoutEntriesInput {
   create: UserCreateWithoutEntriesInput
 }
 
-input UserCreateNestedOneWithoutProfileInput {
-  connect: UserWhereUniqueInput
-  connectOrCreate: UserCreateOrConnectWithoutProfileInput
-  create: UserCreateWithoutProfileInput
-}
-
 input UserCreateOrConnectWithoutCategoriesInput {
   create: UserCreateWithoutCategoriesInput!
   where: UserWhereUniqueInput!
@@ -2070,11 +2070,6 @@ input UserCreateOrConnectWithoutCommentsInput {
 
 input UserCreateOrConnectWithoutEntriesInput {
   create: UserCreateWithoutEntriesInput!
-  where: UserWhereUniqueInput!
-}
-
-input UserCreateOrConnectWithoutProfileInput {
-  create: UserCreateWithoutProfileInput!
   where: UserWhereUniqueInput!
 }
 
@@ -2135,27 +2130,6 @@ input UserCreateWithoutEntriesInput {
   mediaItems: MediaItemCreateNestedManyWithoutUserInput
   password: String
   profile: ProfileCreateNestedOneWithoutUserInput
-  role: Role
-  sessions: SessionCreateNestedManyWithoutUserInput
-  status: UserStatus
-  updatedAt: DateTime
-}
-
-input UserCreateWithoutProfileInput {
-  accounts: AccountCreateNestedManyWithoutUserInput
-  categories: CategoryCreateNestedManyWithoutCreatorInput
-  comments: CommentCreateNestedManyWithoutAuthorInput
-  connections: ConnectionCreateNestedManyWithoutOwnerInput
-  createdAt: DateTime
-  email: String!
-  emailVerified: DateTime
-  entries: EntryCreateNestedManyWithoutAuthorInput
-  firstName: String
-  id: String
-  image: String
-  lastName: String
-  mediaItems: MediaItemCreateNestedManyWithoutUserInput
-  password: String
   role: Role
   sessions: SessionCreateNestedManyWithoutUserInput
   status: UserStatus

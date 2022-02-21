@@ -107,7 +107,6 @@ export class NodeService {
                 : this.__typename
           };
         }
-
         @Field(() => ModelsEnum)
         __typename: keyof typeof ModelsEnum;
       }

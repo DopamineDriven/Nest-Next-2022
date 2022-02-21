@@ -111,24 +111,27 @@ export class AuthService {
   async getViewerFromContext(viewerId: string) {
     return await this.validateUser(viewerId);
   }
-  async createEntryNuevoService(params: {
-    input: EntryCreateNuevoInput;
-    viewerId: string;
-  }) {
-    return await this.prismaService.entry
-      .create({
-        data: params.input
-      })
-      .then(entry => entry);
-  }
+
   async getUserWithDecodedToken(token: string) {
     const { header, payload, signature } = this.jwtService.decode(token, {
       complete: true
     }) as JwtDecoded;
-    const { refreshToken, accessToken } = this.generateTokens({
-      userId: payload.userId
-    });
+
     const user = await this.validateUser(payload.userId);
+    const getFirstSesh = await this.prismaService.session.findFirst({
+      where: { accessToken: token }
+    });
+    const seshes = user?.sessions;
+    const userToSessionsNonNull = seshes as NonNullable<typeof seshes>;
+    const refreshNoRegen = userToSessionsNonNull
+      .sort(
+        (a, b) =>
+          (a.lastVerified ? a.lastVerified.getMilliseconds() : a.iat!) -
+          (b.lastVerified?.getMilliseconds()
+            ? b.lastVerified?.getMilliseconds()
+            : b.iat!)
+      )
+      .find(refreshToken => refreshToken)?.refreshToken;
     const { auth, jwt } = {
       jwt: {
         header,
@@ -137,7 +140,7 @@ export class AuthService {
       },
       auth: {
         accessToken: token,
-        refreshToken: refreshToken ?? "",
+        refreshToken: refreshNoRegen ?? getFirstSesh?.refreshToken ?? "",
         user: {
           sessions: user?.sessions.sort(
             (a, b) =>
@@ -173,24 +176,66 @@ export class AuthService {
           status: { set: "ONLINE" },
           updatedAt: { set: new Date(Date.now()) },
           sessions: {
-            create: {
-              accessToken: auth.accessToken,
-              alg: header.alg,
-              exp: payload.exp,
-              iat: payload.iat,
-              refreshToken: refreshToken ?? "",
-              signature: signature,
-              provider: header.typ,
-              lastVerified: new Date(Date.now()),
-              scopes:
-                user?.role === "SUPERADMIN"
-                  ? ["read", "write", "edit", "administer", "impersonate"]
-                  : user?.role === "ADMIN"
-                  ? ["read", "write", "edit", "administer"]
-                  : user?.role === "MAINTAINER"
-                  ? ["read", "write", "edit"]
-                  : ["read", "write"],
-              tokenState: "valid"
+            upsert: {
+              where: { id: getFirstSesh?.id },
+              update:
+                Boolean(getFirstSesh?.id) == true
+                  ? {
+                      id: getFirstSesh?.id,
+                      accessToken: auth.accessToken,
+                      alg: header.alg,
+                      exp: payload.exp,
+                      iat: payload.iat,
+                      refreshToken: refreshNoRegen ?? "",
+                      signature: signature,
+                      provider: header.typ,
+                      lastVerified: new Date(Date.now()),
+                      scopes:
+                        user?.role === "SUPERADMIN"
+                          ? [
+                              "read",
+                              "write",
+                              "edit",
+                              "administer",
+                              "impersonate"
+                            ]
+                          : user?.role === "ADMIN"
+                          ? ["read", "write", "edit", "administer"]
+                          : user?.role === "MAINTAINER"
+                          ? ["read", "write", "edit"]
+                          : ["read", "write"],
+                      tokenState: "valid"
+                    }
+                  : {},
+              create:
+                Boolean(getFirstSesh?.id) === false
+                  ? {
+                      accessToken: auth.accessToken,
+                      alg: header.alg,
+                      exp: payload.exp,
+                      iat: payload.iat,
+                      refreshToken:
+                        refreshNoRegen ?? getFirstSesh?.refreshToken ?? "",
+                      signature: signature,
+                      provider: header.typ,
+                      lastVerified: new Date(Date.now()),
+                      scopes:
+                        user?.role === "SUPERADMIN"
+                          ? [
+                              "read",
+                              "write",
+                              "edit",
+                              "administer",
+                              "impersonate"
+                            ]
+                          : user?.role === "ADMIN"
+                          ? ["read", "write", "edit", "administer"]
+                          : user?.role === "MAINTAINER"
+                          ? ["read", "write", "edit"]
+                          : ["read", "write"],
+                      tokenState: "valid"
+                    }
+                  : {}
             }
           }
         }
@@ -204,7 +249,7 @@ export class AuthService {
       .then(async results => ({
         auth: {
           accessToken: auth.accessToken,
-          refreshToken: refreshToken,
+          refreshToken: refreshNoRegen ?? getFirstSesh?.refreshToken,
           session: results.session[0],
           user: results.user
         },
@@ -213,7 +258,7 @@ export class AuthService {
   }
   async signIn(
     { email, password }: LoginInput,
-    getUser?: { accessToken: string }
+    token?: string
   ): Promise<AuthDetailed> {
     if (!email || email === new NotFoundException(`email`).message) {
       throw new NotFoundException(`No user found for email: ${email}`);
@@ -236,7 +281,7 @@ export class AuthService {
         where: {
           email: email
         },
-        select: { id: true }
+        select: { id: true, sessions: true }
       })
       .then(id => id)
       .then(id => {
