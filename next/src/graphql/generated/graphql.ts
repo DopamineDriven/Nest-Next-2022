@@ -723,6 +723,13 @@ export type ContentNodes = {
   contentNodes: FieldWrapper<BaseTypeNodes>;
 };
 
+export type CreatNewCommentInput = {
+  body: Scalars["String"];
+  entryId: Scalars["String"];
+  position: Scalars["String"];
+  reactions: Array<CommentReactions>;
+};
+
 export type CreateNewProfileInput = {
   bio?: InputMaybe<Scalars["String"]>;
   city?: InputMaybe<Scalars["String"]>;
@@ -737,13 +744,6 @@ export type CreateNewProfileInput = {
 
 export type CreateOneProfile = {
   data: CreateNewProfileInput;
-};
-
-export type CreateewCommentInput = {
-  body: Scalars["String"];
-  entryId: Scalars["String"];
-  position: Scalars["String"];
-  reactions: Array<CommentReactions>;
 };
 
 export type DateTimeFilter = {
@@ -1445,7 +1445,7 @@ export type MutationcreateEntryWithAxiosArgs = {
 };
 
 export type MutationcreateNewCommentArgs = {
-  commentCreateInput: CreateewCommentInput;
+  commentCreateInput: CreatNewCommentInput;
 };
 
 export type MutationcreateNewEntryArgs = {
@@ -2810,7 +2810,7 @@ export const changePassword = gql`
 `;
 export const createNewComment = gql`
   mutation createNewComment(
-    $createNewCommentInput: CreateewCommentInput!
+    $createNewCommentInput: CreatNewCommentInput!
   ) {
     createNewComment(commentCreateInput: $createNewCommentInput) {
       ...CommentPartial
@@ -3544,13 +3544,13 @@ export type ResolversTypes = ResolversObject<{
     DeepPartial<ConnectionWhereUniqueInput>
   >;
   ContentNodes: ResolverTypeWrapper<DeepPartial<ContentNodes>>;
+  CreatNewCommentInput: ResolverTypeWrapper<
+    DeepPartial<CreatNewCommentInput>
+  >;
   CreateNewProfileInput: ResolverTypeWrapper<
     DeepPartial<CreateNewProfileInput>
   >;
   CreateOneProfile: ResolverTypeWrapper<DeepPartial<CreateOneProfile>>;
-  CreateewCommentInput: ResolverTypeWrapper<
-    DeepPartial<CreateewCommentInput>
-  >;
   DateTime: ResolverTypeWrapper<DeepPartial<Scalars["DateTime"]>>;
   DateTimeFilter: ResolverTypeWrapper<DeepPartial<DateTimeFilter>>;
   DateTimeNullableFilter: ResolverTypeWrapper<
@@ -4056,9 +4056,9 @@ export type ResolversParentTypes = ResolversObject<{
   ConnectionWhereInput: DeepPartial<ConnectionWhereInput>;
   ConnectionWhereUniqueInput: DeepPartial<ConnectionWhereUniqueInput>;
   ContentNodes: DeepPartial<ContentNodes>;
+  CreatNewCommentInput: DeepPartial<CreatNewCommentInput>;
   CreateNewProfileInput: DeepPartial<CreateNewProfileInput>;
   CreateOneProfile: DeepPartial<CreateOneProfile>;
-  CreateewCommentInput: DeepPartial<CreateewCommentInput>;
   DateTime: DeepPartial<Scalars["DateTime"]>;
   DateTimeFilter: DeepPartial<DateTimeFilter>;
   DateTimeNullableFilter: DeepPartial<DateTimeNullableFilter>;
@@ -6038,7 +6038,7 @@ export type changePasswordMutation = {
 };
 
 export type createNewCommentMutationVariables = Exact<{
-  createNewCommentInput: CreateewCommentInput;
+  createNewCommentInput: CreatNewCommentInput;
 }>;
 
 export type createNewCommentMutation = {
@@ -7222,7 +7222,7 @@ export type changePasswordMutationOptions = Apollo.BaseMutationOptions<
 >;
 export const createNewCommentDocument = gql`
   mutation createNewComment(
-    $createNewCommentInput: CreateewCommentInput!
+    $createNewCommentInput: CreatNewCommentInput!
   ) {
     createNewComment(commentCreateInput: $createNewCommentInput) {
       ...CommentPartial

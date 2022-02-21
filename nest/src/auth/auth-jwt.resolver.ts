@@ -245,20 +245,20 @@ export class AuthResolver {
       });
   }
 
-  @Mutation(() => Entry)
-  @UseGuards(AuthGuard)
-  async createNuevoEntryMutation(
-    @Args("createNuevoEntryInput", { type: () => EntryCreateNuevoInput })
-    params: EntryCreateNuevoInput,
-    @Context("viewerId") ctx: ExecutionContext
-  ): Promise<Entry> {
-    const newEntry = this.auth.createEntryNuevoService({
-      input: params,
-      viewerId: ctx as unknown as string
-    });
+  // @Mutation(() => Entry)
+  // @UseGuards(AuthGuard)
+  // async createNuevoEntryMutation(
+  //   @Args("createNuevoEntryInput", { type: () => EntryCreateNuevoInput })
+  //   params: EntryCreateNuevoInput,
+  //   @Context("viewerId") ctx: ExecutionContext
+  // ): Promise<Entry> {
+  //   const newEntry = this.auth.createEntryNuevoService({
+  //     input: params,
+  //     viewerId: ctx as unknown as string
+  //   });
 
-    return newEntry;
-  }
+  //   return newEntry;
+  // }
 
   @Query(() => User)
   async getUserFromAccessToken(

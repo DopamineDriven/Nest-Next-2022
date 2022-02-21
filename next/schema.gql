@@ -662,6 +662,13 @@ type ContentNodes {
   contentNodes: BaseTypeNodes!
 }
 
+input CreatNewCommentInput {
+  body: String!
+  entryId: String!
+  position: String!
+  reactions: [CommentReactions!]!
+}
+
 input CreateNewProfileInput {
   bio: String
   city: String
@@ -676,13 +683,6 @@ input CreateNewProfileInput {
 
 input CreateOneProfile {
   data: CreateNewProfileInput!
-}
-
-input CreateewCommentInput {
-  body: String!
-  entryId: String!
-  position: String!
-  reactions: [CommentReactions!]!
 }
 
 """
@@ -1334,7 +1334,7 @@ enum MimeTypes {
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
   createEntryWithAxios(createNew: EntryCreateOneInput!): Entry!
-  createNewComment(commentCreateInput: CreateewCommentInput!): Comment!
+  createNewComment(commentCreateInput: CreatNewCommentInput!): Comment!
   createNewEntry(entryCreateInput: EntryCreateOneInput!): Entry!
   createNewProfile(createNewProfileInput: CreateOneProfile!): Profile!
   createNuevoEntryMutation(

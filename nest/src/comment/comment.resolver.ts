@@ -49,6 +49,20 @@ export class CommentResolver {
     return await this.commentService.relayFindUniqueComment({ id: cursor });
   }
 
+  @Query(() => CommentConnection)
+  @UseGuards(AuthGuard)
+  async viewerCommentsPaginated(
+    @Context("viewerId") ctx: ExecutionContext,
+    @Args("viewerCommentsPaginatedInput", {
+      type: () => FindManyCommentsPaginatedInput
+    })
+    params: FindManyCommentsPaginatedInput
+  ) {
+    return await this.commentService
+      .getViewerCommentsPaginatedService(params, ctx as unknown as string)
+      .then(commentConnection => commentConnection);
+  }
+
   @Mutation(() => Comment)
   @UseGuards(AuthGuard)
   async createNewComment(

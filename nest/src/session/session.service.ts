@@ -37,7 +37,6 @@ export class SessionService {
         }),
       () =>
         this.prismaService.session.count({
-          orderBy: params.orderBy,
           take: params.take,
           distinct: params.distinct,
           skip: params.skip,
@@ -45,7 +44,7 @@ export class SessionService {
           cursor: params.cursor
         }),
       {
-        first: params.pagination.first ?? 10,
+        first: params.pagination.first,
         last: params.pagination.last,
         before: params.pagination.before,
         after: params.pagination.after
@@ -59,5 +58,69 @@ export class SessionService {
           toGlobalId(Session.name, cursor.id)
       }
     );
+  }
+
+  async getViewerSessionsPaginated(
+    params: FindManySessionsPaginatedInput,
+    viewerId: string
+  ) {
+    return await this.prismaService.user
+      .findUnique({
+        where: { id: viewerId },
+        include: { sessions: true, _count: true }
+      })
+      .then(async auth => {
+        const user = auth as unknown as NonNullable<typeof auth>;
+        return await findManyCursorConnection(
+          args =>
+            this.prismaService.session.findMany({
+              include: {
+                user: true
+              },
+              distinct: params.distinct,
+              take: params.take,
+              skip: params.skip,
+              where: {
+                userId: { equals: user.id },
+                id: params.where?.id,
+                ...params.where
+              },
+              cursor: {
+                id: user?.sessions?.find(id => id)?.id,
+                ...params.cursor
+              },
+              orderBy: params.orderBy,
+              ...args
+            }),
+          () =>
+            this.prismaService.session.count({
+              distinct: params.distinct,
+              take: params.take,
+              skip: params.skip,
+              where: {
+                userId: user.id,
+                ...params.where
+              },
+              cursor: {
+                id: user?.sessions?.find(id => id)?.id,
+                ...params.cursor
+              }
+            }),
+          {
+            first: params.pagination.first,
+            last: params.pagination.last,
+            before: params.pagination.before,
+            after: params.pagination.after
+          },
+          {
+            getCursor: (record: { id: string }) => {
+              return record;
+            },
+            decodeCursor: (cursor: string) => fromGlobalId(cursor),
+            encodeCursor: (cursor: { id: string }) =>
+              toGlobalId(Session.name, cursor.id)
+          }
+        );
+      });
   }
 }

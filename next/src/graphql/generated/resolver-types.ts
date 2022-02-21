@@ -707,6 +707,13 @@ export type ContentNodes = {
   contentNodes: BaseTypeNodes;
 };
 
+export type CreatNewCommentInput = {
+  body: Scalars["String"];
+  entryId: Scalars["String"];
+  position: Scalars["String"];
+  reactions: Array<CommentReactions>;
+};
+
 export type CreateNewProfileInput = {
   bio?: InputMaybe<Scalars["String"]>;
   city?: InputMaybe<Scalars["String"]>;
@@ -721,13 +728,6 @@ export type CreateNewProfileInput = {
 
 export type CreateOneProfile = {
   data: CreateNewProfileInput;
-};
-
-export type CreateewCommentInput = {
-  body: Scalars["String"];
-  entryId: Scalars["String"];
-  position: Scalars["String"];
-  reactions: Array<CommentReactions>;
 };
 
 export type DateTimeFilter = {
@@ -1429,7 +1429,7 @@ export type MutationCreateEntryWithAxiosArgs = {
 };
 
 export type MutationCreateNewCommentArgs = {
-  commentCreateInput: CreateewCommentInput;
+  commentCreateInput: CreatNewCommentInput;
 };
 
 export type MutationCreateNewEntryArgs = {
@@ -2695,9 +2695,9 @@ export type ResolversTypes = ResolversObject<{
   ConnectionWhereInput: ConnectionWhereInput;
   ConnectionWhereUniqueInput: ConnectionWhereUniqueInput;
   ContentNodes: ResolverTypeWrapper<ContentNodes>;
+  CreatNewCommentInput: CreatNewCommentInput;
   CreateNewProfileInput: CreateNewProfileInput;
   CreateOneProfile: CreateOneProfile;
-  CreateewCommentInput: CreateewCommentInput;
   DateTime: ResolverTypeWrapper<Scalars["DateTime"]>;
   DateTimeFilter: DateTimeFilter;
   DateTimeNullableFilter: DateTimeNullableFilter;
@@ -2976,9 +2976,9 @@ export type ResolversParentTypes = ResolversObject<{
   ConnectionWhereInput: ConnectionWhereInput;
   ConnectionWhereUniqueInput: ConnectionWhereUniqueInput;
   ContentNodes: ContentNodes;
+  CreatNewCommentInput: CreatNewCommentInput;
   CreateNewProfileInput: CreateNewProfileInput;
   CreateOneProfile: CreateOneProfile;
-  CreateewCommentInput: CreateewCommentInput;
   DateTime: Scalars["DateTime"];
   DateTimeFilter: DateTimeFilter;
   DateTimeNullableFilter: DateTimeNullableFilter;

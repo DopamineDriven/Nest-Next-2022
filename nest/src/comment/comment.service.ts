@@ -51,7 +51,68 @@ export class CommentService {
       }
     );
   }
-
+  async getViewerCommentsPaginatedService(params: FindManyCommentsPaginatedInput, viewerId: string) {
+    return await this.prismaService.user
+      .findUnique({
+        where: { id: viewerId },
+        include: { comments: true, _count: true }
+      })
+      .then(async auth => {
+        const user = auth as unknown as NonNullable<typeof auth>;
+        return await findManyCursorConnection(
+          args =>
+            this.prismaService.comment.findMany({
+              include: {
+                author: true,
+                entry: true
+              },
+              distinct: params.distinct,
+              take: params.take,
+              skip: params.skip,
+              where: {
+                authorId: { equals: user.id },
+                id: params.where?.id,
+                ...params.where
+              },
+              cursor: {
+                id: auth?.comments?.find(id => id)?.id,
+                ...params.cursor
+              },
+              orderBy: params.orderBy,
+              ...args
+            }),
+          () =>
+            this.prismaService.comment.count({
+              distinct: params.distinct,
+              orderBy: params.orderBy,
+              take: params.take,
+              skip: params.skip,
+              where: {
+                authorId: user.id,
+                ...params.where
+              },
+              cursor: {
+                id: auth?.comments?.find(id => id)?.id,
+                ...params.cursor
+              }
+            }),
+          {
+            first: params.pagination.first ?? 10,
+            last: params.pagination.last,
+            before: params.pagination.before,
+            after: params.pagination.after
+          },
+          {
+            getCursor: (record: { id: string }) => {
+              return record;
+            },
+            decodeCursor: (cursor: string) => fromGlobalId(cursor),
+            encodeCursor: (cursor: { id: string }) =>
+              toGlobalId(Comment.name, cursor.id)
+          }
+        );
+      })
+  }
   async relayFindUniqueComment(params: { id: string }) {
     const comment = await this.prismaService.comment.findUnique({
       where: { id: fromGlobalId(params.id).id }

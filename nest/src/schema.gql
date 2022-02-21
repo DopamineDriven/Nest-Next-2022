@@ -662,6 +662,13 @@ type ContentNodes {
   contentNodes: BaseTypeNodes!
 }
 
+input CreatNewCommentInput {
+  body: String!
+  entryId: String!
+  position: String!
+  reactions: [CommentReactions!]!
+}
+
 input CreateNewProfileInput {
   bio: String
   city: String
@@ -676,13 +683,6 @@ input CreateNewProfileInput {
 
 input CreateOneProfile {
   data: CreateNewProfileInput!
-}
-
-input CreateewCommentInput {
-  body: String!
-  entryId: String!
-  position: String!
-  reactions: [CommentReactions!]!
 }
 
 """
@@ -772,13 +772,6 @@ input EntryCreateNestedOneWithoutCommentsInput {
   connect: EntryWhereUniqueInput
   connectOrCreate: EntryCreateOrConnectWithoutCommentsInput
   create: EntryCreateWithoutCommentsInput
-}
-
-input EntryCreateNuevoInput {
-  content: String
-  featuredImage: String
-  published: Boolean
-  title: String!
 }
 
 input EntryCreateOneInput {
@@ -1044,7 +1037,7 @@ input FindManyProfilesPaginatedInput {
 }
 
 input FindManySessionsPaginatedInput {
-  cursor: SessionWhereUniqueInput!
+  cursor: SessionWhereUniqueInput
   distinct: [SessionScalarFieldEnum!]
   orderBy: [SessionOrderByWithRelationAndSearchRelevanceInput!]
   pagination: PaginationArgsInput!
@@ -1334,12 +1327,9 @@ enum MimeTypes {
 type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): User!
   createEntryWithAxios(createNew: EntryCreateOneInput!): Entry!
-  createNewComment(commentCreateInput: CreateewCommentInput!): Comment!
+  createNewComment(commentCreateInput: CreatNewCommentInput!): Comment!
   createNewEntry(entryCreateInput: EntryCreateOneInput!): Entry!
   createNewProfile(createNewProfileInput: CreateOneProfile!): Profile!
-  createNuevoEntryMutation(
-    createNuevoEntryInput: EntryCreateNuevoInput!
-  ): Entry!
   login(data: LoginInput!): Token!
   nuevoEntry(nuevoEntry: EntryCreateOneInput!): Entry!
   register(dataRegister: SignupInput!): AuthSansSession!
@@ -1740,9 +1730,15 @@ type Query {
   userByRelayId(cursor: String!): User!
   viewer: ViewerDetailed!
   viewerAuthInfoFromContext: ViewerAuthInfo!
+  viewerCommentsPaginated(
+    viewerCommentsPaginatedInput: FindManyCommentsPaginatedInput!
+  ): CommentConnection!
   viewerEntriesPaginated(
     viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput!
   ): EntryConnection!
+  viewerSessionsPaginated(
+    viewerSessionssPaginatedInput: FindManySessionsPaginatedInput!
+  ): SessionConnection!
 }
 
 enum QueryMode {
