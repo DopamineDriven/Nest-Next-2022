@@ -51,7 +51,10 @@ export class CommentService {
       }
     );
   }
-  async getViewerCommentsPaginatedService(params: FindManyCommentsPaginatedInput, viewerId: string) {
+  async getViewerCommentsPaginatedService(
+    params: FindManyCommentsPaginatedInput,
+    viewerId: string
+  ) {
     return await this.prismaService.user
       .findUnique({
         where: { id: viewerId },
@@ -111,7 +114,7 @@ export class CommentService {
               toGlobalId(Comment.name, cursor.id)
           }
         );
-      })
+      });
   }
   async relayFindUniqueComment(params: { id: string }) {
     const comment = await this.prismaService.comment.findUnique({

@@ -178,45 +178,64 @@ export class AuthService {
           sessions: {
             upsert: {
               where: { id: getFirstSesh?.id },
-              update: Boolean(getFirstSesh?.id) == true ? {
-                id: getFirstSesh?.id,
-                accessToken: auth.accessToken,
-                alg: header.alg,
-                exp: payload.exp,
-                iat: payload.iat,
-                refreshToken: refreshNoRegen ?? "",
-                signature: signature,
-                provider: header.typ,
-                lastVerified: new Date(Date.now()),
-                scopes:
-                  user?.role === "SUPERADMIN"
-                    ? ["read", "write", "edit", "administer", "impersonate"]
-                    : user?.role === "ADMIN"
-                    ? ["read", "write", "edit", "administer"]
-                    : user?.role === "MAINTAINER"
-                    ? ["read", "write", "edit"]
-                    : ["read", "write"],
-                tokenState: "valid"
-              } : {},
-              create: Boolean(getFirstSesh?.id) === false ? {
-                accessToken: auth.accessToken,
-                alg: header.alg,
-                exp: payload.exp,
-                iat: payload.iat,
-                refreshToken: refreshNoRegen ?? getFirstSesh?.refreshToken ?? "",
-                signature: signature,
-                provider: header.typ,
-                lastVerified: new Date(Date.now()),
-                scopes:
-                  user?.role === "SUPERADMIN"
-                    ? ["read", "write", "edit", "administer", "impersonate"]
-                    : user?.role === "ADMIN"
-                    ? ["read", "write", "edit", "administer"]
-                    : user?.role === "MAINTAINER"
-                    ? ["read", "write", "edit"]
-                    : ["read", "write"],
-                tokenState: "valid"
-              } : {}
+              update:
+                Boolean(getFirstSesh?.id) == true
+                  ? {
+                      id: getFirstSesh?.id,
+                      accessToken: auth.accessToken,
+                      alg: header.alg,
+                      exp: payload.exp,
+                      iat: payload.iat,
+                      refreshToken: refreshNoRegen ?? "",
+                      signature: signature,
+                      provider: header.typ,
+                      lastVerified: new Date(Date.now()),
+                      scopes:
+                        user?.role === "SUPERADMIN"
+                          ? [
+                              "read",
+                              "write",
+                              "edit",
+                              "administer",
+                              "impersonate"
+                            ]
+                          : user?.role === "ADMIN"
+                          ? ["read", "write", "edit", "administer"]
+                          : user?.role === "MAINTAINER"
+                          ? ["read", "write", "edit"]
+                          : ["read", "write"],
+                      tokenState: "valid"
+                    }
+                  : {},
+              create:
+                Boolean(getFirstSesh?.id) === false
+                  ? {
+                      accessToken: auth.accessToken,
+                      alg: header.alg,
+                      exp: payload.exp,
+                      iat: payload.iat,
+                      refreshToken:
+                        refreshNoRegen ?? getFirstSesh?.refreshToken ?? "",
+                      signature: signature,
+                      provider: header.typ,
+                      lastVerified: new Date(Date.now()),
+                      scopes:
+                        user?.role === "SUPERADMIN"
+                          ? [
+                              "read",
+                              "write",
+                              "edit",
+                              "administer",
+                              "impersonate"
+                            ]
+                          : user?.role === "ADMIN"
+                          ? ["read", "write", "edit", "administer"]
+                          : user?.role === "MAINTAINER"
+                          ? ["read", "write", "edit"]
+                          : ["read", "write"],
+                      tokenState: "valid"
+                    }
+                  : {}
             }
           }
         }

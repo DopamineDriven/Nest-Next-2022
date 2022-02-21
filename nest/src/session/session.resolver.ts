@@ -44,5 +44,4 @@ export class SessionResolver {
       .getViewerSessionsPaginated(params, ctx as unknown as string)
       .then(sessionConnection => sessionConnection);
   }
-
 }
