@@ -1,9 +1,7 @@
 import { PrismaService } from "src/prisma/prisma.service";
-import { PaginationService } from "src/pagination/pagination.service";
 import { FindManySessionsPaginatedInput } from "./inputs/sessions-paginated.input";
-import { Injectable, Inject } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
-import { SessionWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/session/inputs/session-where-unique.input";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { Session } from "./model";
 

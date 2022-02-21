@@ -1,6 +1,6 @@
 import { ConfigService } from "@nestjs/config";
 import { ApolloDriverConfig } from "@nestjs/apollo";
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { GqlOptionsFactory } from "@nestjs/graphql";
 import {
   ApolloConfig,
@@ -9,7 +9,6 @@ import {
 import { AuthService } from "./auth/auth-jwt.service";
 import { Context } from "src/app.module";
 import { AuthDetailed } from "./auth/model/auth-detailed.model";
-import internal from "stream";
 import { AuthModule } from "./auth/auth-jwt.module";
 import { PasswordModule } from "./auth/password.module";
 import { JwtModule } from "@nestjs/jwt";
@@ -41,10 +40,8 @@ export class GqlConfigService implements GqlOptionsFactory {
     const apolloConfig = this.configService.get<ApolloConfig>("apollo");
 
     return {
-      // schema options
       autoSchemaFile: graphqlConfig?.schemaDestination || "./src/schema.gql",
       sortSchema: graphqlConfig?.sortSchema ? graphqlConfig.sortSchema : true,
-      // subscription
       installSubscriptionHandlers: true,
       apollo: {
         key: apolloConfig?.key ?? process.env.APOLLO_KEY ?? undefined
@@ -108,10 +105,6 @@ export class GqlConfigService implements GqlOptionsFactory {
         optionsSuccessStatus: 204,
         preflightContinue: false
       },
-      // plugins: [
-      //   ApolloServerPluginLandingPageLocalDefault(),
-      //   ApolloServerPluginInlineTrace()
-      // ],
       fieldResolverEnhancers: ["guards"],
       context: async ({
         req,
@@ -138,9 +131,6 @@ export class GqlConfigService implements GqlOptionsFactory {
         } catch (error) {
           throw new Error(`error in gql-config.service.ts: ${error}`);
         }
-        // finally {
-        //   res.emit("pipe", new internal.Readable({ emitClose: true }))
-        // }
       },
       include: [
         AuthModule,
