@@ -7,8 +7,6 @@ import { ExpressContext } from "apollo-server-express";
 import { AppController } from "./app/app.controller";
 import { AppService } from "./app/app.service";
 import { AppResolver } from "./app/app.resolver";
-import { APP_FILTER } from "@nestjs/core";
-import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
 import { PrismaModule } from "./prisma/prisma.module";
 import { PasswordModule } from "./auth/password.module";
 import { AuthModule } from "./auth/auth-jwt.module";
@@ -24,7 +22,6 @@ import {
 import { ThrottlerModule, ThrottlerModuleOptions } from "@nestjs/throttler";
 import { ThrottlerStorageRedisService } from "nestjs-throttler-storage-redis";
 import { RedisError } from "redis";
-import { AuthService } from "./auth/auth-jwt.service";
 import { MediaModule } from "./media/media.module";
 import { NodeModule } from "./node/node.module";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
@@ -35,11 +32,6 @@ import { CategoryModule } from "./category/category.module";
 import { ConnectionModule } from "./connection/connection.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
-export type RecordContiional<T> =
-  | Record<keyof T, T>
-  | Array<T>
-  | PromiseLike<T>
-  | T;
 
 export type Context = {
   req: ExpressContext["req"];
@@ -107,7 +99,14 @@ export type Context = {
             username: undefined,
             async onClientCreated(client) {
               const redisPing = await client.ping(
-                `${new Date(Date.now()).toISOString().split(/([T])/)[0]}`
+                `[date]: ${
+                  new Date(Date.now()).toISOString().split(/([T])/)[0]
+                } \n [time]: ${
+                  new Date(Date.now())
+                    .toISOString()
+                    .split(/([T])/)[2]
+                    .split(/([Z])/)[0]
+                } UTC`
               );
               console.log(
                 "[redis-ping-check]: " + JSON.stringify(redisPing, null, 2)
