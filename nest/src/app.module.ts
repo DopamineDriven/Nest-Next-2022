@@ -101,7 +101,7 @@ export type Context = {
               const redisPing = await client.ping(
                 `[date]: ${
                   new Date(Date.now()).toISOString().split(/([T])/)[0]
-                } \n [time]: ${
+                } [time]: ${
                   new Date(Date.now())
                     .toISOString()
                     .split(/([T])/)[2]
@@ -159,7 +159,6 @@ export type Context = {
       driver: ApolloDriver,
       useClass: GqlConfigService,
       imports: [AuthModule, ConfigModule],
-
       inject: [ConfigService]
     }),
     ServeStaticModule.forRoot({
