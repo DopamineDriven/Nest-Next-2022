@@ -269,9 +269,10 @@ export class NodeResolver {
     throw new Error("could not find any resource with id: " + id);
   }
 
-
   @Query(() => NodeImplementedUnionConst, { name: "nodeField" })
-  async nodeField(@Args("cursor", { type: () => String }) cursor: string): Promise<Nullable<NodeImplementedUnion>> {
+  async nodeField(
+    @Args("cursor", { type: () => String }) cursor: string
+  ): Promise<Nullable<NodeImplementedUnion>> {
     const { type, id } = fromGlobalId(cursor) as {
       type:
         | "User"
@@ -290,20 +291,20 @@ export class NodeResolver {
       const user = await this.prismaService.user.findUnique({
         where: { id: cursor || id }
       });
-      return user
+      return user;
     }
     if (type === "Profile") {
       const profile = await this.prismaService.profile.findUnique({
         where: { id: cursor || id }
       });
-      return profile
+      return profile;
     }
 
     if (type === "Entry") {
       const entry = await this.prismaService.entry.findUnique({
         where: { id: cursor || id }
       });
-      return entry
+      return entry;
     }
 
     if (type === "MediaItem") {
@@ -311,34 +312,36 @@ export class NodeResolver {
         where: { id: cursor || id }
       });
 
-      return mediaItem
+      return mediaItem;
     }
 
     if (type === "Session") {
       const session = await this.prismaService.session.findUnique({
         where: { id: cursor || id }
       });
-      return session
+      return session;
     }
 
     if (type === "Comment") {
       const comment = await this.prismaService.comment.findUnique({
         where: { id: cursor }
       });
-      return comment
+      return comment;
     }
 
     if (type === "Connection") {
       const connection = await this.prismaService.connection.findUnique({
         where: { id: cursor || id }
       });
-      return connection
+      return connection;
     }
     if (type === "Category") {
-      const category = await this.prismaService.category.findUnique({
-        where: { id: cursor || id }
-      }).then((category => category))
-      return category
+      const category = await this.prismaService.category
+        .findUnique({
+          where: { id: cursor || id }
+        })
+        .then(category => category);
+      return category;
     }
     return this.assertAllTypesCovered(type as unknown as never, id);
   }

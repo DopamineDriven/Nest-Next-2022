@@ -214,7 +214,10 @@ export class ProfileService {
     );
   }
 
-  async createNewProfileService(params: CreateOneProfile, viewerId: string): Promise<Profile> {
+  async createNewProfileService(
+    params: CreateOneProfile,
+    viewerId: string
+  ): Promise<Profile> {
     const getUser = await this.prismaService.user.findUnique({
       where: { id: viewerId }
     });

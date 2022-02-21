@@ -52,9 +52,12 @@ export class ProfileResolver {
     @Context("viewerId") ctx: ExecutionContext,
     @Args("createNewProfileInput") params: CreateOneProfile
   ) {
-    const createNewProfile = await this.profileService.createNewProfileService(params, ctx as unknown as string);
+    const createNewProfile = await this.profileService.createNewProfileService(
+      params,
+      ctx as unknown as string
+    );
     pubSub.publish("PROFILE_CREATED", { profileCreated: createNewProfile });
-    return createNewProfile
+    return createNewProfile;
   }
 
   @Query(() => ProfileConnection)
