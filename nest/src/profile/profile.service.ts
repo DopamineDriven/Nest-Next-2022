@@ -14,7 +14,10 @@ import { FindManyProfilesPaginatedInput } from "./inputs/profile-paginated.input
 import { Profile } from "./model/profile.model";
 import { ProfileWhereUniqueInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-where-unique.input";
 import { ProfileUncheckedUpdateInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-unchecked-update.input";
-
+import {
+  CreateNewProfileInput,
+  CreateOneProfile
+} from "./inputs/profile-create.input";
 @Injectable()
 export class ProfileService {
   constructor(
@@ -209,5 +212,33 @@ export class ProfileService {
           toGlobalId(Profile.name, cursor.id)
       }
     );
+  }
+
+  async createNewProfileService(params: CreateOneProfile, viewerId: string): Promise<Profile> {
+    const getUser = await this.prismaService.user.findUnique({
+      where: { id: viewerId }
+    });
+    return this.prismaService.profile.create({
+      data: {
+        activiyFeed: `${getUser?.firstName} ${getUser?.lastName} created their profile`,
+        bio: params.data.bio,
+        city: params.data.city,
+        country: params.data.country,
+        coverPhoto: params.data.coverPhoto,
+        dob: params.data.dob,
+        gender: params.data.gender,
+        pronouns: params.data.pronouns,
+        lastSeen: new Date(Date.now()),
+        memberSince: getUser?.createdAt,
+        phoneNumber: params.data.phoneNumber,
+        occupation: params.data.occupation,
+        recentActivity: `Profile Successfully Created on ${
+          new Date(Date.now()).toISOString().split(/([T])/)[0]
+        } at ${
+          new Date(Date.now()).toISOString().split(/([T])/)[2].split(/([Z])/)[0]
+        } UTC`,
+        user: { connect: { id: viewerId } }
+      }
+    });
   }
 }

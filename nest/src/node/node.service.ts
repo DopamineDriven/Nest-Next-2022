@@ -90,7 +90,8 @@ export class NodeService {
     T extends ReturnTypeFuncValue,
     V extends Constructor,
     U extends { id: string }
-  >(nodeType: T, cursor: U): (target: V) => Constructor {
+    >(nodeType: T, cursor: U): (target: V) => Constructor {
+
     return (target: V): Constructor => {
       @ObjectType(target.name)
       class NodeDefs extends target {
@@ -107,7 +108,6 @@ export class NodeService {
                 : this.__typename
           };
         }
-
         @Field(() => ModelsEnum)
         __typename: keyof typeof ModelsEnum;
       }

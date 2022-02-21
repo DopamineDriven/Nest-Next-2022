@@ -9,6 +9,7 @@ import { ResolveTypeFactory } from "@nestjs/graphql/dist/schema-builder/factorie
 import { SessionModule } from "src/session/session.module";
 import { MediaModule } from "src/media/media.module";
 import { NodeUnionResolver } from "./comprehensive-union.resolver";
+import { PrismaModule } from "src/prisma";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { NodeUnionResolver } from "./comprehensive-union.resolver";
     CommentModule,
     UserModule,
     ProfileModule,
+    PrismaModule,
     MediaModule,
     SessionModule
   ],

@@ -1,4 +1,4 @@
-import { ExecutionContext, HostParam, Inject, UseGuards } from "@nestjs/common";
+import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { ProfileService } from "./profile.service";
 import {
@@ -13,11 +13,11 @@ import {
 } from "@nestjs/graphql";
 import { Profile } from "../profile/model/profile.model";
 import { PubSub } from "graphql-subscriptions";
-import { GraphqlAuthGuard } from "../auth/gql-auth.guard";
 import { ProfileConnection } from "./model/profile-connection.model";
 import { User } from "../user/model/user.model";
-import { ProfileCreateInput } from "src/.generated/prisma-nestjs-graphql/profile/inputs/profile-create.input";
 import { FindManyProfilesPaginatedInput } from "./inputs/profile-paginated.input";
+import { AuthGuard } from "src/common/guards/gql-context.guard";
+import { CreateOneProfile } from "./inputs/profile-create.input";
 
 const pubSub = new PubSub();
 @Resolver(() => Profile)
@@ -43,18 +43,18 @@ export class ProfileResolver {
 
   @Subscription(() => Profile)
   profileCreated() {
-    return pubSub.asyncIterator("profileCreated");
+    return pubSub.asyncIterator("PROFILE_CREATED");
   }
 
-  @UseGuards(GraphqlAuthGuard)
+  @UseGuards(AuthGuard)
   @Mutation(() => Profile)
-  async createProfile(
-    @Args("data", { type: () => ProfileCreateInput }) data: ProfileCreateInput,
-    @Args("userId", { type: () => String }) userId: string
+  async createNewProfile(
+    @Context("viewerId") ctx: ExecutionContext,
+    @Args("createNewProfileInput") params: CreateOneProfile
   ) {
-    const newProfile = await this.profileService.createProfile(data, userId);
-    pubSub.publish("profileCreated", { profileCreated: newProfile });
-    return newProfile;
+    const createNewProfile = await this.profileService.createNewProfileService(params, ctx as unknown as string);
+    pubSub.publish("PROFILE_CREATED", { profileCreated: createNewProfile });
+    return createNewProfile
   }
 
   @Query(() => ProfileConnection)
@@ -67,7 +67,7 @@ export class ProfileResolver {
 
   @ResolveField(() => User)
   async userInProfile(
-    @HostParam() profile: Profile,
+    @Parent() profile: Profile,
     @Context("viewerId") ctx: ExecutionContext
   ) {
     return await this.prismaService.user

@@ -12,6 +12,17 @@ export type PossibleTypesResultData = {
       "User",
       "ViewerDetailed"
     ];
+    NodeBaseFieldUnion: [
+      "Account",
+      "Category",
+      "Comment",
+      "Connection",
+      "Entry",
+      "MediaItem",
+      "Profile",
+      "Session",
+      "User"
+    ];
     NodeUnion: [
       "CommentConnection",
       "EntryConnection",
@@ -36,6 +47,17 @@ const result: PossibleTypesResultData = {
       "Session",
       "User",
       "ViewerDetailed"
+    ],
+    NodeBaseFieldUnion: [
+      "Account",
+      "Category",
+      "Comment",
+      "Connection",
+      "Entry",
+      "MediaItem",
+      "Profile",
+      "Session",
+      "User"
     ],
     NodeUnion: [
       "CommentConnection",

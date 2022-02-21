@@ -5,6 +5,7 @@ import { Country } from "../enums/country.enum";
 import { JSONObjectResolver, PhoneNumberResolver } from "graphql-scalars";
 import GraphQLJSON from "graphql-type-json";
 import { Prisma } from "@prisma/client";
+import { UserCreateNestedOneWithoutProfileInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-create-nested-one-without-profile.input";
 
 @InputType("ProfileCreateInput")
 export class ProfileCreateInput {
@@ -31,4 +32,39 @@ export class ProfileCreateInput {
 
   @Field(() => String, { nullable: true })
   coverPhoto: string | null;
+}
+
+@InputType("CreateNewProfileInput")
+export class CreateNewProfileInput {
+  @Field(() => Gender, { nullable: true })
+  gender?: keyof typeof Gender;
+
+  @Field(() => Pronouns, { nullable: true })
+  pronouns?: keyof typeof Pronouns;
+
+  @Field(() => String, { nullable: true })
+  coverPhoto?: string;
+
+  @Field(() => String, { nullable: true })
+  dob?: string;
+
+  @Field(() => String, { nullable: true })
+  phoneNumber?: string;
+
+  @Field(() => String, { nullable: true })
+  occupation?: string;
+
+  @Field(() => String, { nullable: true })
+  city?: string;
+
+  @Field(() => String, { nullable: true })
+  country?: string;
+
+  @Field(() => String, { nullable: true })
+  bio?: string;
+}
+@InputType("CreateOneProfile")
+export class CreateOneProfile {
+  @Field(() => CreateNewProfileInput, { nullable: false })
+  data!: CreateNewProfileInput;
 }
