@@ -137,12 +137,12 @@ type Auth {
   """
   JWT access token
   """
-  accessToken: String
+  accessToken: String!
 
   """
   JWT refresh token
   """
-  refreshToken: String
+  refreshToken: String!
   session: Session
   user: User!
 }
@@ -150,19 +150,6 @@ type Auth {
 type AuthDetailed {
   auth: Auth
   jwt: JwtDecoded
-}
-
-type AuthSansSession {
-  """
-  JWT access token
-  """
-  accessToken: String
-
-  """
-  JWT refresh token
-  """
-  refreshToken: String
-  user: User
 }
 
 type BaseTypeNodes {
@@ -774,13 +761,6 @@ input EntryCreateNestedOneWithoutCommentsInput {
   create: EntryCreateWithoutCommentsInput
 }
 
-input EntryCreateNuevoInput {
-  content: String
-  featuredImage: String
-  published: Boolean
-  title: String!
-}
-
 input EntryCreateOneInput {
   author: UserCreateNestedOneWithoutEntriesInput!
   categories: CategoryCreateNestedManyWithoutEntriesInput
@@ -1044,7 +1024,7 @@ input FindManyProfilesPaginatedInput {
 }
 
 input FindManySessionsPaginatedInput {
-  cursor: SessionWhereUniqueInput!
+  cursor: SessionWhereUniqueInput
   distinct: [SessionScalarFieldEnum!]
   orderBy: [SessionOrderByWithRelationAndSearchRelevanceInput!]
   pagination: PaginationArgsInput!
@@ -1337,15 +1317,9 @@ type Mutation {
   createNewComment(commentCreateInput: CreatNewCommentInput!): Comment!
   createNewEntry(entryCreateInput: EntryCreateOneInput!): Entry!
   createNewProfile(createNewProfileInput: CreateOneProfile!): Profile!
-  createNuevoEntryMutation(
-    createNuevoEntryInput: EntryCreateNuevoInput!
-  ): Entry!
-  login(data: LoginInput!): Token!
   nuevoEntry(nuevoEntry: EntryCreateOneInput!): Entry!
-  register(dataRegister: SignupInput!): AuthSansSession!
   registerNewUser(userCreateInput: SignupInput!): AuthDetailed!
   signin(userloginInput: LoginInput!): AuthDetailed!
-  signup(data: SignupInput!): Token!
   updateUserPassword(passwordInput: ChangePasswordInput!): User!
 }
 
@@ -1693,7 +1667,7 @@ type Query {
   entryById(id: String!): Entry!
   entryByRelayId(entryCursor: String!): Entry!
   findUniqueMediaItem(mediaItemId: String!): MediaItem!
-  getUserFromAccessToken(token: String!): User!
+  getUserFromAccessToken(token: String!): AuthDetailed!
   getViewer: AuthDetailed!
   listCategories(
     findManyCategoriesPaginatedInput: FindManyCategoriesPaginatedInput!
@@ -1731,7 +1705,7 @@ type Query {
     manySessions: FindManySessionsPaginatedInput!
     manyUsers: FindManyUsersPaginatedInput!
   ): NodeUnionConnection!
-  profileByRelayId: Profile!
+  profileByRelayId(cursor: String!): Profile!
   sessionByRelayId(cursor: String!): Session!
   siftEntries(
     entryFindManyInput: FindManyEntriessPaginatedInput!
@@ -1740,9 +1714,15 @@ type Query {
   userByRelayId(cursor: String!): User!
   viewer: ViewerDetailed!
   viewerAuthInfoFromContext: ViewerAuthInfo!
+  viewerCommentsPaginated(
+    viewerCommentsPaginatedInput: FindManyCommentsPaginatedInput!
+  ): CommentConnection!
   viewerEntriesPaginated(
     viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput!
   ): EntryConnection!
+  viewerSessionsPaginated(
+    viewerSessionssPaginatedInput: FindManySessionsPaginatedInput!
+  ): SessionConnection!
 }
 
 enum QueryMode {
@@ -1977,18 +1957,6 @@ type Subscription {
   commentCreated: Comment!
   entryCreated: Entry!
   profileCreated: Profile!
-}
-
-type Token {
-  """
-  JWT access token
-  """
-  accessToken: String
-
-  """
-  JWT refresh token
-  """
-  refreshToken: String
 }
 
 union TypesUnion = Entry | MediaItem | User

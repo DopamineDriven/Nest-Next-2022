@@ -5,9 +5,10 @@
 # import UserPartial from "../fragments/user-partial.graphql";
 # import EntryPartial from "../fragments/entry-partial.graphql";
 
-
-query getAllComments {
-  listComments(findManyCommentsPaginatedInput: { pagination: { first: 40 } }) {
+query listComments(
+  $findManyCommentsInput: FindManyCommentsPaginatedInput!
+) {
+  listComments(findManyCommentsPaginatedInput: $findManyCommentsInput) {
     ...CommentConnectionPartial
     pageInfo {
       ...PageInfoPartial

@@ -1,8 +1,0 @@
-
-# import TokenPartial from "../fragments/token-partial.graphql";
-
-mutation createUser($createUserInput: SignupInput!) {
-  signup(data: $createUserInput) {
-    ...TokenPartial
-  }
-}

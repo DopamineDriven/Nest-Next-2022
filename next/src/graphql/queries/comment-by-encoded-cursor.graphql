@@ -1,6 +1,6 @@
 # import CommentPartial from "../fragments/comment-partial.graphql";
 
-query findUniqueCommentByRelayCursor($commentCursor: String!) {
+query commentByEncodedCursor($commentCursor: String!) {
   commentByRelayId(cursor: $commentCursor) {
     ...CommentPartial
   }

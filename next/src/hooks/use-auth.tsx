@@ -24,7 +24,9 @@ export const DEFAULT_STATE: AuthData = {
   viewer: undefined
 };
 
-const AuthContext = createContext<AuthData>(DEFAULT_STATE);
+const AuthContext = createContext<AuthData>(
+  DEFAULT_STATE
+) as Context<AuthData>;
 
 export interface AuthProviderProps {
   children: ReactNode;

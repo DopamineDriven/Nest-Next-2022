@@ -3,7 +3,7 @@
 # import MediaItemEdgePartial from "../fragments/media-item-partial.graphql";
 # import MediaItemConnectionPartial from "../fragments/media-item-partial.graphql";
 
-query allMediaItems(
+query listMediaItems(
   $findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput!
 ) {
   listMediaItems(

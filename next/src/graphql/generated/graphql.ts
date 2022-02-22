@@ -186,9 +186,9 @@ export enum AlgorithmType {
 export type Auth = {
   __typename?: "Auth";
   /** JWT access token */
-  accessToken?: Maybe<FieldWrapper<Scalars["String"]>>;
+  accessToken: FieldWrapper<Scalars["String"]>;
   /** JWT refresh token */
-  refreshToken?: Maybe<FieldWrapper<Scalars["String"]>>;
+  refreshToken: FieldWrapper<Scalars["String"]>;
   session?: Maybe<FieldWrapper<Session>>;
   user: FieldWrapper<User>;
 };
@@ -197,15 +197,6 @@ export type AuthDetailed = {
   __typename?: "AuthDetailed";
   auth?: Maybe<FieldWrapper<Auth>>;
   jwt?: Maybe<FieldWrapper<JwtDecoded>>;
-};
-
-export type AuthSansSession = {
-  __typename?: "AuthSansSession";
-  /** JWT access token */
-  accessToken?: Maybe<FieldWrapper<Scalars["String"]>>;
-  /** JWT refresh token */
-  refreshToken?: Maybe<FieldWrapper<Scalars["String"]>>;
-  user?: Maybe<FieldWrapper<User>>;
 };
 
 export type BaseTypeNodes = {
@@ -837,13 +828,6 @@ export type EntryCreateNestedOneWithoutCommentsInput = {
   create?: InputMaybe<EntryCreateWithoutCommentsInput>;
 };
 
-export type EntryCreateNuevoInput = {
-  content?: InputMaybe<Scalars["String"]>;
-  featuredImage?: InputMaybe<Scalars["String"]>;
-  published?: InputMaybe<Scalars["Boolean"]>;
-  title: Scalars["String"];
-};
-
 export type EntryCreateOneInput = {
   author: UserCreateNestedOneWithoutEntriesInput;
   categories?: InputMaybe<CategoryCreateNestedManyWithoutEntriesInput>;
@@ -1120,7 +1104,7 @@ export type FindManyProfilesPaginatedInput = {
 };
 
 export type FindManySessionsPaginatedInput = {
-  cursor: SessionWhereUniqueInput;
+  cursor?: InputMaybe<SessionWhereUniqueInput>;
   distinct?: InputMaybe<Array<SessionScalarFieldEnum>>;
   orderBy?: InputMaybe<
     Array<SessionOrderByWithRelationAndSearchRelevanceInput>
@@ -1426,13 +1410,9 @@ export type Mutation = {
   createNewComment: FieldWrapper<Comment>;
   createNewEntry: FieldWrapper<Entry>;
   createNewProfile: FieldWrapper<Profile>;
-  createNuevoEntryMutation: FieldWrapper<Entry>;
-  login: FieldWrapper<Token>;
   nuevoEntry: FieldWrapper<Entry>;
-  register: FieldWrapper<AuthSansSession>;
   registerNewUser: FieldWrapper<AuthDetailed>;
   signin: FieldWrapper<AuthDetailed>;
-  signup: FieldWrapper<Token>;
   updateUserPassword: FieldWrapper<User>;
 };
 
@@ -1456,20 +1436,8 @@ export type MutationcreateNewProfileArgs = {
   createNewProfileInput: CreateOneProfile;
 };
 
-export type MutationcreateNuevoEntryMutationArgs = {
-  createNuevoEntryInput: EntryCreateNuevoInput;
-};
-
-export type MutationloginArgs = {
-  data: LoginInput;
-};
-
 export type MutationnuevoEntryArgs = {
   nuevoEntry: EntryCreateOneInput;
-};
-
-export type MutationregisterArgs = {
-  dataRegister: SignupInput;
 };
 
 export type MutationregisterNewUserArgs = {
@@ -1478,10 +1446,6 @@ export type MutationregisterNewUserArgs = {
 
 export type MutationsigninArgs = {
   userloginInput: LoginInput;
-};
-
-export type MutationsignupArgs = {
-  data: SignupInput;
 };
 
 export type MutationupdateUserPasswordArgs = {
@@ -1830,7 +1794,7 @@ export type Query = {
   entryById: FieldWrapper<Entry>;
   entryByRelayId: FieldWrapper<Entry>;
   findUniqueMediaItem: FieldWrapper<MediaItem>;
-  getUserFromAccessToken: FieldWrapper<User>;
+  getUserFromAccessToken: FieldWrapper<AuthDetailed>;
   getViewer: FieldWrapper<AuthDetailed>;
   listCategories: FieldWrapper<CategoryConnection>;
   listComments: FieldWrapper<CommentConnection>;
@@ -1851,7 +1815,9 @@ export type Query = {
   userByRelayId: FieldWrapper<User>;
   viewer: FieldWrapper<ViewerDetailed>;
   viewerAuthInfoFromContext: FieldWrapper<ViewerAuthInfo>;
+  viewerCommentsPaginated: FieldWrapper<CommentConnection>;
   viewerEntriesPaginated: FieldWrapper<EntryConnection>;
+  viewerSessionsPaginated: FieldWrapper<SessionConnection>;
 };
 
 export type QuerycategoryByRelayIdArgs = {
@@ -1938,6 +1904,10 @@ export type QuerynodeUnionResolverArgs = {
   manyUsers: FindManyUsersPaginatedInput;
 };
 
+export type QueryprofileByRelayIdArgs = {
+  cursor: Scalars["String"];
+};
+
 export type QuerysessionByRelayIdArgs = {
   cursor: Scalars["String"];
 };
@@ -1954,8 +1924,16 @@ export type QueryuserByRelayIdArgs = {
   cursor: Scalars["String"];
 };
 
+export type QueryviewerCommentsPaginatedArgs = {
+  viewerCommentsPaginatedInput: FindManyCommentsPaginatedInput;
+};
+
 export type QueryviewerEntriesPaginatedArgs = {
   viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput;
+};
+
+export type QueryviewerSessionsPaginatedArgs = {
+  viewerSessionssPaginatedInput: FindManySessionsPaginatedInput;
 };
 
 export enum QueryMode {
@@ -2196,14 +2174,6 @@ export type Subscription = {
   commentCreated: FieldWrapper<Comment>;
   entryCreated: FieldWrapper<Entry>;
   profileCreated: FieldWrapper<Profile>;
-};
-
-export type Token = {
-  __typename?: "Token";
-  /** JWT access token */
-  accessToken?: Maybe<FieldWrapper<Scalars["String"]>>;
-  /** JWT refresh token */
-  refreshToken?: Maybe<FieldWrapper<Scalars["String"]>>;
 };
 
 export type TypesUnion = Entry | MediaItem | User;
@@ -2534,11 +2504,10 @@ export const AuthPartial = gql`
     __typename
   }
 `;
-export const AuthSansSessionPartial = gql`
-  fragment AuthSansSessionPartial on AuthSansSession {
-    accessToken
-    refreshToken
+export const CategoryCountPartial = gql`
+  fragment CategoryCountPartial on CategoryCount {
     __typename
+    entries
   }
 `;
 export const CategoryPartial = gql`
@@ -2550,6 +2519,18 @@ export const CategoryPartial = gql`
     name
     updatedAt
     __typename
+  }
+`;
+export const CategoryConnectionPartial = gql`
+  fragment CategoryConnectionPartial on CategoryConnection {
+    __typename
+    totalCount
+  }
+`;
+export const CategoryEdgePartial = gql`
+  fragment CategoryEdgePartial on CategoryEdge {
+    __typename
+    cursor
   }
 `;
 export const CommentPartial = gql`
@@ -2590,6 +2571,18 @@ export const ConnectionPartial = gql`
     ownerId
     phoneNumber
     __typename
+  }
+`;
+export const ConnectionConnectionPartial = gql`
+  fragment ConnectionConnectionPartial on ConnectionConnection {
+    __typename
+    totalCount
+  }
+`;
+export const ConnectionEdgePartial = gql`
+  fragment ConnectionEdgePartial on ConnectionEdge {
+    __typename
+    cursor
   }
 `;
 export const EntryCountPartial = gql`
@@ -2730,11 +2723,16 @@ export const SessionPartial = gql`
     __typename
   }
 `;
-export const TokenPartial = gql`
-  fragment TokenPartial on Token {
-    accessToken
-    refreshToken
+export const SessionConnectionPartial = gql`
+  fragment SessionConnectionPartial on SessionConnection {
     __typename
+    totalCount
+  }
+`;
+export const SessionEdgePartial = gql`
+  fragment SessionEdgePartial on SessionEdge {
+    __typename
+    cursor
   }
 `;
 export const UserCountPartial = gql`
@@ -2834,37 +2832,12 @@ export const createEntry = gql`
   }
   ${EntryPartial}
 `;
-export const createUser = gql`
-  mutation createUser($createUserInput: SignupInput!) {
-    signup(data: $createUserInput) {
-      ...TokenPartial
-    }
-  }
-  ${TokenPartial}
-`;
-export const loginUser = gql`
-  mutation loginUser($data: LoginInput!) {
-    login(data: $data) {
-      ...TokenPartial
-    }
-  }
-  ${TokenPartial}
-`;
 export const registerNewUser = gql`
   mutation registerNewUser($userCreateMutationInput: SignupInput!) {
     registerNewUser(userCreateInput: $userCreateMutationInput) {
       auth {
         ...AuthPartial
         user {
-          mediaItems {
-            ...MediaItemPartial
-          }
-          entries {
-            ...EntryPartial
-          }
-          profile {
-            ...ProfilePartial
-          }
           _count {
             ...UserCountPartial
           }
@@ -2886,9 +2859,6 @@ export const registerNewUser = gql`
     }
   }
   ${AuthPartial}
-  ${MediaItemPartial}
-  ${EntryPartial}
-  ${ProfilePartial}
   ${UserCountPartial}
   ${UserPartial}
   ${SessionPartial}
@@ -2931,68 +2901,41 @@ export const signInUser = gql`
   ${JwtPayloadPartial}
   ${JwtDecodedPartial}
 `;
-export const findUniqueCommentByRelayCursor = gql`
-  query findUniqueCommentByRelayCursor($commentCursor: String!) {
+export const categoryByEncodedCursor = gql`
+  query categoryByEncodedCursor($categoryCursor: String!) {
+    categoryByRelayId(cursor: $categoryCursor) {
+      ...CategoryPartial
+    }
+  }
+  ${CategoryPartial}
+`;
+export const commentByEncodedCursor = gql`
+  query commentByEncodedCursor($commentCursor: String!) {
     commentByRelayId(cursor: $commentCursor) {
       ...CommentPartial
     }
   }
   ${CommentPartial}
 `;
-export const listEntries = gql`
-  query listEntries(
-    $findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!
-  ) {
-    listEntries(
-      findManyEntriesPaginatedInput: $findManyEntriesPaginatedInput
-    ) {
-      ...EntryConnectionPartial
-      pageInfo {
-        ...PageInfoPartial
-      }
-      edges {
-        ...EntryEdgePartial
-        node {
-          ...EntryPartial
-          _count {
-            ...EntryCountPartial
-          }
-        }
-      }
+export const connectionByEncodedCursor = gql`
+  query connectionByEncodedCursor($connectionCursor: String!) {
+    connectionByRelayId(connectionCursor: $connectionCursor) {
+      ...ConnectionPartial
     }
   }
-  ${EntryConnectionPartial}
-  ${PageInfoPartial}
-  ${EntryEdgePartial}
-  ${EntryPartial}
-  ${EntryCountPartial}
+  ${ConnectionPartial}
 `;
-export const listProfiles = gql`
-  query listProfiles($findManyProfiles: FindManyProfilesPaginatedInput!) {
-    listProfiles(profilesArgs: $findManyProfiles) {
-      ...ProfileConnectionPartial
-      pageInfo {
-        ...PageInfoPartial
-      }
-      edges {
-        ...ProfileEdgePartial
-        node {
-          ...ProfilePartial
-          user {
-            ...UserPartial
-          }
-        }
-      }
+export const entryByEncodedCursor = gql`
+  query entryByEncodedCursor($entryCursor: String!) {
+    entryByRelayId(entryCursor: $entryCursor) {
+      ...EntryPartial
     }
   }
-  ${ProfileConnectionPartial}
-  ${PageInfoPartial}
-  ${ProfileEdgePartial}
-  ${ProfilePartial}
-  ${UserPartial}
+  ${EntryPartial}
 `;
 export const deriveUserDetailsFromToken = gql`
   query deriveUserDetailsFromToken {
+    __typename
     getViewer {
       __typename
       auth {
@@ -3026,11 +2969,47 @@ export const deriveUserDetailsFromToken = gql`
   ${JwtPayloadPartial}
   ${JwtDecodedPartial}
 `;
-export const getAllComments = gql`
-  query getAllComments {
-    listComments(
-      findManyCommentsPaginatedInput: { pagination: { first: 40 } }
+export const listCategories = gql`
+  query listCategories(
+    $findManyCategoriesInput: FindManyCategoriesPaginatedInput!
+  ) {
+    listCategories(
+      findManyCategoriesPaginatedInput: $findManyCategoriesInput
     ) {
+      ...CategoryConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...CategoryEdgePartial
+        node {
+          ...CategoryPartial
+          creator {
+            ...UserPartial
+          }
+          entries {
+            ...EntryPartial
+          }
+          _count {
+            ...CategoryCountPartial
+          }
+        }
+      }
+    }
+  }
+  ${CategoryConnectionPartial}
+  ${PageInfoPartial}
+  ${CategoryEdgePartial}
+  ${CategoryPartial}
+  ${UserPartial}
+  ${EntryPartial}
+  ${CategoryCountPartial}
+`;
+export const listComments = gql`
+  query listComments(
+    $findManyCommentsInput: FindManyCommentsPaginatedInput!
+  ) {
+    listComments(findManyCommentsPaginatedInput: $findManyCommentsInput) {
       ...CommentConnectionPartial
       pageInfo {
         ...PageInfoPartial
@@ -3056,8 +3035,66 @@ export const getAllComments = gql`
   ${UserPartial}
   ${EntryPartial}
 `;
-export const allMediaItems = gql`
-  query allMediaItems(
+export const listConnections = gql`
+  query listConnections(
+    $findManyConnectionsInput: FindManyConnectionsPaginatedInput!
+  ) {
+    listConnections(
+      findManyConnectionsPaginatedInput: $findManyConnectionsInput
+    ) {
+      ...ConnectionConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...ConnectionEdgePartial
+        node {
+          ...ConnectionPartial
+        }
+      }
+    }
+  }
+  ${ConnectionConnectionPartial}
+  ${PageInfoPartial}
+  ${ConnectionEdgePartial}
+  ${ConnectionPartial}
+`;
+export const listEntries = gql`
+  query listEntries(
+    $findManyEntriesInput: FindManyEntriessPaginatedInput!
+  ) {
+    listEntries(findManyEntriesPaginatedInput: $findManyEntriesInput) {
+      ...EntryConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...EntryEdgePartial
+        node {
+          ...EntryPartial
+          _count {
+            ...EntryCountPartial
+          }
+          author {
+            ...UserPartial
+          }
+          comments {
+            ...CommentPartial
+          }
+        }
+      }
+    }
+  }
+  ${EntryConnectionPartial}
+  ${PageInfoPartial}
+  ${EntryEdgePartial}
+  ${EntryPartial}
+  ${EntryCountPartial}
+  ${UserPartial}
+  ${CommentPartial}
+`;
+export const listMediaItems = gql`
+  query listMediaItems(
     $findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput!
   ) {
     listMediaItems(
@@ -3080,37 +3117,65 @@ export const allMediaItems = gql`
   ${MediaItemEdgePartial}
   ${MediaItemPartial}
 `;
-export const userByEncodedCursor = gql`
-  query userByEncodedCursor($userCursor: String!) {
-    userByRelayId(cursor: $userCursor) {
-      ...UserPartial
+export const listProfiles = gql`
+  query listProfiles(
+    $findManyProfilesInput: FindManyProfilesPaginatedInput!
+  ) {
+    listProfiles(profilesArgs: $findManyProfilesInput) {
+      ...ProfileConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...ProfileEdgePartial
+        node {
+          ...ProfilePartial
+          user {
+            ...UserPartial
+            _count {
+              ...UserCountPartial
+            }
+          }
+        }
+      }
     }
   }
-  ${UserPartial}
-`;
-export const userDecodedFromToken = gql`
-  query userDecodedFromToken($userFromToken: String!) {
-    getUserFromAccessToken(token: $userFromToken) {
-      _count {
-        ...UserCountPartial
-      }
-      sessions {
-        ...SessionPartial
-      }
-      profile {
-        ...ProfilePartial
-      }
-      entries {
-        ...EntryPartial
-      }
-      ...UserPartial
-    }
-  }
-  ${UserCountPartial}
-  ${SessionPartial}
+  ${ProfileConnectionPartial}
+  ${PageInfoPartial}
+  ${ProfileEdgePartial}
   ${ProfilePartial}
-  ${EntryPartial}
   ${UserPartial}
+  ${UserCountPartial}
+`;
+export const listSessions = gql`
+  query listSessions(
+    $findManySessionsInput: FindManySessionsPaginatedInput!
+  ) {
+    listSessions(findManySessionsPaginatedInput: $findManySessionsInput) {
+      ...SessionConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...SessionEdgePartial
+        node {
+          ...SessionPartial
+          user {
+            ...UserPartial
+            _count {
+              ...UserCountPartial
+            }
+          }
+        }
+      }
+    }
+  }
+  ${SessionConnectionPartial}
+  ${PageInfoPartial}
+  ${SessionEdgePartial}
+  ${SessionPartial}
+  ${UserPartial}
+  ${UserCountPartial}
 `;
 export const allUsers = gql`
   query allUsers(
@@ -3124,6 +3189,7 @@ export const allUsers = gql`
       edges {
         ...UserEdgePartial
         node {
+          ...UserPartial
           profile {
             ...ProfilePartial
           }
@@ -3136,7 +3202,6 @@ export const allUsers = gql`
           _count {
             ...UserCountPartial
           }
-          ...UserPartial
         }
       }
     }
@@ -3144,11 +3209,70 @@ export const allUsers = gql`
   ${UserConnectionPartial}
   ${PageInfoPartial}
   ${UserEdgePartial}
+  ${UserPartial}
   ${ProfilePartial}
   ${MediaItemPartial}
   ${EntryPartial}
   ${UserCountPartial}
+`;
+export const profileByEncodedCursor = gql`
+  query profileByEncodedCursor($profileCursor: String!) {
+    profileByRelayId(cursor: $profileCursor) {
+      ...ProfilePartial
+    }
+  }
+  ${ProfilePartial}
+`;
+export const sessionByEncodedCursor = gql`
+  query sessionByEncodedCursor($sessionCursor: String!) {
+    sessionByRelayId(cursor: $sessionCursor) {
+      ...SessionPartial
+    }
+  }
+  ${SessionPartial}
+`;
+export const userByEncodedCursor = gql`
+  query userByEncodedCursor($userCursor: String!) {
+    userByRelayId(cursor: $userCursor) {
+      ...UserPartial
+    }
+  }
   ${UserPartial}
+`;
+export const userDecodedFromToken = gql`
+  query userDecodedFromToken($accessToken: String!) {
+    getUserFromAccessToken(token: $accessToken) {
+      __typename
+      auth {
+        session {
+          ...SessionPartial
+        }
+        user {
+          _count {
+            ...UserCountPartial
+          }
+          ...UserPartial
+        }
+        ...AuthPartial
+      }
+      jwt {
+        header {
+          ...JwtHeadersPartial
+        }
+        payload {
+          ...JwtPayloadPartial
+        }
+        ...JwtDecodedPartial
+      }
+    }
+  }
+  ${SessionPartial}
+  ${UserCountPartial}
+  ${UserPartial}
+  ${AuthPartial}
+  ${JwtHeadersPartial}
+  ${JwtPayloadPartial}
+  ${JwtDecodedPartial}
 `;
 export const viewerAuthFromContext = gql`
   query viewerAuthFromContext {
@@ -3365,7 +3489,6 @@ export type ResolversTypes = ResolversObject<{
   AlgorithmType: ResolverTypeWrapper<DeepPartial<AlgorithmType>>;
   Auth: ResolverTypeWrapper<DeepPartial<Auth>>;
   AuthDetailed: ResolverTypeWrapper<DeepPartial<AuthDetailed>>;
-  AuthSansSession: ResolverTypeWrapper<DeepPartial<AuthSansSession>>;
   BaseTypeNodes: ResolverTypeWrapper<
     DeepPartial<
       Omit<BaseTypeNodes, "nodes"> & {
@@ -3573,9 +3696,6 @@ export type ResolversTypes = ResolversObject<{
   >;
   EntryCreateNestedOneWithoutCommentsInput: ResolverTypeWrapper<
     DeepPartial<EntryCreateNestedOneWithoutCommentsInput>
-  >;
-  EntryCreateNuevoInput: ResolverTypeWrapper<
-    DeepPartial<EntryCreateNuevoInput>
   >;
   EntryCreateOneInput: ResolverTypeWrapper<
     DeepPartial<EntryCreateOneInput>
@@ -3906,7 +4026,6 @@ export type ResolversTypes = ResolversObject<{
     DeepPartial<StringNullableListFilter>
   >;
   Subscription: ResolverTypeWrapper<{}>;
-  Token: ResolverTypeWrapper<DeepPartial<Token>>;
   TypesUnion: DeepPartial<
     | ResolversTypes["Entry"]
     | ResolversTypes["MediaItem"]
@@ -3986,7 +4105,6 @@ export type ResolversParentTypes = ResolversObject<{
   AccountWhereUniqueInput: DeepPartial<AccountWhereUniqueInput>;
   Auth: DeepPartial<Auth>;
   AuthDetailed: DeepPartial<AuthDetailed>;
-  AuthSansSession: DeepPartial<AuthSansSession>;
   BaseTypeNodes: DeepPartial<
     Omit<BaseTypeNodes, "nodes"> & {
       nodes: Array<ResolversParentTypes["TypesUnion"]>;
@@ -4070,7 +4188,6 @@ export type ResolversParentTypes = ResolversObject<{
   EntryCreateNestedManyWithoutAuthorInput: DeepPartial<EntryCreateNestedManyWithoutAuthorInput>;
   EntryCreateNestedManyWithoutCategoriesInput: DeepPartial<EntryCreateNestedManyWithoutCategoriesInput>;
   EntryCreateNestedOneWithoutCommentsInput: DeepPartial<EntryCreateNestedOneWithoutCommentsInput>;
-  EntryCreateNuevoInput: DeepPartial<EntryCreateNuevoInput>;
   EntryCreateOneInput: DeepPartial<EntryCreateOneInput>;
   EntryCreateOrConnectWithoutAuthorInput: DeepPartial<EntryCreateOrConnectWithoutAuthorInput>;
   EntryCreateOrConnectWithoutCategoriesInput: DeepPartial<EntryCreateOrConnectWithoutCategoriesInput>;
@@ -4213,7 +4330,6 @@ export type ResolversParentTypes = ResolversObject<{
   StringNullableFilter: DeepPartial<StringNullableFilter>;
   StringNullableListFilter: DeepPartial<StringNullableListFilter>;
   Subscription: {};
-  Token: DeepPartial<Token>;
   TypesUnion: DeepPartial<
     | ResolversParentTypes["Entry"]
     | ResolversParentTypes["MediaItem"]
@@ -4315,12 +4431,12 @@ export type AuthResolvers<
   ParentType extends ResolversParentTypes["Auth"] = ResolversParentTypes["Auth"]
 > = ResolversObject<{
   accessToken?: Resolver<
-    Maybe<ResolversTypes["String"]>,
+    ResolversTypes["String"],
     ParentType,
     ContextType
   >;
   refreshToken?: Resolver<
-    Maybe<ResolversTypes["String"]>,
+    ResolversTypes["String"],
     ParentType,
     ContextType
   >;
@@ -4343,24 +4459,6 @@ export type AuthDetailedResolvers<
     ParentType,
     ContextType
   >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type AuthSansSessionResolvers<
-  ContextType = ResolverContext,
-  ParentType extends ResolversParentTypes["AuthSansSession"] = ResolversParentTypes["AuthSansSession"]
-> = ResolversObject<{
-  accessToken?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  refreshToken?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -4858,32 +4956,11 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationcreateNewProfileArgs, "createNewProfileInput">
   >;
-  createNuevoEntryMutation?: Resolver<
-    ResolversTypes["Entry"],
-    ParentType,
-    ContextType,
-    RequireFields<
-      MutationcreateNuevoEntryMutationArgs,
-      "createNuevoEntryInput"
-    >
-  >;
-  login?: Resolver<
-    ResolversTypes["Token"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationloginArgs, "data">
-  >;
   nuevoEntry?: Resolver<
     ResolversTypes["Entry"],
     ParentType,
     ContextType,
     RequireFields<MutationnuevoEntryArgs, "nuevoEntry">
-  >;
-  register?: Resolver<
-    ResolversTypes["AuthSansSession"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationregisterArgs, "dataRegister">
   >;
   registerNewUser?: Resolver<
     ResolversTypes["AuthDetailed"],
@@ -4896,12 +4973,6 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationsigninArgs, "userloginInput">
-  >;
-  signup?: Resolver<
-    ResolversTypes["Token"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationsignupArgs, "data">
   >;
   updateUserPassword?: Resolver<
     ResolversTypes["User"],
@@ -5176,7 +5247,7 @@ export type QueryResolvers<
     RequireFields<QueryfindUniqueMediaItemArgs, "mediaItemId">
   >;
   getUserFromAccessToken?: Resolver<
-    ResolversTypes["User"],
+    ResolversTypes["AuthDetailed"],
     ParentType,
     ContextType,
     RequireFields<QuerygetUserFromAccessTokenArgs, "token">
@@ -5271,7 +5342,8 @@ export type QueryResolvers<
   profileByRelayId?: Resolver<
     ResolversTypes["Profile"],
     ParentType,
-    ContextType
+    ContextType,
+    RequireFields<QueryprofileByRelayIdArgs, "cursor">
   >;
   sessionByRelayId?: Resolver<
     ResolversTypes["Session"],
@@ -5307,6 +5379,15 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  viewerCommentsPaginated?: Resolver<
+    ResolversTypes["CommentConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryviewerCommentsPaginatedArgs,
+      "viewerCommentsPaginatedInput"
+    >
+  >;
   viewerEntriesPaginated?: Resolver<
     ResolversTypes["EntryConnection"],
     ParentType,
@@ -5314,6 +5395,15 @@ export type QueryResolvers<
     RequireFields<
       QueryviewerEntriesPaginatedArgs,
       "viewerEntriesPaginatedInput"
+    >
+  >;
+  viewerSessionsPaginated?: Resolver<
+    ResolversTypes["SessionConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryviewerSessionsPaginatedArgs,
+      "viewerSessionssPaginatedInput"
     >
   >;
 }>;
@@ -5415,23 +5505,6 @@ export type SubscriptionResolvers<
     ParentType,
     ContextType
   >;
-}>;
-
-export type TokenResolvers<
-  ContextType = ResolverContext,
-  ParentType extends ResolversParentTypes["Token"] = ResolversParentTypes["Token"]
-> = ResolversObject<{
-  accessToken?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  refreshToken?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type TypesUnionResolvers<
@@ -5701,7 +5774,6 @@ export type Resolvers<ContextType = ResolverContext> = ResolversObject<{
   Account?: AccountResolvers<ContextType>;
   Auth?: AuthResolvers<ContextType>;
   AuthDetailed?: AuthDetailedResolvers<ContextType>;
-  AuthSansSession?: AuthSansSessionResolvers<ContextType>;
   BaseTypeNodes?: BaseTypeNodesResolvers<ContextType>;
   BaseTypesEdge?: BaseTypesEdgeResolvers<ContextType>;
   BigInt?: GraphQLScalarType;
@@ -5743,7 +5815,6 @@ export type Resolvers<ContextType = ResolverContext> = ResolversObject<{
   SessionConnection?: SessionConnectionResolvers<ContextType>;
   SessionEdge?: SessionEdgeResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
-  Token?: TokenResolvers<ContextType>;
   TypesUnion?: TypesUnionResolvers<ContextType>;
   UnionOnEdgeObjectType?: UnionOnEdgeObjectTypeResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
@@ -5775,14 +5846,13 @@ export type AccountPartialFragment = {
 
 export type AuthPartialFragment = {
   __typename: "Auth";
-  accessToken?: string | null;
-  refreshToken?: string | null;
+  accessToken: string;
+  refreshToken: string;
 };
 
-export type AuthSansSessionPartialFragment = {
-  __typename: "AuthSansSession";
-  accessToken?: string | null;
-  refreshToken?: string | null;
+export type CategoryCountPartialFragment = {
+  __typename: "CategoryCount";
+  entries: number;
 };
 
 export type CategoryPartialFragment = {
@@ -5793,6 +5863,16 @@ export type CategoryPartialFragment = {
   id: string;
   name: string;
   updatedAt?: Date | null;
+};
+
+export type CategoryConnectionPartialFragment = {
+  __typename: "CategoryConnection";
+  totalCount: number;
+};
+
+export type CategoryEdgePartialFragment = {
+  __typename: "CategoryEdge";
+  cursor: string;
 };
 
 export type CommentPartialFragment = {
@@ -5827,6 +5907,16 @@ export type ConnectionPartialFragment = {
   lastModified?: Date | null;
   ownerId?: string | null;
   phoneNumber?: typeof String | null;
+};
+
+export type ConnectionConnectionPartialFragment = {
+  __typename: "ConnectionConnection";
+  totalCount: number;
+};
+
+export type ConnectionEdgePartialFragment = {
+  __typename: "ConnectionEdge";
+  cursor: string;
 };
 
 export type EntryCountPartialFragment = {
@@ -5952,10 +6042,14 @@ export type SessionPartialFragment = {
   userId?: string | null;
 };
 
-export type TokenPartialFragment = {
-  __typename: "Token";
-  accessToken?: string | null;
-  refreshToken?: string | null;
+export type SessionConnectionPartialFragment = {
+  __typename: "SessionConnection";
+  totalCount: number;
+};
+
+export type SessionEdgePartialFragment = {
+  __typename: "SessionEdge";
+  cursor: string;
 };
 
 export type UserCountPartialFragment = {
@@ -6100,32 +6194,6 @@ export type createEntryMutation = {
   };
 };
 
-export type createUserMutationVariables = Exact<{
-  createUserInput: SignupInput;
-}>;
-
-export type createUserMutation = {
-  __typename?: "Mutation";
-  signup: {
-    __typename: "Token";
-    accessToken?: string | null;
-    refreshToken?: string | null;
-  };
-};
-
-export type loginUserMutationVariables = Exact<{
-  data: LoginInput;
-}>;
-
-export type loginUserMutation = {
-  __typename?: "Mutation";
-  login: {
-    __typename: "Token";
-    accessToken?: string | null;
-    refreshToken?: string | null;
-  };
-};
-
 export type registerNewUserMutationVariables = Exact<{
   userCreateMutationInput: SignupInput;
 }>;
@@ -6136,8 +6204,8 @@ export type registerNewUserMutation = {
     __typename?: "AuthDetailed";
     auth?: {
       __typename: "Auth";
-      accessToken?: string | null;
-      refreshToken?: string | null;
+      accessToken: string;
+      refreshToken: string;
       user: {
         __typename: "User";
         createdAt: Date;
@@ -6151,48 +6219,6 @@ export type registerNewUserMutation = {
         role?: Role | null;
         status: UserStatus;
         updatedAt?: Date | null;
-        mediaItems?: Array<{
-          __typename: "MediaItem";
-          id: string;
-          name?: string | null;
-          width?: number | null;
-          height?: number | null;
-          quality?: number | null;
-          size?: string | null;
-          src?: string | null;
-          type?: MimeTypes | null;
-          uploadedAt: Date;
-          userId?: string | null;
-          fileLastModified?: Date | null;
-        }> | null;
-        entries?: Array<{
-          __typename: "Entry";
-          authorId?: string | null;
-          content?: string | null;
-          createdAt: Date;
-          featuredImage?: string | null;
-          title?: string | null;
-          published?: boolean | null;
-          id: string;
-        }> | null;
-        profile?: {
-          __typename: "Profile";
-          activiyFeed?: string | null;
-          bio?: string | null;
-          city?: string | null;
-          country?: string | null;
-          coverPhoto?: string | null;
-          dob?: string | null;
-          gender?: Gender | null;
-          id: string;
-          lastSeen?: Date | null;
-          memberSince: Date;
-          occupation?: string | null;
-          phoneNumber?: string | null;
-          pronouns?: Pronouns | null;
-          recentActivity?: string | null;
-          userId?: string | null;
-        } | null;
         _count: {
           __typename: "UserCount";
           accounts: number;
@@ -6248,8 +6274,8 @@ export type signInUserMutation = {
     __typename: "AuthDetailed";
     auth?: {
       __typename: "Auth";
-      accessToken?: string | null;
-      refreshToken?: string | null;
+      accessToken: string;
+      refreshToken: string;
       user: {
         __typename: "User";
         createdAt: Date;
@@ -6308,11 +6334,28 @@ export type signInUserMutation = {
   };
 };
 
-export type findUniqueCommentByRelayCursorQueryVariables = Exact<{
+export type categoryByEncodedCursorQueryVariables = Exact<{
+  categoryCursor: Scalars["String"];
+}>;
+
+export type categoryByEncodedCursorQuery = {
+  __typename?: "Query";
+  categoryByRelayId: {
+    __typename: "Category";
+    createdAt?: Date | null;
+    creatorId: string;
+    entryId?: string | null;
+    id: string;
+    name: string;
+    updatedAt?: Date | null;
+  };
+};
+
+export type commentByEncodedCursorQueryVariables = Exact<{
   commentCursor: Scalars["String"];
 }>;
 
-export type findUniqueCommentByRelayCursorQuery = {
+export type commentByEncodedCursorQuery = {
   __typename?: "Query";
   commentByRelayId: {
     __typename: "Comment";
@@ -6327,96 +6370,40 @@ export type findUniqueCommentByRelayCursorQuery = {
   };
 };
 
-export type listEntriesQueryVariables = Exact<{
-  findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput;
+export type connectionByEncodedCursorQueryVariables = Exact<{
+  connectionCursor: Scalars["String"];
 }>;
 
-export type listEntriesQuery = {
+export type connectionByEncodedCursorQuery = {
   __typename?: "Query";
-  listEntries: {
-    __typename: "EntryConnection";
-    totalCount: number;
-    pageInfo: {
-      __typename: "PageInfo";
-      startCursor?: string | null;
-      endCursor?: string | null;
-      hasNextPage: boolean;
-      hasPreviousPage: boolean;
-    };
-    edges: Array<{
-      __typename: "EntryEdge";
-      cursor: string;
-      node: {
-        __typename: "Entry";
-        authorId?: string | null;
-        content?: string | null;
-        createdAt: Date;
-        featuredImage?: string | null;
-        title?: string | null;
-        published?: boolean | null;
-        id: string;
-        _count: {
-          __typename: "EntryCount";
-          categories: number;
-          comments: number;
-        };
-      };
-    }>;
+  connectionByRelayId: {
+    __typename: "Connection";
+    firstName?: string | null;
+    email: string;
+    lastName?: string | null;
+    id: string;
+    ip?: string | null;
+    lastModified?: Date | null;
+    ownerId?: string | null;
+    phoneNumber?: typeof String | null;
   };
 };
 
-export type listProfilesQueryVariables = Exact<{
-  findManyProfiles: FindManyProfilesPaginatedInput;
+export type entryByEncodedCursorQueryVariables = Exact<{
+  entryCursor: Scalars["String"];
 }>;
 
-export type listProfilesQuery = {
+export type entryByEncodedCursorQuery = {
   __typename?: "Query";
-  listProfiles: {
-    __typename: "ProfileConnection";
-    totalCount: number;
-    pageInfo: {
-      __typename: "PageInfo";
-      startCursor?: string | null;
-      endCursor?: string | null;
-      hasNextPage: boolean;
-      hasPreviousPage: boolean;
-    };
-    edges: Array<{
-      __typename: "ProfileEdge";
-      cursor: string;
-      node: {
-        __typename: "Profile";
-        activiyFeed?: string | null;
-        bio?: string | null;
-        city?: string | null;
-        country?: string | null;
-        coverPhoto?: string | null;
-        dob?: string | null;
-        gender?: Gender | null;
-        id: string;
-        lastSeen?: Date | null;
-        memberSince: Date;
-        occupation?: string | null;
-        phoneNumber?: string | null;
-        pronouns?: Pronouns | null;
-        recentActivity?: string | null;
-        userId?: string | null;
-        user: {
-          __typename: "User";
-          createdAt: Date;
-          email: string;
-          emailVerified?: Date | null;
-          id: string;
-          image?: string | null;
-          firstName?: string | null;
-          lastName?: string | null;
-          password: string;
-          role?: Role | null;
-          status: UserStatus;
-          updatedAt?: Date | null;
-        };
-      };
-    }>;
+  entryByRelayId: {
+    __typename: "Entry";
+    authorId?: string | null;
+    content?: string | null;
+    createdAt: Date;
+    featuredImage?: string | null;
+    title?: string | null;
+    published?: boolean | null;
+    id: string;
   };
 };
 
@@ -6425,13 +6412,13 @@ export type deriveUserDetailsFromTokenQueryVariables = Exact<{
 }>;
 
 export type deriveUserDetailsFromTokenQuery = {
-  __typename?: "Query";
+  __typename: "Query";
   getViewer: {
     __typename: "AuthDetailed";
     auth?: {
       __typename: "Auth";
-      accessToken?: string | null;
-      refreshToken?: string | null;
+      accessToken: string;
+      refreshToken: string;
       session?: {
         __typename: "Session";
         accessToken?: string | null;
@@ -6490,9 +6477,68 @@ export type deriveUserDetailsFromTokenQuery = {
   };
 };
 
-export type getAllCommentsQueryVariables = Exact<{ [key: string]: never }>;
+export type listCategoriesQueryVariables = Exact<{
+  findManyCategoriesInput: FindManyCategoriesPaginatedInput;
+}>;
 
-export type getAllCommentsQuery = {
+export type listCategoriesQuery = {
+  __typename?: "Query";
+  listCategories: {
+    __typename: "CategoryConnection";
+    totalCount: number;
+    pageInfo: {
+      __typename: "PageInfo";
+      startCursor?: string | null;
+      endCursor?: string | null;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+    edges: Array<{
+      __typename: "CategoryEdge";
+      cursor: string;
+      node: {
+        __typename: "Category";
+        createdAt?: Date | null;
+        creatorId: string;
+        entryId?: string | null;
+        id: string;
+        name: string;
+        updatedAt?: Date | null;
+        creator: {
+          __typename: "User";
+          createdAt: Date;
+          email: string;
+          emailVerified?: Date | null;
+          id: string;
+          image?: string | null;
+          firstName?: string | null;
+          lastName?: string | null;
+          password: string;
+          role?: Role | null;
+          status: UserStatus;
+          updatedAt?: Date | null;
+        };
+        entries?: Array<{
+          __typename: "Entry";
+          authorId?: string | null;
+          content?: string | null;
+          createdAt: Date;
+          featuredImage?: string | null;
+          title?: string | null;
+          published?: boolean | null;
+          id: string;
+        }> | null;
+        _count: { __typename: "CategoryCount"; entries: number };
+      };
+    }>;
+  };
+};
+
+export type listCommentsQueryVariables = Exact<{
+  findManyCommentsInput: FindManyCommentsPaginatedInput;
+}>;
+
+export type listCommentsQuery = {
   __typename?: "Query";
   listComments: {
     __typename: "CommentConnection";
@@ -6546,11 +6592,108 @@ export type getAllCommentsQuery = {
   };
 };
 
-export type allMediaItemsQueryVariables = Exact<{
+export type listConnectionsQueryVariables = Exact<{
+  findManyConnectionsInput: FindManyConnectionsPaginatedInput;
+}>;
+
+export type listConnectionsQuery = {
+  __typename?: "Query";
+  listConnections: {
+    __typename: "ConnectionConnection";
+    totalCount: number;
+    pageInfo: {
+      __typename: "PageInfo";
+      startCursor?: string | null;
+      endCursor?: string | null;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+    edges: Array<{
+      __typename: "ConnectionEdge";
+      cursor: string;
+      node: {
+        __typename: "Connection";
+        firstName?: string | null;
+        email: string;
+        lastName?: string | null;
+        id: string;
+        ip?: string | null;
+        lastModified?: Date | null;
+        ownerId?: string | null;
+        phoneNumber?: typeof String | null;
+      };
+    }>;
+  };
+};
+
+export type listEntriesQueryVariables = Exact<{
+  findManyEntriesInput: FindManyEntriessPaginatedInput;
+}>;
+
+export type listEntriesQuery = {
+  __typename?: "Query";
+  listEntries: {
+    __typename: "EntryConnection";
+    totalCount: number;
+    pageInfo: {
+      __typename: "PageInfo";
+      startCursor?: string | null;
+      endCursor?: string | null;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+    edges: Array<{
+      __typename: "EntryEdge";
+      cursor: string;
+      node: {
+        __typename: "Entry";
+        authorId?: string | null;
+        content?: string | null;
+        createdAt: Date;
+        featuredImage?: string | null;
+        title?: string | null;
+        published?: boolean | null;
+        id: string;
+        _count: {
+          __typename: "EntryCount";
+          categories: number;
+          comments: number;
+        };
+        author: {
+          __typename: "User";
+          createdAt: Date;
+          email: string;
+          emailVerified?: Date | null;
+          id: string;
+          image?: string | null;
+          firstName?: string | null;
+          lastName?: string | null;
+          password: string;
+          role?: Role | null;
+          status: UserStatus;
+          updatedAt?: Date | null;
+        };
+        comments?: Array<{
+          __typename: "Comment";
+          body?: string | null;
+          updatedAt?: Date | null;
+          createdAt: Date;
+          entryId?: string | null;
+          authorId?: string | null;
+          id: string;
+          position?: string | null;
+          reactions?: Array<CommentReactions> | null;
+        }> | null;
+      };
+    }>;
+  };
+};
+
+export type listMediaItemsQueryVariables = Exact<{
   findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput;
 }>;
 
-export type allMediaItemsQuery = {
+export type listMediaItemsQuery = {
   __typename?: "Query";
   listMediaItems: {
     __typename: "MediaItemConnection";
@@ -6583,100 +6726,130 @@ export type allMediaItemsQuery = {
   };
 };
 
-export type userByEncodedCursorQueryVariables = Exact<{
-  userCursor: Scalars["String"];
+export type listProfilesQueryVariables = Exact<{
+  findManyProfilesInput: FindManyProfilesPaginatedInput;
 }>;
 
-export type userByEncodedCursorQuery = {
+export type listProfilesQuery = {
   __typename?: "Query";
-  userByRelayId: {
-    __typename: "User";
-    createdAt: Date;
-    email: string;
-    emailVerified?: Date | null;
-    id: string;
-    image?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    password: string;
-    role?: Role | null;
-    status: UserStatus;
-    updatedAt?: Date | null;
+  listProfiles: {
+    __typename: "ProfileConnection";
+    totalCount: number;
+    pageInfo: {
+      __typename: "PageInfo";
+      startCursor?: string | null;
+      endCursor?: string | null;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+    edges: Array<{
+      __typename: "ProfileEdge";
+      cursor: string;
+      node: {
+        __typename: "Profile";
+        activiyFeed?: string | null;
+        bio?: string | null;
+        city?: string | null;
+        country?: string | null;
+        coverPhoto?: string | null;
+        dob?: string | null;
+        gender?: Gender | null;
+        id: string;
+        lastSeen?: Date | null;
+        memberSince: Date;
+        occupation?: string | null;
+        phoneNumber?: string | null;
+        pronouns?: Pronouns | null;
+        recentActivity?: string | null;
+        userId?: string | null;
+        user: {
+          __typename: "User";
+          createdAt: Date;
+          email: string;
+          emailVerified?: Date | null;
+          id: string;
+          image?: string | null;
+          firstName?: string | null;
+          lastName?: string | null;
+          password: string;
+          role?: Role | null;
+          status: UserStatus;
+          updatedAt?: Date | null;
+          _count: {
+            __typename: "UserCount";
+            accounts: number;
+            categories: number;
+            comments: number;
+            connections: number;
+            mediaItems: number;
+            entries: number;
+            sessions: number;
+          };
+        };
+      };
+    }>;
   };
 };
 
-export type userDecodedFromTokenQueryVariables = Exact<{
-  userFromToken: Scalars["String"];
+export type listSessionsQueryVariables = Exact<{
+  findManySessionsInput: FindManySessionsPaginatedInput;
 }>;
 
-export type userDecodedFromTokenQuery = {
+export type listSessionsQuery = {
   __typename?: "Query";
-  getUserFromAccessToken: {
-    __typename: "User";
-    createdAt: Date;
-    email: string;
-    emailVerified?: Date | null;
-    id: string;
-    image?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    password: string;
-    role?: Role | null;
-    status: UserStatus;
-    updatedAt?: Date | null;
-    _count: {
-      __typename: "UserCount";
-      accounts: number;
-      categories: number;
-      comments: number;
-      connections: number;
-      mediaItems: number;
-      entries: number;
-      sessions: number;
+  listSessions: {
+    __typename: "SessionConnection";
+    totalCount: number;
+    pageInfo: {
+      __typename: "PageInfo";
+      startCursor?: string | null;
+      endCursor?: string | null;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
     };
-    sessions?: Array<{
-      __typename: "Session";
-      accessToken?: string | null;
-      alg?: string | null;
-      exp?: number | null;
-      iat?: number | null;
-      id: string;
-      lastVerified?: Date | null;
-      provider?: string | null;
-      refreshToken?: string | null;
-      scopes?: Array<string> | null;
-      signature?: string | null;
-      tokenState?: string | null;
-      userId?: string | null;
-    }> | null;
-    profile?: {
-      __typename: "Profile";
-      activiyFeed?: string | null;
-      bio?: string | null;
-      city?: string | null;
-      country?: string | null;
-      coverPhoto?: string | null;
-      dob?: string | null;
-      gender?: Gender | null;
-      id: string;
-      lastSeen?: Date | null;
-      memberSince: Date;
-      occupation?: string | null;
-      phoneNumber?: string | null;
-      pronouns?: Pronouns | null;
-      recentActivity?: string | null;
-      userId?: string | null;
-    } | null;
-    entries?: Array<{
-      __typename: "Entry";
-      authorId?: string | null;
-      content?: string | null;
-      createdAt: Date;
-      featuredImage?: string | null;
-      title?: string | null;
-      published?: boolean | null;
-      id: string;
-    }> | null;
+    edges: Array<{
+      __typename: "SessionEdge";
+      cursor: string;
+      node: {
+        __typename: "Session";
+        accessToken?: string | null;
+        alg?: string | null;
+        exp?: number | null;
+        iat?: number | null;
+        id: string;
+        lastVerified?: Date | null;
+        provider?: string | null;
+        refreshToken?: string | null;
+        scopes?: Array<string> | null;
+        signature?: string | null;
+        tokenState?: string | null;
+        userId?: string | null;
+        user?: {
+          __typename: "User";
+          createdAt: Date;
+          email: string;
+          emailVerified?: Date | null;
+          id: string;
+          image?: string | null;
+          firstName?: string | null;
+          lastName?: string | null;
+          password: string;
+          role?: Role | null;
+          status: UserStatus;
+          updatedAt?: Date | null;
+          _count: {
+            __typename: "UserCount";
+            accounts: number;
+            categories: number;
+            comments: number;
+            connections: number;
+            mediaItems: number;
+            entries: number;
+            sessions: number;
+          };
+        } | null;
+      };
+    }>;
   };
 };
 
@@ -6769,6 +6942,147 @@ export type allUsersQuery = {
   };
 };
 
+export type profileByEncodedCursorQueryVariables = Exact<{
+  profileCursor: Scalars["String"];
+}>;
+
+export type profileByEncodedCursorQuery = {
+  __typename?: "Query";
+  profileByRelayId: {
+    __typename: "Profile";
+    activiyFeed?: string | null;
+    bio?: string | null;
+    city?: string | null;
+    country?: string | null;
+    coverPhoto?: string | null;
+    dob?: string | null;
+    gender?: Gender | null;
+    id: string;
+    lastSeen?: Date | null;
+    memberSince: Date;
+    occupation?: string | null;
+    phoneNumber?: string | null;
+    pronouns?: Pronouns | null;
+    recentActivity?: string | null;
+    userId?: string | null;
+  };
+};
+
+export type sessionByEncodedCursorQueryVariables = Exact<{
+  sessionCursor: Scalars["String"];
+}>;
+
+export type sessionByEncodedCursorQuery = {
+  __typename?: "Query";
+  sessionByRelayId: {
+    __typename: "Session";
+    accessToken?: string | null;
+    alg?: string | null;
+    exp?: number | null;
+    iat?: number | null;
+    id: string;
+    lastVerified?: Date | null;
+    provider?: string | null;
+    refreshToken?: string | null;
+    scopes?: Array<string> | null;
+    signature?: string | null;
+    tokenState?: string | null;
+    userId?: string | null;
+  };
+};
+
+export type userByEncodedCursorQueryVariables = Exact<{
+  userCursor: Scalars["String"];
+}>;
+
+export type userByEncodedCursorQuery = {
+  __typename?: "Query";
+  userByRelayId: {
+    __typename: "User";
+    createdAt: Date;
+    email: string;
+    emailVerified?: Date | null;
+    id: string;
+    image?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    password: string;
+    role?: Role | null;
+    status: UserStatus;
+    updatedAt?: Date | null;
+  };
+};
+
+export type userDecodedFromTokenQueryVariables = Exact<{
+  accessToken: Scalars["String"];
+}>;
+
+export type userDecodedFromTokenQuery = {
+  __typename?: "Query";
+  getUserFromAccessToken: {
+    __typename: "AuthDetailed";
+    auth?: {
+      __typename: "Auth";
+      accessToken: string;
+      refreshToken: string;
+      session?: {
+        __typename: "Session";
+        accessToken?: string | null;
+        alg?: string | null;
+        exp?: number | null;
+        iat?: number | null;
+        id: string;
+        lastVerified?: Date | null;
+        provider?: string | null;
+        refreshToken?: string | null;
+        scopes?: Array<string> | null;
+        signature?: string | null;
+        tokenState?: string | null;
+        userId?: string | null;
+      } | null;
+      user: {
+        __typename: "User";
+        createdAt: Date;
+        email: string;
+        emailVerified?: Date | null;
+        id: string;
+        image?: string | null;
+        firstName?: string | null;
+        lastName?: string | null;
+        password: string;
+        role?: Role | null;
+        status: UserStatus;
+        updatedAt?: Date | null;
+        _count: {
+          __typename: "UserCount";
+          accounts: number;
+          categories: number;
+          comments: number;
+          connections: number;
+          mediaItems: number;
+          entries: number;
+          sessions: number;
+        };
+      };
+    } | null;
+    jwt?: {
+      __typename: "JwtDecoded";
+      signature: string;
+      header: {
+        __typename: "JwtHeaders";
+        alg: AlgorithmType;
+        typ: string;
+      };
+      payload: {
+        __typename: "JwtPayload";
+        exp?: typeof GraphQLBigInt | null;
+        iat?: typeof GraphQLBigInt | null;
+        userId?: string | null;
+      };
+    } | null;
+  };
+};
+
 export type viewerAuthFromContextQueryVariables = Exact<{
   [key: string]: never;
 }>;
@@ -6805,8 +7119,8 @@ export type ViewerQuery = {
     __typename: "AuthDetailed";
     auth?: {
       __typename: "Auth";
-      accessToken?: string | null;
-      refreshToken?: string | null;
+      accessToken: string;
+      refreshToken: string;
       user: {
         __typename: "User";
         createdAt: Date;
@@ -6903,11 +7217,10 @@ export const AuthPartialFragmentDoc = gql`
     __typename
   }
 `;
-export const AuthSansSessionPartialFragmentDoc = gql`
-  fragment AuthSansSessionPartial on AuthSansSession {
-    accessToken
-    refreshToken
+export const CategoryCountPartialFragmentDoc = gql`
+  fragment CategoryCountPartial on CategoryCount {
     __typename
+    entries
   }
 `;
 export const CategoryPartialFragmentDoc = gql`
@@ -6919,6 +7232,18 @@ export const CategoryPartialFragmentDoc = gql`
     name
     updatedAt
     __typename
+  }
+`;
+export const CategoryConnectionPartialFragmentDoc = gql`
+  fragment CategoryConnectionPartial on CategoryConnection {
+    __typename
+    totalCount
+  }
+`;
+export const CategoryEdgePartialFragmentDoc = gql`
+  fragment CategoryEdgePartial on CategoryEdge {
+    __typename
+    cursor
   }
 `;
 export const CommentPartialFragmentDoc = gql`
@@ -6959,6 +7284,18 @@ export const ConnectionPartialFragmentDoc = gql`
     ownerId
     phoneNumber
     __typename
+  }
+`;
+export const ConnectionConnectionPartialFragmentDoc = gql`
+  fragment ConnectionConnectionPartial on ConnectionConnection {
+    __typename
+    totalCount
+  }
+`;
+export const ConnectionEdgePartialFragmentDoc = gql`
+  fragment ConnectionEdgePartial on ConnectionEdge {
+    __typename
+    cursor
   }
 `;
 export const EntryCountPartialFragmentDoc = gql`
@@ -7099,11 +7436,16 @@ export const SessionPartialFragmentDoc = gql`
     __typename
   }
 `;
-export const TokenPartialFragmentDoc = gql`
-  fragment TokenPartial on Token {
-    accessToken
-    refreshToken
+export const SessionConnectionPartialFragmentDoc = gql`
+  fragment SessionConnectionPartial on SessionConnection {
     __typename
+    totalCount
+  }
+`;
+export const SessionEdgePartialFragmentDoc = gql`
+  fragment SessionEdgePartial on SessionEdge {
+    __typename
+    cursor
   }
 `;
 export const UserCountPartialFragmentDoc = gql`
@@ -7375,123 +7717,12 @@ export type createEntryMutationOptions = Apollo.BaseMutationOptions<
   createEntryMutation,
   createEntryMutationVariables
 >;
-export const createUserDocument = gql`
-  mutation createUser($createUserInput: SignupInput!) {
-    signup(data: $createUserInput) {
-      ...TokenPartial
-    }
-  }
-  ${TokenPartialFragmentDoc}
-`;
-export type createUserMutationFn = Apollo.MutationFunction<
-  createUserMutation,
-  createUserMutationVariables
->;
-
-/**
- * __usecreateUserMutation__
- *
- * To run a mutation, you first call `usecreateUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usecreateUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createUserMutation, { data, loading, error }] = usecreateUserMutation({
- *   variables: {
- *      createUserInput: // value for 'createUserInput'
- *   },
- * });
- */
-export function usecreateUserMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    createUserMutation,
-    createUserMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    createUserMutation,
-    createUserMutationVariables
-  >(createUserDocument, options);
-}
-export type createUserMutationHookResult = ReturnType<
-  typeof usecreateUserMutation
->;
-export type createUserMutationResult =
-  Apollo.MutationResult<createUserMutation>;
-export type createUserMutationOptions = Apollo.BaseMutationOptions<
-  createUserMutation,
-  createUserMutationVariables
->;
-export const loginUserDocument = gql`
-  mutation loginUser($data: LoginInput!) {
-    login(data: $data) {
-      ...TokenPartial
-    }
-  }
-  ${TokenPartialFragmentDoc}
-`;
-export type loginUserMutationFn = Apollo.MutationFunction<
-  loginUserMutation,
-  loginUserMutationVariables
->;
-
-/**
- * __useloginUserMutation__
- *
- * To run a mutation, you first call `useloginUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useloginUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [loginUserMutation, { data, loading, error }] = useloginUserMutation({
- *   variables: {
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useloginUserMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    loginUserMutation,
-    loginUserMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<loginUserMutation, loginUserMutationVariables>(
-    loginUserDocument,
-    options
-  );
-}
-export type loginUserMutationHookResult = ReturnType<
-  typeof useloginUserMutation
->;
-export type loginUserMutationResult =
-  Apollo.MutationResult<loginUserMutation>;
-export type loginUserMutationOptions = Apollo.BaseMutationOptions<
-  loginUserMutation,
-  loginUserMutationVariables
->;
 export const registerNewUserDocument = gql`
   mutation registerNewUser($userCreateMutationInput: SignupInput!) {
     registerNewUser(userCreateInput: $userCreateMutationInput) {
       auth {
         ...AuthPartial
         user {
-          mediaItems {
-            ...MediaItemPartial
-          }
-          entries {
-            ...EntryPartial
-          }
-          profile {
-            ...ProfilePartial
-          }
           _count {
             ...UserCountPartial
           }
@@ -7513,9 +7744,6 @@ export const registerNewUserDocument = gql`
     }
   }
   ${AuthPartialFragmentDoc}
-  ${MediaItemPartialFragmentDoc}
-  ${EntryPartialFragmentDoc}
-  ${ProfilePartialFragmentDoc}
   ${UserCountPartialFragmentDoc}
   ${UserPartialFragmentDoc}
   ${SessionPartialFragmentDoc}
@@ -7644,8 +7872,72 @@ export type signInUserMutationOptions = Apollo.BaseMutationOptions<
   signInUserMutation,
   signInUserMutationVariables
 >;
-export const findUniqueCommentByRelayCursorDocument = gql`
-  query findUniqueCommentByRelayCursor($commentCursor: String!) {
+export const categoryByEncodedCursorDocument = gql`
+  query categoryByEncodedCursor($categoryCursor: String!) {
+    categoryByRelayId(cursor: $categoryCursor) {
+      ...CategoryPartial
+    }
+  }
+  ${CategoryPartialFragmentDoc}
+`;
+
+/**
+ * __usecategoryByEncodedCursorQuery__
+ *
+ * To run a query within a React component, call `usecategoryByEncodedCursorQuery` and pass it any options that fit your needs.
+ * When your component renders, `usecategoryByEncodedCursorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usecategoryByEncodedCursorQuery({
+ *   variables: {
+ *      categoryCursor: // value for 'categoryCursor'
+ *   },
+ * });
+ */
+export function usecategoryByEncodedCursorQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    categoryByEncodedCursorQuery,
+    categoryByEncodedCursorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    categoryByEncodedCursorQuery,
+    categoryByEncodedCursorQueryVariables
+  >(categoryByEncodedCursorDocument, options);
+}
+export function usecategoryByEncodedCursorLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    categoryByEncodedCursorQuery,
+    categoryByEncodedCursorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    categoryByEncodedCursorQuery,
+    categoryByEncodedCursorQueryVariables
+  >(categoryByEncodedCursorDocument, options);
+}
+export type categoryByEncodedCursorQueryHookResult = ReturnType<
+  typeof usecategoryByEncodedCursorQuery
+>;
+export type categoryByEncodedCursorLazyQueryHookResult = ReturnType<
+  typeof usecategoryByEncodedCursorLazyQuery
+>;
+export type categoryByEncodedCursorQueryResult = Apollo.QueryResult<
+  categoryByEncodedCursorQuery,
+  categoryByEncodedCursorQueryVariables
+>;
+export function refetchcategoryByEncodedCursorQuery(
+  variables: categoryByEncodedCursorQueryVariables
+) {
+  return { query: categoryByEncodedCursorDocument, variables: variables };
+}
+export const commentByEncodedCursorDocument = gql`
+  query commentByEncodedCursor($commentCursor: String!) {
     commentByRelayId(cursor: $commentCursor) {
       ...CommentPartial
     }
@@ -7654,229 +7946,194 @@ export const findUniqueCommentByRelayCursorDocument = gql`
 `;
 
 /**
- * __usefindUniqueCommentByRelayCursorQuery__
+ * __usecommentByEncodedCursorQuery__
  *
- * To run a query within a React component, call `usefindUniqueCommentByRelayCursorQuery` and pass it any options that fit your needs.
- * When your component renders, `usefindUniqueCommentByRelayCursorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usecommentByEncodedCursorQuery` and pass it any options that fit your needs.
+ * When your component renders, `usecommentByEncodedCursorQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usefindUniqueCommentByRelayCursorQuery({
+ * const { data, loading, error } = usecommentByEncodedCursorQuery({
  *   variables: {
  *      commentCursor: // value for 'commentCursor'
  *   },
  * });
  */
-export function usefindUniqueCommentByRelayCursorQuery(
+export function usecommentByEncodedCursorQuery(
   baseOptions: Apollo.QueryHookOptions<
-    findUniqueCommentByRelayCursorQuery,
-    findUniqueCommentByRelayCursorQueryVariables
+    commentByEncodedCursorQuery,
+    commentByEncodedCursorQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<
-    findUniqueCommentByRelayCursorQuery,
-    findUniqueCommentByRelayCursorQueryVariables
-  >(findUniqueCommentByRelayCursorDocument, options);
+    commentByEncodedCursorQuery,
+    commentByEncodedCursorQueryVariables
+  >(commentByEncodedCursorDocument, options);
 }
-export function usefindUniqueCommentByRelayCursorLazyQuery(
+export function usecommentByEncodedCursorLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    findUniqueCommentByRelayCursorQuery,
-    findUniqueCommentByRelayCursorQueryVariables
+    commentByEncodedCursorQuery,
+    commentByEncodedCursorQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<
-    findUniqueCommentByRelayCursorQuery,
-    findUniqueCommentByRelayCursorQueryVariables
-  >(findUniqueCommentByRelayCursorDocument, options);
+    commentByEncodedCursorQuery,
+    commentByEncodedCursorQueryVariables
+  >(commentByEncodedCursorDocument, options);
 }
-export type findUniqueCommentByRelayCursorQueryHookResult = ReturnType<
-  typeof usefindUniqueCommentByRelayCursorQuery
+export type commentByEncodedCursorQueryHookResult = ReturnType<
+  typeof usecommentByEncodedCursorQuery
 >;
-export type findUniqueCommentByRelayCursorLazyQueryHookResult = ReturnType<
-  typeof usefindUniqueCommentByRelayCursorLazyQuery
+export type commentByEncodedCursorLazyQueryHookResult = ReturnType<
+  typeof usecommentByEncodedCursorLazyQuery
 >;
-export type findUniqueCommentByRelayCursorQueryResult = Apollo.QueryResult<
-  findUniqueCommentByRelayCursorQuery,
-  findUniqueCommentByRelayCursorQueryVariables
+export type commentByEncodedCursorQueryResult = Apollo.QueryResult<
+  commentByEncodedCursorQuery,
+  commentByEncodedCursorQueryVariables
 >;
-export function refetchfindUniqueCommentByRelayCursorQuery(
-  variables: findUniqueCommentByRelayCursorQueryVariables
+export function refetchcommentByEncodedCursorQuery(
+  variables: commentByEncodedCursorQueryVariables
+) {
+  return { query: commentByEncodedCursorDocument, variables: variables };
+}
+export const connectionByEncodedCursorDocument = gql`
+  query connectionByEncodedCursor($connectionCursor: String!) {
+    connectionByRelayId(connectionCursor: $connectionCursor) {
+      ...ConnectionPartial
+    }
+  }
+  ${ConnectionPartialFragmentDoc}
+`;
+
+/**
+ * __useconnectionByEncodedCursorQuery__
+ *
+ * To run a query within a React component, call `useconnectionByEncodedCursorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useconnectionByEncodedCursorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useconnectionByEncodedCursorQuery({
+ *   variables: {
+ *      connectionCursor: // value for 'connectionCursor'
+ *   },
+ * });
+ */
+export function useconnectionByEncodedCursorQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    connectionByEncodedCursorQuery,
+    connectionByEncodedCursorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    connectionByEncodedCursorQuery,
+    connectionByEncodedCursorQueryVariables
+  >(connectionByEncodedCursorDocument, options);
+}
+export function useconnectionByEncodedCursorLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    connectionByEncodedCursorQuery,
+    connectionByEncodedCursorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    connectionByEncodedCursorQuery,
+    connectionByEncodedCursorQueryVariables
+  >(connectionByEncodedCursorDocument, options);
+}
+export type connectionByEncodedCursorQueryHookResult = ReturnType<
+  typeof useconnectionByEncodedCursorQuery
+>;
+export type connectionByEncodedCursorLazyQueryHookResult = ReturnType<
+  typeof useconnectionByEncodedCursorLazyQuery
+>;
+export type connectionByEncodedCursorQueryResult = Apollo.QueryResult<
+  connectionByEncodedCursorQuery,
+  connectionByEncodedCursorQueryVariables
+>;
+export function refetchconnectionByEncodedCursorQuery(
+  variables: connectionByEncodedCursorQueryVariables
 ) {
   return {
-    query: findUniqueCommentByRelayCursorDocument,
+    query: connectionByEncodedCursorDocument,
     variables: variables
   };
 }
-export const listEntriesDocument = gql`
-  query listEntries(
-    $findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!
-  ) {
-    listEntries(
-      findManyEntriesPaginatedInput: $findManyEntriesPaginatedInput
-    ) {
-      ...EntryConnectionPartial
-      pageInfo {
-        ...PageInfoPartial
-      }
-      edges {
-        ...EntryEdgePartial
-        node {
-          ...EntryPartial
-          _count {
-            ...EntryCountPartial
-          }
-        }
-      }
+export const entryByEncodedCursorDocument = gql`
+  query entryByEncodedCursor($entryCursor: String!) {
+    entryByRelayId(entryCursor: $entryCursor) {
+      ...EntryPartial
     }
   }
-  ${EntryConnectionPartialFragmentDoc}
-  ${PageInfoPartialFragmentDoc}
-  ${EntryEdgePartialFragmentDoc}
   ${EntryPartialFragmentDoc}
-  ${EntryCountPartialFragmentDoc}
 `;
 
 /**
- * __uselistEntriesQuery__
+ * __useentryByEncodedCursorQuery__
  *
- * To run a query within a React component, call `uselistEntriesQuery` and pass it any options that fit your needs.
- * When your component renders, `uselistEntriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useentryByEncodedCursorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useentryByEncodedCursorQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = uselistEntriesQuery({
+ * const { data, loading, error } = useentryByEncodedCursorQuery({
  *   variables: {
- *      findManyEntriesPaginatedInput: // value for 'findManyEntriesPaginatedInput'
+ *      entryCursor: // value for 'entryCursor'
  *   },
  * });
  */
-export function uselistEntriesQuery(
+export function useentryByEncodedCursorQuery(
   baseOptions: Apollo.QueryHookOptions<
-    listEntriesQuery,
-    listEntriesQueryVariables
+    entryByEncodedCursorQuery,
+    entryByEncodedCursorQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<listEntriesQuery, listEntriesQueryVariables>(
-    listEntriesDocument,
-    options
-  );
+  return Apollo.useQuery<
+    entryByEncodedCursorQuery,
+    entryByEncodedCursorQueryVariables
+  >(entryByEncodedCursorDocument, options);
 }
-export function uselistEntriesLazyQuery(
+export function useentryByEncodedCursorLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    listEntriesQuery,
-    listEntriesQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<listEntriesQuery, listEntriesQueryVariables>(
-    listEntriesDocument,
-    options
-  );
-}
-export type listEntriesQueryHookResult = ReturnType<
-  typeof uselistEntriesQuery
->;
-export type listEntriesLazyQueryHookResult = ReturnType<
-  typeof uselistEntriesLazyQuery
->;
-export type listEntriesQueryResult = Apollo.QueryResult<
-  listEntriesQuery,
-  listEntriesQueryVariables
->;
-export function refetchlistEntriesQuery(
-  variables: listEntriesQueryVariables
-) {
-  return { query: listEntriesDocument, variables: variables };
-}
-export const listProfilesDocument = gql`
-  query listProfiles($findManyProfiles: FindManyProfilesPaginatedInput!) {
-    listProfiles(profilesArgs: $findManyProfiles) {
-      ...ProfileConnectionPartial
-      pageInfo {
-        ...PageInfoPartial
-      }
-      edges {
-        ...ProfileEdgePartial
-        node {
-          ...ProfilePartial
-          user {
-            ...UserPartial
-          }
-        }
-      }
-    }
-  }
-  ${ProfileConnectionPartialFragmentDoc}
-  ${PageInfoPartialFragmentDoc}
-  ${ProfileEdgePartialFragmentDoc}
-  ${ProfilePartialFragmentDoc}
-  ${UserPartialFragmentDoc}
-`;
-
-/**
- * __uselistProfilesQuery__
- *
- * To run a query within a React component, call `uselistProfilesQuery` and pass it any options that fit your needs.
- * When your component renders, `uselistProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = uselistProfilesQuery({
- *   variables: {
- *      findManyProfiles: // value for 'findManyProfiles'
- *   },
- * });
- */
-export function uselistProfilesQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    listProfilesQuery,
-    listProfilesQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<listProfilesQuery, listProfilesQueryVariables>(
-    listProfilesDocument,
-    options
-  );
-}
-export function uselistProfilesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    listProfilesQuery,
-    listProfilesQueryVariables
+    entryByEncodedCursorQuery,
+    entryByEncodedCursorQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<
-    listProfilesQuery,
-    listProfilesQueryVariables
-  >(listProfilesDocument, options);
+    entryByEncodedCursorQuery,
+    entryByEncodedCursorQueryVariables
+  >(entryByEncodedCursorDocument, options);
 }
-export type listProfilesQueryHookResult = ReturnType<
-  typeof uselistProfilesQuery
+export type entryByEncodedCursorQueryHookResult = ReturnType<
+  typeof useentryByEncodedCursorQuery
 >;
-export type listProfilesLazyQueryHookResult = ReturnType<
-  typeof uselistProfilesLazyQuery
+export type entryByEncodedCursorLazyQueryHookResult = ReturnType<
+  typeof useentryByEncodedCursorLazyQuery
 >;
-export type listProfilesQueryResult = Apollo.QueryResult<
-  listProfilesQuery,
-  listProfilesQueryVariables
+export type entryByEncodedCursorQueryResult = Apollo.QueryResult<
+  entryByEncodedCursorQuery,
+  entryByEncodedCursorQueryVariables
 >;
-export function refetchlistProfilesQuery(
-  variables: listProfilesQueryVariables
+export function refetchentryByEncodedCursorQuery(
+  variables: entryByEncodedCursorQueryVariables
 ) {
-  return { query: listProfilesDocument, variables: variables };
+  return { query: entryByEncodedCursorDocument, variables: variables };
 }
 export const deriveUserDetailsFromTokenDocument = gql`
   query deriveUserDetailsFromToken {
+    __typename
     getViewer {
       __typename
       auth {
@@ -7968,11 +8225,103 @@ export function refetchderiveUserDetailsFromTokenQuery(
     variables: variables
   };
 }
-export const getAllCommentsDocument = gql`
-  query getAllComments {
-    listComments(
-      findManyCommentsPaginatedInput: { pagination: { first: 40 } }
+export const listCategoriesDocument = gql`
+  query listCategories(
+    $findManyCategoriesInput: FindManyCategoriesPaginatedInput!
+  ) {
+    listCategories(
+      findManyCategoriesPaginatedInput: $findManyCategoriesInput
     ) {
+      ...CategoryConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...CategoryEdgePartial
+        node {
+          ...CategoryPartial
+          creator {
+            ...UserPartial
+          }
+          entries {
+            ...EntryPartial
+          }
+          _count {
+            ...CategoryCountPartial
+          }
+        }
+      }
+    }
+  }
+  ${CategoryConnectionPartialFragmentDoc}
+  ${PageInfoPartialFragmentDoc}
+  ${CategoryEdgePartialFragmentDoc}
+  ${CategoryPartialFragmentDoc}
+  ${UserPartialFragmentDoc}
+  ${EntryPartialFragmentDoc}
+  ${CategoryCountPartialFragmentDoc}
+`;
+
+/**
+ * __uselistCategoriesQuery__
+ *
+ * To run a query within a React component, call `uselistCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `uselistCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = uselistCategoriesQuery({
+ *   variables: {
+ *      findManyCategoriesInput: // value for 'findManyCategoriesInput'
+ *   },
+ * });
+ */
+export function uselistCategoriesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    listCategoriesQuery,
+    listCategoriesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    listCategoriesQuery,
+    listCategoriesQueryVariables
+  >(listCategoriesDocument, options);
+}
+export function uselistCategoriesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    listCategoriesQuery,
+    listCategoriesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    listCategoriesQuery,
+    listCategoriesQueryVariables
+  >(listCategoriesDocument, options);
+}
+export type listCategoriesQueryHookResult = ReturnType<
+  typeof uselistCategoriesQuery
+>;
+export type listCategoriesLazyQueryHookResult = ReturnType<
+  typeof uselistCategoriesLazyQuery
+>;
+export type listCategoriesQueryResult = Apollo.QueryResult<
+  listCategoriesQuery,
+  listCategoriesQueryVariables
+>;
+export function refetchlistCategoriesQuery(
+  variables: listCategoriesQueryVariables
+) {
+  return { query: listCategoriesDocument, variables: variables };
+}
+export const listCommentsDocument = gql`
+  query listComments(
+    $findManyCommentsInput: FindManyCommentsPaginatedInput!
+  ) {
+    listComments(findManyCommentsPaginatedInput: $findManyCommentsInput) {
       ...CommentConnectionPartial
       pageInfo {
         ...PageInfoPartial
@@ -8000,61 +8349,232 @@ export const getAllCommentsDocument = gql`
 `;
 
 /**
- * __usegetAllCommentsQuery__
+ * __uselistCommentsQuery__
  *
- * To run a query within a React component, call `usegetAllCommentsQuery` and pass it any options that fit your needs.
- * When your component renders, `usegetAllCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `uselistCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `uselistCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = usegetAllCommentsQuery({
+ * const { data, loading, error } = uselistCommentsQuery({
  *   variables: {
+ *      findManyCommentsInput: // value for 'findManyCommentsInput'
  *   },
  * });
  */
-export function usegetAllCommentsQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    getAllCommentsQuery,
-    getAllCommentsQueryVariables
+export function uselistCommentsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    listCommentsQuery,
+    listCommentsQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    getAllCommentsQuery,
-    getAllCommentsQueryVariables
-  >(getAllCommentsDocument, options);
+  return Apollo.useQuery<listCommentsQuery, listCommentsQueryVariables>(
+    listCommentsDocument,
+    options
+  );
 }
-export function usegetAllCommentsLazyQuery(
+export function uselistCommentsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    getAllCommentsQuery,
-    getAllCommentsQueryVariables
+    listCommentsQuery,
+    listCommentsQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<
-    getAllCommentsQuery,
-    getAllCommentsQueryVariables
-  >(getAllCommentsDocument, options);
+    listCommentsQuery,
+    listCommentsQueryVariables
+  >(listCommentsDocument, options);
 }
-export type getAllCommentsQueryHookResult = ReturnType<
-  typeof usegetAllCommentsQuery
+export type listCommentsQueryHookResult = ReturnType<
+  typeof uselistCommentsQuery
 >;
-export type getAllCommentsLazyQueryHookResult = ReturnType<
-  typeof usegetAllCommentsLazyQuery
+export type listCommentsLazyQueryHookResult = ReturnType<
+  typeof uselistCommentsLazyQuery
 >;
-export type getAllCommentsQueryResult = Apollo.QueryResult<
-  getAllCommentsQuery,
-  getAllCommentsQueryVariables
+export type listCommentsQueryResult = Apollo.QueryResult<
+  listCommentsQuery,
+  listCommentsQueryVariables
 >;
-export function refetchgetAllCommentsQuery(
-  variables?: getAllCommentsQueryVariables
+export function refetchlistCommentsQuery(
+  variables: listCommentsQueryVariables
 ) {
-  return { query: getAllCommentsDocument, variables: variables };
+  return { query: listCommentsDocument, variables: variables };
 }
-export const allMediaItemsDocument = gql`
-  query allMediaItems(
+export const listConnectionsDocument = gql`
+  query listConnections(
+    $findManyConnectionsInput: FindManyConnectionsPaginatedInput!
+  ) {
+    listConnections(
+      findManyConnectionsPaginatedInput: $findManyConnectionsInput
+    ) {
+      ...ConnectionConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...ConnectionEdgePartial
+        node {
+          ...ConnectionPartial
+        }
+      }
+    }
+  }
+  ${ConnectionConnectionPartialFragmentDoc}
+  ${PageInfoPartialFragmentDoc}
+  ${ConnectionEdgePartialFragmentDoc}
+  ${ConnectionPartialFragmentDoc}
+`;
+
+/**
+ * __uselistConnectionsQuery__
+ *
+ * To run a query within a React component, call `uselistConnectionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `uselistConnectionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = uselistConnectionsQuery({
+ *   variables: {
+ *      findManyConnectionsInput: // value for 'findManyConnectionsInput'
+ *   },
+ * });
+ */
+export function uselistConnectionsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    listConnectionsQuery,
+    listConnectionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    listConnectionsQuery,
+    listConnectionsQueryVariables
+  >(listConnectionsDocument, options);
+}
+export function uselistConnectionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    listConnectionsQuery,
+    listConnectionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    listConnectionsQuery,
+    listConnectionsQueryVariables
+  >(listConnectionsDocument, options);
+}
+export type listConnectionsQueryHookResult = ReturnType<
+  typeof uselistConnectionsQuery
+>;
+export type listConnectionsLazyQueryHookResult = ReturnType<
+  typeof uselistConnectionsLazyQuery
+>;
+export type listConnectionsQueryResult = Apollo.QueryResult<
+  listConnectionsQuery,
+  listConnectionsQueryVariables
+>;
+export function refetchlistConnectionsQuery(
+  variables: listConnectionsQueryVariables
+) {
+  return { query: listConnectionsDocument, variables: variables };
+}
+export const listEntriesDocument = gql`
+  query listEntries(
+    $findManyEntriesInput: FindManyEntriessPaginatedInput!
+  ) {
+    listEntries(findManyEntriesPaginatedInput: $findManyEntriesInput) {
+      ...EntryConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...EntryEdgePartial
+        node {
+          ...EntryPartial
+          _count {
+            ...EntryCountPartial
+          }
+          author {
+            ...UserPartial
+          }
+          comments {
+            ...CommentPartial
+          }
+        }
+      }
+    }
+  }
+  ${EntryConnectionPartialFragmentDoc}
+  ${PageInfoPartialFragmentDoc}
+  ${EntryEdgePartialFragmentDoc}
+  ${EntryPartialFragmentDoc}
+  ${EntryCountPartialFragmentDoc}
+  ${UserPartialFragmentDoc}
+  ${CommentPartialFragmentDoc}
+`;
+
+/**
+ * __uselistEntriesQuery__
+ *
+ * To run a query within a React component, call `uselistEntriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `uselistEntriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = uselistEntriesQuery({
+ *   variables: {
+ *      findManyEntriesInput: // value for 'findManyEntriesInput'
+ *   },
+ * });
+ */
+export function uselistEntriesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    listEntriesQuery,
+    listEntriesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<listEntriesQuery, listEntriesQueryVariables>(
+    listEntriesDocument,
+    options
+  );
+}
+export function uselistEntriesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    listEntriesQuery,
+    listEntriesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<listEntriesQuery, listEntriesQueryVariables>(
+    listEntriesDocument,
+    options
+  );
+}
+export type listEntriesQueryHookResult = ReturnType<
+  typeof uselistEntriesQuery
+>;
+export type listEntriesLazyQueryHookResult = ReturnType<
+  typeof uselistEntriesLazyQuery
+>;
+export type listEntriesQueryResult = Apollo.QueryResult<
+  listEntriesQuery,
+  listEntriesQueryVariables
+>;
+export function refetchlistEntriesQuery(
+  variables: listEntriesQueryVariables
+) {
+  return { query: listEntriesDocument, variables: variables };
+}
+export const listMediaItemsDocument = gql`
+  query listMediaItems(
     $findManyMediaItemsPaginated: FindManyMediaItemsPaginatedInput!
   ) {
     listMediaItems(
@@ -8079,59 +8599,449 @@ export const allMediaItemsDocument = gql`
 `;
 
 /**
- * __useallMediaItemsQuery__
+ * __uselistMediaItemsQuery__
  *
- * To run a query within a React component, call `useallMediaItemsQuery` and pass it any options that fit your needs.
- * When your component renders, `useallMediaItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `uselistMediaItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `uselistMediaItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useallMediaItemsQuery({
+ * const { data, loading, error } = uselistMediaItemsQuery({
  *   variables: {
  *      findManyMediaItemsPaginated: // value for 'findManyMediaItemsPaginated'
  *   },
  * });
  */
-export function useallMediaItemsQuery(
+export function uselistMediaItemsQuery(
   baseOptions: Apollo.QueryHookOptions<
-    allMediaItemsQuery,
-    allMediaItemsQueryVariables
+    listMediaItemsQuery,
+    listMediaItemsQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<allMediaItemsQuery, allMediaItemsQueryVariables>(
-    allMediaItemsDocument,
-    options
-  );
+  return Apollo.useQuery<
+    listMediaItemsQuery,
+    listMediaItemsQueryVariables
+  >(listMediaItemsDocument, options);
 }
-export function useallMediaItemsLazyQuery(
+export function uselistMediaItemsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    allMediaItemsQuery,
-    allMediaItemsQueryVariables
+    listMediaItemsQuery,
+    listMediaItemsQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<
-    allMediaItemsQuery,
-    allMediaItemsQueryVariables
-  >(allMediaItemsDocument, options);
+    listMediaItemsQuery,
+    listMediaItemsQueryVariables
+  >(listMediaItemsDocument, options);
 }
-export type allMediaItemsQueryHookResult = ReturnType<
-  typeof useallMediaItemsQuery
+export type listMediaItemsQueryHookResult = ReturnType<
+  typeof uselistMediaItemsQuery
 >;
-export type allMediaItemsLazyQueryHookResult = ReturnType<
-  typeof useallMediaItemsLazyQuery
+export type listMediaItemsLazyQueryHookResult = ReturnType<
+  typeof uselistMediaItemsLazyQuery
 >;
-export type allMediaItemsQueryResult = Apollo.QueryResult<
-  allMediaItemsQuery,
-  allMediaItemsQueryVariables
+export type listMediaItemsQueryResult = Apollo.QueryResult<
+  listMediaItemsQuery,
+  listMediaItemsQueryVariables
 >;
-export function refetchallMediaItemsQuery(
-  variables: allMediaItemsQueryVariables
+export function refetchlistMediaItemsQuery(
+  variables: listMediaItemsQueryVariables
 ) {
-  return { query: allMediaItemsDocument, variables: variables };
+  return { query: listMediaItemsDocument, variables: variables };
+}
+export const listProfilesDocument = gql`
+  query listProfiles(
+    $findManyProfilesInput: FindManyProfilesPaginatedInput!
+  ) {
+    listProfiles(profilesArgs: $findManyProfilesInput) {
+      ...ProfileConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...ProfileEdgePartial
+        node {
+          ...ProfilePartial
+          user {
+            ...UserPartial
+            _count {
+              ...UserCountPartial
+            }
+          }
+        }
+      }
+    }
+  }
+  ${ProfileConnectionPartialFragmentDoc}
+  ${PageInfoPartialFragmentDoc}
+  ${ProfileEdgePartialFragmentDoc}
+  ${ProfilePartialFragmentDoc}
+  ${UserPartialFragmentDoc}
+  ${UserCountPartialFragmentDoc}
+`;
+
+/**
+ * __uselistProfilesQuery__
+ *
+ * To run a query within a React component, call `uselistProfilesQuery` and pass it any options that fit your needs.
+ * When your component renders, `uselistProfilesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = uselistProfilesQuery({
+ *   variables: {
+ *      findManyProfilesInput: // value for 'findManyProfilesInput'
+ *   },
+ * });
+ */
+export function uselistProfilesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    listProfilesQuery,
+    listProfilesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<listProfilesQuery, listProfilesQueryVariables>(
+    listProfilesDocument,
+    options
+  );
+}
+export function uselistProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    listProfilesQuery,
+    listProfilesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    listProfilesQuery,
+    listProfilesQueryVariables
+  >(listProfilesDocument, options);
+}
+export type listProfilesQueryHookResult = ReturnType<
+  typeof uselistProfilesQuery
+>;
+export type listProfilesLazyQueryHookResult = ReturnType<
+  typeof uselistProfilesLazyQuery
+>;
+export type listProfilesQueryResult = Apollo.QueryResult<
+  listProfilesQuery,
+  listProfilesQueryVariables
+>;
+export function refetchlistProfilesQuery(
+  variables: listProfilesQueryVariables
+) {
+  return { query: listProfilesDocument, variables: variables };
+}
+export const listSessionsDocument = gql`
+  query listSessions(
+    $findManySessionsInput: FindManySessionsPaginatedInput!
+  ) {
+    listSessions(findManySessionsPaginatedInput: $findManySessionsInput) {
+      ...SessionConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...SessionEdgePartial
+        node {
+          ...SessionPartial
+          user {
+            ...UserPartial
+            _count {
+              ...UserCountPartial
+            }
+          }
+        }
+      }
+    }
+  }
+  ${SessionConnectionPartialFragmentDoc}
+  ${PageInfoPartialFragmentDoc}
+  ${SessionEdgePartialFragmentDoc}
+  ${SessionPartialFragmentDoc}
+  ${UserPartialFragmentDoc}
+  ${UserCountPartialFragmentDoc}
+`;
+
+/**
+ * __uselistSessionsQuery__
+ *
+ * To run a query within a React component, call `uselistSessionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `uselistSessionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = uselistSessionsQuery({
+ *   variables: {
+ *      findManySessionsInput: // value for 'findManySessionsInput'
+ *   },
+ * });
+ */
+export function uselistSessionsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    listSessionsQuery,
+    listSessionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<listSessionsQuery, listSessionsQueryVariables>(
+    listSessionsDocument,
+    options
+  );
+}
+export function uselistSessionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    listSessionsQuery,
+    listSessionsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    listSessionsQuery,
+    listSessionsQueryVariables
+  >(listSessionsDocument, options);
+}
+export type listSessionsQueryHookResult = ReturnType<
+  typeof uselistSessionsQuery
+>;
+export type listSessionsLazyQueryHookResult = ReturnType<
+  typeof uselistSessionsLazyQuery
+>;
+export type listSessionsQueryResult = Apollo.QueryResult<
+  listSessionsQuery,
+  listSessionsQueryVariables
+>;
+export function refetchlistSessionsQuery(
+  variables: listSessionsQueryVariables
+) {
+  return { query: listSessionsDocument, variables: variables };
+}
+export const allUsersDocument = gql`
+  query allUsers(
+    $findManyUsersPaginatedInput: FindManyUsersPaginatedInput
+  ) {
+    listUsers(findManyUsersPaginatedInput: $findManyUsersPaginatedInput) {
+      ...UserConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...UserEdgePartial
+        node {
+          ...UserPartial
+          profile {
+            ...ProfilePartial
+          }
+          mediaItems {
+            ...MediaItemPartial
+          }
+          entries {
+            ...EntryPartial
+          }
+          _count {
+            ...UserCountPartial
+          }
+        }
+      }
+    }
+  }
+  ${UserConnectionPartialFragmentDoc}
+  ${PageInfoPartialFragmentDoc}
+  ${UserEdgePartialFragmentDoc}
+  ${UserPartialFragmentDoc}
+  ${ProfilePartialFragmentDoc}
+  ${MediaItemPartialFragmentDoc}
+  ${EntryPartialFragmentDoc}
+  ${UserCountPartialFragmentDoc}
+`;
+
+/**
+ * __useallUsersQuery__
+ *
+ * To run a query within a React component, call `useallUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useallUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useallUsersQuery({
+ *   variables: {
+ *      findManyUsersPaginatedInput: // value for 'findManyUsersPaginatedInput'
+ *   },
+ * });
+ */
+export function useallUsersQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    allUsersQuery,
+    allUsersQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<allUsersQuery, allUsersQueryVariables>(
+    allUsersDocument,
+    options
+  );
+}
+export function useallUsersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    allUsersQuery,
+    allUsersQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<allUsersQuery, allUsersQueryVariables>(
+    allUsersDocument,
+    options
+  );
+}
+export type allUsersQueryHookResult = ReturnType<typeof useallUsersQuery>;
+export type allUsersLazyQueryHookResult = ReturnType<
+  typeof useallUsersLazyQuery
+>;
+export type allUsersQueryResult = Apollo.QueryResult<
+  allUsersQuery,
+  allUsersQueryVariables
+>;
+export function refetchallUsersQuery(variables?: allUsersQueryVariables) {
+  return { query: allUsersDocument, variables: variables };
+}
+export const profileByEncodedCursorDocument = gql`
+  query profileByEncodedCursor($profileCursor: String!) {
+    profileByRelayId(cursor: $profileCursor) {
+      ...ProfilePartial
+    }
+  }
+  ${ProfilePartialFragmentDoc}
+`;
+
+/**
+ * __useprofileByEncodedCursorQuery__
+ *
+ * To run a query within a React component, call `useprofileByEncodedCursorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useprofileByEncodedCursorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useprofileByEncodedCursorQuery({
+ *   variables: {
+ *      profileCursor: // value for 'profileCursor'
+ *   },
+ * });
+ */
+export function useprofileByEncodedCursorQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    profileByEncodedCursorQuery,
+    profileByEncodedCursorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    profileByEncodedCursorQuery,
+    profileByEncodedCursorQueryVariables
+  >(profileByEncodedCursorDocument, options);
+}
+export function useprofileByEncodedCursorLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    profileByEncodedCursorQuery,
+    profileByEncodedCursorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    profileByEncodedCursorQuery,
+    profileByEncodedCursorQueryVariables
+  >(profileByEncodedCursorDocument, options);
+}
+export type profileByEncodedCursorQueryHookResult = ReturnType<
+  typeof useprofileByEncodedCursorQuery
+>;
+export type profileByEncodedCursorLazyQueryHookResult = ReturnType<
+  typeof useprofileByEncodedCursorLazyQuery
+>;
+export type profileByEncodedCursorQueryResult = Apollo.QueryResult<
+  profileByEncodedCursorQuery,
+  profileByEncodedCursorQueryVariables
+>;
+export function refetchprofileByEncodedCursorQuery(
+  variables: profileByEncodedCursorQueryVariables
+) {
+  return { query: profileByEncodedCursorDocument, variables: variables };
+}
+export const sessionByEncodedCursorDocument = gql`
+  query sessionByEncodedCursor($sessionCursor: String!) {
+    sessionByRelayId(cursor: $sessionCursor) {
+      ...SessionPartial
+    }
+  }
+  ${SessionPartialFragmentDoc}
+`;
+
+/**
+ * __usesessionByEncodedCursorQuery__
+ *
+ * To run a query within a React component, call `usesessionByEncodedCursorQuery` and pass it any options that fit your needs.
+ * When your component renders, `usesessionByEncodedCursorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usesessionByEncodedCursorQuery({
+ *   variables: {
+ *      sessionCursor: // value for 'sessionCursor'
+ *   },
+ * });
+ */
+export function usesessionByEncodedCursorQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    sessionByEncodedCursorQuery,
+    sessionByEncodedCursorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    sessionByEncodedCursorQuery,
+    sessionByEncodedCursorQueryVariables
+  >(sessionByEncodedCursorDocument, options);
+}
+export function usesessionByEncodedCursorLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    sessionByEncodedCursorQuery,
+    sessionByEncodedCursorQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    sessionByEncodedCursorQuery,
+    sessionByEncodedCursorQueryVariables
+  >(sessionByEncodedCursorDocument, options);
+}
+export type sessionByEncodedCursorQueryHookResult = ReturnType<
+  typeof usesessionByEncodedCursorQuery
+>;
+export type sessionByEncodedCursorLazyQueryHookResult = ReturnType<
+  typeof usesessionByEncodedCursorLazyQuery
+>;
+export type sessionByEncodedCursorQueryResult = Apollo.QueryResult<
+  sessionByEncodedCursorQuery,
+  sessionByEncodedCursorQueryVariables
+>;
+export function refetchsessionByEncodedCursorQuery(
+  variables: sessionByEncodedCursorQueryVariables
+) {
+  return { query: sessionByEncodedCursorDocument, variables: variables };
 }
 export const userByEncodedCursorDocument = gql`
   query userByEncodedCursor($userCursor: String!) {
@@ -8198,28 +9108,39 @@ export function refetchuserByEncodedCursorQuery(
   return { query: userByEncodedCursorDocument, variables: variables };
 }
 export const userDecodedFromTokenDocument = gql`
-  query userDecodedFromToken($userFromToken: String!) {
-    getUserFromAccessToken(token: $userFromToken) {
-      _count {
-        ...UserCountPartial
+  query userDecodedFromToken($accessToken: String!) {
+    getUserFromAccessToken(token: $accessToken) {
+      __typename
+      auth {
+        session {
+          ...SessionPartial
+        }
+        user {
+          _count {
+            ...UserCountPartial
+          }
+          ...UserPartial
+        }
+        ...AuthPartial
       }
-      sessions {
-        ...SessionPartial
+      jwt {
+        header {
+          ...JwtHeadersPartial
+        }
+        payload {
+          ...JwtPayloadPartial
+        }
+        ...JwtDecodedPartial
       }
-      profile {
-        ...ProfilePartial
-      }
-      entries {
-        ...EntryPartial
-      }
-      ...UserPartial
     }
   }
-  ${UserCountPartialFragmentDoc}
   ${SessionPartialFragmentDoc}
-  ${ProfilePartialFragmentDoc}
-  ${EntryPartialFragmentDoc}
+  ${UserCountPartialFragmentDoc}
   ${UserPartialFragmentDoc}
+  ${AuthPartialFragmentDoc}
+  ${JwtHeadersPartialFragmentDoc}
+  ${JwtPayloadPartialFragmentDoc}
+  ${JwtDecodedPartialFragmentDoc}
 `;
 
 /**
@@ -8234,7 +9155,7 @@ export const userDecodedFromTokenDocument = gql`
  * @example
  * const { data, loading, error } = useuserDecodedFromTokenQuery({
  *   variables: {
- *      userFromToken: // value for 'userFromToken'
+ *      accessToken: // value for 'accessToken'
  *   },
  * });
  */
@@ -8276,96 +9197,6 @@ export function refetchuserDecodedFromTokenQuery(
   variables: userDecodedFromTokenQueryVariables
 ) {
   return { query: userDecodedFromTokenDocument, variables: variables };
-}
-export const allUsersDocument = gql`
-  query allUsers(
-    $findManyUsersPaginatedInput: FindManyUsersPaginatedInput
-  ) {
-    listUsers(findManyUsersPaginatedInput: $findManyUsersPaginatedInput) {
-      ...UserConnectionPartial
-      pageInfo {
-        ...PageInfoPartial
-      }
-      edges {
-        ...UserEdgePartial
-        node {
-          profile {
-            ...ProfilePartial
-          }
-          mediaItems {
-            ...MediaItemPartial
-          }
-          entries {
-            ...EntryPartial
-          }
-          _count {
-            ...UserCountPartial
-          }
-          ...UserPartial
-        }
-      }
-    }
-  }
-  ${UserConnectionPartialFragmentDoc}
-  ${PageInfoPartialFragmentDoc}
-  ${UserEdgePartialFragmentDoc}
-  ${ProfilePartialFragmentDoc}
-  ${MediaItemPartialFragmentDoc}
-  ${EntryPartialFragmentDoc}
-  ${UserCountPartialFragmentDoc}
-  ${UserPartialFragmentDoc}
-`;
-
-/**
- * __useallUsersQuery__
- *
- * To run a query within a React component, call `useallUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useallUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useallUsersQuery({
- *   variables: {
- *      findManyUsersPaginatedInput: // value for 'findManyUsersPaginatedInput'
- *   },
- * });
- */
-export function useallUsersQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    allUsersQuery,
-    allUsersQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<allUsersQuery, allUsersQueryVariables>(
-    allUsersDocument,
-    options
-  );
-}
-export function useallUsersLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    allUsersQuery,
-    allUsersQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<allUsersQuery, allUsersQueryVariables>(
-    allUsersDocument,
-    options
-  );
-}
-export type allUsersQueryHookResult = ReturnType<typeof useallUsersQuery>;
-export type allUsersLazyQueryHookResult = ReturnType<
-  typeof useallUsersLazyQuery
->;
-export type allUsersQueryResult = Apollo.QueryResult<
-  allUsersQuery,
-  allUsersQueryVariables
->;
-export function refetchallUsersQuery(variables?: allUsersQueryVariables) {
-  return { query: allUsersDocument, variables: variables };
 }
 export const viewerAuthFromContextDocument = gql`
   query viewerAuthFromContext {
@@ -8531,15 +9362,23 @@ export function refetchViewerQuery(variables?: ViewerQueryVariables) {
 }
 export const namedOperations = {
   Query: {
-    findUniqueCommentByRelayCursor: "findUniqueCommentByRelayCursor",
-    listEntries: "listEntries",
-    listProfiles: "listProfiles",
+    categoryByEncodedCursor: "categoryByEncodedCursor",
+    commentByEncodedCursor: "commentByEncodedCursor",
+    connectionByEncodedCursor: "connectionByEncodedCursor",
+    entryByEncodedCursor: "entryByEncodedCursor",
     deriveUserDetailsFromToken: "deriveUserDetailsFromToken",
-    getAllComments: "getAllComments",
-    allMediaItems: "allMediaItems",
+    listCategories: "listCategories",
+    listComments: "listComments",
+    listConnections: "listConnections",
+    listEntries: "listEntries",
+    listMediaItems: "listMediaItems",
+    listProfiles: "listProfiles",
+    listSessions: "listSessions",
+    allUsers: "allUsers",
+    profileByEncodedCursor: "profileByEncodedCursor",
+    sessionByEncodedCursor: "sessionByEncodedCursor",
     userByEncodedCursor: "userByEncodedCursor",
     userDecodedFromToken: "userDecodedFromToken",
-    allUsers: "allUsers",
     viewerAuthFromContext: "viewerAuthFromContext",
     Viewer: "Viewer"
   },
@@ -8548,20 +9387,22 @@ export const namedOperations = {
     createNewComment: "createNewComment",
     createNewProfile: "createNewProfile",
     createEntry: "createEntry",
-    createUser: "createUser",
-    loginUser: "loginUser",
     registerNewUser: "registerNewUser",
     signInUser: "signInUser"
   },
   Fragment: {
     AccountPartial: "AccountPartial",
     AuthPartial: "AuthPartial",
-    AuthSansSessionPartial: "AuthSansSessionPartial",
+    CategoryCountPartial: "CategoryCountPartial",
     CategoryPartial: "CategoryPartial",
+    CategoryConnectionPartial: "CategoryConnectionPartial",
+    CategoryEdgePartial: "CategoryEdgePartial",
     CommentPartial: "CommentPartial",
     CommentEdgePartial: "CommentEdgePartial",
     CommentConnectionPartial: "CommentConnectionPartial",
     ConnectionPartial: "ConnectionPartial",
+    ConnectionConnectionPartial: "ConnectionConnectionPartial",
+    ConnectionEdgePartial: "ConnectionEdgePartial",
     EntryCountPartial: "EntryCountPartial",
     EntryPartial: "EntryPartial",
     EntryConnectionPartial: "EntryConnectionPartial",
@@ -8577,7 +9418,8 @@ export const namedOperations = {
     ProfileEdgePartial: "ProfileEdgePartial",
     ProfilePartial: "ProfilePartial",
     SessionPartial: "SessionPartial",
-    TokenPartial: "TokenPartial",
+    SessionConnectionPartial: "SessionConnectionPartial",
+    SessionEdgePartial: "SessionEdgePartial",
     UserCountPartial: "UserCountPartial",
     UserPartial: "UserPartial",
     UserConnectionPartial: "UserConnectionPartial",

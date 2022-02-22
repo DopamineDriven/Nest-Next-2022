@@ -1,0 +1,7 @@
+# import EntryPartial from "../fragments/entry-partial.graphql";
+
+query entryByEncodedCursor($entryCursor: String!) {
+  entryByRelayId(entryCursor: $entryCursor) {
+    ...EntryPartial
+  }
+}

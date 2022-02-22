@@ -1,0 +1,7 @@
+# import CategoryPartial from "../fragments/category-partial.graphql";
+
+query categoryByEncodedCursor($categoryCursor: String!) {
+  categoryByRelayId(cursor: $categoryCursor) {
+    ...CategoryPartial
+  }
+}

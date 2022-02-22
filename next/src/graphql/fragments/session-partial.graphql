@@ -13,3 +13,13 @@ fragment SessionPartial on Session {
   userId
   __typename
 }
+
+fragment SessionConnectionPartial on SessionConnection {
+  __typename
+  totalCount
+}
+
+fragment SessionEdgePartial on SessionEdge {
+  __typename
+  cursor
+}

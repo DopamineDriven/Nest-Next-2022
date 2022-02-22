@@ -1,0 +1,4 @@
+fragment CategoryCountPartial on CategoryCount {
+  __typename
+  entries
+}

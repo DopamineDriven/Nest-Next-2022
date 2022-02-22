@@ -11,3 +11,13 @@ fragment ConnectionPartial on Connection {
   phoneNumber
   __typename
 }
+
+fragment ConnectionConnectionPartial on ConnectionConnection {
+  __typename
+  totalCount
+}
+
+fragment ConnectionEdgePartial on ConnectionEdge {
+  __typename
+  cursor
+}

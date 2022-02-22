@@ -13,7 +13,13 @@ import { GitHub, Google } from "@/components/Icons";
 // } from "@/graphql/Mutations/user-create.graphql";
 import { useRouter } from "next/router";
 import { blurDataURLShimmer } from "@/lib/shimmer";
-import { RegisterMutation, RegisterMutationOptions } from "@/graphql/mutations/register.graphql";
+import {
+  registerNewUser,
+  registerNewUserDocument,
+  registerNewUserMutationOptions,
+  registerNewUserMutationVariables,
+  useregisterNewUserMutation
+} from "@/graphql/generated/graphql";
 
 export default function Register() {
   const router = useRouter();

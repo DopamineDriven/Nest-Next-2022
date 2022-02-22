@@ -15,6 +15,7 @@ query allUsers($findManyUsersPaginatedInput: FindManyUsersPaginatedInput) {
     edges {
       ...UserEdgePartial
       node {
+        ...UserPartial
         profile {
           ...ProfilePartial
         }
@@ -27,7 +28,6 @@ query allUsers($findManyUsersPaginatedInput: FindManyUsersPaginatedInput) {
         _count {
           ...UserCountPartial
         }
-        ...UserPartial
       }
     }
   }

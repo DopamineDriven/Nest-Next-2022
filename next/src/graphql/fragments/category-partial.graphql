@@ -7,3 +7,13 @@ fragment CategoryPartial on Category {
   updatedAt
   __typename
 }
+
+fragment CategoryConnectionPartial on CategoryConnection {
+  __typename
+  totalCount
+}
+
+fragment CategoryEdgePartial on CategoryEdge {
+  __typename
+  cursor
+}

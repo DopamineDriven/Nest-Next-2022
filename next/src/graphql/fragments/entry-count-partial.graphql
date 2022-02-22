@@ -1,4 +1,3 @@
-
 fragment EntryCountPartial on EntryCount {
   categories
   comments

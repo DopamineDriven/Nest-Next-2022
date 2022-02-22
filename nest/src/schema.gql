@@ -1705,7 +1705,7 @@ type Query {
     manySessions: FindManySessionsPaginatedInput!
     manyUsers: FindManyUsersPaginatedInput!
   ): NodeUnionConnection!
-  profileByRelayId: Profile!
+  profileByRelayId(cursor: String!): Profile!
   sessionByRelayId(cursor: String!): Session!
   siftEntries(
     entryFindManyInput: FindManyEntriessPaginatedInput!

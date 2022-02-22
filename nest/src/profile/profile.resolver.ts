@@ -28,17 +28,8 @@ export class ProfileResolver {
   ) {}
 
   @Query(() => Profile)
-  async profileByRelayId(@Parent() profile: Profile) {
-    const getId = await this.prismaService.profile
-      .findUnique({
-        where: { id: profile.id },
-        include: { user: true }
-      })
-      .user()
-      .profile();
-    return await this.profileService.relayFindUniqueProfile({
-      id: getId?.id ?? profile.id
-    });
+  async profileByRelayId(@Args("cursor", {type: () => String}) cursor: string) {
+return await this.profileService.relayFindUniqueProfile({ id: cursor })
   }
 
   @Subscription(() => Profile)

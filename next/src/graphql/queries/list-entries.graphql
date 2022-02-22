@@ -3,13 +3,11 @@
 # import EntryEdgePartial from "../fragments/entry-partial.graphql";
 # import EntryPartial from "../fragments/entry-partial.graphql";
 # import EntryCountPartial from "../fragments/entry-count-partial.graphql";
+# import UserPartial from "../fragments/user-partial.graphql";
+# import CommentPartial from "../fragments/comment-partial.graphql"
 
-query listEntries(
-  $findManyEntriesPaginatedInput: FindManyEntriessPaginatedInput!
-) {
-  listEntries(
-    findManyEntriesPaginatedInput: $findManyEntriesPaginatedInput
-  ) {
+query listEntries($findManyEntriesInput: FindManyEntriessPaginatedInput!) {
+  listEntries(findManyEntriesPaginatedInput: $findManyEntriesInput) {
     ...EntryConnectionPartial
     pageInfo {
       ...PageInfoPartial
@@ -20,6 +18,12 @@ query listEntries(
         ...EntryPartial
         _count {
           ...EntryCountPartial
+        }
+        author {
+          ...UserPartial
+        }
+        comments {
+          ...CommentPartial
         }
       }
     }

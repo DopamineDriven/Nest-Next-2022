@@ -5,30 +5,17 @@
 # import JwtHeadersPartial from "../fragments/jwt-header-partial.graphql";
 # import JwtPayloadPartial from "../fragments/jwt-payload-partial.graphql";
 # import JwtDecodedPartial from "../fragments/jwt-decoded-partial.graphql";
-# import ProfilePartial from "../fragments/profile-partial.graphql";
-# import EntryPartial from "../fragments/entry-partial.graphql";
-# import MediaItemPartial from "../fragments/media-item-partial.graphql";
 
 mutation registerNewUser($userCreateMutationInput: SignupInput!) {
   registerNewUser(userCreateInput: $userCreateMutationInput) {
     auth {
       ...AuthPartial
       user {
-        mediaItems {
-          ...MediaItemPartial
-        }
-        entries {
-          ...EntryPartial
-        }
-        profile {
-          ...ProfilePartial
-        }
         _count {
           ...UserCountPartial
         }
         ...UserPartial
       }
-
       session {
         ...SessionPartial
       }

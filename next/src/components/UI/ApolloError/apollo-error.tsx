@@ -4,35 +4,37 @@ import { Inspector } from "../index";
 export interface ErrorInterface {
   error: ApolloError;
 }
-export default class ApolloErrorComponent
-  extends React.Component<{}, {}, ApolloError>
-  implements ErrorInterface
-{
+export default class ApolloErrorComponent extends React.Component<
+  {},
+  {},
+  ApolloError
+> {
   constructor(
-    public readonly error: ApolloError,
-    public readonly props: Readonly<{}> &
+    public readonly props: Readonly<{
+      error: ApolloError;
+    }> &
       Readonly<{ children?: ReactNode }>
   ) {
-    super({ props });
-    error = this.error;
+    super({ props: { error: new ApolloError(props.error) } });
   }
 
   toString(): string {
     return JSON.stringify(
       {
-        ...this.error
+        ...this.props.error
       },
       null,
       2
     );
   }
   render(
-    props: Readonly<{}> & Readonly<{ children?: ReactNode }> = this.props
+    props: Readonly<{ error: ApolloError }> &
+      Readonly<{ children?: ReactNode }> = this.props
   ) {
     return (
       <div>
         <>{(props = this.props)}</>
-        <Inspector>{this.toString()}</Inspector>
+        <Inspector>{this.props.error}</Inspector>
       </div>
     );
   }
