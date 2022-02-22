@@ -1,4 +1,3 @@
-import { Token } from "./model/token.model";
 import { Auth } from "./model/auth.model";
 import { LoginInput } from "./inputs/login.input";
 import { SignupInput } from "./inputs/signup.input";
@@ -25,6 +24,7 @@ import { ViewerAuthInfo } from "./model/jwt-auth.model";
 @Resolver(() => Auth)
 export class AuthResolver {
   constructor(private readonly auth: AuthService) {}
+
   @Mutation(() => User)
   @UseGuards(AuthGuard)
   async updateUserPassword(
@@ -39,6 +39,7 @@ export class AuthResolver {
       ctx as unknown as string
     );
   }
+
   @Mutation(() => AuthDetailed)
   async registerNewUser(
     @Args("userCreateInput", { type: () => SignupInput })
@@ -47,38 +48,23 @@ export class AuthResolver {
     return await this.auth.createNewUser(params);
   }
 
-  @Mutation(() => AuthDetailed)
-  async register(
-    @Args("dataRegister", { type: () => SignupInput }) dataRegister: SignupInput
-  ): Promise<AuthDetailed> {
-    return await this.auth.createNewUser(dataRegister);
-  }
-
+  // @CacheKey("login")
   @Mutation(() => AuthDetailed)
   async signin(
-    @Args("userloginInput") userloginInput: LoginInput
+    @Args("userloginInput") userloginInput: LoginInput,
+    @Info() info: GraphQLResolveInfo
   ): Promise<AuthDetailed> {
+    info.cacheControl.setCacheHint({
+      scope: CacheScope.Public,
+      maxAge: 200000
+    });
+    const infoResolved = JSON.stringify(info, null, 2);
+    console.log(infoResolved);
     const { email, password } = userloginInput;
 
     const getUserWithToken = await this.auth.signIn({ email, password });
     console.log(getUserWithToken ?? "no context");
     return getUserWithToken;
-  }
-
-  // @CacheKey("login")
-  @Mutation(() => Token)
-  async login(
-    @Args("data") data: LoginInput,
-    @Info() info: GraphQLResolveInfo
-  ): Promise<Token> {
-    info.cacheControl.setCacheHint({
-      scope: CacheScope.Public,
-      maxAge: 200000
-    });
-    const { email, password } = data;
-    const payload = await this.auth.login(email, password);
-
-    return payload;
   }
 
   @Query(() => AuthDetailed)
@@ -109,13 +95,11 @@ export class AuthResolver {
       });
   }
 
-  @Query(() => User)
+  @Query(() => AuthDetailed)
   async getUserFromAccessToken(
     @Args() { token }: TokenInput
-  ): Promise<User | null> {
-    return await this.auth
-      .getUserFromToken(token)
-      .then(authDetailed => authDetailed);
+  ): Promise<AuthDetailed> {
+    return await this.auth.getUserWithDecodedToken(token);
   }
 
   @Query(() => ViewerDetailed)

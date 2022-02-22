@@ -2014,13 +2014,7 @@ export abstract class IMutation {
     createNewProfileInput: CreateOneProfile
   ): Profile | Promise<Profile>;
 
-  abstract login(data: LoginInput): Token | Promise<Token>;
-
   abstract nuevoEntry(nuevoEntry: EntryCreateOneInput): Entry | Promise<Entry>;
-
-  abstract register(
-    dataRegister: SignupInput
-  ): AuthDetailed | Promise<AuthDetailed>;
 
   abstract registerNewUser(
     userCreateInput: SignupInput
@@ -2117,7 +2111,9 @@ export abstract class IQuery {
     mediaItemId: string
   ): MediaItem | Promise<MediaItem>;
 
-  abstract getUserFromAccessToken(token: string): User | Promise<User>;
+  abstract getUserFromAccessToken(
+    token: string
+  ): AuthDetailed | Promise<AuthDetailed>;
 
   abstract getViewer(): AuthDetailed | Promise<AuthDetailed>;
 
@@ -2240,12 +2236,6 @@ export abstract class ISubscription {
   abstract entryCreated(): Entry | Promise<Entry>;
 
   abstract profileCreated(): Profile | Promise<Profile>;
-}
-
-export class Token {
-  __typename?: "Token";
-  accessToken: string;
-  refreshToken: string;
 }
 
 export class UnionOnEdgeObjectType {

@@ -232,7 +232,7 @@ export class AuthService {
     }
   }
 
-  excludeUserOrViewerField<User, Key extends keyof User>(
+  excludeUserField<User, Key extends keyof User>(
     user: User,
     ...keys: Key[]
   ): Omit<User, Key> {
@@ -411,28 +411,6 @@ export class AuthService {
       },
       jwt: authDetailed.jwt
     };
-  }
-
-  async login(email: string, password: string): Promise<Token> {
-    const user = await this.prismaService.user.findUnique({ where: { email } });
-
-    if (!user) {
-      throw new NotFoundException(`No user found for email: ${email}`);
-    }
-
-    const passwordValid = await this.passwordService.validatePassword({
-      encryptedPassword:
-        user.password ?? (await this.passwordService.hashPassword(password)),
-      password: password
-    });
-
-    if (!passwordValid) {
-      throw new PrismaClientValidationError("Invalid password").message;
-    }
-
-    return this.generateTokens({
-      userId: user.id
-    });
   }
 
   async validateUser(userId: string | null) {

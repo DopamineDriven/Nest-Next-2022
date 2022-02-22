@@ -1317,9 +1317,7 @@ type Mutation {
   createNewComment(commentCreateInput: CreatNewCommentInput!): Comment!
   createNewEntry(entryCreateInput: EntryCreateOneInput!): Entry!
   createNewProfile(createNewProfileInput: CreateOneProfile!): Profile!
-  login(data: LoginInput!): Token!
   nuevoEntry(nuevoEntry: EntryCreateOneInput!): Entry!
-  register(dataRegister: SignupInput!): AuthDetailed!
   registerNewUser(userCreateInput: SignupInput!): AuthDetailed!
   signin(userloginInput: LoginInput!): AuthDetailed!
   updateUserPassword(passwordInput: ChangePasswordInput!): User!
@@ -1669,7 +1667,7 @@ type Query {
   entryById(id: String!): Entry!
   entryByRelayId(entryCursor: String!): Entry!
   findUniqueMediaItem(mediaItemId: String!): MediaItem!
-  getUserFromAccessToken(token: String!): User!
+  getUserFromAccessToken(token: String!): AuthDetailed!
   getViewer: AuthDetailed!
   listCategories(
     findManyCategoriesPaginatedInput: FindManyCategoriesPaginatedInput!
@@ -1959,18 +1957,6 @@ type Subscription {
   commentCreated: Comment!
   entryCreated: Entry!
   profileCreated: Profile!
-}
-
-type Token {
-  """
-  JWT access token
-  """
-  accessToken: String!
-
-  """
-  JWT refresh token
-  """
-  refreshToken: String!
 }
 
 union TypesUnion = Entry | MediaItem | User
