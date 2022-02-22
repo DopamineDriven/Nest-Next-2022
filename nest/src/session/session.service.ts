@@ -82,8 +82,7 @@ export class SessionService {
                 ...params.where
               },
               cursor: {
-                id: user?.sessions?.find(id => id)?.id ??
-                params.cursor?.id
+                id: user?.sessions?.find(id => id)?.id ?? params.cursor?.id
               },
               orderBy: params.orderBy,
               ...args
