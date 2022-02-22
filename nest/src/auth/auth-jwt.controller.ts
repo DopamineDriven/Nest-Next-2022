@@ -106,8 +106,8 @@ export default class AuthJwtController {
         token
       );
       const parseTokenFromIncomingReq =
-        req.headers.authorization?.split(/([ ])/)[1];
-      if (userFromToken != null || req.headers.authorization?.split(/([ ])/)[1])
+        req.headers.authorization?.split(/([ ])/)[2];
+      if (userFromToken != null || req.headers.authorization?.split(/([ ])/)[2])
         res.setHeader(
           "authorization",
           `Bearer ${userFromToken.auth.accessToken}`

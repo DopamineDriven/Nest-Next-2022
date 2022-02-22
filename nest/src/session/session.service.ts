@@ -48,9 +48,7 @@ export class SessionService {
         after: params.pagination.after
       },
       {
-        getCursor: (record: { id: string }) => {
-          return record;
-        },
+        getCursor: (record: { id: string }) => record,
         decodeCursor: (cursor: string) => fromGlobalId(cursor),
         encodeCursor: (cursor: { id: string }) =>
           toGlobalId(Session.name, cursor.id)
@@ -84,8 +82,8 @@ export class SessionService {
                 ...params.where
               },
               cursor: {
-                id: user?.sessions?.find(id => id)?.id,
-                ...params.cursor
+                id: user?.sessions?.find(id => id)?.id ??
+                params.cursor?.id
               },
               orderBy: params.orderBy,
               ...args
@@ -111,9 +109,7 @@ export class SessionService {
             after: params.pagination.after
           },
           {
-            getCursor: (record: { id: string }) => {
-              return record;
-            },
+            getCursor: (record: { id: string }) => record,
             decodeCursor: (cursor: string) => fromGlobalId(cursor),
             encodeCursor: (cursor: { id: string }) =>
               toGlobalId(Session.name, cursor.id)
