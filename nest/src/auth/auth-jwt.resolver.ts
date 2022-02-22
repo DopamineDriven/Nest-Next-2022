@@ -1,5 +1,5 @@
 import { Token } from "./model/token.model";
-import { Auth, AuthSansSession } from "./model/auth.model";
+import { Auth } from "./model/auth.model";
 import { LoginInput } from "./inputs/login.input";
 import { SignupInput } from "./inputs/signup.input";
 import { TokenInput } from "./inputs/refresh-token.input";
@@ -9,49 +9,22 @@ import {
   Args,
   Info,
   Query,
-  Context,
-  ResolveProperty,
-  Root,
-  GraphQLExecutionContext,
-  ResolveField
+  Context
 } from "@nestjs/graphql";
 import { AuthService } from "./auth-jwt.service";
 import { GraphQLResolveInfo } from "graphql";
 import { User } from "../user/model/user.model";
 import { AuthDetailed } from "./model/auth-detailed.model";
-import { PrismaService } from "../prisma";
-import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
-import { PasswordService } from "./password.service";
 import { CacheScope } from "apollo-server-types";
-import { Viewer, PrismaViewer } from "./model/auth.model";
-import { UserMeta } from "src/common/decorators/user.decorator";
-import {
-  ConflictException,
-  ExecutionContext,
-  UseGuards,
-  UsePipes
-} from "@nestjs/common";
-import { UserCreateMutationInput } from "./inputs/create-one-user.input";
-import { v4 } from "uuid";
-import { Prisma } from "@prisma/client";
-import { PrismaClientValidationError } from "@prisma/client/runtime";
-import { Context as LocalContext } from "src/app.module";
+import { ExecutionContext, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { ChangePasswordInput } from "src/user/inputs/change-passsword.input";
 import { ViewerDetailed } from "./model";
-import { pipe } from "rxjs";
 import { ViewerAuthInfo } from "./model/jwt-auth.model";
-import { Entry } from "src/entry";
-import { EntryCreateNuevoInput } from "./inputs/entry-create-nuevo.input";
-import { UserUncheckedCreateInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-unchecked-create.input";
-import { CreateOneUserArgs } from "src/.generated/prisma-nestjs-graphql/user/args/create-one-user.args";
+
 @Resolver(() => Auth)
 export class AuthResolver {
-  constructor(
-    private readonly auth: AuthService,
-    private readonly prismaService: PrismaService,
-    private readonly passwordService: PasswordService
-  ) {}
+  constructor(private readonly auth: AuthService) {}
   @Mutation(() => User)
   @UseGuards(AuthGuard)
   async updateUserPassword(
@@ -71,123 +44,14 @@ export class AuthResolver {
     @Args("userCreateInput", { type: () => SignupInput })
     params: SignupInput
   ) {
-    try {
-      const userCreate = await this.prismaService.user.create({
-        include: { _count: true, sessions: true, mediaItems: true },
-        data: {
-          ...params,
-          email: params.email,
-          password: await this.passwordService.hashPassword(
-            params.password ? params.password : ""
-          ),
-          firstName: params.firstName,
-          lastName: params.lastName,
-          role: params.email.includes("andrew@windycitydevs.io")
-            ? "SUPERADMIN"
-            : "USER",
-          status: "ONLINE",
-          createdAt: new Date(Date.now()),
-          image: params.image
-          // ? { ...params.image.set }
-          // : {
-          //     set: [
-          //       {
-          //         id: params.image?.set.find(id => id).id ?? v4(),
-          //         uploadedAt: new Date(
-          //           params.mediaItems?.create
-          //             ? (params.mediaItems.create[0].uploadedAt as string)
-          //             : (uploadDate as string)
-          //         ).toUTCString()
-          //       },
-          //       {
-          //         ariaLabel: "Accessibility label",
-          //         caption: "default avatar",
-          //         destination: "AVATAR",
-          //         quality: 90,
-          //         name: "g4apn65eo8acy988pfhb",
-          //         src: "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
-          //         srcSet: "",
-          //         height: 141,
-          //         width: 220,
-          //         type: "GIF",
-          //         size: ""
-          //       },
-          //       {
-          //         unique: `${params.id}_${"g4apn65eo8acy988pfhb"}`
-          //       }
-          //     ]
-          //   }
-        }
-      });
-
-      const getTokes = this.auth.generateTokens({ userId: userCreate.id });
-
-      if (getTokes.accessToken != null) {
-        return await this.auth.getUserWithDecodedToken(getTokes.accessToken);
-      }
-      return await this.auth.getUserWithDecodedToken(
-        getTokes.accessToken ? getTokes.accessToken : ""
-      );
-    } catch (e) {
-      if (
-        e instanceof Prisma.PrismaClientKnownRequestError &&
-        e.code === "P2002"
-      ) {
-        throw new ConflictException(`Email ${params.email} already used.`);
-      } else {
-        throw new Error(e as any);
-      }
-    }
+    return await this.auth.createNewUser(params);
   }
 
-  @Mutation(() => AuthSansSession)
+  @Mutation(() => AuthDetailed)
   async register(
     @Args("dataRegister", { type: () => SignupInput }) dataRegister: SignupInput
-  ): Promise<AuthSansSession> {
-    const registerUser = await this.prismaService.user.create({
-      data: {
-        role: dataRegister.email.includes("andrew@windycitydevs.io")
-          ? Role.SUPERADMIN
-          : Role.USER,
-        status: "ONLINE",
-        emailVerified: new Date(Date.now()),
-        email: dataRegister.email,
-        firstName: dataRegister.firstName,
-        image:
-          dataRegister.image ??
-          "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/g4apn65eo8acy988pfhb.gif",
-        lastName: dataRegister.lastName,
-        password: await this.passwordService.hashPassword(
-          dataRegister.password
-        ),
-        createdAt: new Date(Date.now())
-      }
-    });
-    const getToken = this.auth.generateTokens({
-      userId: registerUser.id ? registerUser.id : ""
-    });
-
-    const getRefreshToken = this.auth.refreshToken(registerUser.id);
-
-    console.log(registerUser);
-    const createUserResult = {
-      user: registerUser,
-      accessToken: getToken.accessToken,
-      refreshToken:
-        getToken.refreshToken ?? (await getRefreshToken).refreshToken
-    } as AuthSansSession;
-    return createUserResult;
-  }
-  @Mutation(() => Token)
-  async signup(
-    @Args("data", { type: () => SignupInput }) data: SignupInput
-  ): Promise<Token> {
-    data.email = data.email.toLowerCase();
-    const { accessToken, refreshToken } = await this.auth.createUser(data);
-    return {
-      accessToken: accessToken ? accessToken : "",
-      refreshToken: refreshToken ? refreshToken : ""
-    };
+  ): Promise<AuthDetailed> {
+    return await this.auth.createNewUser(dataRegister);
   }
 
   @Mutation(() => AuthDetailed)
@@ -244,21 +108,6 @@ export class AuthResolver {
         };
       });
   }
-
-  // @Mutation(() => Entry)
-  // @UseGuards(AuthGuard)
-  // async createNuevoEntryMutation(
-  //   @Args("createNuevoEntryInput", { type: () => EntryCreateNuevoInput })
-  //   params: EntryCreateNuevoInput,
-  //   @Context("viewerId") ctx: ExecutionContext
-  // ): Promise<Entry> {
-  //   const newEntry = this.auth.createEntryNuevoService({
-  //     input: params,
-  //     viewerId: ctx as unknown as string
-  //   });
-
-  //   return newEntry;
-  // }
 
   @Query(() => User)
   async getUserFromAccessToken(

@@ -137,12 +137,12 @@ type Auth {
   """
   JWT access token
   """
-  accessToken: String
+  accessToken: String!
 
   """
   JWT refresh token
   """
-  refreshToken: String
+  refreshToken: String!
   session: Session
   user: User!
 }
@@ -150,19 +150,6 @@ type Auth {
 type AuthDetailed {
   auth: Auth
   jwt: JwtDecoded
-}
-
-type AuthSansSession {
-  """
-  JWT access token
-  """
-  accessToken: String
-
-  """
-  JWT refresh token
-  """
-  refreshToken: String
-  user: User
 }
 
 type BaseTypeNodes {
@@ -1332,10 +1319,9 @@ type Mutation {
   createNewProfile(createNewProfileInput: CreateOneProfile!): Profile!
   login(data: LoginInput!): Token!
   nuevoEntry(nuevoEntry: EntryCreateOneInput!): Entry!
-  register(dataRegister: SignupInput!): AuthSansSession!
+  register(dataRegister: SignupInput!): AuthDetailed!
   registerNewUser(userCreateInput: SignupInput!): AuthDetailed!
   signin(userloginInput: LoginInput!): AuthDetailed!
-  signup(data: SignupInput!): Token!
   updateUserPassword(passwordInput: ChangePasswordInput!): User!
 }
 
@@ -1979,12 +1965,12 @@ type Token {
   """
   JWT access token
   """
-  accessToken: String
+  accessToken: String!
 
   """
   JWT refresh token
   """
-  refreshToken: String
+  refreshToken: String!
 }
 
 union TypesUnion = Entry | MediaItem | User

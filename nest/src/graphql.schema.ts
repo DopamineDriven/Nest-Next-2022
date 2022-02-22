@@ -1790,8 +1790,8 @@ export class Account implements Node {
 
 export class Auth {
   __typename?: "Auth";
-  accessToken?: Nullable<string>;
-  refreshToken?: Nullable<string>;
+  accessToken: string;
+  refreshToken: string;
   session?: Nullable<Session>;
   user: User;
 }
@@ -1800,13 +1800,6 @@ export class AuthDetailed {
   __typename?: "AuthDetailed";
   auth?: Nullable<Auth>;
   jwt?: Nullable<JwtDecoded>;
-}
-
-export class AuthSansSession {
-  __typename?: "AuthSansSession";
-  accessToken?: Nullable<string>;
-  refreshToken?: Nullable<string>;
-  user?: Nullable<User>;
 }
 
 export class BaseTypeNodes {
@@ -2027,7 +2020,7 @@ export abstract class IMutation {
 
   abstract register(
     dataRegister: SignupInput
-  ): AuthSansSession | Promise<AuthSansSession>;
+  ): AuthDetailed | Promise<AuthDetailed>;
 
   abstract registerNewUser(
     userCreateInput: SignupInput
@@ -2036,8 +2029,6 @@ export abstract class IMutation {
   abstract signin(
     userloginInput: LoginInput
   ): AuthDetailed | Promise<AuthDetailed>;
-
-  abstract signup(data: SignupInput): Token | Promise<Token>;
 
   abstract updateUserPassword(
     passwordInput: ChangePasswordInput
@@ -2253,8 +2244,8 @@ export abstract class ISubscription {
 
 export class Token {
   __typename?: "Token";
-  accessToken?: Nullable<string>;
-  refreshToken?: Nullable<string>;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export class UnionOnEdgeObjectType {
