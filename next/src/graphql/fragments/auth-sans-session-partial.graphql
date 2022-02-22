@@ -1,5 +1,0 @@
-fragment AuthSansSessionPartial on AuthSansSession {
-  accessToken
-  refreshToken
-  __typename
-}

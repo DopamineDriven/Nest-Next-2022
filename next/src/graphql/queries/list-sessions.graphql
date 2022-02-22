@@ -1,0 +1,29 @@
+# import SessionConnectionPartial from "../fragments/session-partial.graphql";
+# import SessionEdgePartial from "../fragments/session-partial.graphql";
+# import SessionPartial from "../fragments/session-partial.graphql";
+# import PageInfoPartial from "../fragments/page-info-partial.graphql";
+# import UserPartial from "../fragments/user-partial.graphql";
+# import UserCountPartial from "../fragments/user-count-partial.graphql";
+
+query listSessions(
+  $findManySessionsInput: FindManySessionsPaginatedInput!
+) {
+  listSessions(findManySessionsPaginatedInput: $findManySessionsInput) {
+    ...SessionConnectionPartial
+    pageInfo {
+      ...PageInfoPartial
+    }
+    edges {
+      ...SessionEdgePartial
+      node {
+        ...SessionPartial
+        user {
+          ...UserPartial
+          _count {
+            ...UserCountPartial
+          }
+        }
+      }
+    }
+  }
+}

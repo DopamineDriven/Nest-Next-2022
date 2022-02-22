@@ -1,0 +1,7 @@
+# import SessionPartial from "../fragments/session-partial.graphql";
+
+query sessionByEncodedCursor($sessionCursor: String!) {
+  sessionByRelayId(cursor: $sessionCursor) {
+    ...SessionPartial
+  }
+}

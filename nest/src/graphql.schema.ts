@@ -2167,7 +2167,7 @@ export abstract class IQuery {
     manyUsers: FindManyUsersPaginatedInput
   ): NodeUnionConnection | Promise<NodeUnionConnection>;
 
-  abstract profileByRelayId(): Profile | Promise<Profile>;
+  abstract profileByRelayId(cursor: string): Profile | Promise<Profile>;
 
   abstract sessionByRelayId(cursor: string): Session | Promise<Session>;
 

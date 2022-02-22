@@ -1,0 +1,25 @@
+# import ConnectionConnectionPartial from "../fragments/connection-partial.graphql";
+# import ConnectionEdgePartial from "../fragments/connection-partial.graphql";
+# import ConnectionPartial from "../fragments/connection-partial.graphql";
+# import PageInfoPartial from "../fragments/page-info-partial.graphql";
+# import UserPartial from "../fragments/user-partial.graphql";
+# import EntryPartial from "../fragments/entry-partial.graphql";
+
+query listConnections(
+  $findManyConnectionsInput: FindManyConnectionsPaginatedInput!
+) {
+  listConnections(
+    findManyConnectionsPaginatedInput: $findManyConnectionsInput
+  ) {
+    ...ConnectionConnectionPartial
+    pageInfo {
+      ...PageInfoPartial
+    }
+    edges {
+      ...ConnectionEdgePartial
+      node {
+        ...ConnectionPartial
+      }
+    }
+  }
+}

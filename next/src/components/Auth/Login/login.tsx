@@ -10,15 +10,14 @@ import {
   Mail as MailIcon,
   LockClosedIcon
 } from "@/components/Icons";
-import { LoginUserMutationOptions } from "@/graphql/mutations/login-user.graphql";
 import {
-  useLoginUserMutation,
-  LoginUserMutationVariables,
-  LoginUserDocument,
-  LoginUserMutation,
-  TokenPartialFragment,
-  LoginUserMutationResult
-} from "@/graphql/mutations/login-user.graphql";
+  SignInUserMutation,
+  SignInUserMutationOptions,
+  useSignInUserMutation,
+  SignInUserDocument,
+  SignInUserMutationVariables,
+  SignInUserMutationResult
+} from "@/graphql/mutations/sign-in.graphql";
 import { useRouter } from "next/router";
 import { blurDataURLShimmer } from "@/lib/shimmer";
 import auth from "../../../../public/Cortina_Blue.jpg";
@@ -45,8 +44,8 @@ export default function Login({
   email: emailState,
   password: passwordState
 }: LoginProps) {
-  const [login, { data, error, loading }] = useLoginUserMutation({
-    mutation: LoginUserDocument
+  const [login, { data, error, loading }] = useSignInUserMutation({
+    mutation: SignInUserDocument
   });
 
   const errorMessage = error?.message ?? "";
@@ -57,7 +56,7 @@ export default function Login({
     accessToken
   );
   const [email, setEmail] = useState(emailState);
-  const res = useSWR<LoginUserMutationResult>(
+  const res = useSWR<SignInUserMutation>(
     `/api/auth/login?email=${email}&password=${password}`,
     authFetcher
   );
@@ -84,7 +83,7 @@ export default function Login({
     event.preventDefault();
     const variables = new FormData(event.currentTarget);
     const { email, password } = Object.fromEntries(variables);
-    setStatus(res.data?.data?.login ? res.data.data.login : undefined);
+    setStatus(res.data?.signin ? res.data.signin : undefined);
     setEmail(email as string);
     setPassword(password as string);
     login({

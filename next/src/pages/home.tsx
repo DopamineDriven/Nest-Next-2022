@@ -22,7 +22,6 @@ import {
 } from "@/graphql/queries/viewer.graphql";
 import useSWR from "swr";
 import { viewerFetcher } from "@/lib/network/fetchers";
-import { LoginUserMutationResult } from "@/graphql/mutations/login-user.graphql";
 import { Suspense } from "react";
 import { get } from "https";
 

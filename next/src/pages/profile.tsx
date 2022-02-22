@@ -21,11 +21,20 @@ import {
   lazy
 } from "react";
 import {
-  AllUsersDocument,
-  AllUsersQuery,
-  AllUsersQueryVariables,
-  useAllUsersLazyQuery
-} from "@/graphql/queries/users-paginated.graphql";
+  allUsers,
+  allUsersDocument,
+  Role,
+  SortOrder,
+  UserStatus,
+  UserOrderByRelevanceFieldEnum,
+  allUsersQuery,
+  allUsersQueryVariables,
+  useallUsersLazyQuery,
+  userDecodedFromTokenQueryVariables,
+  userDecodedFromTokenDocument,
+  userDecodedFromTokenQuery,
+  useuserDecodedFromTokenLazyQuery
+} from "@/graphql/generated/graphql";
 import auth from "../../public/auth-validation.png";
 import Image from "next/image";
 import { initializeApollo, useApollo } from "@/apollo/apollo";
@@ -39,14 +48,7 @@ import {
   QueryLazyOptions,
   QueryTuple
 } from "@apollo/client";
-import {
-  Exact,
-  Role,
-  SortOrder,
-  UserOrderByRelevanceFieldEnum,
-  UserScalarFieldEnum,
-  UserStatus
-} from "../.cache/__types__";
+import { Exact, UserScalarFieldEnum } from "../.cache/__types__";
 import { useRouter } from "next/router";
 import { getCookie } from "cookies-next";
 import {
@@ -61,21 +63,17 @@ import { IncomingMessage, ServerResponse } from "http";
 import DataInspector from "@/components/UI/Inspector/inspector";
 import { RequireOnlyOne } from "@/types/helpers";
 import { viewerFetcher } from "@/lib/network/fetchers";
-import {
-  ProfileComponent,
-  Inspector,
-  ApolloErrorComponent
-} from "@/components/UI";
+import { ProfileComponent, Inspector } from "@/components/UI";
 import { storeKeyNameFromField } from "@apollo/client/utilities";
 import {
   deriveUserDetailsFromTokenDocument,
   usederiveUserDetailsFromTokenLazyQuery
-} from "@/graphql/generated/graphql"
+} from "@/graphql/generated/graphql";
 type ProfileProps = {
   apolloCache: NormalizedCacheObject;
   authHeaderReq: string;
   authHeaderRes: string;
-  allUsers: AllUsersQuery | null;
+  allUsers: allUsersQuery | null;
 };
 
 export default function Profile<T extends typeof getServerSideProps>({
@@ -84,10 +82,14 @@ export default function Profile<T extends typeof getServerSideProps>({
   authHeaderReq,
   authHeaderRes
 }: InferGetServerSidePropsType<T>) {
-  const [lazyDerivePayload, { data, called, client, error, loading }] =
-  usederiveUserDetailsFromTokenLazyQuery({
-      query: deriveUserDetailsFromTokenDocument
-    });
+  const router = useRouter();
+  const useApolloClient = useApollo(apolloCache, router.query ?? {});
+  const [
+    lazyDerivePayload,
+    { data, called, client: client = useApolloClient, error, loading }
+  ] = useuserDecodedFromTokenLazyQuery({
+    query: userDecodedFromTokenDocument
+  });
   const callbackData = useCallback(async () => {
     const fetchIt = async () =>
       await fetch(
@@ -112,10 +114,10 @@ export default function Profile<T extends typeof getServerSideProps>({
         .then(resolved => resolved as AuthDetailed);
     return await lazyDerivePayload({
       variables: {
-        token: authHeaderReq ? authHeaderReq : authHeaderRes ?? ""
+        accessToken: authHeaderReq ? authHeaderReq : authHeaderRes ?? ""
       }
     }).then(data => {
-      data.data?.userFromAccessTokenDecoded as unknown as AuthDetailed;
+      data.data?.getUserFromAccessToken as unknown as AuthDetailed;
     });
   }, [authHeaderReq, authHeaderRes, lazyDerivePayload]);
   useEffect(() => {
@@ -125,18 +127,17 @@ export default function Profile<T extends typeof getServerSideProps>({
   }, [callbackData]);
   const crm = getCookie("nest-next-2022");
   console.log(crm ?? "no cookie");
-  const router = useRouter();
   return (
     // <SWRConfig value={fallback}>
     <>
       {allUsers?.listUsers ? (
         <ProfileComponent
           viewer={
-            data?.userFromAccessTokenDecoded.auth?.user &&
+            data?.getUserFromAccessToken.auth?.user &&
             ({ accessToken: authHeaderReq } ?? {
               accessToken: authHeaderRes
             })
-              ? ((data.userFromAccessTokenDecoded.auth.user &&
+              ? ((data.getUserFromAccessToken.auth.user &&
                   authHeaderReq) as unknown as ViewerQuery)
               : null ?? (null as unknown as ViewerQuery | null)
           }>
@@ -172,30 +173,30 @@ function watchViewerQueryFallback(
 export const getServerSideProps = async (
   ctx: GetServerSidePropsContext<ParsedUrlQuery>
 ): Promise<GetServerSidePropsResult<ProfileProps>> => {
-  const allUsersQueryVars: AllUsersQueryVariables = {
+  const allUsersQueryVars: allUsersQueryVariables = {
     findManyUsersPaginatedInput: {
       pagination: { first: 10 },
       // distinct: [UserScalarFieldEnum.Email, UserScalarFieldEnum.],
       where: {
         email: { contains: "" },
         role: {
-          in: [Role.Admin, Role.Maintainer, Role.Superadmin, Role.User]
+          in: [Role.USER, Role.ADMIN, Role.MAINTAINER, Role.SUPERADMIN]
         },
         status: {
           in: [
-            UserStatus.Online,
-            UserStatus.Offline,
-            UserStatus.Deactivated
+            UserStatus.OFFLINE,
+            UserStatus.ONLINE,
+            UserStatus.DEACTIVATED
           ]
         }
       },
       orderBy: [
-        { firstName: SortOrder.Asc },
+        { firstName: SortOrder.desc },
         {
           _relevance: {
-            fields: [UserOrderByRelevanceFieldEnum.FirstName],
+            fields: [UserOrderByRelevanceFieldEnum.firstName],
             search: "",
-            sort: SortOrder.Asc
+            sort: SortOrder.desc
           }
         }
       ]
@@ -207,11 +208,8 @@ export const getServerSideProps = async (
     ctx.req,
     ctx.res
   );
-  const allUsers = await apolloClient.query<
-    AllUsersQuery,
-    AllUsersQueryVariables
-  >({
-    query: AllUsersDocument,
+  await apolloClient.query<allUsersQuery, allUsersQueryVariables>({
+    query: allUsersDocument,
     fetchPolicy: "cache-first",
     variables: allUsersQueryVars,
     notifyOnNetworkStatusChange: true,
@@ -221,11 +219,11 @@ export const getServerSideProps = async (
 
   const getAuthHeader = ctx.req.headers["authorization"]?.split(
     /([ ])/
-  )[0] as string;
+  )[2] as string;
 
   const authHeaderRes = ctx.res.req.headers["authorization"]?.split(
     /([ ])/
-  )[0] as string;
+  )[2] as string;
   return {
     props: {
       apolloCache: apolloClient.cache.extract(true),
@@ -233,7 +231,13 @@ export const getServerSideProps = async (
       authHeaderReq: getAuthHeader,
       // fallback: (await viewerQuery.result())
       //   .data as unknown as ProfileProps["fallback"],
-      allUsers: allUsers.data
+      allUsers: apolloClient.cache.readQuery<
+        allUsersQuery,
+        allUsersQueryVariables
+      >({
+        query: allUsersDocument,
+        variables: allUsersQueryVars
+      })
     }
   };
 };

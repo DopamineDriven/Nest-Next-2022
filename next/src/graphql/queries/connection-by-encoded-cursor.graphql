@@ -1,0 +1,7 @@
+# import ConnectionPartial from "../fragments/connection-partial.graphql";
+
+query connectionByEncodedCursor($connectionCursor: String!) {
+  connectionByRelayId(connectionCursor: $connectionCursor) {
+    ...ConnectionPartial
+  }
+}

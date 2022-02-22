@@ -170,9 +170,9 @@ export enum AlgorithmType {
 export type Auth = {
   __typename?: "Auth";
   /** JWT access token */
-  accessToken?: Maybe<Scalars["String"]>;
+  accessToken: Scalars["String"];
   /** JWT refresh token */
-  refreshToken?: Maybe<Scalars["String"]>;
+  refreshToken: Scalars["String"];
   session?: Maybe<Session>;
   user: User;
 };
@@ -181,15 +181,6 @@ export type AuthDetailed = {
   __typename?: "AuthDetailed";
   auth?: Maybe<Auth>;
   jwt?: Maybe<JwtDecoded>;
-};
-
-export type AuthSansSession = {
-  __typename?: "AuthSansSession";
-  /** JWT access token */
-  accessToken?: Maybe<Scalars["String"]>;
-  /** JWT refresh token */
-  refreshToken?: Maybe<Scalars["String"]>;
-  user?: Maybe<User>;
 };
 
 export type BaseTypeNodes = {
@@ -821,13 +812,6 @@ export type EntryCreateNestedOneWithoutCommentsInput = {
   create?: InputMaybe<EntryCreateWithoutCommentsInput>;
 };
 
-export type EntryCreateNuevoInput = {
-  content?: InputMaybe<Scalars["String"]>;
-  featuredImage?: InputMaybe<Scalars["String"]>;
-  published?: InputMaybe<Scalars["Boolean"]>;
-  title: Scalars["String"];
-};
-
 export type EntryCreateOneInput = {
   author: UserCreateNestedOneWithoutEntriesInput;
   categories?: InputMaybe<CategoryCreateNestedManyWithoutEntriesInput>;
@@ -1104,7 +1088,7 @@ export type FindManyProfilesPaginatedInput = {
 };
 
 export type FindManySessionsPaginatedInput = {
-  cursor: SessionWhereUniqueInput;
+  cursor?: InputMaybe<SessionWhereUniqueInput>;
   distinct?: InputMaybe<Array<SessionScalarFieldEnum>>;
   orderBy?: InputMaybe<
     Array<SessionOrderByWithRelationAndSearchRelevanceInput>
@@ -1410,13 +1394,9 @@ export type Mutation = {
   createNewComment: Comment;
   createNewEntry: Entry;
   createNewProfile: Profile;
-  createNuevoEntryMutation: Entry;
-  login: Token;
   nuevoEntry: Entry;
-  register: AuthSansSession;
   registerNewUser: AuthDetailed;
   signin: AuthDetailed;
-  signup: Token;
   updateUserPassword: User;
 };
 
@@ -1440,20 +1420,8 @@ export type MutationCreateNewProfileArgs = {
   createNewProfileInput: CreateOneProfile;
 };
 
-export type MutationCreateNuevoEntryMutationArgs = {
-  createNuevoEntryInput: EntryCreateNuevoInput;
-};
-
-export type MutationLoginArgs = {
-  data: LoginInput;
-};
-
 export type MutationNuevoEntryArgs = {
   nuevoEntry: EntryCreateOneInput;
-};
-
-export type MutationRegisterArgs = {
-  dataRegister: SignupInput;
 };
 
 export type MutationRegisterNewUserArgs = {
@@ -1462,10 +1430,6 @@ export type MutationRegisterNewUserArgs = {
 
 export type MutationSigninArgs = {
   userloginInput: LoginInput;
-};
-
-export type MutationSignupArgs = {
-  data: SignupInput;
 };
 
 export type MutationUpdateUserPasswordArgs = {
@@ -1814,7 +1778,7 @@ export type Query = {
   entryById: Entry;
   entryByRelayId: Entry;
   findUniqueMediaItem: MediaItem;
-  getUserFromAccessToken: User;
+  getUserFromAccessToken: AuthDetailed;
   getViewer: AuthDetailed;
   listCategories: CategoryConnection;
   listComments: CommentConnection;
@@ -1835,7 +1799,9 @@ export type Query = {
   userByRelayId: User;
   viewer: ViewerDetailed;
   viewerAuthInfoFromContext: ViewerAuthInfo;
+  viewerCommentsPaginated: CommentConnection;
   viewerEntriesPaginated: EntryConnection;
+  viewerSessionsPaginated: SessionConnection;
 };
 
 export type QueryCategoryByRelayIdArgs = {
@@ -1922,6 +1888,10 @@ export type QueryNodeUnionResolverArgs = {
   manyUsers: FindManyUsersPaginatedInput;
 };
 
+export type QueryProfileByRelayIdArgs = {
+  cursor: Scalars["String"];
+};
+
 export type QuerySessionByRelayIdArgs = {
   cursor: Scalars["String"];
 };
@@ -1938,8 +1908,16 @@ export type QueryUserByRelayIdArgs = {
   cursor: Scalars["String"];
 };
 
+export type QueryViewerCommentsPaginatedArgs = {
+  viewerCommentsPaginatedInput: FindManyCommentsPaginatedInput;
+};
+
 export type QueryViewerEntriesPaginatedArgs = {
   viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput;
+};
+
+export type QueryViewerSessionsPaginatedArgs = {
+  viewerSessionssPaginatedInput: FindManySessionsPaginatedInput;
 };
 
 export enum QueryMode {
@@ -2180,14 +2158,6 @@ export type Subscription = {
   commentCreated: Comment;
   entryCreated: Entry;
   profileCreated: Profile;
-};
-
-export type Token = {
-  __typename?: "Token";
-  /** JWT access token */
-  accessToken?: Maybe<Scalars["String"]>;
-  /** JWT refresh token */
-  refreshToken?: Maybe<Scalars["String"]>;
 };
 
 export type TypesUnion = Entry | MediaItem | User;
@@ -2620,7 +2590,6 @@ export type ResolversTypes = ResolversObject<{
   AlgorithmType: AlgorithmType;
   Auth: ResolverTypeWrapper<Auth>;
   AuthDetailed: ResolverTypeWrapper<AuthDetailed>;
-  AuthSansSession: ResolverTypeWrapper<AuthSansSession>;
   BaseTypeNodes: ResolverTypeWrapper<
     Omit<BaseTypeNodes, "nodes"> & {
       nodes: Array<ResolversTypes["TypesUnion"]>;
@@ -2709,7 +2678,6 @@ export type ResolversTypes = ResolversObject<{
   EntryCreateNestedManyWithoutAuthorInput: EntryCreateNestedManyWithoutAuthorInput;
   EntryCreateNestedManyWithoutCategoriesInput: EntryCreateNestedManyWithoutCategoriesInput;
   EntryCreateNestedOneWithoutCommentsInput: EntryCreateNestedOneWithoutCommentsInput;
-  EntryCreateNuevoInput: EntryCreateNuevoInput;
   EntryCreateOneInput: EntryCreateOneInput;
   EntryCreateOrConnectWithoutAuthorInput: EntryCreateOrConnectWithoutAuthorInput;
   EntryCreateOrConnectWithoutCategoriesInput: EntryCreateOrConnectWithoutCategoriesInput;
@@ -2863,7 +2831,6 @@ export type ResolversTypes = ResolversObject<{
   StringNullableFilter: StringNullableFilter;
   StringNullableListFilter: StringNullableListFilter;
   Subscription: ResolverTypeWrapper<{}>;
-  Token: ResolverTypeWrapper<Token>;
   TypesUnion:
     | ResolversTypes["Entry"]
     | ResolversTypes["MediaItem"]
@@ -2910,7 +2877,6 @@ export type ResolversParentTypes = ResolversObject<{
   AccountWhereUniqueInput: AccountWhereUniqueInput;
   Auth: Auth;
   AuthDetailed: AuthDetailed;
-  AuthSansSession: AuthSansSession;
   BaseTypeNodes: Omit<BaseTypeNodes, "nodes"> & {
     nodes: Array<ResolversParentTypes["TypesUnion"]>;
   };
@@ -2990,7 +2956,6 @@ export type ResolversParentTypes = ResolversObject<{
   EntryCreateNestedManyWithoutAuthorInput: EntryCreateNestedManyWithoutAuthorInput;
   EntryCreateNestedManyWithoutCategoriesInput: EntryCreateNestedManyWithoutCategoriesInput;
   EntryCreateNestedOneWithoutCommentsInput: EntryCreateNestedOneWithoutCommentsInput;
-  EntryCreateNuevoInput: EntryCreateNuevoInput;
   EntryCreateOneInput: EntryCreateOneInput;
   EntryCreateOrConnectWithoutAuthorInput: EntryCreateOrConnectWithoutAuthorInput;
   EntryCreateOrConnectWithoutCategoriesInput: EntryCreateOrConnectWithoutCategoriesInput;
@@ -3129,7 +3094,6 @@ export type ResolversParentTypes = ResolversObject<{
   StringNullableFilter: StringNullableFilter;
   StringNullableListFilter: StringNullableListFilter;
   Subscription: {};
-  Token: Token;
   TypesUnion:
     | ResolversParentTypes["Entry"]
     | ResolversParentTypes["MediaItem"]
@@ -3230,12 +3194,12 @@ export type AuthResolvers<
   ParentType extends ResolversParentTypes["Auth"] = ResolversParentTypes["Auth"]
 > = ResolversObject<{
   accessToken?: Resolver<
-    Maybe<ResolversTypes["String"]>,
+    ResolversTypes["String"],
     ParentType,
     ContextType
   >;
   refreshToken?: Resolver<
-    Maybe<ResolversTypes["String"]>,
+    ResolversTypes["String"],
     ParentType,
     ContextType
   >;
@@ -3258,24 +3222,6 @@ export type AuthDetailedResolvers<
     ParentType,
     ContextType
   >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type AuthSansSessionResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes["AuthSansSession"] = ResolversParentTypes["AuthSansSession"]
-> = ResolversObject<{
-  accessToken?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  refreshToken?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -3773,32 +3719,11 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationCreateNewProfileArgs, "createNewProfileInput">
   >;
-  createNuevoEntryMutation?: Resolver<
-    ResolversTypes["Entry"],
-    ParentType,
-    ContextType,
-    RequireFields<
-      MutationCreateNuevoEntryMutationArgs,
-      "createNuevoEntryInput"
-    >
-  >;
-  login?: Resolver<
-    ResolversTypes["Token"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationLoginArgs, "data">
-  >;
   nuevoEntry?: Resolver<
     ResolversTypes["Entry"],
     ParentType,
     ContextType,
     RequireFields<MutationNuevoEntryArgs, "nuevoEntry">
-  >;
-  register?: Resolver<
-    ResolversTypes["AuthSansSession"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationRegisterArgs, "dataRegister">
   >;
   registerNewUser?: Resolver<
     ResolversTypes["AuthDetailed"],
@@ -3811,12 +3736,6 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationSigninArgs, "userloginInput">
-  >;
-  signup?: Resolver<
-    ResolversTypes["Token"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationSignupArgs, "data">
   >;
   updateUserPassword?: Resolver<
     ResolversTypes["User"],
@@ -4091,7 +4010,7 @@ export type QueryResolvers<
     RequireFields<QueryFindUniqueMediaItemArgs, "mediaItemId">
   >;
   getUserFromAccessToken?: Resolver<
-    ResolversTypes["User"],
+    ResolversTypes["AuthDetailed"],
     ParentType,
     ContextType,
     RequireFields<QueryGetUserFromAccessTokenArgs, "token">
@@ -4186,7 +4105,8 @@ export type QueryResolvers<
   profileByRelayId?: Resolver<
     ResolversTypes["Profile"],
     ParentType,
-    ContextType
+    ContextType,
+    RequireFields<QueryProfileByRelayIdArgs, "cursor">
   >;
   sessionByRelayId?: Resolver<
     ResolversTypes["Session"],
@@ -4222,6 +4142,15 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  viewerCommentsPaginated?: Resolver<
+    ResolversTypes["CommentConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryViewerCommentsPaginatedArgs,
+      "viewerCommentsPaginatedInput"
+    >
+  >;
   viewerEntriesPaginated?: Resolver<
     ResolversTypes["EntryConnection"],
     ParentType,
@@ -4229,6 +4158,15 @@ export type QueryResolvers<
     RequireFields<
       QueryViewerEntriesPaginatedArgs,
       "viewerEntriesPaginatedInput"
+    >
+  >;
+  viewerSessionsPaginated?: Resolver<
+    ResolversTypes["SessionConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryViewerSessionsPaginatedArgs,
+      "viewerSessionssPaginatedInput"
     >
   >;
 }>;
@@ -4330,23 +4268,6 @@ export type SubscriptionResolvers<
     ParentType,
     ContextType
   >;
-}>;
-
-export type TokenResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes["Token"] = ResolversParentTypes["Token"]
-> = ResolversObject<{
-  accessToken?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  refreshToken?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type TypesUnionResolvers<
@@ -4616,7 +4537,6 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Account?: AccountResolvers<ContextType>;
   Auth?: AuthResolvers<ContextType>;
   AuthDetailed?: AuthDetailedResolvers<ContextType>;
-  AuthSansSession?: AuthSansSessionResolvers<ContextType>;
   BaseTypeNodes?: BaseTypeNodesResolvers<ContextType>;
   BaseTypesEdge?: BaseTypesEdgeResolvers<ContextType>;
   BigInt?: GraphQLScalarType;
@@ -4658,7 +4578,6 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   SessionConnection?: SessionConnectionResolvers<ContextType>;
   SessionEdge?: SessionEdgeResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
-  Token?: TokenResolvers<ContextType>;
   TypesUnion?: TypesUnionResolvers<ContextType>;
   UnionOnEdgeObjectType?: UnionOnEdgeObjectTypeResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

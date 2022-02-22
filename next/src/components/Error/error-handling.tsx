@@ -5,6 +5,9 @@ export default class ErrorBoundary extends React.Component<
   Record<string, unknown> | unknown,
   Record<string, any> | any
 > {
+  constructor() {
+    super({ fallback: "blocking" || true || false });
+  }
   public state = { hasError: false, error: null };
 
   static getDerivedStateFromError(error: ErrorEvent) {

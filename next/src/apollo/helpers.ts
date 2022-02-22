@@ -63,17 +63,6 @@ export type AuthDetailedFieldPolicy = {
   auth?: FieldPolicy<any> | FieldReadFunction<any>;
   jwt?: FieldPolicy<any> | FieldReadFunction<any>;
 };
-export type AuthSansSessionKeySpecifier = (
-  | "accessToken"
-  | "refreshToken"
-  | "user"
-  | AuthSansSessionKeySpecifier
-)[];
-export type AuthSansSessionFieldPolicy = {
-  accessToken?: FieldPolicy<any> | FieldReadFunction<any>;
-  refreshToken?: FieldPolicy<any> | FieldReadFunction<any>;
-  user?: FieldPolicy<any> | FieldReadFunction<any>;
-};
 export type BaseTypeNodesKeySpecifier = (
   | "nodes"
   | "pageInfo"
@@ -389,13 +378,9 @@ export type MutationKeySpecifier = (
   | "createNewComment"
   | "createNewEntry"
   | "createNewProfile"
-  | "createNuevoEntryMutation"
-  | "login"
   | "nuevoEntry"
-  | "register"
   | "registerNewUser"
   | "signin"
-  | "signup"
   | "updateUserPassword"
   | MutationKeySpecifier
 )[];
@@ -405,13 +390,9 @@ export type MutationFieldPolicy = {
   createNewComment?: FieldPolicy<any> | FieldReadFunction<any>;
   createNewEntry?: FieldPolicy<any> | FieldReadFunction<any>;
   createNewProfile?: FieldPolicy<any> | FieldReadFunction<any>;
-  createNuevoEntryMutation?: FieldPolicy<any> | FieldReadFunction<any>;
-  login?: FieldPolicy<any> | FieldReadFunction<any>;
   nuevoEntry?: FieldPolicy<any> | FieldReadFunction<any>;
-  register?: FieldPolicy<any> | FieldReadFunction<any>;
   registerNewUser?: FieldPolicy<any> | FieldReadFunction<any>;
   signin?: FieldPolicy<any> | FieldReadFunction<any>;
-  signup?: FieldPolicy<any> | FieldReadFunction<any>;
   updateUserPassword?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type NodeKeySpecifier = ("id" | NodeKeySpecifier)[];
@@ -540,7 +521,9 @@ export type QueryKeySpecifier = (
   | "userByRelayId"
   | "viewer"
   | "viewerAuthInfoFromContext"
+  | "viewerCommentsPaginated"
   | "viewerEntriesPaginated"
+  | "viewerSessionsPaginated"
   | QueryKeySpecifier
 )[];
 export type QueryFieldPolicy = {
@@ -573,7 +556,9 @@ export type QueryFieldPolicy = {
   userByRelayId?: FieldPolicy<any> | FieldReadFunction<any>;
   viewer?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerAuthInfoFromContext?: FieldPolicy<any> | FieldReadFunction<any>;
+  viewerCommentsPaginated?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerEntriesPaginated?: FieldPolicy<any> | FieldReadFunction<any>;
+  viewerSessionsPaginated?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type SessionKeySpecifier = (
   | "accessToken"
@@ -636,15 +621,6 @@ export type SubscriptionFieldPolicy = {
   commentCreated?: FieldPolicy<any> | FieldReadFunction<any>;
   entryCreated?: FieldPolicy<any> | FieldReadFunction<any>;
   profileCreated?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type TokenKeySpecifier = (
-  | "accessToken"
-  | "refreshToken"
-  | TokenKeySpecifier
-)[];
-export type TokenFieldPolicy = {
-  accessToken?: FieldPolicy<any> | FieldReadFunction<any>;
-  refreshToken?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type UnionOnEdgeObjectTypeKeySpecifier = (
   | "unionOnEdge"
@@ -820,13 +796,6 @@ export type StrictTypedTypePolicies = {
       | AuthDetailedKeySpecifier
       | (() => undefined | AuthDetailedKeySpecifier);
     fields?: AuthDetailedFieldPolicy;
-  };
-  AuthSansSession?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | AuthSansSessionKeySpecifier
-      | (() => undefined | AuthSansSessionKeySpecifier);
-    fields?: AuthSansSessionFieldPolicy;
   };
   BaseTypeNodes?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
@@ -1079,13 +1048,6 @@ export type StrictTypedTypePolicies = {
       | SubscriptionKeySpecifier
       | (() => undefined | SubscriptionKeySpecifier);
     fields?: SubscriptionFieldPolicy;
-  };
-  Token?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | TokenKeySpecifier
-      | (() => undefined | TokenKeySpecifier);
-    fields?: TokenFieldPolicy;
   };
   UnionOnEdgeObjectType?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:

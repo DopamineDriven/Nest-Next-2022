@@ -1,7 +1,0 @@
-# import TokenPartial from "../fragments/token-partial.graphql";
-
-mutation loginUser($data: LoginInput!) {
-  login(data: $data) {
-    ...TokenPartial
-  }
-}

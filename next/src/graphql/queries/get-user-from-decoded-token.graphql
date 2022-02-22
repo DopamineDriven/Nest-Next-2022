@@ -7,6 +7,7 @@
 # import JwtDecodedPartial from "../fragments/jwt-decoded-partial.graphql";
 
 query deriveUserDetailsFromToken {
+  __typename
   getViewer {
     __typename
     auth {

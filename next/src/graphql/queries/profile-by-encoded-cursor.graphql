@@ -1,0 +1,7 @@
+# import ProfilePartial from "../fragments/profile-partial.graphql";
+
+query profileByEncodedCursor($profileCursor: String!) {
+  profileByRelayId(cursor: $profileCursor) {
+    ...ProfilePartial
+  }
+}
