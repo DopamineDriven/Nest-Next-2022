@@ -28,8 +28,10 @@ export class ProfileResolver {
   ) {}
 
   @Query(() => Profile)
-  async profileByRelayId(@Args("cursor", {type: () => String}) cursor: string) {
-return await this.profileService.relayFindUniqueProfile({ id: cursor })
+  async profileByRelayId(
+    @Args("cursor", { type: () => String }) cursor: string
+  ) {
+    return await this.profileService.relayFindUniqueProfile({ id: cursor });
   }
 
   @Subscription(() => Profile)
