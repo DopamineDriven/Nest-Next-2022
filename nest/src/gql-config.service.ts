@@ -35,6 +35,12 @@ export class GqlConfigService implements GqlOptionsFactory {
     private configService: ConfigService,
     private authService: AuthService
   ) {}
+
+  public base64Encode(
+    str: WithImplicitCoercion<string | Uint8Array | readonly number[]>
+  ) {
+    return Buffer.from(str).toString("base64");
+  }
   createGqlOptions(): ApolloDriverConfig {
     const graphqlConfig = this.configService.get<GraphqlConfig>("graphql");
     const apolloConfig = this.configService.get<ApolloConfig>("apollo");
@@ -113,17 +119,22 @@ export class GqlConfigService implements GqlOptionsFactory {
       }: Context) => {
         try {
           if (token != null && token.length > 10) {
-            const viewerId = (
-              (await this.authService.getUserWithDecodedToken(
-                token
-              )) as AuthDetailed
-            ).jwt.payload.userId;
+            const viewer = this.authService.getDecodedJwtComplete(token);
+
+            res.setHeader(
+              "X-Auth",
+              `${this.base64Encode(
+                viewer.payload.userId.concat(":").concat(token)
+              ).trim()}`
+            );
+
             res.setHeader("authorization", `Bearer ${token}`);
             return {
               req,
               res,
               token,
-              viewerId: viewerId
+              viewerId: viewer.payload.userId,
+              xAuth: `${viewer.payload.userId.concat(":").concat(token)}`.trim()
             };
           } else {
             return { req, res, token: null, viewerId: null };

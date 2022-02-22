@@ -38,6 +38,7 @@ export type Context = {
   res: ExpressContext["res"];
   token: string | null;
   viewerId: string | null;
+  xAuth: string | null;
 };
 
 @Module({

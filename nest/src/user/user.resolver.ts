@@ -34,12 +34,12 @@ export class UserResolver {
   @UseGuards(AuthGuard)
   @Query(() => AuthDetailed)
   async me(
-    @Context("token") ctx: ExecutionContext
+    @Context("xAuth") ctx: ExecutionContext
   ): Promise<AuthDetailed | null> {
     console.log(ctx ?? "no viewerId coupled with token");
 
     return await this.authService.getUserWithDecodedToken(
-      (ctx as unknown as string) ?? ""
+      (ctx as unknown as string).split(/([:])/)[2] ?? ""
     );
   }
 
