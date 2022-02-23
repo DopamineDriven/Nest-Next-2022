@@ -14,17 +14,18 @@ import { MulterModule } from "@nestjs/platform-express";
 import { ConfigService } from "@nestjs/config";
 import { ApolloConfig, GraphqlConfig } from "src/common";
 import multer, { Multer } from "multer";
+import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 
 @Module({
-  imports: [PrismaModule],
-  //MulterModule.registerAsync({
-  //     useFactory: async <T extends GraphQLOperation>(configService: ConfigService) => {
-  //       const multerService = configService.get<GraphqlConfig>("graphql");
-  //       return ({
-  //       fileFilter(req: T['query'], file: Multer['single'], callback: (error: Error | null, acceptFile: boolean) => void) {}, ))
-
-  //       })
-  // } })],
+  imports: [PrismaModule,
+    MulterModule.registerAsync({
+      useFactory: async ({...props}: MulterOptions) => {
+        return ({
+          // fileFilter(req: GraphQLOperation['query'], file: Multer['single'], callback: (error: Error | null, acceptFile: boolean) => void)
+          ...props
+        })
+      }
+    })],
   providers: [UploadResolver, UploadService],
   exports: [UploadService]
 })

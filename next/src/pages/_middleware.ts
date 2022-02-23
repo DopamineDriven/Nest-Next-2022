@@ -6,18 +6,26 @@ import cors, { CorsOptions } from "@/lib/cors";
 
 export default async function middleware(req: NextRequest) {
   req.cookies;
+  // Store the response so we can modify its headers
+  const response = NextResponse.next();
+
   console.log(req.cookies ?? "no cooks");
   if (
     req.headers.get("authorization") &&
     req.headers.get("authorization") != null
   ) {
-    return NextResponse.prototype.headers.set(
+    return response.headers.set(
       "authorization",
       `Bearer ${req.headers
         .get("authorization")
-        ?.split(/([ ])/)[1]
+        ?.split(/([ ])/)[2]
         ?.trim()}`
     );
+  }
+
+  if (req.headers.get("X-Auth") && req.headers.get("X-Auth") != null) {
+    console.log(req.headers.get("X-Auth") ?? "no x-auth");
+    return response.headers.set(`X-Auth`, `${req.headers.get("X-Auth")}`);
   }
   // if (req.nextUrl.pathname === "/" || "") {
   //   const getCookieFromSignupOrloginMutations = JSON.parse(
@@ -27,7 +35,7 @@ export default async function middleware(req: NextRequest) {
   //     `/${getCookieFromSignupOrloginMutations ? "profile" : "index"}`
   //   );
   // }
-  const response = NextResponse.next();
+
   response.headers.set("Referrer-Policy", "Origin-When-Cross-Origin");
   response.headers.set(
     "Strict-Transport-Security",
@@ -82,7 +90,8 @@ export default async function middleware(req: NextRequest) {
       "X-XSS-Protection",
       "Upgrade-Insecure-Requests",
       "Session",
-      "authorization"
+      "authorization",
+      "X-Auth"
     ],
     maxAge: 31536000,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",

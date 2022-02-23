@@ -40,8 +40,7 @@ export const enhancedFetch = async (
             ? (req.cookies as string[])
             : ""
           : ""
-      }`,
-      ...init.headers
+      }`
     },
     keepalive: true,
     credentials: "include",

@@ -7,8 +7,7 @@ import {
   GqlExecutionContext
 } from "@nestjs/graphql";
 import { UserMeta } from "src/common/decorators/user.decorator";
-import { Context as LocalContext } from "src/app.module";
-import { User } from "src/user/model/user.model";
+import { AppContext } from "src/gql-config.service";import { User } from "src/user/model/user.model";
 import { GetViewer, Viewer } from "./model/viewer-extends-prisma.model";
 import { Inject, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma";
@@ -119,13 +118,13 @@ export class ViewerService {
                 create: {
                   lastSeen: new Date(Date.now()),
                   memberSince: new Date(Date.now()),
-                  recentActivity: [
+                  recentActivity: JSON.stringify([
                     {
                       signedUp: `Created an account on ${new Date(Date.now())
                         .toUTCString()
                         .split(/([T])/)} 🎉`
                     }
-                  ]
+                  ])
                 }
               }
             }

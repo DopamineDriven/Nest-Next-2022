@@ -2,20 +2,26 @@ import { AuthData } from "@/hooks/use-auth";
 import { ReactNode, FC } from "react";
 import GlobalNav from "./Nav/nav";
 
-interface Props extends AuthData {
+export interface Props extends AuthData {
   children: ReactNode;
 }
 
-const Layout: React.FC<Props> = props => {
+const Layout: FC<Props> = ({
+  children,
+  loading,
+  loggedIn,
+  error,
+  viewer
+}) => {
   return (
     <div>
       <GlobalNav
-        viewer={props.viewer}
-        loading={props.loading}
-        loggedIn={props.loggedIn}
-        error={props.error}
+        viewer={viewer}
+        loading={loading}
+        loggedIn={loggedIn}
+        error={error}
       />
-      <div className=''>{props.children}</div>
+      <div className=''>{children}</div>
       <style jsx global>{`
         html {
           box-sizing: border-box;

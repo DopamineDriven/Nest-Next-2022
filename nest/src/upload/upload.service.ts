@@ -23,8 +23,8 @@ import {
   JSONObjectResolver,
   GraphQLJSONObject
 } from "graphql-scalars";
-import { Context as LocalContext } from "../app.module";
-
+import { AppContext } from "src/gql-config.service";
+import { Multer } from "multer";
 @Injectable()
 export class UploadService
   implements GraphQLOperation, FileUpload, UploadOptions
@@ -40,9 +40,14 @@ export class UploadService
   public mimetype: string;
   public createReadStream: () => ReadStream;
   constructor(
-    @Inject(PrismaService) private readonly prismaService: PrismaService
+    private readonly multerService: Multer
   ) {
     ({
+      /** TODO Mimic GqlConfig flow 
+       * export interface MulterOptionsFactory {
+    createMulterOptions(): Promise<MulterModuleOptions> | MulterModuleOptions;
+}
+       */
       // Upload(upload: ReturnType<typeof Upload>)=> (processRequest(this.createReadStream(upload()).setEncoding("base64").emit("data")),
       encoding: this.encoding,
       filename: this.filename,

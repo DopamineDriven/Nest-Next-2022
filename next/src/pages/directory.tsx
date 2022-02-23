@@ -26,6 +26,7 @@ import {
 } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Layout from "@/components/Layout/layout";
 
 export type DirectoryPageProps = {
   people: allUsersQuery | null;
@@ -76,10 +77,9 @@ export const getServerSideProps = async (
   };
 };
 
-function DirectoryPage<T extends typeof getServerSideProps>({
-  apolloCache,
-  people
-}: InferGetServerSidePropsType<T>) {
+export default function DirectoryPage<
+  T extends typeof getServerSideProps
+>({ apolloCache, people }: InferGetServerSidePropsType<T>) {
   // const [
   //   lazyPeople,
   //   {
@@ -187,4 +187,4 @@ function DirectoryPage<T extends typeof getServerSideProps>({
   );
 }
 
-export default DirectoryPage;
+DirectoryPage.Layout = Layout;

@@ -4,7 +4,8 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
-  UnauthorizedException
+  UnauthorizedException,
+  ExecutionContext
 } from "@nestjs/common";
 import { User } from "../user/model/user.model";
 import { JwtService } from "@nestjs/jwt";
@@ -23,6 +24,7 @@ import { Response } from "express";
 import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
 import { Session } from "src/session/model";
 import { Auth } from "./model";
+import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
 @Injectable()
 export class AuthService {
@@ -37,9 +39,7 @@ export class AuthService {
   setTokenCookie(res: Response, token: string) {
     const authConfig = this.configService.get<SecurityConfig>("security");
     const cookie = serialize(
-      authConfig?.secret
-        ? authConfig.secret
-        : `${process.env.JWT_SECRET ?? ""}`,
+      "user-token",
       token,
       {
         maxAge: this.maxAge, // 360 hours ~ 15 days
@@ -303,114 +303,118 @@ export class AuthService {
       });
   }
   async signIn({ email, password }: LoginInput): Promise<AuthDetailed> {
-    if (!email || email === new NotFoundException(`email`).message) {
-      throw new NotFoundException(`No user found for email: ${email}`);
-    }
+    try {
+      if (!email || email === new NotFoundException(`email`).message) {
+        throw new NotFoundException(`No user found for email: ${email}`);
+      }
 
-    const hash = await this.passwordService.hashPassword(password);
-    const passwordValid = await this.passwordService.validatePassword({
-      password: password,
-      encryptedPassword: hash
-    });
-
-    if (passwordValid == false) {
-      throw new PrismaClientValidationError(
-        "Invalid password" + process.exitCode
-      );
-    }
-
-    const authDetailed = await this.prismaService.session
-      .findFirst({
-        where: {
-          user: { email: { equals: email } }
-        },
-        include: { user: true }
-      })
-      .then(payload => {
-        return {
-          accessToken: payload?.accessToken,
-          refreshToken: payload?.refreshToken,
-          user: payload?.user,
-          session: {
-            accessToken: payload?.accessToken,
-            alg: payload?.alg,
-            exp: payload?.exp,
-            iat: payload?.iat,
-            id: payload?.id,
-            lastVerified: payload?.lastVerified,
-            provider: payload?.provider,
-            refreshToken: payload?.refreshToken,
-            scopes: payload?.scopes,
-            signature: payload?.signature,
-            tokenState: payload?.tokenState,
-            userId: payload?.userId,
-            user: payload?.user
-          } as Session
-        } as Auth;
-      })
-      .then(async authJwt => {
-        const getNewTokes = this.generateTokens({
-          userId: authJwt.user.id
-        });
-        const getDecodedTokeVal = this.jwtService.decode(
-          (getNewTokes?.accessToken as string) ?? "",
-          { complete: true }
-        ) as JwtDecoded;
-        return await this.prismaService.user
-          .update({
-            include: { sessions: true },
-            where: { id: authJwt.user.id },
-            data: {
-              status: { set: "ONLINE" },
-              updatedAt: { set: new Date(Date.now()) },
-              sessions: {
-                create: {
-                  accessToken: getNewTokes.accessToken,
-                  refreshToken: getNewTokes.refreshToken,
-                  alg: getDecodedTokeVal.header.alg,
-                  exp: getDecodedTokeVal.payload.exp,
-                  iat: getDecodedTokeVal.payload.iat,
-                  lastVerified: new Date(Date.now()),
-                  provider: "JWT",
-                  signature: getDecodedTokeVal.signature,
-                  scopes:
-                    authJwt.user?.role === "SUPERADMIN"
-                      ? ["read", "write", "edit", "administer", "impersonate"]
-                      : authJwt.user?.role === "ADMIN"
-                      ? ["read", "write", "edit", "administer"]
-                      : authJwt.user?.role === "MAINTAINER"
-                      ? ["read", "write", "edit"]
-                      : ["read", "write"],
-                  tokenState: "valid"
-                }
-              }
-            }
-          })
-          .then(dataReturned => {
-            return {
-              auth: {
-                accessToken: getNewTokes.accessToken,
-                refreshToken: getNewTokes.refreshToken,
-                user: dataReturned as User,
-                session:
-                  dataReturned.sessions && dataReturned.sessions.length > 1
-                    ? dataReturned.sessions.sort((a, b) => b.iat! - a.iat!)[0]
-                    : (dataReturned.sessions[0] as Session)
-              },
-              jwt: getDecodedTokeVal as JwtDecoded
-            };
-          });
+      const hash = await this.passwordService.hashPassword(password);
+      const passwordValid = await this.passwordService.validatePassword({
+        password: password,
+        encryptedPassword: hash
       });
 
-    return {
-      auth: {
-        accessToken: authDetailed.auth?.accessToken,
-        refreshToken: authDetailed.auth?.refreshToken,
-        session: authDetailed.auth.session,
-        user: authDetailed.auth.user
-      },
-      jwt: authDetailed.jwt
-    };
+      if (passwordValid == false) {
+        throw new PrismaClientValidationError(
+          "Invalid password" + process.exitCode
+        );
+      }
+
+      const authDetailed = await this.prismaService.session
+        .findFirst({
+          where: {
+            user: { email: { equals: email } }
+          },
+          include: { user: true }
+        })
+        .then(payload => {
+          return {
+            accessToken: payload?.accessToken,
+            refreshToken: payload?.refreshToken,
+            user: payload?.user,
+            session: {
+              accessToken: payload?.accessToken,
+              alg: payload?.alg,
+              exp: payload?.exp,
+              iat: payload?.iat,
+              id: payload?.id,
+              lastVerified: payload?.lastVerified,
+              provider: payload?.provider,
+              refreshToken: payload?.refreshToken,
+              scopes: payload?.scopes,
+              signature: payload?.signature,
+              tokenState: payload?.tokenState,
+              userId: payload?.userId,
+              user: payload?.user
+            } as Session
+          } as Auth;
+        })
+        .then(async authJwt => {
+          const getNewTokes = this.generateTokens({
+            userId: authJwt.user.id
+          });
+          const getDecodedTokeVal = this.jwtService.decode(
+            (getNewTokes?.accessToken as string) ?? "",
+            { complete: true }
+          ) as JwtDecoded;
+          return await this.prismaService.user
+            .update({
+              include: { sessions: true },
+              where: { id: authJwt.user.id },
+              data: {
+                status: { set: "ONLINE" },
+                updatedAt: { set: new Date(Date.now()) },
+                sessions: {
+                  create: {
+                    accessToken: getNewTokes.accessToken,
+                    refreshToken: getNewTokes.refreshToken,
+                    alg: getDecodedTokeVal.header.alg,
+                    exp: getDecodedTokeVal.payload.exp,
+                    iat: getDecodedTokeVal.payload.iat,
+                    lastVerified: new Date(Date.now()),
+                    provider: "JWT",
+                    signature: getDecodedTokeVal.signature,
+                    scopes:
+                      authJwt.user?.role === "SUPERADMIN"
+                        ? ["read", "write", "edit", "administer", "impersonate"]
+                        : authJwt.user?.role === "ADMIN"
+                          ? ["read", "write", "edit", "administer"]
+                          : authJwt.user?.role === "MAINTAINER"
+                            ? ["read", "write", "edit"]
+                            : ["read", "write"],
+                    tokenState: "valid"
+                  }
+                }
+              }
+            })
+            .then(dataReturned => {
+              return {
+                auth: {
+                  accessToken: getNewTokes.accessToken,
+                  refreshToken: getNewTokes.refreshToken,
+                  user: dataReturned as User,
+                  session:
+                    dataReturned.sessions && dataReturned.sessions.length > 1
+                      ? dataReturned.sessions.sort((a, b) => b.iat! - a.iat!)[0]
+                      : (dataReturned.sessions[0] as Session)
+                },
+                jwt: getDecodedTokeVal as JwtDecoded
+              };
+            });
+        });
+
+      return {
+        auth: {
+          accessToken: authDetailed.auth?.accessToken,
+          refreshToken: authDetailed.auth?.refreshToken,
+          session: authDetailed.auth.session,
+          user: authDetailed.auth.user
+        },
+        jwt: authDetailed.jwt
+      }
+    } catch (err) {
+      throw new Error(`${err}`);
+    }
   }
 
   async validateUser(userId: string | null) {
