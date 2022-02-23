@@ -1,10 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { initializeApollo } from "@/apollo/apollo";
-import {
-  LoginUserMutation,
-  LoginUserMutationVariables,
-  LoginUserDocument
-} from "@/graphql/mutations/login-user.graphql";
+
 import { getCookiesFromContext } from "@/lib/url";
 import { setCookies } from "cookies-next";
 import {

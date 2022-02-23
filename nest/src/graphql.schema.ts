@@ -2155,7 +2155,7 @@ export abstract class IQuery {
 
   abstract nodeField(
     cursor: string
-  ): NodeBaseFieldUnion | Promise<NodeBaseFieldUnion>;
+  ): NodeBaseFieldUnion[] | Promise<NodeBaseFieldUnion[]>;
 
   abstract nodeUnionResolver(
     id: string,
@@ -2236,11 +2236,6 @@ export abstract class ISubscription {
   abstract entryCreated(): Entry | Promise<Entry>;
 
   abstract profileCreated(): Profile | Promise<Profile>;
-}
-
-export class UnionOnEdgeObjectType {
-  __typename?: "UnionOnEdgeObjectType";
-  unionOnEdge: UnionOnEdgeObjectType;
 }
 
 export class User implements Node {

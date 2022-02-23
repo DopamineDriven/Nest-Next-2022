@@ -16,8 +16,9 @@ import { Node } from "src/node/model/node.model";
 import { UserCount } from "src/.generated/prisma-nestjs-graphql/user/outputs/user-count.output";
 type Nullable<T> = T | null;
 
-@ObjectType("User", { implements: () => Node })
+@ObjectType("User", { implements: () => [Node] })
 export class User implements Node {
+  nombre?: string | undefined = User.name;
   @Field(() => ID, {
     name: "id",
     nullable: false

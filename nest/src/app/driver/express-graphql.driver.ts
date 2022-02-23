@@ -2,7 +2,7 @@ import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
 import { AbstractGraphQLDriver, GqlModuleOptions } from "@nestjs/graphql";
 import { getPrismaClient } from "@prisma/client/runtime";
-import { Context } from "src/app.module";
+import { AppContext } from "src/gql-config.service";
 import {
   GraphQLParams,
   Options,

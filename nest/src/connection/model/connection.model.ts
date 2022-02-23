@@ -8,8 +8,9 @@ import { User } from "../../user/model/user.model";
 import { Node } from "src/node/model/node.model";
 import { PhoneNumber } from "graphql-scalars/typeDefs";
 
-@ObjectType("Connection", { implements: () => Node })
+@ObjectType("Connection", { implements: () => [Node] })
 export class Connection implements Node {
+  nombre?: string | undefined = Connection.name;
   @Field(() => ID, { nullable: false })
   id!: string;
 

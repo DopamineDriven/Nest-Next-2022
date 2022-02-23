@@ -25,11 +25,17 @@ import {
   ViewerQueryVariables
 } from "@/graphql/generated/graphql";
 import { setCookies } from "cookies-next";
-import { NextPage } from "next";
+import {
+  GetServerSidePropsContext,
+  GetServerSidePropsResult,
+  NextPage
+} from "next";
 import * as SuperJSON from "superjson";
 import { QueryDocumentKeys } from "graphql/language/visitor";
-
-
+import { ParsedUrlQuery } from "@/types/query-parser";
+import { initializeApollo } from "@/apollo/apollo";
+import Layout from "@/components/Layout/layout";
+import useAuth from "@/hooks/use-auth";
 
 type userImageJsonField = {
   id: string;
@@ -48,7 +54,7 @@ type userImageJsonField = {
   caption: string;
   destination: MediaItemDestination;
   unique: string;
-}
+};
 
 const ReusableInput = ({
   ...props
@@ -71,7 +77,7 @@ const ReusableInput = ({
   | "minLength"
   | "value"
 >) => <input {...props} />;
-type IndexProps = {
+export type IndexProps = {
   viewerServer: ViewerQuery;
   parseAuthHeaderFromNest: string;
   normalizedCacheObject: NormalizedCacheObject;
@@ -83,7 +89,8 @@ export default function Index() {
 
   const [
     signInMutation,
-    { data: signInData,
+    {
+      data: signInData,
       client: signInClient,
       loading: signInLoading,
       called: signinCalled,
@@ -112,6 +119,7 @@ export default function Index() {
             const getLs = window.localStorage.getItem("authorization");
             if (getLs && getLs.length > 0)
               window.sessionStorage.setItem("authorization", getLs);
+
             setAccessTokenVal(
               authDetailedState.auth?.accessToken
                 ? authDetailedState.auth.accessToken
@@ -120,6 +128,17 @@ export default function Index() {
           }, 4000)
         : () => {};
     })();
+    if (authDetailedState != null) {
+      // const fetcher = fetch(
+      //   `/api/viewer/viewer?token=${authDetailedState.auth?.accessToken}`.trim(),
+      //   {
+      //     headers: {
+      //       authorization: "Bearer " + authDetailedState.auth?.accessToken
+      //     }
+      //   }
+      // ).then((res) => res);
+      // console.log(fetcher ?? "no fetcher data")
+    }
   }, [authDetailedState, router]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -265,6 +284,8 @@ export default function Index() {
     </>
   );
 }
+
+Index.Layout = Layout;
 /*
     { refetchQueries: [namedOperations.Query.myQuery] }
 https://www.graphql-code-generator.com/plugins/named-operations-object

@@ -15,6 +15,7 @@ import { ReturnTypedNode } from "ts-morph";
 import { UploadService } from "./upload.service";
 import { processGraphQLRequest } from "apollo-server-core/dist/requestPipeline";
 import { request, response } from "express";
+import { resolve } from "path/posix";
 
 interface File extends Blob {
   readonly lastModified: number;
@@ -46,6 +47,7 @@ export class UploadResolver implements FileUpload {
     @Args({ name: "callback" }) callback: (imageBase64Value: string) => void
   ) {
     const fileReader = new FileReader();
+
     return new Promise(async (resolve, reject) =>
       props
         .stream()
@@ -83,6 +85,7 @@ export class UploadResolver implements FileUpload {
     )
       .catch(err => new Error(`${err}`).message)
       .then(val => {
+        return val;
         // graphqlUploadExpress({ maxFieldSize: null, maxFileSize: 1000000, maxFiles: 10 })(request, response, ...prop)=>;
       });
   }

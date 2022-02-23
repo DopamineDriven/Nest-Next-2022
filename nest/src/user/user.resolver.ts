@@ -19,7 +19,7 @@ import { Entry } from "src/entry";
 import { ContentNodes } from "./outputs/content-nodes.output";
 import { EntryUpdateManyWithWhereWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-update-many-with-where-without-author.input";
 import { GraphqlAuthGuard } from "src/auth/gql-auth.guard";
-import { Context as AppContext } from "src/app.module";
+import { AppContext } from "src/gql-config.service";
 import { EntryCreateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create.input";
 import { EntryUncheckedCreateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-unchecked-create.input";
 
@@ -33,13 +33,9 @@ export class UserResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => AuthDetailed)
-  async me(
-    @Context("token") ctx: ExecutionContext
-  ): Promise<AuthDetailed | null> {
-    console.log(ctx ?? "no viewerId coupled with token");
-
+  async me(@Context() { xAuth }: AppContext): Promise<AuthDetailed | null> {
     return await this.authService.getUserWithDecodedToken(
-      (ctx as unknown as string) ?? ""
+      (xAuth as string).split(/([:])/)[2] ?? ""
     );
   }
 
@@ -206,13 +202,15 @@ export class UserResolver {
   @UseGuards(AuthGuard)
   @Mutation(() => User)
   async changePassword(
-    @Context("viewerId") ctx: ExecutionContext,
+    @Context() ctx: AppContext,
     @Args("changePasswordInput") changePasswordInput: ChangePasswordInput
   ) {
     return await this.userService
       .changePassword({
         changePasswordInput: changePasswordInput,
-        id: ctx as unknown as string
+        id: ctx.xAuth?.split(/([:])/)[0]
+          ? ctx.xAuth.split(/([:])/)[0]
+          : ctx.viewerId!
       })
       .then(async data => {
         const changePW = await this.userService.changePassword({
@@ -228,31 +226,4 @@ export class UserResolver {
         return changePW;
       });
   }
-  // @UseGuards(AuthGuard)
-  // @Mutation(() => Entry)
-  // async viewerCreateEntry(
-  //   @Context("viewerId") ctx: ExecutionContext,
-  //   @Args("viewerEntryCreateInput", {
-  //     type: () => EntryUncheckedCreateInput
-  //   })
-  //   viewerEntryCreateInput: EntryUncheckedCreateInput
-  // ) {
-  //   const viewerId = ctx as unknown as string;
-  //   console.log(
-  //     `[viewerId in viewerCreateEntry of UserResolver]: ${viewerId}` ??
-  //       "no viewer Id"
-  //   );
-  //   return await this.prismaService.entry.create({
-  //     data: { ...viewerEntryCreateInput },
-  //     include: { _count: true, author: true }
-  //     // data: {
-  //     //   entries: { updateMany: [viewerEntryCreateInput] }
-  //     // },
-  //     // where: { id: ctx as unknown as string },
-  //     // include: {
-  //     //   entries: { include: { _count: true, author: true } },
-  //     //   _count: true
-  //     // }
-  //   });
-  // }
 }

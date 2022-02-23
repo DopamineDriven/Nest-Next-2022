@@ -37,26 +37,30 @@ export default class AuthJwtController {
     @Req() request: ExpressRequest,
     @Res({ passthrough: true }) response: ExpressResponse
   ) {
-    const payload = this.jwtService.decode(
-      request.headers.authorization ? request.headers.authorization : ""
-    ) as JwtDecoded;
+    const token = request.headers.authorization
+      ? request.headers.authorization.split(/([ ])/)[2]
+      : "";
+    const payload = this.jwtService.decode(token, {
+      complete: true
+    }) as JwtDecoded;
     const userId = payload.payload?.userId;
     console.log(userId);
     const signedPayload = this.jwtService.sign(
       payload?.payload ? payload.payload : {}
     );
     console.log(signedPayload);
-    return response
-      .cookie("access_token", signedPayload, {
-        httpOnly: true,
+    return this.authService.setTokenCookie(response, token);
+    // return response
+    //   .cookie("access_token", signedPayload, {
+    //     httpOnly: true,
 
-        domain: "http://localhost:3000",
-        expires: new Date(`${payload.payload?.exp}`),
-        path: "*",
-        secure: process.env.NODE_ENV === "production" ? true : false
-      })
-      .json({ payload: signedPayload })
-      .end();
+    //     domain: "http://localhost:3000",
+    //     expires: new Date(`${payload.payload?.exp}`),
+    //     path: "*",
+    //     secure: process.env.NODE_ENV === "production" ? true : false
+    //   })
+    //   .json({ payload: signedPayload })
+    //   .end();
   }
   // @Post("/loginInput")
   // async loginInput(@Param("LoginInput") { email, password }: LoginInput) {
@@ -78,18 +82,7 @@ export default class AuthJwtController {
       });
       const response: AuthDetailed = { auth, jwt };
 
-      return res
-        .cookie("accessToken", auth.accessToken, {
-          expires: new Date(jwt.payload.exp),
-          maxAge: jwt.payload.exp,
-          path: "/",
-          secure: process.env.NODE_ENV === "production" ? true : false,
-          signed: true,
-          sameSite: "none",
-          httpOnly: true
-        })
-        .status(200 || 201 || 202 || 203 || 204)
-        .send(response);
+      return this.authService.setTokenCookie(res, response.auth.accessToken);
     } catch (error) {
       throw error;
     }
@@ -107,16 +100,19 @@ export default class AuthJwtController {
       );
       const parseTokenFromIncomingReq =
         req.headers.authorization?.split(/([ ])/)[2];
-      if (userFromToken != null || req.headers.authorization?.split(/([ ])/)[2])
+      if (userFromToken != null)
         res.setHeader(
           "authorization",
           `Bearer ${userFromToken.auth.accessToken}`
         );
       if (parseTokenFromIncomingReq)
-        res.setHeader("authorization", parseTokenFromIncomingReq);
+        res.setHeader(
+          "authorization",
+          "Bearer " + userFromToken.auth.accessToken
+        );
       return this.authService.setTokenCookie(
         res,
-        (parseTokenFromIncomingReq as string) ?? userFromToken
+        userFromToken.auth.accessToken
       );
     } catch (err) {
       throw new Error(`${err}`).message;

@@ -4,8 +4,9 @@ import { Gender } from "../../.generated/prisma-nestjs-graphql/prisma/enums/gend
 import { Pronouns } from "../../.generated/prisma-nestjs-graphql/prisma/enums/pronouns.enum";
 import { Node } from "src/node/model/node.model";
 
-@ObjectType("Profile", { implements: () => Node })
+@ObjectType("Profile", { implements: () => [Node] })
 export class Profile implements Node {
+  nombre?: string | undefined = Profile.name;
   @Field(() => ID, { nullable: false })
   id!: string;
 

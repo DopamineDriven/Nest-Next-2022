@@ -20,16 +20,8 @@ export class ConnectionOrderBy {}
 @ConnectionNodesObjectType(Connection)
 export class ConnectionNodes {}
 
-@ConnectionEdgeObjectType(Connection, { id: new Connection().id })
-export class ConnectionEdge extends Connection {
-  constructor() {
-    super();
-  }
-}
+@ConnectionEdgeObjectType(Connection)
+export class ConnectionEdge {}
 
 @ConnectionObjectType(ConnectionEdge)
-export class ConnectionConnection extends ConnectionEdge {
-  constructor() {
-    super();
-  }
-}
+export class ConnectionConnection {}

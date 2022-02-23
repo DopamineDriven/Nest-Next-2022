@@ -18,16 +18,8 @@ export class CategoryOrderBy {}
 @ConnectionNodesObjectType(Category)
 export class CategoryNodes {}
 
-@ConnectionEdgeObjectType(Category, { id: new Category().id })
-export class CategoryEdge extends Category {
-  constructor() {
-    super();
-  }
-}
+@ConnectionEdgeObjectType(Category)
+export class CategoryEdge {}
 
 @ConnectionObjectType(CategoryEdge)
-export class CategoryConnection extends CategoryEdge {
-  constructor() {
-    super();
-  }
-}
+export class CategoryConnection {}

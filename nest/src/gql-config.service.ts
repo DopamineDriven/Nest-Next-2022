@@ -4,10 +4,10 @@ import { Injectable } from "@nestjs/common";
 import { GqlOptionsFactory } from "@nestjs/graphql";
 import {
   ApolloConfig,
-  GraphqlConfig
+  GraphqlConfig,
+  SecurityConfig
 } from "./common/config/config-interfaces.config";
 import { AuthService } from "./auth/auth-jwt.service";
-import { Context } from "src/app.module";
 import { AuthDetailed } from "./auth/model/auth-detailed.model";
 import { AuthModule } from "./auth/auth-jwt.module";
 import { PasswordModule } from "./auth/password.module";
@@ -23,7 +23,17 @@ import { PaginationModule } from "./pagination";
 import { PrismaModule } from "./prisma";
 import { ProfileModule } from "./profile/profile.module";
 import { SessionModule } from "./session/session.module";
+import { ExpressContext } from "apollo-server-express";
+import { SignJWT, jwtVerify } from "jose";
+import { nanoid } from "nanoid";
 
+export type AppContext = {
+  req: ExpressContext["req"];
+  res: ExpressContext["res"];
+  token: string | null;
+  viewerId: string | null;
+  xAuth: string | null;
+};
 export type ParsedUrlQuery<
   T extends string,
   N extends NodeJS.Dict<T | T[keyof T]>
@@ -35,9 +45,16 @@ export class GqlConfigService implements GqlOptionsFactory {
     private configService: ConfigService,
     private authService: AuthService
   ) {}
+
+  public base64Encode(
+    enc: WithImplicitCoercion<string | Uint8Array | readonly number[]>
+  ) {
+    return Buffer.from(enc).toString("base64");
+  }
   createGqlOptions(): ApolloDriverConfig {
     const graphqlConfig = this.configService.get<GraphqlConfig>("graphql");
     const apolloConfig = this.configService.get<ApolloConfig>("apollo");
+    const securityConfig = this.configService.get<SecurityConfig>("security");
 
     return {
       autoSchemaFile: graphqlConfig?.schemaDestination || "./src/schema.gql",
@@ -80,6 +97,7 @@ export class GqlConfigService implements GqlOptionsFactory {
           "Accept-Encoding",
           "Transfer-Encoding",
           "Connection",
+          "X-Auth",
           "Referrer",
           "Referrer-Policy",
           "X-Csrf-Token",
@@ -109,21 +127,45 @@ export class GqlConfigService implements GqlOptionsFactory {
       context: async ({
         req,
         res,
-        token = req.headers.authorization?.split(/([ ])/)[2] ?? null
-      }: Context) => {
+        token = req.headers.authorization?.split(/([ ])/)[2] ??
+          req.header("accessToken") ??
+          null
+      }: AppContext) => {
         try {
           if (token != null && token.length > 10) {
-            const viewerId = (
-              (await this.authService.getUserWithDecodedToken(
-                token
-              )) as AuthDetailed
-            ).jwt.payload.userId;
+            const viewer = this.authService.getDecodedJwtComplete(token);
+            const cookie = req.cookies["user-token"];
+            if (!cookie) {
+              const tokenSet = await new SignJWT({
+                iat: viewer.payload.iat,
+                exp: viewer.payload.exp
+              })
+                .setProtectedHeader({
+                  alg: viewer.header.alg,
+                  typ: viewer.header.typ
+                })
+                .setJti(token)
+                .setIssuedAt(viewer.payload.iat)
+                .setExpirationTime(viewer.payload.exp)
+                .sign(new TextEncoder().encode(`${securityConfig?.secret}`));
+              res.cookie(`${securityConfig?.USER_TOKEN}`, tokenSet, {
+                httpOnly: false
+              });
+            }
+            res.setHeader(
+              "X-Auth",
+              `${this.base64Encode(
+                viewer.payload.userId.concat(":").concat(token)
+              ).trim()}`
+            );
+
             res.setHeader("authorization", `Bearer ${token}`);
             return {
               req,
               res,
               token,
-              viewerId: viewerId
+              viewerId: viewer.payload.userId,
+              xAuth: `${viewer.payload.userId.concat(":").concat(token)}`.trim()
             };
           } else {
             return { req, res, token: null, viewerId: null };

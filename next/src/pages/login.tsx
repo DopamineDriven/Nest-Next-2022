@@ -23,7 +23,7 @@ import Layout from "@/components/Layout/layout";
 //   newsletter?: GetGravityFormQuery;
 // };
 
-function LoginPage({}) {
+export default function LoginPage() {
   // const [token, setToken] = useState<string | null>("");
   const { viewer, loading, loggedIn } = useAuth();
 
@@ -106,4 +106,4 @@ function LoginPage({}) {
 //   });
 // };
 
-export default LoginPage;
+LoginPage.Layout = Layout;

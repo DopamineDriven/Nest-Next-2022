@@ -3,7 +3,6 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { RedisConfig } from "./common/config/config-interfaces.config";
 import config from "./common/config/config.config";
-import { ExpressContext } from "apollo-server-express";
 import { AppController } from "./app/app.controller";
 import { AppService } from "./app/app.service";
 import { AppResolver } from "./app/app.resolver";
@@ -32,13 +31,6 @@ import { CategoryModule } from "./category/category.module";
 import { ConnectionModule } from "./connection/connection.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
-
-export type Context = {
-  req: ExpressContext["req"];
-  res: ExpressContext["res"];
-  token: string | null;
-  viewerId: string | null;
-};
 
 @Module({
   imports: [
@@ -162,6 +154,7 @@ export type Context = {
       inject: [ConfigService]
     }),
     ServeStaticModule.forRoot({
+      // exclude: ["/api", "/graphql"],
       rootPath: join(__dirname, "..", "docs", "prisma-docs-generated")
     })
   ],

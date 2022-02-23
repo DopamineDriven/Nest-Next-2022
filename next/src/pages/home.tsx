@@ -24,6 +24,7 @@ import useSWR from "swr";
 import { viewerFetcher } from "@/lib/network/fetchers";
 import { Suspense } from "react";
 import { get } from "https";
+import Layout from "@/components/Layout/layout";
 
 // export type HomeGetStaticPropsInferred = UnwrapPromise<
 //   ReturnType<typeof getStaticProps>
@@ -46,6 +47,7 @@ export default function Home() {
   );
 }
 
+Home.Layout = Layout;
 // export const getStaticProps = async <T extends ParsedUrlQuery>(
 //   ctx: GetStaticPropsContext<T>
 // ): Promise<

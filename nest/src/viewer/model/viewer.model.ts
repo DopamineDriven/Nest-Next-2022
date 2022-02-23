@@ -32,11 +32,13 @@ import { UserStatus } from "src/.generated/prisma-nestjs-graphql/prisma/enums/us
 import { GraphQLEmailAddressConfig } from "graphql-scalars/scalars/EmailAddress";
 import { EmailAddress } from "graphql-scalars/typeDefs";
 type Nullable<T> = T | null;
-@ObjectType("ViewerEntity", { implements: () => Node })
+@ObjectType("ViewerEntity", { implements: () => [Node] })
 export class ViewerEntity extends AuthDetailed implements Node {
   constructor() {
     super();
+    this.jwt;
   }
+  nombre?: string | undefined = ViewerEntity.name;
   @Field(() => ID, { nullable: false })
   id!: string;
 }

@@ -17,7 +17,7 @@ export class ProfileOrderBy {}
 @ConnectionNodesObjectType(Profile)
 export class ProfileNodes {}
 
-@ConnectionEdgeObjectType(Profile, { id: new Profile().id })
+@ConnectionEdgeObjectType(Profile)
 export class ProfileEdge {}
 
 @ConnectionObjectType(ProfileEdge)

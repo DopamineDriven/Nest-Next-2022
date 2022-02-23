@@ -45,7 +45,7 @@ module.exports = withSuperjson()({
   async headers() {
     return [
       {
-        source: "/hco_fonts/hco_fonts.css",
+        source: "/fonts/inter-var-latin.woff2",
         headers: [
           {
             key: "Cache-Control",
@@ -70,9 +70,6 @@ module.exports = withSuperjson()({
     productionBrowserSourceMaps: true
   },
   experimental: {
-    optimizeCss: true,
-    optimizeImages: true,
-    isrFlushToDisk: true,
     outputStandalone: true
   },
   images: {

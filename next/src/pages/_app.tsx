@@ -3,48 +3,41 @@ import "@/styles/index.css";
 import React, {
   useEffect,
   FC,
-  ReactElement,
-  useCallback,
-  useState
+  HTMLAttributes,
+  ComponentType
 } from "react";
-import App, {
-  NextWebVitalsMetric,
-  AppProps,
-  AppInitialProps,
-  AppContext
-} from "next/app";
-import { initializeApollo, useApollo } from "@/apollo/apollo";
+import App, { NextWebVitalsMetric, AppProps } from "next/app";
+import { useApollo } from "@/apollo/apollo";
 import {
   ApolloClient,
   ApolloProvider,
   NormalizedCacheObject
 } from "@apollo/client";
 import { useRouter } from "next/router";
-import Layout from "@/components/Layout/layout";
-import useAuth, {
-  AuthData,
-  AuthProvider,
-  ViewerState
-} from "../hooks/use-auth";
-import Router from "next/dist/server/router";
-import { NextPageContext } from "next";
-import { request } from "http";
-import { getCookie } from "cookies-next";
-import { getCookieParser } from "next/dist/server/api-utils";
-import Link, { LinkProps } from "next/link";
-import NextNodeServer from "next/dist/server/next-server";
-import { BaseRouter } from "next/dist/shared/lib/router/router";
-import { error } from "console";
-import {
-  Viewer,
-  ViewerQuery,
-  ViewerQueryVariables
-} from "@/graphql/generated/graphql";
+import { Props } from "@/components/Layout/layout";
+import { AuthProvider } from "../hooks/use-auth";
+import { LinkProps } from "next/link";
+import cn from "classnames";
 
-const Noop: FC<{}> = ({ children }) => <>{children}</>;
-// const envVars = {
-//   facebookId: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID ?? ""
-// };
+const Noop: FC = ({ children }) => <>{children}</>;
+
+export const Page: FC<HTMLAttributes<HTMLElement>> = ({
+  children,
+  className,
+  ...props
+}) => (
+  <main
+    {...props}
+    className={cn("w-full max-w-3xl mx-auto py-16", className)}>
+    {children}
+  </main>
+);
+
+export function getLayout<LP extends {}>(
+  Component: ComponentType<any>
+): ComponentType<LP> {
+  return (Component as any).Layout || Noop;
+}
 
 type LinkPropsMapped<T extends keyof LinkProps> = {
   [P in T]: LinkProps[P];
@@ -54,11 +47,9 @@ type RouterPropsMapped<K extends keyof ReturnType<typeof useRouter>> = {
   [L in K]: ReturnType<typeof useRouter>[L];
 };
 
-export default function NestNextApp<T extends AppProps>({
-  pageProps,
-  Component
-}: T): ReactElement {
-  const LayoutNoop = (Component as any).LayoutNoop || Noop;
+export default function NestNextApp({ pageProps, Component }: AppProps) {
+  const LayoutGlobal = getLayout<Props>(Component);
+
   const apolloClient = useApollo(
     pageProps.initialApolloState ?? null,
     pageProps.resolverContext ?? {}
@@ -108,16 +99,7 @@ export default function NestNextApp<T extends AppProps>({
     };
   }, [router.events, router.query]);
 
-  // const readCache = apolloClient.cache.readQuery<ViewerQuery, ViewerQueryVariables>({
-  //   query: Viewer,
-  //   returnPartialData: true
-  // });
-
-  // const objectManipulation: ViewerState['authDetailed'] = pageProps.authData?.viewer?.authDetailed ? pageProps.authData.viewer.authDetailed : undefined;
-  // const areEqual = objectManipulation === readCache?.me ? readCache?.me : objectManipulation
-
   useEffect(() => {
-    // getCookie("nest-next-2022") ? router.replace(window.location.href, { auth: cookieAuth }) : document.cookie;
     document?.body?.classList?.remove("loading");
   }, [router]);
 
@@ -125,15 +107,14 @@ export default function NestNextApp<T extends AppProps>({
     <>
       <ApolloProvider client={apolloClient}>
         <AuthProvider authData={pageProps.authData}>
-          <LayoutNoop pageProps={pageProps}>
-            <Layout
-              loggedIn={Boolean(pageProps.authData?.loggedIn)}
-              loading={Boolean(pageProps.authData?.loading)}
-              viewer={pageProps.authData?.viewer}
-              error={pageProps.authData?.error}>
-              <Component {...pageProps} />
-            </Layout>
-          </LayoutNoop>
+          <LayoutGlobal
+            {...pageProps}
+            loggedIn={Boolean(pageProps.authData?.loggedIn)}
+            loading={Boolean(pageProps.authData?.loading)}
+            viewer={pageProps.authData?.viewer}
+            error={pageProps.authData?.error}>
+            <Component {...pageProps} />
+          </LayoutGlobal>
         </AuthProvider>
       </ApolloProvider>
     </>
@@ -184,3 +165,11 @@ export function reportWebVitals(metric: NextWebVitalsMetric): void {
         break;
     }
 }
+
+// const readCache = apolloClient.cache.readQuery<ViewerQuery, ViewerQueryVariables>({
+//   query: Viewer,
+//   returnPartialData: true
+// });
+
+// const objectManipulation: ViewerState['authDetailed'] = pageProps.authData?.viewer?.authDetailed ? pageProps.authData.viewer.authDetailed : undefined;
+// const areEqual = objectManipulation === readCache?.me ? readCache?.me : objectManipulation

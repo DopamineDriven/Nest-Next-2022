@@ -104,6 +104,7 @@ export interface SecurityConfig {
   bcryptSaltOrRound: string | number;
   secret: string;
   refreshSecret: string;
+  USER_TOKEN: string;
 }
 
 export interface GitHubConfig {

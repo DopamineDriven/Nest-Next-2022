@@ -28,6 +28,7 @@ const config = {
     sortSchema: true
   },
   security: {
+    USER_TOKEN: "user-token",
     expiresIn: "1d",
     refreshIn: "7d",
     bcryptSaltOrRound: 10,
