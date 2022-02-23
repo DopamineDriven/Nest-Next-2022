@@ -4,9 +4,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
-  UnauthorizedException,
-  ExecutionContext
-} from "@nestjs/common";
+  UnauthorizedException} from "@nestjs/common";
 import { User } from "../user/model/user.model";
 import { JwtService } from "@nestjs/jwt";
 import { SignupInput } from "./inputs/signup.input";
@@ -24,7 +22,6 @@ import { Response } from "express";
 import { Role } from "src/.generated/prisma-nestjs-graphql/prisma/enums/role.enum";
 import { Session } from "src/session/model";
 import { Auth } from "./model";
-import { GqlContextType, GqlExecutionContext } from "@nestjs/graphql";
 
 @Injectable()
 export class AuthService {

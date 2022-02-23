@@ -1,4 +1,4 @@
-import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
+import { UseGuards } from "@nestjs/common";
 import { Args, Context, Resolver } from "@nestjs/graphql";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "./model/user.model";
@@ -8,20 +8,16 @@ import { UserConnection } from "./model/user-connection.model";
 import { ChangePasswordInput } from "./inputs/change-passsword.input";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { AuthService } from "../auth/auth-jwt.service";
-import { UserMeta } from "../common/decorators/user.decorator";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { AuthDetailed } from "src/auth/model/auth-detailed.model";
 import { FindManyUsersPaginatedInput } from "./inputs/user-paginated-args.input";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { FindManyEntriesPaginatedInput } from "src/entry/inputs/entry-paginated.input";
 import { FindManyMediaItemsPaginatedInput } from "src/media/inputs/find-many-media-items-paginated.input";
-import { Entry } from "src/entry";
 import { ContentNodes } from "./outputs/content-nodes.output";
-import { EntryUpdateManyWithWhereWithoutAuthorInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-update-many-with-where-without-author.input";
-import { GraphqlAuthGuard } from "src/auth/gql-auth.guard";
 import { AppContext } from "src/gql-config.service";
-import { EntryCreateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-create.input";
-import { EntryUncheckedCreateInput } from "src/.generated/prisma-nestjs-graphql/entry/inputs/entry-unchecked-create.input";
+import { Entry } from "src/entry/model/entry.model";
+import { MediaItem } from "src/media/model/media.model";
 
 @Resolver(() => User)
 export class UserResolver {
@@ -33,10 +29,8 @@ export class UserResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => AuthDetailed)
-  async me(@Context() { xAuth }: AppContext): Promise<AuthDetailed | null> {
-    return await this.authService.getUserWithDecodedToken(
-      (xAuth as string).split(/([:])/)[2] ?? ""
-    );
+  async me(@Context() { token }: AppContext): Promise<AuthDetailed | null> {
+    return token ? await this.authService.getUserWithDecodedToken(token) : null;
   }
 
   @Query(() => ContentNodes)
@@ -78,6 +72,14 @@ export class UserResolver {
         last: params.pagination.last,
         before: params.pagination.before,
         after: params.pagination.after
+      },
+      {
+        getCursor: (record: { id: string }) => {
+          return record;
+        },
+        decodeCursor: (cursor: string) => fromGlobalId(cursor),
+        encodeCursor: (cursor: { id: string }) =>
+          toGlobalId(User.name, cursor.id)
       }
     );
     const edgingThoseMediaItems = await findManyCursorConnection(
@@ -104,6 +106,14 @@ export class UserResolver {
         last: mediaParams.pagination.last,
         before: mediaParams.pagination.before,
         after: mediaParams.pagination.after
+      },
+      {
+        getCursor: (record: { id: string }) => {
+          return record;
+        },
+        decodeCursor: (cursor: string) => fromGlobalId(cursor),
+        encodeCursor: (cursor: { id: string }) =>
+          toGlobalId(MediaItem.name, cursor.id)
       }
     );
     const edgingThoseNodes = await findManyCursorConnection(
@@ -129,6 +139,14 @@ export class UserResolver {
         last: entryParams.pagination.last,
         before: entryParams.pagination.before,
         after: entryParams.pagination.after
+      },
+      {
+        getCursor: (record: { id: string }) => {
+          return record;
+        },
+        decodeCursor: (cursor: string) => fromGlobalId(cursor),
+        encodeCursor: (cursor: { id: string }) =>
+          toGlobalId(Entry.name, cursor.id)
       }
     );
     const output = edgingThoseMediaItems || edgingThoseNodes || edgingUserNodes;

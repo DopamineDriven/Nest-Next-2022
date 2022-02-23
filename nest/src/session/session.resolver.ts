@@ -2,17 +2,14 @@ import { SessionService } from "./session.service";
 import { Session } from "./model/session.model";
 import { SessionConnection } from "./model/session-connection.model";
 import { Resolver, Query, Args, Context } from "@nestjs/graphql";
-import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
+import { Inject, UseGuards } from "@nestjs/common";
 import { FindManySessionsPaginatedInput } from "./inputs/sessions-paginated.input";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
+import { AppContext } from "src/gql-config.service";
 
 @Resolver(Session)
 export class SessionResolver {
-  constructor(
-    @Inject(PrismaService) private prismaService: PrismaService,
-    @Inject(SessionService) private sessionService: SessionService
-  ) {}
+  constructor(@Inject(SessionService) private sessionService: SessionService) {}
 
   @Query(() => Session)
   async sessionByRelayId(
@@ -34,14 +31,14 @@ export class SessionResolver {
   @Query(() => SessionConnection)
   @UseGuards(AuthGuard)
   async viewerSessionsPaginated(
-    @Context("viewerId") ctx: ExecutionContext,
+    @Context() { viewerId }: AppContext,
     @Args("viewerSessionssPaginatedInput", {
       type: () => FindManySessionsPaginatedInput
     })
     params: FindManySessionsPaginatedInput
   ) {
     return await this.sessionService
-      .getViewerSessionsPaginated(params, ctx as unknown as string)
+      .getViewerSessionsPaginated(params, viewerId as string)
       .then(sessionConnection => sessionConnection);
   }
 }
