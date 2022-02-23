@@ -3,94 +3,65 @@ import {
   GetServerSidePropsResult,
   InferGetServerSidePropsType
 } from "next";
-import useSWR, { SWRConfig, useSWRConfig } from "swr";
+import { useCallback, useEffect } from "react";
 import {
-  FullConfiguration,
-  PublicConfiguration,
-  ProviderConfiguration,
-  BareFetcher,
-  Fetcher,
-  Cache
-} from "swr/dist/types";
-import {
-  useCallback,
-  useEffect,
-  useState,
-  LegacyRef,
-  FC,
-  lazy
-} from "react";
-import {
-  allUsers,
   allUsersDocument,
-  Role,
   SortOrder,
   UserStatus,
+  Role,
   UserOrderByRelevanceFieldEnum,
   allUsersQuery,
   allUsersQueryVariables,
-  useallUsersLazyQuery,
-  userDecodedFromTokenQueryVariables,
   userDecodedFromTokenDocument,
-  userDecodedFromTokenQuery,
+  ViewerDocument,
+  ViewerQuery,
+  ViewerQueryVariables,
   useuserDecodedFromTokenLazyQuery
 } from "@/graphql/generated/graphql";
-import auth from "../../public/auth-validation.png";
-import Image from "next/image";
 import { initializeApollo, useApollo } from "@/apollo/apollo";
 import {
   ApolloClient,
-  ApolloError,
   ErrorPolicy,
-  LazyQueryResult,
   NetworkStatus,
-  NormalizedCacheObject,
-  QueryLazyOptions,
-  QueryTuple
+  NormalizedCacheObject
 } from "@apollo/client";
-import { Exact, UserScalarFieldEnum } from "../.cache/__types__";
 import { useRouter } from "next/router";
 import { getCookie } from "cookies-next";
-import {
-  useViewerLazyQuery,
-  useViewerQuery,
-  ViewerDocument,
-  ViewerQuery,
-  ViewerQueryVariables
-} from "@/graphql/queries/viewer.graphql";
 import { ParsedUrlQuery } from "@/types/query-parser";
 import { IncomingMessage, ServerResponse } from "http";
-import DataInspector from "@/components/UI/Inspector/inspector";
 import { RequireOnlyOne } from "@/types/helpers";
-import { viewerFetcher } from "@/lib/network/fetchers";
 import { ProfileComponent, Inspector } from "@/components/UI";
-import { storeKeyNameFromField } from "@apollo/client/utilities";
-import {
-  deriveUserDetailsFromTokenDocument,
-  usederiveUserDetailsFromTokenLazyQuery
-} from "@/graphql/generated/graphql";
 import Layout from "@/components/Layout/layout";
-type ProfileProps = {
+import useAuth from "@/hooks/use-auth";
+import { ResolverContext, xResolvers } from "@/apollo/resolver-context";
+import { Resolvers } from "@/graphql/generated/resolver-types";
+
+export type ProfileProps = {
   apolloCache: NormalizedCacheObject;
   authHeaderReq: string;
   authHeaderRes: string;
   allUsers: allUsersQuery | null;
+  viewer: ViewerQuery | null;
 };
 
 export default function Profile<T extends typeof getServerSideProps>({
   allUsers,
+  viewer,
   apolloCache,
   authHeaderReq,
   authHeaderRes
 }: InferGetServerSidePropsType<T>) {
+  const getViewer = useAuth();
   const router = useRouter();
   const useApolloClient = useApollo(apolloCache, router.query ?? {});
+
   const [
     lazyDerivePayload,
     { data, called, client: client = useApolloClient, error, loading }
   ] = useuserDecodedFromTokenLazyQuery({
     query: userDecodedFromTokenDocument
   });
+
   const callbackData = useCallback(async () => {
     const fetchIt = async () =>
       await fetch(
@@ -131,17 +102,8 @@ export default function Profile<T extends typeof getServerSideProps>({
   return (
     // <SWRConfig value={fallback}>
     <>
-      {allUsers?.listUsers ? (
-        <ProfileComponent
-          viewer={
-            data?.getUserFromAccessToken.auth?.user &&
-            ({ accessToken: authHeaderReq } ?? {
-              accessToken: authHeaderRes
-            })
-              ? ((data.getUserFromAccessToken.auth.user &&
-                  authHeaderReq) as unknown as ViewerQuery)
-              : null ?? (null as unknown as ViewerQuery | null)
-          }>
+      {getViewer.viewer?.me ? (
+        <ProfileComponent viewer={getViewer.viewer}>
           {error ? (
             <Inspector>{JSON.stringify(error, null, 2)}</Inspector>
           ) : (
@@ -149,11 +111,19 @@ export default function Profile<T extends typeof getServerSideProps>({
           )}
         </ProfileComponent>
       ) : (
-        <></>
+        <>
+          {viewer ? (
+            <ProfileComponent viewer={viewer}></ProfileComponent>
+          ) : (
+            <></>
+          )}
+        </>
       )}
     </>
   );
 }
+type networkstats = typeof NetworkStatus[keyof typeof NetworkStatus];
+
 function watchViewerQueryFallback(
   apolloClient: ApolloClient<NormalizedCacheObject>,
   req?: IncomingMessage,
@@ -161,7 +131,11 @@ function watchViewerQueryFallback(
 ) {
   return apolloClient.watchQuery<ViewerQuery, ViewerQueryVariables>({
     query: ViewerDocument,
-    context: { req, res, networkStatus: { ...NetworkStatus } },
+    context: xResolvers({
+      req,
+      res,
+      networkStatus: NetworkStatus
+    }) as Resolvers<ResolverContext>,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: "network-only",
     nextFetchPolicy: "cache-first",
@@ -203,7 +177,11 @@ export const getServerSideProps = async (
       ]
     }
   };
-  const apolloClient = initializeApollo({}, ctx);
+
+  const apolloClient = initializeApollo(
+    {},
+    { req: ctx.req, res: ctx.res }
+  );
   const viewerQuery = watchViewerQueryFallback(
     apolloClient,
     ctx.req,
@@ -227,6 +205,7 @@ export const getServerSideProps = async (
   )[2] as string;
   return {
     props: {
+      viewer: viewerQuery.getCurrentResult(true).data,
       apolloCache: apolloClient.cache.extract(true),
       authHeaderRes: authHeaderRes,
       authHeaderReq: getAuthHeader,

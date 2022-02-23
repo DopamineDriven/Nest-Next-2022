@@ -55,7 +55,7 @@ export default function LoginPage() {
       ) : (
         <UnAuthContext>
           <div className='mt-12 bg-white p-4 ring-2 ring-inset ring-blue-600 rounded-lg font-gothamLight shadow-cardHover'>
-            <LoginComponent viewer={viewer?.authDetailed} />
+            <LoginComponent viewer={viewer} />
           </div>
         </UnAuthContext>
       )}

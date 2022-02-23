@@ -30,11 +30,13 @@ import {
 } from "./helpers";
 import emittedIntrospection from "./fragment-matcher";
 import { Resolvers } from "@/graphql/generated/graphql";
+
 export type DocumentType<
   TDocumentNode extends TypedDocumentNode<any, any>
 > = TDocumentNode extends TypedDocumentNode<infer TType, any>
   ? TType
   : never;
+
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 function createApolloClient(
