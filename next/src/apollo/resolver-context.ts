@@ -5,7 +5,7 @@ import {
 } from "http";
 import { BatchHttpLink } from "@apollo/client/link/batch-http";
 import { onError } from "@apollo/client/link/error";
-import { Resolvers } from "@/cache/__types__";
+import { Resolvers } from "@/graphql/generated/graphql";
 export interface ResolverContext {
   req?: IncomingMessage;
   res?: ServerResponse;
@@ -13,7 +13,9 @@ export interface ResolverContext {
 // import { GraphQLLet } from ".graphql-let.yml";
 import { ApolloLink, FetchResult, RequestHandler } from "@apollo/client";
 import { signInUserMutation } from "@/graphql/generated/graphql";
-const x = (props: Resolvers<ResolverContext>) => ({ ...props });
+export const xResolvers = (props: Resolvers<ResolverContext>) => ({
+  ...props
+});
 const browser = typeof window !== "undefined";
 const envEndpoint =
   process.env.NODE_ENV === "development"
@@ -24,53 +26,115 @@ const uri =
     ? envEndpoint
     : "http://localhost:3000/graphql";
 
+// export const enhancedFetch = async (
+//   url: RequestInfo,
+//   init: RequestInit,
+//   req: IncomingHttpHeaders
+// ) => {
+//   return await fetch((url = uri), {
+//     ...init,
+//     headers: {
+//       authorization: `Bearer ${
+//         req.authorization?.split(/([ ])/)[2]
+//           ? req.authorization.split(/([ ])/)[2]
+//           : req.cookies
+//           ? req.cookies.includes("jwt")
+//             ? (req.cookies as string[])
+//             : ""
+//           : ""
+//       }`
+//     },
+//     keepalive: true,
+//     credentials: "include",
+//     mode: "cors",
+//     cache: "default",
+//     method: "POST"
+//   }).then(response => response);
+// };
 export const enhancedFetch = async (
   url: RequestInfo,
-  init: RequestInit,
-  req: IncomingHttpHeaders
+  init: RequestInit
 ) => {
-  return await fetch((url = uri), {
+  return await fetch(url, {
     ...init,
     headers: {
-      authorization: `Bearer ${
-        req.authorization?.split(/([ ])/)[2]
-          ? req.authorization.split(/([ ])/)[2]
-          : req.cookies
-          ? req.cookies.includes("jwt")
-            ? (req.cookies as string[])
-            : ""
-          : ""
-      }`
+      ...init.headers
     },
-    keepalive: true,
     credentials: "include",
-    mode: "cors",
-    cache: "default",
+    keepalive: true,
     method: "POST"
   }).then(response => response);
 };
-export function createBatch<T extends ResolverContext>(context?: T) {
+export function createBatch<T extends Resolvers<ResolverContext>>(
+  context?: T
+) {
   return new BatchHttpLink({
     uri: "http://localhost:3000/graphql",
     credentials: "include",
     includeExtensions: true,
     batchInterval: 10,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": ["access-control-allow-headers"],
-      "Access-Control-Expose-Headers": "*, authorization",
-      Authorization: `${
-        context?.req?.headers.authorization ??
-        process.env.NEXT_TOKEN_CODEGEN
-          ? process.env.NEXT_TOKEN_CODEGEN
-          : ""
-      }`
-    },
+    // headers: {
+    //   "Content-Type": "application/json; charset=utf-8",
+    //   "Access-Control-Allow-Origin": "*",
+    //   "Access-Control-Allow-Headers": [
+    //     "Access-Control-Allow-Methods",
+    //     "Access-Control-Expose-Headers",
+    //     "apollographql-client-name",
+    //     "access-control-allow-headers",
+    //     "Access-Control-Allow-Origin",
+    //     "Origin",
+    //     "X-Requested-With",
+    //     "Content-Type",
+    //     "Accept",
+    //     "Apollo-Federation-Include-Trace",
+    //     "Authorization",
+    //     "Cache-Control",
+    //     "Vary",
+    //     "X-Auth",
+    //     "Content-Length",
+    //     "Cookie",
+    //     "Accept-Encoding",
+    //     "Transfer-Encoding",
+    //     "Connection",
+    //     "Referrer",
+    //     "Referrer-Policy",
+    //     "X-Csrf-Token",
+    //     "Woocommerce-Session",
+    //     "Accept-Charset",
+    //     "Forwarded",
+    //     "Host",
+    //     "From",
+    //     "ETag",
+    //     "Retry-After",
+    //     "Server",
+    //     "Set-Cookie",
+    //     "Trailer",
+    //     "User-Agent",
+    //     "Upgrade",
+    //     "X-XSS-Protection",
+    //     "Upgrade-Insecure-Requests",
+    //     "Session",
+    //     "authorization"
+    //   ],
+    //   exposedHeaders: ["*", "authorization", "Authorization"],
+    //   // Authorization: `${
+    //   //   context?.req?.headers.authorization ??
+    //   //   process.env.NEXT_TOKEN_CODEGEN
+    //   //     ? process.env.NEXT_TOKEN_CODEGEN
+    //   //     : ""
+    //   // }`
     fetchOptions: {
-      context: () => ({ ...context })
+      mode: "cors",
+      context: { ...context }
     },
-    ...fetch
+    fetch: enhancedFetch,
+    headers: {
+      "Accept-Encoding": "gzip, deflate, br",
+      "Transfer-Encoding": "chunked",
+      "Content-Type": "application/json",
+      Connection: "keep-alive",
+      Accept: "*/*"
+    }
   });
 }
 export const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -144,6 +208,45 @@ export const nextSesh = new ApolloLink((operation, forward) => {
       2
     );
     console.log("response: " + jsonString ?? "no response");
+    return response;
+  });
+});
+const isBrowser = typeof window !== "undefined";
+
+export const nextNestMiddleware = new ApolloLink((operation, forward) => {
+  // if session exists in LS, set value as session header
+  const token = isBrowser
+    ? window.localStorage.getItem("authorization")
+    : "";
+  if (token) {
+    operation.setContext(({ headers = {} }) => ({
+      headers: {
+        ...headers,
+        authorization: `${token}`
+      }
+    }));
+  }
+  return forward(operation);
+});
+
+export const nextNestAfterware = new ApolloLink((operation, forward) => {
+  return forward(operation).map(response => {
+    // catches incoming session token to store in LS
+    // check for session header & update session in LS accordingly
+    const context = operation.getContext();
+    const {
+      response: { headers }
+    } = context;
+    const session = headers.get("authorization");
+    if (session && isBrowser) {
+      if (window.localStorage.getItem("authorization") !== session) {
+        isBrowser && window.localStorage.removeItem("authorization");
+        window.localStorage.setItem(
+          "authorization",
+          headers.get("authorization")
+        );
+      }
+    }
     return response;
   });
 });

@@ -80,23 +80,6 @@ export const getServerSideProps = async (
 export default function DirectoryPage<
   T extends typeof getServerSideProps
 >({ apolloCache, people }: InferGetServerSidePropsType<T>) {
-  // const [
-  //   lazyPeople,
-  //   {
-  //     called,
-  //     variables,
-  //     data,
-  //     client,
-  //     loading,
-  //     networkStatus,
-  //     updateQuery,
-  //     error,
-  //     previousData,
-  //     refetch
-  //   }
-  // ] = useallUsersLazyQuery({
-  //   query: allUsersDocument
-  // });
   const allUsersVarsClient: allUsersQueryVariables = {
     findManyUsersPaginatedInput: {
       pagination: { first: 20 },
@@ -130,37 +113,6 @@ export default function DirectoryPage<
     query: allUsersDocument,
     variables: allUsersVarsClient
   });
-  // const [callPrompted, setCallPrompted] = useState(called);
-  // const [lazyPeopleVariables, setLazyPeopleVariables] =
-  //   useState<typeof variables>(variables);
-  // const [lazyPeopleState, setLazyPeopleState] = useState(
-  //   lazyPeople({ variables })
-  // );
-
-  // useEffect(() => {
-  //   const allUsersVarsClient: allUsersQueryVariables = {
-  //     findManyUsersPaginatedInput: {
-  //       pagination: { first: 20 },
-  //       orderBy: [
-  //         {
-  //           _relevance: {
-  //             fields: [UserOrderByRelevanceFieldEnum.email],
-  //             search: "*",
-  //             sort: SortOrder.asc
-  //           }
-  //         }
-  //       ],
-  //       where: {
-  //         role: {
-  //           in: [Role.ADMIN, Role.MAINTAINER, Role.SUPERADMIN, Role.USER]
-  //         }
-  //       }
-  //     }
-  //   };
-  //   (function lazyPeopleIIFE() {
-  //     return !callPrompted ? () => {} :lazyPeople({variables: allUsersVarsClient});
-  //   })();
-  // }, [callPrompted, lazyPeople]);
 
   return (
     <>
@@ -174,17 +126,57 @@ export default function DirectoryPage<
             ? new ApolloError(error)
             : new Error("error in directory page")}
         </div>
-        // ) : (
-        //   <div>
-        //     {!called && !data ? (
-        //       <div>{`${setCallPrompted(true)} called!`}</div>
-        //     ) : (
-        //       data && <Directory people={data?.listUsers} />
-        //     )}
-        //   </div>
       )}
     </>
   );
 }
 
 DirectoryPage.Layout = Layout;
+// const [callPrompted, setCallPrompted] = useState(called);
+// const [lazyPeopleVariables, setLazyPeopleVariables] =
+//   useState<typeof variables>(variables);
+// const [lazyPeopleState, setLazyPeopleState] = useState(
+//   lazyPeople({ variables })
+// );
+
+// useEffect(() => {
+//   const allUsersVarsClient: allUsersQueryVariables = {
+//     findManyUsersPaginatedInput: {
+//       pagination: { first: 20 },
+//       orderBy: [
+//         {
+//           _relevance: {
+//             fields: [UserOrderByRelevanceFieldEnum.email],
+//             search: "*",
+//             sort: SortOrder.asc
+//           }
+//         }
+//       ],
+//       where: {
+//         role: {
+//           in: [Role.ADMIN, Role.MAINTAINER, Role.SUPERADMIN, Role.USER]
+//         }
+//       }
+//     }
+//   };
+//   (function lazyPeopleIIFE() {
+//     return !callPrompted ? () => {} :lazyPeople({variables: allUsersVarsClient});
+//   })();
+// }, [callPrompted, lazyPeople]);
+// const [
+//   lazyPeople,
+//   {
+//     called,
+//     variables,
+//     data,
+//     client,
+//     loading,
+//     networkStatus,
+//     updateQuery,
+//     error,
+//     previousData,
+//     refetch
+//   }
+// ] = useallUsersLazyQuery({
+//   query: allUsersDocument
+// });

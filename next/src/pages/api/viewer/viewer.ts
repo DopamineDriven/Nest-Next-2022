@@ -1,15 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { initializeApollo } from "@/apollo/apollo";
 import { setCookies } from "cookies-next";
+import { serialize } from "cookie";
 import {
-  ViewerDocument,
-  ViewerQuery,
-  ViewerQueryVariables,
-  deriveUserDetailsFromTokenDocument,
-  deriveUserDetailsFromToken,
-  deriveUserDetailsFromTokenLazyQueryHookResult,
-  deriveUserDetailsFromTokenQuery,
-  deriveUserDetailsFromTokenQueryVariables
+  userDecodedFromTokenQuery,
+  userDecodedFromTokenQueryVariables,
+  userDecodedFromTokenDocument
 } from "@/graphql/generated/graphql";
 import { ApolloError, ErrorPolicy } from "@apollo/client";
 import { RequireOnlyOne } from "@/types/helpers";
@@ -17,7 +13,7 @@ import { RequireOnlyOne } from "@/types/helpers";
 export default async function viewerValidate(
   req: NextApiRequest,
   res: NextApiResponse<{
-    authDetailed: deriveUserDetailsFromTokenQuery["userFromAccessTokenDecoded"];
+    authDetailed: userDecodedFromTokenQuery["getUserFromAccessToken"];
   }>
 ) {
   const {
@@ -28,21 +24,21 @@ export default async function viewerValidate(
   const apolloClient = initializeApollo({}, { req, res });
   try {
     const nestSwaggerValidate = await apolloClient.query<
-      deriveUserDetailsFromTokenQuery,
-      deriveUserDetailsFromTokenQueryVariables
-      >({
-      variables: {token: token as string},
-      query: deriveUserDetailsFromTokenDocument,
+      userDecodedFromTokenQuery,
+      userDecodedFromTokenQueryVariables
+    >({
+      variables: { accessToken: token as string },
+      query: userDecodedFromTokenDocument,
       context: { req, res, token: token as string },
       errorPolicy: "all" as RequireOnlyOne<ErrorPolicy>
     });
     const setAuthHeader = res.setHeader(
       "authorization",
-      `Bearer ${nestSwaggerValidate.data?.userFromAccessTokenDecoded?.auth?.accessToken}`
+      `Bearer ${nestSwaggerValidate.data?.getUserFromAccessToken?.auth?.accessToken}`
     );
     console.log(nestSwaggerValidate ?? "no data");
     if (nestSwaggerValidate.data != null && setAuthHeader) {
-      setCookies("nest-to-next-2022", nestSwaggerValidate.data, {
+      setCookies("authorization-cookie", nestSwaggerValidate.data, {
         sameSite: "none",
         domain: "http://localhost:3040",
         path: "/",
@@ -53,16 +49,12 @@ export default async function viewerValidate(
         httpOnly: false,
         encode: (val: string) => encodeURIComponent(val)
       });
-
-      return nestSwaggerValidate
-        ? res
-            .status(201)
-            .json({
-              authDetailed:
-                nestSwaggerValidate.data.userFromAccessTokenDecoded
-            })
-        : console.error(`no data to send ${new Error("no data").message}`);
     }
+
+    return res.json({
+      authDetailed: nestSwaggerValidate?.data
+        ?.getUserFromAccessToken as unknown as userDecodedFromTokenQuery["getUserFromAccessToken"]
+    });
   } catch (error) {
     throw new Error(`error in /api/viewer/viewer - ${error}`).message;
   }

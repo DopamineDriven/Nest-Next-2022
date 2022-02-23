@@ -1695,7 +1695,7 @@ type Query {
   ): UserConnection!
   me: AuthDetailed!
   node(id: ID!): Node
-  nodeField(cursor: String!): NodeBaseFieldUnion!
+  nodeField(cursor: String!): [NodeBaseFieldUnion!]!
   nodeUnionResolver(
     id: String!
     manyComments: FindManyCommentsPaginatedInput!
@@ -1960,10 +1960,6 @@ type Subscription {
 }
 
 union TypesUnion = Entry | MediaItem | User
-
-type UnionOnEdgeObjectType {
-  unionOnEdge: UnionOnEdgeObjectType!
-}
 
 type User implements Node {
   _count: UserCount!

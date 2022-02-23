@@ -82,9 +82,7 @@ export const baseTypes = createUnionType<Type<BaseTypes>[]>({
     // }
   }
 });
-@ConnectionEdgeObjectType(baseTypes, {
-  id: new Entry().id || new User().id || new MediaItem().id
-})
+@ConnectionEdgeObjectType(baseTypes)
 export class BaseTypesEdge {}
 
 @ConnectionNodesObjectType(baseTypes)

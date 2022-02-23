@@ -321,11 +321,11 @@ const GlobalNav = ({ viewer, loading, loggedIn, error }: NavProps) => {
                       className='w-8 h-8 rounded-full'
                       src={
                         status === false
-                          ? "/cortina-logo.png"
+                          ? "/stock.jpg"
                           : status === true &&
                             data?.authDetailed?.me?.auth?.user?.image
                           ? data.authDetailed.me.auth.user.image
-                          : "/cortina-logo.png"
+                          : "/stock.jpg"
                       }
                       alt={`${data?.authDetailed?.me?.auth?.user.firstName}'s Avatar`}
                     />

@@ -17,11 +17,17 @@
     "moduleResolution": "node",
     "strictNullChecks": true,
     "sourceMap": true,
+    "allowJs": true,
     "outDir": "./dist",
     "baseUrl": ".",
     "incremental": true,
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["./src/**/*.ts", "./src/.generated/**/*.ts", "./prisma/**/*", "./seeds/**/*.ts"],
+  "include": [
+    "./src/**/*.ts",
+    "./src/.generated/**/*.ts",
+    "./prisma/**/*",
+    "./seeds/**/*.ts"
+  ]
 }

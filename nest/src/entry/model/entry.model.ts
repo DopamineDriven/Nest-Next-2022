@@ -14,8 +14,9 @@ import { Session } from "src/session/model/session.model";
 
 //function IntersectionType<A, B>(target: Type<A>, source: Type<B>): MappedType<A & B>;
 
-@ObjectType("Entry", { implements: () => Node })
+@ObjectType("Entry", { implements: () => [Node] })
 export class Entry implements Node {
+  nombre?: string | undefined = Entry.name;
   @Field(() => ID, { nullable: false })
   id!: string;
 

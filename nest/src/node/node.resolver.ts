@@ -85,6 +85,7 @@ import { Account } from "src/account";
 import { Category } from "src/category";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UnwrapPromise } from "@prisma/client";
+import { astFromUnionType } from "@graphql-tools/utils";
 export type Maybe<T> = T | null;
 export type UnionOnEdge =
   | UserEdge
@@ -97,11 +98,14 @@ export type UnionOnEdge =
 export interface UnionOnEdgeExtended<T extends UnionOnEdge> {
   unionOnEdge: T;
 }
-@ObjectType("UnionOnEdgeObjectType")
-export class UnionOnEdgeObjectType implements UnionOnEdgeExtended<UnionOnEdge> {
-  @Field(() => UnionOnEdgeObjectType)
-  unionOnEdge: UnionOnEdge;
-}
+
+export type UnionOnNode =
+  | UserConnection
+  | EntryConnection
+  | MediaItemConnection
+  | ProfileConnection
+  | SessionConnection
+  | CommentConnection;
 
 class UnionTypeDef implements UnionTypeDefinitionNode {
   kind: "UnionTypeDefinition";
@@ -112,23 +116,20 @@ class UnionTypeDef implements UnionTypeDefinitionNode {
   types?: readonly NamedTypeNode[] | undefined;
 }
 
-new GraphQLUnionType({
+@ObjectType("UnionOnEdgeObjectType", { implements: () => [unionOnEdge] })
+export class UnionOnEdgeObjectType<T extends Type<UnionOnEdge>[]> {
+  @Field(() => [unionOnEdge])
+  unionOnEdge: T;
+}
+
+const unionOnEdge = new GraphQLUnionType({
   name: "UnionEdge",
   types: <
-    Thunk<GraphQLObjectType<UnionOnEdgeObjectType, GqlExecutionContext>[]>
+    Thunk<GraphQLObjectType<UnionOnEdgeObjectType<Type<UnionOnEdge>[]>, GqlExecutionContext>[]>
   >{},
   astNode: <Union<UnionOnEdgeExtended<UnionOnEdge>[]>>{},
   description: "Top Level Union"
 });
-
-export type UnionOnNode =
-  | UserConnection
-  | EntryConnection
-  | MediaItemConnection
-  | ProfileConnection
-  | SessionConnection
-  | CommentConnection;
-
 export const UnionNode = createUnionType<Type<UnionOnNode>[]>({
   name: "NodeUnion",
   types: () => [
@@ -222,7 +223,7 @@ export const NodeImplementedUnionConst = createUnionType<
   }
 });
 
-@ConnectionEdgeObjectType(UnionNode, { id: new Node().id })
+@ConnectionEdgeObjectType(UnionNode)
 export class NodeUnionEdge extends InstanceWrapper<
   Type<
     | UserConnection
@@ -236,22 +237,18 @@ export class NodeUnionEdge extends InstanceWrapper<
   constructor() {
     super();
   }
-  @Field(() => UnionNode)
-  nodeUnion:
+  @Field(() => [UnionNode])
+  nodeUnion: Array<
     | UserConnection
     | EntryConnection
     | MediaItemConnection
     | ProfileConnection
     | SessionConnection
-    | CommentConnection;
+    | CommentConnection>;
 }
 
 @ConnectionObjectType(NodeUnionEdge)
-export class NodeUnionConnection extends NodeUnionEdge {
-  constructor() {
-    super();
-  }
-}
+export class NodeUnionConnection {}
 type Nullable<T> = T | null;
 @Resolver(() => Node)
 export class NodeResolver {
@@ -269,7 +266,7 @@ export class NodeResolver {
     throw new Error("could not find any resource with id: " + id);
   }
 
-  @Query(() => NodeImplementedUnionConst, { name: "nodeField" })
+  @Query(() => [NodeImplementedUnionConst], { name: "nodeField" })
   async nodeField(
     @Args("cursor", { type: () => String }) cursor: string
   ): Promise<Nullable<NodeImplementedUnion>> {
@@ -347,7 +344,7 @@ export class NodeResolver {
   }
 
   @Query(_returns => Node, { nullable: true })
-  async node(@Args({ name: "id", type: () => ID }) id: string) {
+  async node(@Args({ name: "id", type: () => ID }) id: string): Promise<string | User | Entry | MediaItem | Session | Comment | Profile | null> {
     const { type, id: cursor } = fromGlobalId(id);
     if (!globalIdField(toGlobalId(type, cursor))) {
       return null;

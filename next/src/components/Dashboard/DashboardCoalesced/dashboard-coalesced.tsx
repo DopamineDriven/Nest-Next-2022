@@ -8,7 +8,7 @@ import {
   Search as SearchIcon
 } from "@/components/Icons";
 import { TypeScript } from "@/components/Icons";
-import {Analytics} from "@/components/Icons";
+import { Analytics } from "@/components/Icons";
 import cn from "classnames";
 import Image from "next/image";
 import Link from "next/link";
@@ -562,7 +562,7 @@ export default function Example() {
                                               src={
                                                 item.imageUrl
                                                   ? item.imageUrl
-                                                  : "/cortina-logo.png"
+                                                  : "/stock.jpg"
                                               }
                                               alt='alt'
                                               objectFit='cover'

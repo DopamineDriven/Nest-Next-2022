@@ -14,7 +14,7 @@ export class UserFilter {}
 @ConnectionOrderingInputType(UserOrderByRelevanceInput)
 export class UserOrderBy {}
 
-@ConnectionEdgeObjectType(Viewer, { id: new Viewer().id })
+@ConnectionEdgeObjectType(Viewer)
 export class ViewerEdge {}
 
 @ConnectionObjectType(ViewerEdge)

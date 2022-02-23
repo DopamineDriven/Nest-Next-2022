@@ -6,9 +6,11 @@ import {
 } from "@apollo/client";
 import {
   createBatch,
+  nextNestAfterware,
+  nextNestMiddleware,
   errorLink,
   ResolverContext,
-  nextSesh
+  xResolvers
 } from "./resolver-context";
 import { useMemo } from "react";
 import { relayStylePagination } from "@apollo/client/utilities";
@@ -17,9 +19,17 @@ import {
   AuthDetailedFieldPolicy,
   AuthDetailedKeySpecifier,
   UserConnectionKeySpecifier,
-  JwtDecodedFieldPolicy
+  JwtDecodedFieldPolicy,
+  ConnectionConnectionKeySpecifier,
+  CategoryConnectionKeySpecifier,
+  CommentConnectionKeySpecifier,
+  MediaItemConnectionKeySpecifier,
+  EntryConnectionKeySpecifier,
+  ProfileConnectionKeySpecifier,
+  SessionConnectionKeySpecifier
 } from "./helpers";
 import emittedIntrospection from "./fragment-matcher";
+import { Resolvers } from "@/graphql/generated/graphql";
 export type DocumentType<
   TDocumentNode extends TypedDocumentNode<any, any>
 > = TDocumentNode extends TypedDocumentNode<infer TType, any>
@@ -28,13 +38,16 @@ export type DocumentType<
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 function createApolloClient(
-  context?: ResolverContext
+  context?: Resolvers<ResolverContext>
 ): ApolloClient<NormalizedCacheObject> {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     name: "graphql-global",
-    link: nextSesh.concat(createBatch(context) || errorLink),
+    link: nextNestMiddleware
+      .concat(nextNestAfterware)
+      .concat(createBatch(context) || errorLink),
     connectToDevTools: true,
+    resolvers: xResolvers(() => context),
     cache: new InMemoryCache({
       possibleTypes: emittedIntrospection.possibleTypes,
       typePolicies: {
@@ -70,7 +83,54 @@ function createApolloClient(
         },
         Query: {
           fields: {
-            listUsers: relayStylePagination<UserConnectionKeySpecifier>()
+            listCategories:
+              relayStylePagination<CategoryConnectionKeySpecifier>([
+                "edges",
+                "pageInfo",
+                "totalCount"
+              ] as CategoryConnectionKeySpecifier),
+            listConnections:
+              relayStylePagination<ConnectionConnectionKeySpecifier>([
+                "edges",
+                "pageInfo",
+                "totalCount"
+              ] as ConnectionConnectionKeySpecifier),
+            listComments:
+              relayStylePagination<CommentConnectionKeySpecifier>([
+                "edges",
+                "pageInfo",
+                "totalCount"
+              ] as CommentConnectionKeySpecifier),
+            listEntries: relayStylePagination<EntryConnectionKeySpecifier>(
+              [
+                "edges",
+                "pageInfo",
+                "totalCount"
+              ] as EntryConnectionKeySpecifier
+            ),
+            listMediaItems:
+              relayStylePagination<MediaItemConnectionKeySpecifier>([
+                "edges",
+                "pageInfo",
+                "totalCount"
+              ] as MediaItemConnectionKeySpecifier),
+            listProfiles:
+              relayStylePagination<ProfileConnectionKeySpecifier>([
+                "edges",
+                "pageInfo",
+                "totalCount"
+              ] as ProfileConnectionKeySpecifier),
+            listSessions:
+              relayStylePagination<SessionConnectionKeySpecifier>([
+                "edges",
+                "pageInfo",
+                "totalCount"
+              ] as SessionConnectionKeySpecifier),
+            listUsers: relayStylePagination<UserConnectionKeySpecifier>([
+              "edges",
+              "pageInfo",
+              "totalCount"
+            ] as UserConnectionKeySpecifier)
           }
         }
       } as TypedTypePolicies

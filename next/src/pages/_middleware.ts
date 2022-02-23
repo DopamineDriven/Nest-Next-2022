@@ -10,10 +10,8 @@ export default async function middleware(req: NextRequest) {
   const response = NextResponse.next();
 
   console.log(req.cookies ?? "no cooks");
-  if (
-    req.headers.get("authorization") &&
-    req.headers.get("authorization") != null
-  ) {
+  if (req.headers.has("authorization")) {
+    console.log(req.headers.get("authorization"));
     return response.headers.set(
       "authorization",
       `Bearer ${req.headers
@@ -23,7 +21,7 @@ export default async function middleware(req: NextRequest) {
     );
   }
 
-  if (req.headers.get("X-Auth") && req.headers.get("X-Auth") != null) {
+  if (req.headers.has("X-Auth")) {
     console.log(req.headers.get("X-Auth") ?? "no x-auth");
     return response.headers.set(`X-Auth`, `${req.headers.get("X-Auth")}`);
   }

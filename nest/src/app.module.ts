@@ -3,7 +3,6 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { RedisConfig } from "./common/config/config-interfaces.config";
 import config from "./common/config/config.config";
-import { ExpressContext } from "apollo-server-express";
 import { AppController } from "./app/app.controller";
 import { AppService } from "./app/app.service";
 import { AppResolver } from "./app/app.resolver";
@@ -155,6 +154,7 @@ import { join } from "path";
       inject: [ConfigService]
     }),
     ServeStaticModule.forRoot({
+      // exclude: ["/api", "/graphql"],
       rootPath: join(__dirname, "..", "docs", "prisma-docs-generated")
     })
   ],

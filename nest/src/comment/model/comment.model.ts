@@ -6,8 +6,9 @@ import { GraphQLJSON, JSONObjectResolver, JSONResolver } from "graphql-scalars";
 import { Node } from "src/node/model/node.model";
 import { Prisma, Comment as CommentPrisma } from "@prisma/client";
 
-@ObjectType("Comment", { implements: () => Node })
+@ObjectType("Comment", { implements: () => [Node] })
 export class Comment implements Node {
+  nombre?: string | undefined = Comment.name;
   // abstract(): Node {
   //   return {
   //     id: this.id

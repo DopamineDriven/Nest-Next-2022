@@ -17,12 +17,8 @@ export class UserOrderBy {}
 @ConnectionNodesObjectType(User)
 export class UserNodes {}
 
-@ConnectionEdgeObjectType(User, { id: new User().id })
-export class UserEdge extends User {
-  constructor() {
-    super();
-  }
-}
+@ConnectionEdgeObjectType(User)
+export class UserEdge {}
 
 @ConnectionObjectType(UserEdge)
 export class UserConnection {}

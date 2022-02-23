@@ -61,10 +61,10 @@ import { GraphQLModule } from "@nestjs/graphql";
 const logStream = fs.createWriteStream("api.log", {
   flags: "a" // append
 });
-
 type Options = NestApplicationOptions;
 
 const options: Options = {
+  bodyParser: true,
   bufferLogs: true,
   logger: ["debug", "error", "log", "warn", "verbose"],
   cors: {

@@ -69,6 +69,7 @@ import {
   deriveUserDetailsFromTokenDocument,
   usederiveUserDetailsFromTokenLazyQuery
 } from "@/graphql/generated/graphql";
+import Layout from "@/components/Layout/layout";
 type ProfileProps = {
   apolloCache: NormalizedCacheObject;
   authHeaderReq: string;
@@ -241,3 +242,5 @@ export const getServerSideProps = async (
     }
   };
 };
+
+Profile.Layout = Layout;

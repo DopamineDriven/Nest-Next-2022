@@ -4,8 +4,9 @@ import { CategoryCount } from "../outputs/category-count.output";
 import { Entry } from "../../entry/model/entry.model";
 import { Node } from "src/node/model/node.model";
 
-@ObjectType("Category", { implements: () => Node })
+@ObjectType("Category", { implements: () => [Node] })
 export class Category implements Node {
+  nombre?: string | undefined = Category.name;
   @Field(() => ID, { nullable: false })
   id!: string;
 

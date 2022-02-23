@@ -35,6 +35,7 @@ import { QueryDocumentKeys } from "graphql/language/visitor";
 import { ParsedUrlQuery } from "@/types/query-parser";
 import { initializeApollo } from "@/apollo/apollo";
 import Layout from "@/components/Layout/layout";
+import useAuth from "@/hooks/use-auth";
 
 type userImageJsonField = {
   id: string;
@@ -118,6 +119,7 @@ export default function Index() {
             const getLs = window.localStorage.getItem("authorization");
             if (getLs && getLs.length > 0)
               window.sessionStorage.setItem("authorization", getLs);
+
             setAccessTokenVal(
               authDetailedState.auth?.accessToken
                 ? authDetailedState.auth.accessToken
@@ -127,15 +129,15 @@ export default function Index() {
         : () => {};
     })();
     if (authDetailedState != null) {
-      fetch(
-        "http://localhost:3000/api/auth/token/" +
-          authDetailedState.auth?.accessToken,
-        {
-          headers: {
-            authorization: "Bearer " + authDetailedState.auth?.accessToken
-          }
-        }
-      );
+      // const fetcher = fetch(
+      //   `/api/viewer/viewer?token=${authDetailedState.auth?.accessToken}`.trim(),
+      //   {
+      //     headers: {
+      //       authorization: "Bearer " + authDetailedState.auth?.accessToken
+      //     }
+      //   }
+      // ).then((res) => res);
+      // console.log(fetcher ?? "no fetcher data")
     }
   }, [authDetailedState, router]);
 
