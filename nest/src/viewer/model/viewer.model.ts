@@ -36,9 +36,9 @@ type Nullable<T> = T | null;
 export class ViewerEntity extends AuthDetailed implements Node {
   constructor() {
     super();
-    this.jwt
+    this.jwt;
   }
-  nombre?: string | undefined = ViewerEntity.name
+  nombre?: string | undefined = ViewerEntity.name;
   @Field(() => ID, { nullable: false })
   id!: string;
 }

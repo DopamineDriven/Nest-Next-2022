@@ -129,7 +129,6 @@ export function ConnectionOrderingInputType<
 
 export function ConnectionEdgeObjectType<
   T extends Constructor,
-
   V extends ReturnTypeFuncValue
 >(nodeType: V): (target: T) => Constructor {
   return (target: T): Constructor => {

@@ -125,7 +125,12 @@ export class UnionOnEdgeObjectType<T extends Type<UnionOnEdge>[]> {
 const unionOnEdge = new GraphQLUnionType({
   name: "UnionEdge",
   types: <
-    Thunk<GraphQLObjectType<UnionOnEdgeObjectType<Type<UnionOnEdge>[]>, GqlExecutionContext>[]>
+    Thunk<
+      GraphQLObjectType<
+        UnionOnEdgeObjectType<Type<UnionOnEdge>[]>,
+        GqlExecutionContext
+      >[]
+    >
   >{},
   astNode: <Union<UnionOnEdgeExtended<UnionOnEdge>[]>>{},
   description: "Top Level Union"
@@ -244,7 +249,8 @@ export class NodeUnionEdge extends InstanceWrapper<
     | MediaItemConnection
     | ProfileConnection
     | SessionConnection
-    | CommentConnection>;
+    | CommentConnection
+  >;
 }
 
 @ConnectionObjectType(NodeUnionEdge)
@@ -344,7 +350,11 @@ export class NodeResolver {
   }
 
   @Query(_returns => Node, { nullable: true })
-  async node(@Args({ name: "id", type: () => ID }) id: string): Promise<string | User | Entry | MediaItem | Session | Comment | Profile | null> {
+  async node(
+    @Args({ name: "id", type: () => ID }) id: string
+  ): Promise<
+    string | User | Entry | MediaItem | Session | Comment | Profile | null
+  > {
     const { type, id: cursor } = fromGlobalId(id);
     if (!globalIdField(toGlobalId(type, cursor))) {
       return null;

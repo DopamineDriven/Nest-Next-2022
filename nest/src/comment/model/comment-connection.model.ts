@@ -23,4 +23,4 @@ export class CommentNodes {}
 export class CommentEdge {}
 
 @ConnectionObjectType(CommentEdge)
-export class CommentConnection{}
+export class CommentConnection {}
