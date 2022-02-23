@@ -6,7 +6,7 @@ import React, {
   HTMLAttributes,
   ComponentType
 } from "react";
-import App, { NextWebVitalsMetric, AppProps } from "next/app";
+import { NextWebVitalsMetric, AppProps } from "next/app";
 import { useApollo } from "@/apollo/apollo";
 import {
   ApolloClient,
@@ -15,7 +15,7 @@ import {
 } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Props } from "@/components/Layout/layout";
-import { AuthProvider } from "../hooks/use-auth";
+import { AuthProvider } from "@/hooks/use-auth";
 import { LinkProps } from "next/link";
 import cn from "classnames";
 

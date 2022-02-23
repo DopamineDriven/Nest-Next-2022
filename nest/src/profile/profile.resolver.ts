@@ -1,4 +1,4 @@
-import { ExecutionContext, Inject, UseGuards } from "@nestjs/common";
+import { Inject, UseGuards } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { ProfileService } from "./profile.service";
 import {
@@ -16,8 +16,9 @@ import { PubSub } from "graphql-subscriptions";
 import { ProfileConnection } from "./model/profile-connection.model";
 import { User } from "../user/model/user.model";
 import { FindManyProfilesPaginatedInput } from "./inputs/profile-paginated.input";
-import { AuthGuard } from "src/common/guards/gql-context.guard";
+import { AuthGuard } from "../common/guards/gql-context.guard";
 import { CreateOneProfile } from "./inputs/profile-create.input";
+import { AppContext } from "../gql-config.service";
 
 const pubSub = new PubSub();
 @Resolver(() => Profile)
@@ -42,12 +43,12 @@ export class ProfileResolver {
   @UseGuards(AuthGuard)
   @Mutation(() => Profile)
   async createNewProfile(
-    @Context("viewerId") ctx: ExecutionContext,
+    @Context() { viewerId }: AppContext,
     @Args("createNewProfileInput") params: CreateOneProfile
   ) {
     const createNewProfile = await this.profileService.createNewProfileService(
       params,
-      ctx as unknown as string
+      viewerId as string
     );
     pubSub.publish("PROFILE_CREATED", { profileCreated: createNewProfile });
     return createNewProfile;
@@ -64,12 +65,12 @@ export class ProfileResolver {
   @ResolveField(() => User)
   async userInProfile(
     @Parent() profile: Profile,
-    @Context("viewerId") ctx: ExecutionContext
+    @Context() { viewerId }: AppContext
   ) {
     return await this.prismaService.user
       .findUnique({
         where: {
-          id: profile.userId ? profile.userId : (ctx as unknown as string)
+          id: profile.userId ? profile.userId : (viewerId as string)
         }
       })
       .profile()

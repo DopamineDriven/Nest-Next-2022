@@ -5,18 +5,11 @@ import { fromGlobalId, toGlobalId } from "graphql-relay";
 import { UserConnection } from "./model/user-connection.model";
 import { PrismaService } from "../prisma/prisma.service";
 import { ChangePasswordInput } from "./inputs/change-passsword.input";
-import { PaginationArgs } from "../pagination/pagination.service";
 import { XOR } from "../common/types/helpers.type";
-import { ManyUsersPaginatedArgs } from "./args/find-many-paginated.args";
-import { EnumRoleNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-role-nullable-filter.input";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
-import { StringNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/string-nullable-filter.input";
-import { EnumUserStatusNullableFilter } from "src/.generated/prisma-nestjs-graphql/prisma/inputs/enum-user-status-nullable-filter.input";
-import { UserOrderByWithRelationAndSearchRelevanceInput } from "src/.generated/prisma-nestjs-graphql/user/inputs/user-order-by-with-relation-and-search-relevance.input";
 import { User } from "./model/user.model";
 import { FindManyUsersPaginatedInput } from "./inputs/user-paginated-args.input";
 
-type Enumerable<T> = T | Array<T>;
 @Injectable()
 export class UserService {
   constructor(

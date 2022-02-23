@@ -24,6 +24,7 @@ import { User } from "src/user/model/user.model";
 import { NewEntryOutput } from "./outputs/new-entry.output";
 import { EntryCreateOneInput } from "./inputs/entry-create.input";
 import { GraphQLResolveInfo } from "graphql";
+import { AppContext } from "src/gql-config.service";
 
 const pubSub = new PubSub();
 
@@ -46,7 +47,7 @@ export class EntryResolver {
   @Mutation(() => Entry)
   @UseGuards(AuthGuard)
   async createNewEntry(
-    @Context("viewerId") ctx: ExecutionContext,
+    @Context() { viewerId }: AppContext,
     @Args("entryCreateInput", {
       type: () => EntryCreateOneInput
     })
@@ -54,18 +55,18 @@ export class EntryResolver {
   ) {
     return this.entryService.createEntry({
       data: data,
-      viewerId: ctx as unknown as string
+      viewerId: viewerId as string
     });
   }
   @Mutation(() => Entry)
   @UseGuards(AuthGuard)
   async nuevoEntry(
     @Args("nuevoEntry") data: EntryCreateOneInput,
-    @Context("viewerId") ctx: ExecutionContext
+    @Context() { viewerId }: AppContext
   ) {
     const newEntry = this.entryService.createEntry({
       data: data,
-      viewerId: ctx as unknown as string
+      viewerId: viewerId as string
     });
     pubSub.publish("ENTRY_CREATED", { entryCreated: newEntry });
     return await newEntry;
@@ -73,11 +74,12 @@ export class EntryResolver {
   @UseGuards(AuthGuard)
   @Mutation(() => Entry)
   async createEntryWithAxios(
-    @Context("viewerId") ctx: ExecutionContext,
+    @Context() { viewerId }: AppContext,
+    @Context() ctx: ExecutionContext,
     @Args("createNew", { type: () => EntryCreateOneInput })
     createNew: EntryCreateOneInput
   ) {
-    const getViewerId = ctx as unknown as string;
+    const getViewerId = viewerId as string;
     if (getViewerId) {
       ctx.switchToHttp();
       return await this.entryService
@@ -114,7 +116,7 @@ export class EntryResolver {
   @Query(() => EntryConnection)
   @UseGuards(AuthGuard)
   async viewerEntriesPaginated(
-    @Context("viewerId") ctx: ExecutionContext,
+    @Context() { viewerId }: AppContext,
     @Args("viewerEntriesPaginatedInput", {
       type: () => FindViewerEntriesPaginatedInput
     })
@@ -123,7 +125,7 @@ export class EntryResolver {
     return await this.entryService
       .getViewerEntriesPaginated(
         viewerEntriesPaginatedInput,
-        ctx as unknown as string
+        viewerId as string
       )
       .then(entryConnection => entryConnection);
   }

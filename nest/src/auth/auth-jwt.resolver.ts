@@ -15,11 +15,12 @@ import { GraphQLResolveInfo } from "graphql";
 import { User } from "../user/model/user.model";
 import { AuthDetailed } from "./model/auth-detailed.model";
 import { CacheScope } from "apollo-server-types";
-import { ExecutionContext, UseGuards } from "@nestjs/common";
+import { UseGuards } from "@nestjs/common";
 import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { ChangePasswordInput } from "src/user/inputs/change-passsword.input";
 import { ViewerDetailed } from "./model";
 import { ViewerAuthInfo } from "./model/jwt-auth.model";
+import { AppContext } from "src/gql-config.service";
 
 @Resolver(() => Auth)
 export class AuthResolver {
@@ -28,15 +29,15 @@ export class AuthResolver {
   @Mutation(() => User)
   @UseGuards(AuthGuard)
   async updateUserPassword(
-    @Context("token") ctx: ExecutionContext,
+    @Context() { token }: AppContext,
     @Args("passwordInput") passwordInput: ChangePasswordInput
-  ) {
+  ): Promise<User> {
     return await this.auth.updatePassword(
       {
         newPassword: passwordInput.newPassword,
         oldPassword: passwordInput.oldPassword
       },
-      ctx as unknown as string
+      token as string
     );
   }
 
@@ -44,7 +45,7 @@ export class AuthResolver {
   async registerNewUser(
     @Args("userCreateInput", { type: () => SignupInput })
     params: SignupInput
-  ) {
+  ): Promise<AuthDetailed> {
     return await this.auth.createNewUser(params);
   }
 
@@ -69,24 +70,22 @@ export class AuthResolver {
 
   @Query(() => AuthDetailed)
   @UseGuards(AuthGuard)
-  async getViewer(
-    @Context("token") ctx: ExecutionContext
-  ): Promise<AuthDetailed> {
-    return await this.auth.getUserWithDecodedToken(ctx as unknown as string);
+  async getViewer(@Context() { token }: AppContext): Promise<AuthDetailed> {
+    return await this.auth.getUserWithDecodedToken(token as string);
   }
 
   @Query(() => ViewerAuthInfo)
   @UseGuards(AuthGuard)
   async viewerAuthInfoFromContext(
-    @Context("token") ctx: ExecutionContext
+    @Context() { token }: AppContext
   ): Promise<ViewerAuthInfo> {
     return await this.auth
-      .getUserWithDecodedToken(ctx as unknown as string)
+      .getUserWithDecodedToken(token as string)
       .then(getAuth => {
         return {
           accessToken: getAuth.auth?.accessToken
             ? getAuth.auth.accessToken
-            : (ctx as unknown as string),
+            : (token as string),
           refreshToken: getAuth.auth.refreshToken
             ? getAuth.auth.refreshToken
             : "",
@@ -105,12 +104,12 @@ export class AuthResolver {
   @Query(() => ViewerDetailed)
   @UseGuards(AuthGuard)
   async viewer(
-    @Context("token") token: ExecutionContext,
+    @Context() { token }: AppContext,
     @Info() info: GraphQLResolveInfo
   ): Promise<ViewerDetailed> {
     console.log(info ?? "");
     return await this.auth
-      .getUserWithDecodedToken(token as unknown as string)
+      .getUserWithDecodedToken(token as string)
       .then(user => {
         const { viewer } = {
           viewer: {
