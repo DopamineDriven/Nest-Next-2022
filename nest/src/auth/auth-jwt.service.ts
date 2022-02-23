@@ -4,7 +4,8 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
-  UnauthorizedException} from "@nestjs/common";
+  UnauthorizedException
+} from "@nestjs/common";
 import { User } from "../user/model/user.model";
 import { JwtService } from "@nestjs/jwt";
 import { SignupInput } from "./inputs/signup.input";
