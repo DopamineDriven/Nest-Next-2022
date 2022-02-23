@@ -7,7 +7,8 @@ import {
   GqlExecutionContext
 } from "@nestjs/graphql";
 import { UserMeta } from "src/common/decorators/user.decorator";
-import { AppContext } from "src/gql-config.service";import { User } from "src/user/model/user.model";
+import { AppContext } from "src/gql-config.service";
+import { User } from "src/user/model/user.model";
 import { GetViewer, Viewer } from "./model/viewer-extends-prisma.model";
 import { Inject, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma";

@@ -17,15 +17,17 @@ import multer, { Multer } from "multer";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 
 @Module({
-  imports: [PrismaModule,
+  imports: [
+    PrismaModule,
     MulterModule.registerAsync({
-      useFactory: async ({...props}: MulterOptions) => {
-        return ({
+      useFactory: async ({ ...props }: MulterOptions) => {
+        return {
           // fileFilter(req: GraphQLOperation['query'], file: Multer['single'], callback: (error: Error | null, acceptFile: boolean) => void)
           ...props
-        })
+        };
       }
-    })],
+    })
+  ],
   providers: [UploadResolver, UploadService],
   exports: [UploadService]
 })

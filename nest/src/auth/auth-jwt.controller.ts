@@ -37,17 +37,19 @@ export default class AuthJwtController {
     @Req() request: ExpressRequest,
     @Res({ passthrough: true }) response: ExpressResponse
   ) {
-    const token = request.headers.authorization ? request.headers.authorization.split(/([ ])/)[2] : "";
-    const payload = this.jwtService.decode(
-      token, { complete: true }
-    ) as JwtDecoded;
+    const token = request.headers.authorization
+      ? request.headers.authorization.split(/([ ])/)[2]
+      : "";
+    const payload = this.jwtService.decode(token, {
+      complete: true
+    }) as JwtDecoded;
     const userId = payload.payload?.userId;
     console.log(userId);
     const signedPayload = this.jwtService.sign(
       payload?.payload ? payload.payload : {}
     );
     console.log(signedPayload);
-    return this.authService.setTokenCookie(response, token)
+    return this.authService.setTokenCookie(response, token);
     // return response
     //   .cookie("access_token", signedPayload, {
     //     httpOnly: true,
@@ -80,7 +82,7 @@ export default class AuthJwtController {
       });
       const response: AuthDetailed = { auth, jwt };
 
-      return this.authService.setTokenCookie(res, response.auth.accessToken)
+      return this.authService.setTokenCookie(res, response.auth.accessToken);
     } catch (error) {
       throw error;
     }
@@ -104,7 +106,10 @@ export default class AuthJwtController {
           `Bearer ${userFromToken.auth.accessToken}`
         );
       if (parseTokenFromIncomingReq)
-        res.setHeader("authorization", "Bearer "+userFromToken.auth.accessToken);
+        res.setHeader(
+          "authorization",
+          "Bearer " + userFromToken.auth.accessToken
+        );
       return this.authService.setTokenCookie(
         res,
         userFromToken.auth.accessToken

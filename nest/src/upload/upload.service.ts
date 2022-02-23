@@ -39,9 +39,7 @@ export class UploadService
   public filename: string;
   public mimetype: string;
   public createReadStream: () => ReadStream;
-  constructor(
-    private readonly multerService: Multer
-  ) {
+  constructor(private readonly multerService: Multer) {
     ({
       /** TODO Mimic GqlConfig flow 
        * export interface MulterOptionsFactory {

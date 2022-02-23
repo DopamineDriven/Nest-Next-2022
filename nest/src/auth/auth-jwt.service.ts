@@ -38,18 +38,14 @@ export class AuthService {
   public maxAge = 60 * 60 * 360; // 360 hours ~ 15 days
   setTokenCookie(res: Response, token: string) {
     const authConfig = this.configService.get<SecurityConfig>("security");
-    const cookie = serialize(
-      "user-token",
-      token,
-      {
-        maxAge: this.maxAge, // 360 hours ~ 15 days
-        expires: new Date(Date.now() + this.maxAge * 1000),
-        httpOnly: false,
-        secure: process.env.NODE_ENV === "production" ? true : false,
-        path: "/",
-        sameSite: "lax"
-      }
-    );
+    const cookie = serialize("user-token", token, {
+      maxAge: this.maxAge, // 360 hours ~ 15 days
+      expires: new Date(Date.now() + this.maxAge * 1000),
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      path: "/",
+      sameSite: "lax"
+    });
     return res.setHeader("Set-Cookie", cookie);
   }
 
@@ -378,10 +374,10 @@ export class AuthService {
                       authJwt.user?.role === "SUPERADMIN"
                         ? ["read", "write", "edit", "administer", "impersonate"]
                         : authJwt.user?.role === "ADMIN"
-                          ? ["read", "write", "edit", "administer"]
-                          : authJwt.user?.role === "MAINTAINER"
-                            ? ["read", "write", "edit"]
-                            : ["read", "write"],
+                        ? ["read", "write", "edit", "administer"]
+                        : authJwt.user?.role === "MAINTAINER"
+                        ? ["read", "write", "edit"]
+                        : ["read", "write"],
                     tokenState: "valid"
                   }
                 }
@@ -411,7 +407,7 @@ export class AuthService {
           user: authDetailed.auth.user
         },
         jwt: authDetailed.jwt
-      }
+      };
     } catch (err) {
       throw new Error(`${err}`);
     }

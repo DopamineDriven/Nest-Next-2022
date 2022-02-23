@@ -24,7 +24,7 @@ import { PrismaModule } from "./prisma";
 import { ProfileModule } from "./profile/profile.module";
 import { SessionModule } from "./session/session.module";
 import { ExpressContext } from "apollo-server-express";
-import { SignJWT, jwtVerify } from 'jose'
+import { SignJWT, jwtVerify } from "jose";
 import { nanoid } from "nanoid";
 
 export type AppContext = {
@@ -127,15 +127,30 @@ export class GqlConfigService implements GqlOptionsFactory {
       context: async ({
         req,
         res,
-        token = req.headers.authorization?.split(/([ ])/)[2] ?? req.header("accessToken") ?? null
+        token = req.headers.authorization?.split(/([ ])/)[2] ??
+          req.header("accessToken") ??
+          null
       }: AppContext) => {
         try {
           if (token != null && token.length > 10) {
             const viewer = this.authService.getDecodedJwtComplete(token);
             const cookie = req.cookies["user-token"];
             if (!cookie) {
-              const tokenSet = await new SignJWT({iat: viewer.payload.iat, exp: viewer.payload.exp}).setProtectedHeader({ alg: viewer.header.alg, typ: viewer.header.typ }).setJti(token).setIssuedAt(viewer.payload.iat).setExpirationTime(viewer.payload.exp).sign(new TextEncoder().encode(`${securityConfig?.secret}`));
-              res.cookie(`${securityConfig?.USER_TOKEN}`, tokenSet, { httpOnly: false });
+              const tokenSet = await new SignJWT({
+                iat: viewer.payload.iat,
+                exp: viewer.payload.exp
+              })
+                .setProtectedHeader({
+                  alg: viewer.header.alg,
+                  typ: viewer.header.typ
+                })
+                .setJti(token)
+                .setIssuedAt(viewer.payload.iat)
+                .setExpirationTime(viewer.payload.exp)
+                .sign(new TextEncoder().encode(`${securityConfig?.secret}`));
+              res.cookie(`${securityConfig?.USER_TOKEN}`, tokenSet, {
+                httpOnly: false
+              });
             }
             res.setHeader(
               "X-Auth",
