@@ -14,7 +14,7 @@ export interface AuthData {
   loggedIn: boolean;
   loading: boolean;
   error?: ApolloError;
-  viewer?: ViewerState;
+  viewer?: ViewerQuery;
 }
 
 export const DEFAULT_STATE: AuthData = {

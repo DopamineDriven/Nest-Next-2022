@@ -1,21 +1,12 @@
 import { FC } from "react";
-import cn from "classnames";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { ViewerQuery } from "@/graphql/queries/viewer.graphql";
-// import { Mail, Phone } from "../../Icons";
-// import {
-//   EntryByIdDocument,
-//   EntryByIdQuery
-// } from "@/graphql/Queries/entry-by-id.graphql";
-
+import { ViewerQuery } from "@/graphql/generated/graphql";
 import Image from "next/image";
 import { blurDataURLShimmer } from "@/lib/shimmer";
 import { Mail, Phone } from "@/components/Icons";
 
 export type ProfileHeadingProps = {
   // viewer: UserByEmailQuery["viewer"];
-  viewer?: ViewerQuery | null;
+  viewer?: ViewerQuery;
   className?: string;
 };
 
@@ -110,9 +101,13 @@ const ProfileHeading: FC<ProfileHeadingProps> = ({ children, viewer }) => {
             {viewer?.me.auth?.user?.firstName
               ? viewer.me.auth.user.firstName
               : "Name Null"}
-            <span className='lowercase text-2xl font-bold text-white'>
-              {viewer?.me.auth?.user?.role}
-            </span>
+            {viewer?.me.auth?.user.role ? (
+              <span className='lowercase text-2xl font-bold text-white'>
+                {viewer.me.auth.user.role}
+              </span>
+            ) : (
+              <></>
+            )}
           </h1>
         </div>
       </div>
