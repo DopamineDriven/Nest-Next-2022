@@ -62,7 +62,6 @@ export class MediaItemService {
     );
   }
 
-
   async getViewerMediaItemsPaginated(
     params: FindManyMediaItemsPaginatedInput,
     viewerId: string

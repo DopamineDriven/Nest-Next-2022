@@ -218,9 +218,9 @@ export class UserService {
   }
 
   async relayFindUniqueUser(params: { id: string }) {
-    const user = await this.prismaService.user.findUnique({
+    const user = (await this.prismaService.user.findUnique({
       where: { id: fromGlobalId(params.id).id }
-    }) as User;
+    })) as User;
     if (!user) {
       throw new Error("could not find user with id " + params.id);
     }

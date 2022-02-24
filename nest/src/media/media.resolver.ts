@@ -75,9 +75,11 @@ export class MediaResolver {
     params: FindManyMediaItemsPaginatedInput,
     @Context() { viewerId }: AppContext
   ): Promise<MediaItemConnection | null> {
-    return viewerId ? await this.mediaItemService.getViewerMediaItemsPaginated(
-      params,
-      viewerId as string
-    ) : null;
+    return viewerId
+      ? await this.mediaItemService.getViewerMediaItemsPaginated(
+          params,
+          viewerId as string
+        )
+      : null;
   }
 }

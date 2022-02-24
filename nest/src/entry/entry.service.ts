@@ -126,7 +126,7 @@ export class EntryService {
               take: params.take,
               skip: params.skip,
               where: {
-                authorId: {equals: user.id},
+                authorId: { equals: user.id },
                 ...params.where
               },
               cursor: {
