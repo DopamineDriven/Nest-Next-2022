@@ -91,7 +91,7 @@ export class CommentService {
               take: params.take,
               skip: params.skip,
               where: {
-                authorId: user.id,
+                authorId: { equals: user.id },
                 ...params.where
               },
               cursor: {

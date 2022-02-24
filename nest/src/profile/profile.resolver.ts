@@ -76,4 +76,10 @@ export class ProfileResolver {
       .profile()
       .user();
   }
+
+  @UseGuards(AuthGuard)
+  @Query(() => Profile)
+  async viewerProfile(@Context() { viewerId }: AppContext) {
+    return viewerId ? await this.profileService.viewerProfile(viewerId) : null;
+  }
 }

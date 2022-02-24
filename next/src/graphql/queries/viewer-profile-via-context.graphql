@@ -1,0 +1,11 @@
+# import ProfilePartial from "../fragments/profile-partial.graphql";
+# import UserPartial from "../fragments/user-partial.graphql";
+
+query viewerProfileViaContext {
+  viewerProfile {
+    ...ProfilePartial
+    user {
+      ...UserPartial
+    }
+  }
+}

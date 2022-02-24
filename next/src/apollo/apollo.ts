@@ -40,7 +40,7 @@ export type DocumentType<
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 function createApolloClient(
-  context?: Resolvers<ResolverContext>
+  context?: ResolverContext
 ): ApolloClient<NormalizedCacheObject> {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
@@ -49,7 +49,7 @@ function createApolloClient(
       .concat(nextNestAfterware)
       .concat(createBatch(context) || errorLink),
     connectToDevTools: true,
-    resolvers: xResolvers(() => context),
+    resolvers: xResolvers(context ?? {}),
     cache: new InMemoryCache({
       possibleTypes: emittedIntrospection.possibleTypes,
       typePolicies: {
@@ -144,9 +144,9 @@ export type InitialState = NormalizedCacheObject | null;
 
 // Pages with Next.js data fetching methods, like `getStaticProps`, can send
 // a custom context which will be used by `SchemaLink` to server render pages
-export function initializeApollo(
+export function initializeApollo<T extends ResolverContext>(
   initialState: InitialState = null,
-  context?: ResolverContext
+  context?: T
 ): ApolloClient<NormalizedCacheObject> {
   const _apolloClient = apolloClient ?? createApolloClient(context);
   if (initialState) {
@@ -160,9 +160,9 @@ export function initializeApollo(
   return _apolloClient;
 }
 
-export function useApollo(
+export function useApollo<T extends ResolverContext>(
   initialState: InitialState,
-  context?: ResolverContext
+  context?: T
 ): ApolloClient<NormalizedCacheObject> {
   const store = useMemo(
     () => initializeApollo(initialState, context),

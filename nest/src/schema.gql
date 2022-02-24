@@ -1720,6 +1720,13 @@ type Query {
   viewerEntriesPaginated(
     viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput!
   ): EntryConnection!
+  viewerFieldsPaginated(
+    viewerFieldsPaginatedInput: ViewerFieldsPaginatedInput!
+  ): ViewerFieldsPaginatedConnection!
+  viewerMediaItemsPaginated(
+    viewerMediaItemsPaginatedInput: FindManyMediaItemsPaginatedInput!
+  ): MediaItemConnection!
+  viewerProfile: Profile!
   viewerSessionsPaginated(
     viewerSessionssPaginatedInput: FindManySessionsPaginatedInput!
   ): SessionConnection!
@@ -2259,4 +2266,55 @@ input ViewerEntriesWhereInput {
   published: BoolFilter
   title: StringFilter
   updatedAt: DateTimeNullableFilter
+}
+
+type ViewerFieldsPaginated implements Node {
+  _count: UserCount!
+  commentConnection: CommentConnection!
+
+  """
+  Identifies the date and time when the user was created.
+  """
+  createdAt: DateTime!
+  email: String!
+  emailVerified: DateTime
+  entryConnection: EntryConnection!
+  firstName: String
+  id: ID!
+  image: String
+  lastName: String
+  mediaItemConnection: MediaItemConnection!
+  password: String!
+  profile: Profile
+  role: Role
+  sessionConnection: SessionConnection!
+  status: UserStatus!
+
+  """
+  Identifies the date and time when the user was last updated.
+  """
+  updatedAt: DateTime
+}
+
+type ViewerFieldsPaginatedConnection {
+  edges: [ViewerFieldsPaginatedEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type ViewerFieldsPaginatedEdge {
+  cursor: String!
+  node: ViewerFieldsPaginated!
+}
+
+input ViewerFieldsPaginatedInput {
+  connectionInputs: ViewerFieldsSubConnectionInputs!
+  params: FindManyUsersPaginatedInput!
+}
+
+input ViewerFieldsSubConnectionInputs {
+  findManyCommentsInput: FindManyCommentsPaginatedInput
+  findManyEntriesInput: FindManyEntriessPaginatedInput
+  findManyMediaItemsInput: FindManyMediaItemsPaginatedInput
+  findManySessionsInput: FindManySessionsPaginatedInput
 }

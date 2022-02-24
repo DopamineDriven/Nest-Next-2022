@@ -1790,7 +1790,7 @@ export type Query = {
   listUsers: UserConnection;
   me: AuthDetailed;
   node?: Maybe<Node>;
-  nodeField: NodeBaseFieldUnion;
+  nodeField: Array<NodeBaseFieldUnion>;
   nodeUnionResolver: NodeUnionConnection;
   profileByRelayId: Profile;
   sessionByRelayId: Session;
@@ -1801,6 +1801,9 @@ export type Query = {
   viewerAuthInfoFromContext: ViewerAuthInfo;
   viewerCommentsPaginated: CommentConnection;
   viewerEntriesPaginated: EntryConnection;
+  viewerFieldsPaginated: ViewerFieldsPaginatedConnection;
+  viewerMediaItemsPaginated: MediaItemConnection;
+  viewerProfile: Profile;
   viewerSessionsPaginated: SessionConnection;
 };
 
@@ -1914,6 +1917,14 @@ export type QueryViewerCommentsPaginatedArgs = {
 
 export type QueryViewerEntriesPaginatedArgs = {
   viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput;
+};
+
+export type QueryViewerFieldsPaginatedArgs = {
+  viewerFieldsPaginatedInput: ViewerFieldsPaginatedInput;
+};
+
+export type QueryViewerMediaItemsPaginatedArgs = {
+  viewerMediaItemsPaginatedInput: FindManyMediaItemsPaginatedInput;
 };
 
 export type QueryViewerSessionsPaginatedArgs = {
@@ -2161,11 +2172,6 @@ export type Subscription = {
 };
 
 export type TypesUnion = Entry | MediaItem | User;
-
-export type UnionOnEdgeObjectType = {
-  __typename?: "UnionOnEdgeObjectType";
-  unionOnEdge: UnionOnEdgeObjectType;
-};
 
 export type User = Node & {
   __typename?: "User";
@@ -2459,6 +2465,54 @@ export type ViewerEntriesWhereInput = {
   published?: InputMaybe<BoolFilter>;
   title?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeNullableFilter>;
+};
+
+export type ViewerFieldsPaginated = Node & {
+  __typename?: "ViewerFieldsPaginated";
+  _count: UserCount;
+  commentConnection: CommentConnection;
+  /** Identifies the date and time when the user was created. */
+  createdAt: Scalars["DateTime"];
+  email: Scalars["String"];
+  emailVerified?: Maybe<Scalars["DateTime"]>;
+  entryConnection: EntryConnection;
+  firstName?: Maybe<Scalars["String"]>;
+  id: Scalars["ID"];
+  image?: Maybe<Scalars["String"]>;
+  lastName?: Maybe<Scalars["String"]>;
+  mediaItemConnection: MediaItemConnection;
+  password: Scalars["String"];
+  profile?: Maybe<Profile>;
+  role?: Maybe<Role>;
+  sessionConnection: SessionConnection;
+  status: UserStatus;
+  /** Identifies the date and time when the user was last updated. */
+  updatedAt?: Maybe<Scalars["DateTime"]>;
+};
+
+export type ViewerFieldsPaginatedConnection = {
+  __typename?: "ViewerFieldsPaginatedConnection";
+  edges: Array<ViewerFieldsPaginatedEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars["Int"];
+};
+
+export type ViewerFieldsPaginatedEdge = {
+  __typename?: "ViewerFieldsPaginatedEdge";
+  cursor: Scalars["String"];
+  node: ViewerFieldsPaginated;
+};
+
+export type ViewerFieldsPaginatedInput = {
+  connectionInputs: ViewerFieldsSubConnectionInputs;
+  params: FindManyUsersPaginatedInput;
+};
+
+export type ViewerFieldsSubConnectionInputs = {
+  findManyCommentsInput?: InputMaybe<FindManyCommentsPaginatedInput>;
+  findManyEntriesInput?: InputMaybe<FindManyEntriessPaginatedInput>;
+  findManyMediaItemsInput?: InputMaybe<FindManyMediaItemsPaginatedInput>;
+  findManySessionsInput?: InputMaybe<FindManySessionsPaginatedInput>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -2764,7 +2818,8 @@ export type ResolversTypes = ResolversObject<{
     | ResolversTypes["Profile"]
     | ResolversTypes["Session"]
     | ResolversTypes["User"]
-    | ResolversTypes["ViewerDetailed"];
+    | ResolversTypes["ViewerDetailed"]
+    | ResolversTypes["ViewerFieldsPaginated"];
   NodeBaseFieldUnion:
     | ResolversTypes["Account"]
     | ResolversTypes["Category"]
@@ -2835,7 +2890,6 @@ export type ResolversTypes = ResolversObject<{
     | ResolversTypes["Entry"]
     | ResolversTypes["MediaItem"]
     | ResolversTypes["User"];
-  UnionOnEdgeObjectType: ResolverTypeWrapper<UnionOnEdgeObjectType>;
   User: ResolverTypeWrapper<User>;
   UserConnection: ResolverTypeWrapper<UserConnection>;
   UserCount: ResolverTypeWrapper<UserCount>;
@@ -2860,6 +2914,11 @@ export type ResolversTypes = ResolversObject<{
   ViewerAuthInfo: ResolverTypeWrapper<ViewerAuthInfo>;
   ViewerDetailed: ResolverTypeWrapper<ViewerDetailed>;
   ViewerEntriesWhereInput: ViewerEntriesWhereInput;
+  ViewerFieldsPaginated: ResolverTypeWrapper<ViewerFieldsPaginated>;
+  ViewerFieldsPaginatedConnection: ResolverTypeWrapper<ViewerFieldsPaginatedConnection>;
+  ViewerFieldsPaginatedEdge: ResolverTypeWrapper<ViewerFieldsPaginatedEdge>;
+  ViewerFieldsPaginatedInput: ViewerFieldsPaginatedInput;
+  ViewerFieldsSubConnectionInputs: ViewerFieldsSubConnectionInputs;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -3035,7 +3094,8 @@ export type ResolversParentTypes = ResolversObject<{
     | ResolversParentTypes["Profile"]
     | ResolversParentTypes["Session"]
     | ResolversParentTypes["User"]
-    | ResolversParentTypes["ViewerDetailed"];
+    | ResolversParentTypes["ViewerDetailed"]
+    | ResolversParentTypes["ViewerFieldsPaginated"];
   NodeBaseFieldUnion:
     | ResolversParentTypes["Account"]
     | ResolversParentTypes["Category"]
@@ -3098,7 +3158,6 @@ export type ResolversParentTypes = ResolversObject<{
     | ResolversParentTypes["Entry"]
     | ResolversParentTypes["MediaItem"]
     | ResolversParentTypes["User"];
-  UnionOnEdgeObjectType: UnionOnEdgeObjectType;
   User: User;
   UserConnection: UserConnection;
   UserCount: UserCount;
@@ -3120,6 +3179,11 @@ export type ResolversParentTypes = ResolversObject<{
   ViewerAuthInfo: ViewerAuthInfo;
   ViewerDetailed: ViewerDetailed;
   ViewerEntriesWhereInput: ViewerEntriesWhereInput;
+  ViewerFieldsPaginated: ViewerFieldsPaginated;
+  ViewerFieldsPaginatedConnection: ViewerFieldsPaginatedConnection;
+  ViewerFieldsPaginatedEdge: ViewerFieldsPaginatedEdge;
+  ViewerFieldsPaginatedInput: ViewerFieldsPaginatedInput;
+  ViewerFieldsSubConnectionInputs: ViewerFieldsSubConnectionInputs;
 }>;
 
 export type AccountResolvers<
@@ -3759,7 +3823,8 @@ export type NodeResolvers<
     | "Profile"
     | "Session"
     | "User"
-    | "ViewerDetailed",
+    | "ViewerDetailed"
+    | "ViewerFieldsPaginated",
     ParentType,
     ContextType
   >;
@@ -4082,7 +4147,7 @@ export type QueryResolvers<
     RequireFields<QueryNodeArgs, "id">
   >;
   nodeField?: Resolver<
-    ResolversTypes["NodeBaseFieldUnion"],
+    Array<ResolversTypes["NodeBaseFieldUnion"]>,
     ParentType,
     ContextType,
     RequireFields<QueryNodeFieldArgs, "cursor">
@@ -4159,6 +4224,29 @@ export type QueryResolvers<
       QueryViewerEntriesPaginatedArgs,
       "viewerEntriesPaginatedInput"
     >
+  >;
+  viewerFieldsPaginated?: Resolver<
+    ResolversTypes["ViewerFieldsPaginatedConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryViewerFieldsPaginatedArgs,
+      "viewerFieldsPaginatedInput"
+    >
+  >;
+  viewerMediaItemsPaginated?: Resolver<
+    ResolversTypes["MediaItemConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryViewerMediaItemsPaginatedArgs,
+      "viewerMediaItemsPaginatedInput"
+    >
+  >;
+  viewerProfile?: Resolver<
+    ResolversTypes["Profile"],
+    ParentType,
+    ContextType
   >;
   viewerSessionsPaginated?: Resolver<
     ResolversTypes["SessionConnection"],
@@ -4279,18 +4367,6 @@ export type TypesUnionResolvers<
     ParentType,
     ContextType
   >;
-}>;
-
-export type UnionOnEdgeObjectTypeResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes["UnionOnEdgeObjectType"] = ResolversParentTypes["UnionOnEdgeObjectType"]
-> = ResolversObject<{
-  unionOnEdge?: Resolver<
-    ResolversTypes["UnionOnEdgeObjectType"],
-    ParentType,
-    ContextType
-  >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type UserResolvers<
@@ -4533,6 +4609,101 @@ export type ViewerDetailedResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type ViewerFieldsPaginatedResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["ViewerFieldsPaginated"] = ResolversParentTypes["ViewerFieldsPaginated"]
+> = ResolversObject<{
+  _count?: Resolver<ResolversTypes["UserCount"], ParentType, ContextType>;
+  commentConnection?: Resolver<
+    ResolversTypes["CommentConnection"],
+    ParentType,
+    ContextType
+  >;
+  createdAt?: Resolver<
+    ResolversTypes["DateTime"],
+    ParentType,
+    ContextType
+  >;
+  email?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  emailVerified?: Resolver<
+    Maybe<ResolversTypes["DateTime"]>,
+    ParentType,
+    ContextType
+  >;
+  entryConnection?: Resolver<
+    ResolversTypes["EntryConnection"],
+    ParentType,
+    ContextType
+  >;
+  firstName?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  image?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  lastName?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  mediaItemConnection?: Resolver<
+    ResolversTypes["MediaItemConnection"],
+    ParentType,
+    ContextType
+  >;
+  password?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  profile?: Resolver<
+    Maybe<ResolversTypes["Profile"]>,
+    ParentType,
+    ContextType
+  >;
+  role?: Resolver<Maybe<ResolversTypes["Role"]>, ParentType, ContextType>;
+  sessionConnection?: Resolver<
+    ResolversTypes["SessionConnection"],
+    ParentType,
+    ContextType
+  >;
+  status?: Resolver<ResolversTypes["UserStatus"], ParentType, ContextType>;
+  updatedAt?: Resolver<
+    Maybe<ResolversTypes["DateTime"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ViewerFieldsPaginatedConnectionResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["ViewerFieldsPaginatedConnection"] = ResolversParentTypes["ViewerFieldsPaginatedConnection"]
+> = ResolversObject<{
+  edges?: Resolver<
+    Array<ResolversTypes["ViewerFieldsPaginatedEdge"]>,
+    ParentType,
+    ContextType
+  >;
+  pageInfo?: Resolver<ResolversTypes["PageInfo"], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ViewerFieldsPaginatedEdgeResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["ViewerFieldsPaginatedEdge"] = ResolversParentTypes["ViewerFieldsPaginatedEdge"]
+> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  node?: Resolver<
+    ResolversTypes["ViewerFieldsPaginated"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type Resolvers<ContextType = any> = ResolversObject<{
   Account?: AccountResolvers<ContextType>;
   Auth?: AuthResolvers<ContextType>;
@@ -4579,11 +4750,13 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   SessionEdge?: SessionEdgeResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   TypesUnion?: TypesUnionResolvers<ContextType>;
-  UnionOnEdgeObjectType?: UnionOnEdgeObjectTypeResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserConnection?: UserConnectionResolvers<ContextType>;
   UserCount?: UserCountResolvers<ContextType>;
   UserEdge?: UserEdgeResolvers<ContextType>;
   ViewerAuthInfo?: ViewerAuthInfoResolvers<ContextType>;
   ViewerDetailed?: ViewerDetailedResolvers<ContextType>;
+  ViewerFieldsPaginated?: ViewerFieldsPaginatedResolvers<ContextType>;
+  ViewerFieldsPaginatedConnection?: ViewerFieldsPaginatedConnectionResolvers<ContextType>;
+  ViewerFieldsPaginatedEdge?: ViewerFieldsPaginatedEdgeResolvers<ContextType>;
 }>;

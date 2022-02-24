@@ -1,0 +1,80 @@
+# import ViewerFieldsPaginatedConnectionPartial from "../fragments/viewer-fields-paginated-partial.graphql";
+# import ViewerFieldsPaginatedEdgePartial from "../fragments/viewer-fields-paginated-partial.graphql";
+# import ViewerFieldsPaginatedPartial from "../fragments/viewer-fields-paginated-partial.graphql";
+# import ProfilePartial from "../fragments/profile-partial.graphql";
+# import SessionConnectionPartial from "../fragments/session-partial.graphql";
+# import SessionEdgePartial from "../fragments/session-partial.graphql";
+# import SessionPartial from "../fragments/session-partial.graphql";
+# import PageInfoPartial from "../fragments/page-info-partial.graphql";
+# import UserCountPartial from "../fragments/user-count-partial.graphql";
+# import EntryConnectionPartial from "../fragments/entry-partial.graphql";
+# import EntryEdgePartial from "../fragments/entry-partial.graphql";
+# import EntryPartial from "../fragments/entry-partial.graphql";
+# import EntryCountPartial from "../fragments/entry-count-partial.graphql";
+# import CommentConnectionPartial from "../fragments/comment-partial.graphql";
+# import CommentEdgePartial from "../fragments/comment-partial.graphql";
+# import CommentPartial from "../fragments/comment-partial.graphql";
+
+query viewerFieldsConnectionViaContext(
+  $viewerFieldsPaginatedInput: ViewerFieldsPaginatedInput!
+) {
+  viewerFieldsPaginated(
+    viewerFieldsPaginatedInput: $viewerFieldsPaginatedInput
+  ) {
+    pageInfo {
+      ...PageInfoPartial
+    }
+    ...ViewerFieldsPaginatedConnectionPartial
+    edges {
+      ...ViewerFieldsPaginatedEdgePartial
+      node {
+        _count {
+          ...UserCountPartial
+        }
+        ...ViewerFieldsPaginatedPartial
+        profile {
+          ...ProfilePartial
+        }
+        commentConnection {
+          pageInfo {
+            ...PageInfoPartial
+          }
+          ...CommentConnectionPartial
+          edges {
+            ...CommentEdgePartial
+            node {
+              ...CommentPartial
+            }
+          }
+        }
+        entryConnection {
+          pageInfo {
+            ...PageInfoPartial
+          }
+          ...EntryConnectionPartial
+          edges {
+            ...EntryEdgePartial
+            node {
+              ...EntryPartial
+              _count {
+                ...EntryCountPartial
+              }
+            }
+          }
+        }
+        sessionConnection {
+          pageInfo {
+            ...PageInfoPartial
+          }
+          ...SessionConnectionPartial
+          edges {
+            ...SessionEdgePartial
+            node {
+              ...SessionPartial
+            }
+          }
+        }
+      }
+    }
+  }
+}

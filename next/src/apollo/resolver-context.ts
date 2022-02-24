@@ -38,9 +38,7 @@ export const enhancedFetch = async (
   }).then(response => response);
 };
 
-export function createBatch<T extends Resolvers<ResolverContext>>(
-  context?: T
-) {
+export function createBatch<T extends ResolverContext>(context?: T) {
   return new BatchHttpLink({
     uri: "http://localhost:3000/graphql",
     credentials: "include",

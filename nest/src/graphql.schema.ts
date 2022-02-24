@@ -1764,6 +1764,18 @@ export class ViewerEntriesWhereInput {
   updatedAt?: Nullable<DateTimeNullableFilter>;
 }
 
+export class ViewerFieldsPaginatedInput {
+  connectionInputs: ViewerFieldsSubConnectionInputs;
+  params: FindManyUsersPaginatedInput;
+}
+
+export class ViewerFieldsSubConnectionInputs {
+  findManyCommentsInput?: Nullable<FindManyCommentsPaginatedInput>;
+  findManyEntriesInput?: Nullable<FindManyEntriessPaginatedInput>;
+  findManyMediaItemsInput?: Nullable<FindManyMediaItemsPaginatedInput>;
+  findManySessionsInput?: Nullable<FindManySessionsPaginatedInput>;
+}
+
 export interface Node {
   id: string;
 }
@@ -2193,6 +2205,16 @@ export abstract class IQuery {
     viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput
   ): EntryConnection | Promise<EntryConnection>;
 
+  abstract viewerFieldsPaginated(
+    viewerFieldsPaginatedInput: ViewerFieldsPaginatedInput
+  ): ViewerFieldsPaginatedConnection | Promise<ViewerFieldsPaginatedConnection>;
+
+  abstract viewerMediaItemsPaginated(
+    viewerMediaItemsPaginatedInput: FindManyMediaItemsPaginatedInput
+  ): MediaItemConnection | Promise<MediaItemConnection>;
+
+  abstract viewerProfile(): Profile | Promise<Profile>;
+
   abstract viewerSessionsPaginated(
     viewerSessionssPaginatedInput: FindManySessionsPaginatedInput
   ): SessionConnection | Promise<SessionConnection>;
@@ -2318,6 +2340,40 @@ export class ViewerDetailed implements Node {
   sessions?: Nullable<Session[]>;
   status: UserStatus;
   updatedAt?: Nullable<DateTime>;
+}
+
+export class ViewerFieldsPaginated implements Node {
+  __typename?: "ViewerFieldsPaginated";
+  _count: UserCount;
+  commentConnection: CommentConnection;
+  createdAt: DateTime;
+  email: string;
+  emailVerified?: Nullable<DateTime>;
+  entryConnection: EntryConnection;
+  firstName?: Nullable<string>;
+  id: string;
+  image?: Nullable<string>;
+  lastName?: Nullable<string>;
+  mediaItemConnection: MediaItemConnection;
+  password: string;
+  profile?: Nullable<Profile>;
+  role?: Nullable<Role>;
+  sessionConnection: SessionConnection;
+  status: UserStatus;
+  updatedAt?: Nullable<DateTime>;
+}
+
+export class ViewerFieldsPaginatedConnection {
+  __typename?: "ViewerFieldsPaginatedConnection";
+  edges: ViewerFieldsPaginatedEdge[];
+  pageInfo: PageInfo;
+  totalCount: number;
+}
+
+export class ViewerFieldsPaginatedEdge {
+  __typename?: "ViewerFieldsPaginatedEdge";
+  cursor: string;
+  node: ViewerFieldsPaginated;
 }
 
 export type BigInt = any;

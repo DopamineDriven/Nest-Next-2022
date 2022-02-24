@@ -214,6 +214,13 @@ export class ProfileService {
     );
   }
 
+  async viewerProfile(viewerId: string) {
+    return await this.prismaService.profile.findUnique({
+      where: { userId: viewerId },
+      include: { user: true }
+    });
+  }
+
   async createNewProfileService(
     params: CreateOneProfile,
     viewerId: string
