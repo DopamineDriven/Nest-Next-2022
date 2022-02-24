@@ -63,27 +63,27 @@ export default function Profile<T extends typeof getServerSideProps>({
   });
 
   const callbackData = useCallback(async () => {
-    const fetchIt = async () =>
-      await fetch(
-        encodeURIComponent(
-          `http://localhost:3000/auth/token/${
-            authHeaderReq
-              ? authHeaderReq
-              : authHeaderRes
-              ? authHeaderRes
-              : ""
-          }`
-        ),
-        {
-          headers: {},
-          body: JSON.stringify({ token: authHeaderReq ?? authHeaderRes }),
-          method: "POST",
-          mode: "cors",
-          credentials: "include"
-        }
-      )
-        .then(async res => (await res.json()) as Promise<AuthDetailed>)
-        .then(resolved => resolved as AuthDetailed);
+    // const fetchIt = async () =>
+    //   await fetch(
+    //     encodeURIComponent(
+    //       `http://localhost:3000/auth/token/${
+    //         authHeaderReq
+    //           ? authHeaderReq
+    //           : authHeaderRes
+    //           ? authHeaderRes
+    //           : ""
+    //       }`
+    //     ),
+    //     {
+    //       headers: {},
+    //       body: JSON.stringify({ token: authHeaderReq ?? authHeaderRes }),
+    //       method: "POST",
+    //       mode: "cors",
+    //       credentials: "include"
+    //     }
+    //   )
+    //     .then(async res => (await res.json()) as Promise<AuthDetailed>)
+    //     .then(resolved => resolved as AuthDetailed);
     return await lazyDerivePayload({
       variables: {
         accessToken: authHeaderReq ? authHeaderReq : authHeaderRes ?? ""
@@ -124,26 +124,26 @@ export default function Profile<T extends typeof getServerSideProps>({
 }
 type networkstats = typeof NetworkStatus[keyof typeof NetworkStatus];
 
-function watchViewerQueryFallback(
-  apolloClient: ApolloClient<NormalizedCacheObject>,
-  req?: IncomingMessage,
-  res?: ServerResponse
-) {
-  return apolloClient.watchQuery<ViewerQuery, ViewerQueryVariables>({
-    query: ViewerDocument,
-    context: xResolvers({
-      req,
-      res,
-      networkStatus: NetworkStatus
-    }) as Resolvers<ResolverContext>,
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: "network-only",
-    nextFetchPolicy: "cache-first",
-    errorPolicy: "all" as RequireOnlyOne<ErrorPolicy>,
-    partialRefetch: true,
-    returnPartialData: true
-  });
-}
+// function watchViewerQueryFallback(
+//   apolloClient: ApolloClient<NormalizedCacheObject>,
+//   req?: IncomingMessage,
+//   res?: ServerResponse
+// ) {
+//   return apolloClient.watchQuery<ViewerQuery, ViewerQueryVariables>({
+//     query: ViewerDocument,
+//     context: xResolvers({
+//       req,
+//       res,
+//       networkStatus: NetworkStatus
+//     }) as Resolvers<ResolverContext>,
+//     notifyOnNetworkStatusChange: true,
+//     fetchPolicy: "network-only",
+//     nextFetchPolicy: "cache-first",
+//     errorPolicy: "all" as RequireOnlyOne<ErrorPolicy>,
+//     partialRefetch: true,
+//     returnPartialData: true
+//   });
+// }
 
 export const getServerSideProps = async (
   ctx: GetServerSidePropsContext<ParsedUrlQuery>
@@ -182,19 +182,19 @@ export const getServerSideProps = async (
     {},
     { req: ctx.req, res: ctx.res }
   );
-  const viewerQuery = watchViewerQueryFallback(
-    apolloClient,
-    ctx.req,
-    ctx.res
-  );
-  await apolloClient.query<allUsersQuery, allUsersQueryVariables>({
-    query: allUsersDocument,
-    fetchPolicy: "cache-first",
-    variables: allUsersQueryVars,
-    notifyOnNetworkStatusChange: true,
-    context: { ...ctx }
-  });
-  viewerQuery.getCurrentResult(true);
+  // const viewerQuery = watchViewerQueryFallback(
+  //   apolloClient,
+  //   ctx.req,
+  //   ctx.res
+  // );
+  await apolloClient
+    .query<allUsersQuery, allUsersQueryVariables>({
+      query: allUsersDocument,
+      fetchPolicy: "cache-first",
+      variables: allUsersQueryVars,
+      notifyOnNetworkStatusChange: true
+    })
+    .then(data => data);
 
   const getAuthHeader = ctx.req.headers["authorization"]?.split(
     /([ ])/
@@ -205,19 +205,25 @@ export const getServerSideProps = async (
   )[2] as string;
   return {
     props: {
-      viewer: viewerQuery.getCurrentResult(true).data,
+      viewer:
+        (
+          await apolloClient.query<ViewerQuery, ViewerQueryVariables>({
+            query: ViewerDocument
+          })
+        ).data ?? null,
       apolloCache: apolloClient.cache.extract(true),
       authHeaderRes: authHeaderRes,
       authHeaderReq: getAuthHeader,
       // fallback: (await viewerQuery.result())
       //   .data as unknown as ProfileProps["fallback"],
-      allUsers: apolloClient.cache.readQuery<
-        allUsersQuery,
-        allUsersQueryVariables
-      >({
-        query: allUsersDocument,
-        variables: allUsersQueryVars
-      })
+      allUsers:
+        apolloClient.cache.readQuery<
+          allUsersQuery,
+          allUsersQueryVariables
+        >({
+          query: allUsersDocument,
+          variables: allUsersQueryVars
+        }) ?? null
     }
   };
 };

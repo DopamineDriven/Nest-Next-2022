@@ -61,4 +61,65 @@ export class MediaItemService {
       }
     );
   }
+
+
+  async getViewerMediaItemsPaginated(
+    params: FindManyMediaItemsPaginatedInput,
+    viewerId: string
+  ): Promise<MediaItemConnection> {
+    return await this.prismaService.user
+      .findUnique({
+        where: { id: viewerId },
+        include: { mediaItems: true, _count: true }
+      })
+      .then(async auth => {
+        const user = auth as unknown as NonNullable<typeof auth>;
+        return await findManyCursorConnection(
+          args =>
+            this.prismaService.mediaItem.findMany({
+              include: {
+                user: true
+              },
+              distinct: params.distinct,
+              take: params.take,
+              skip: params.skip,
+              where: {
+                userId: { equals: user.id },
+                id: params.where?.id,
+                ...params.where
+              },
+              cursor: {
+                id: user?.mediaItems?.find(id => id)?.id ?? params.cursor?.id
+              },
+              orderBy: params.orderBy,
+              ...args
+            }),
+          () =>
+            this.prismaService.mediaItem.count({
+              take: params.take,
+              skip: params.skip,
+              where: {
+                userId: user.id,
+                ...params.where
+              },
+              cursor: {
+                id: user?.mediaItems?.find(id => id)?.id,
+                ...params.cursor
+              }
+            }),
+          {
+            first: params.pagination.first,
+            last: params.pagination.last,
+            before: params.pagination.before,
+            after: params.pagination.after
+          },
+          {
+            getCursor: (record: { id: string }) => record,
+            decodeCursor: (cursor: string) => fromGlobalId(cursor),
+            encodeCursor: (cursor: { id: string }) =>
+              toGlobalId(MediaItem.name, cursor.id)
+          }
+        );
+      });
+  }
 }

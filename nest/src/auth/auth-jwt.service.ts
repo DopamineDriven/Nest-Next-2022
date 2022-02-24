@@ -428,7 +428,7 @@ export class AuthService {
         JSON.parse("authDetailed", () => ({
           reviver: (key: RegExp, value: AuthDetailed) => ({
             this: this,
-            key: /([test])/ === key,
+            key: key ? key : /([test])/,
             value: data === value ? data : value
           })
         }))

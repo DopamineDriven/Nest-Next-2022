@@ -1806,7 +1806,7 @@ export type Query = {
   listUsers: FieldWrapper<UserConnection>;
   me: FieldWrapper<AuthDetailed>;
   node?: Maybe<FieldWrapper<Node>>;
-  nodeField: FieldWrapper<NodeBaseFieldUnion>;
+  nodeField: Array<FieldWrapper<NodeBaseFieldUnion>>;
   nodeUnionResolver: FieldWrapper<NodeUnionConnection>;
   profileByRelayId: FieldWrapper<Profile>;
   sessionByRelayId: FieldWrapper<Session>;
@@ -1817,6 +1817,9 @@ export type Query = {
   viewerAuthInfoFromContext: FieldWrapper<ViewerAuthInfo>;
   viewerCommentsPaginated: FieldWrapper<CommentConnection>;
   viewerEntriesPaginated: FieldWrapper<EntryConnection>;
+  viewerFieldsPaginated: FieldWrapper<ViewerFieldsPaginatedConnection>;
+  viewerMediaItemsPaginated: FieldWrapper<MediaItemConnection>;
+  viewerProfile: FieldWrapper<Profile>;
   viewerSessionsPaginated: FieldWrapper<SessionConnection>;
 };
 
@@ -1930,6 +1933,14 @@ export type QueryviewerCommentsPaginatedArgs = {
 
 export type QueryviewerEntriesPaginatedArgs = {
   viewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput;
+};
+
+export type QueryviewerFieldsPaginatedArgs = {
+  viewerFieldsPaginatedInput: ViewerFieldsPaginatedInput;
+};
+
+export type QueryviewerMediaItemsPaginatedArgs = {
+  viewerMediaItemsPaginatedInput: FindManyMediaItemsPaginatedInput;
 };
 
 export type QueryviewerSessionsPaginatedArgs = {
@@ -2177,11 +2188,6 @@ export type Subscription = {
 };
 
 export type TypesUnion = Entry | MediaItem | User;
-
-export type UnionOnEdgeObjectType = {
-  __typename?: "UnionOnEdgeObjectType";
-  unionOnEdge: FieldWrapper<UnionOnEdgeObjectType>;
-};
 
 export type User = Node & {
   __typename?: "User";
@@ -2475,6 +2481,54 @@ export type ViewerEntriesWhereInput = {
   published?: InputMaybe<BoolFilter>;
   title?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeNullableFilter>;
+};
+
+export type ViewerFieldsPaginated = Node & {
+  __typename?: "ViewerFieldsPaginated";
+  _count: FieldWrapper<UserCount>;
+  commentConnection: FieldWrapper<CommentConnection>;
+  /** Identifies the date and time when the user was created. */
+  createdAt: FieldWrapper<Scalars["DateTime"]>;
+  email: FieldWrapper<Scalars["String"]>;
+  emailVerified?: Maybe<FieldWrapper<Scalars["DateTime"]>>;
+  entryConnection: FieldWrapper<EntryConnection>;
+  firstName?: Maybe<FieldWrapper<Scalars["String"]>>;
+  id: FieldWrapper<Scalars["ID"]>;
+  image?: Maybe<FieldWrapper<Scalars["String"]>>;
+  lastName?: Maybe<FieldWrapper<Scalars["String"]>>;
+  mediaItemConnection: FieldWrapper<MediaItemConnection>;
+  password: FieldWrapper<Scalars["String"]>;
+  profile?: Maybe<FieldWrapper<Profile>>;
+  role?: Maybe<FieldWrapper<Role>>;
+  sessionConnection: FieldWrapper<SessionConnection>;
+  status: FieldWrapper<UserStatus>;
+  /** Identifies the date and time when the user was last updated. */
+  updatedAt?: Maybe<FieldWrapper<Scalars["DateTime"]>>;
+};
+
+export type ViewerFieldsPaginatedConnection = {
+  __typename?: "ViewerFieldsPaginatedConnection";
+  edges: Array<FieldWrapper<ViewerFieldsPaginatedEdge>>;
+  pageInfo: FieldWrapper<PageInfo>;
+  totalCount: FieldWrapper<Scalars["Int"]>;
+};
+
+export type ViewerFieldsPaginatedEdge = {
+  __typename?: "ViewerFieldsPaginatedEdge";
+  cursor: FieldWrapper<Scalars["String"]>;
+  node: FieldWrapper<ViewerFieldsPaginated>;
+};
+
+export type ViewerFieldsPaginatedInput = {
+  connectionInputs: ViewerFieldsSubConnectionInputs;
+  params: FindManyUsersPaginatedInput;
+};
+
+export type ViewerFieldsSubConnectionInputs = {
+  findManyCommentsInput?: InputMaybe<FindManyCommentsPaginatedInput>;
+  findManyEntriesInput?: InputMaybe<FindManyEntriessPaginatedInput>;
+  findManyMediaItemsInput?: InputMaybe<FindManyMediaItemsPaginatedInput>;
+  findManySessionsInput?: InputMaybe<FindManySessionsPaginatedInput>;
 };
 
 export const AccountPartial = gql`
@@ -2780,6 +2834,34 @@ export const ViewerAuthInfoPartial = gql`
     __typename
     accessToken
     refreshToken
+  }
+`;
+export const ViewerFieldsPaginatedConnectionPartial = gql`
+  fragment ViewerFieldsPaginatedConnectionPartial on ViewerFieldsPaginatedConnection {
+    __typename
+    totalCount
+  }
+`;
+export const ViewerFieldsPaginatedEdgePartial = gql`
+  fragment ViewerFieldsPaginatedEdgePartial on ViewerFieldsPaginatedEdge {
+    __typename
+    cursor
+  }
+`;
+export const ViewerFieldsPaginatedPartial = gql`
+  fragment ViewerFieldsPaginatedPartial on ViewerFieldsPaginated {
+    createdAt
+    email
+    emailVerified
+    firstName
+    lastName
+    id
+    image
+    password
+    role
+    status
+    updatedAt
+    __typename
   }
 `;
 export const ViewerPartial = gql`
@@ -3274,6 +3356,147 @@ export const userDecodedFromToken = gql`
   ${JwtPayloadPartial}
   ${JwtDecodedPartial}
 `;
+export const viewerCommentsViaContext = gql`
+  query viewerCommentsViaContext(
+    $viewerCommentsInput: FindManyCommentsPaginatedInput!
+  ) {
+    viewerCommentsPaginated(
+      viewerCommentsPaginatedInput: $viewerCommentsInput
+    ) {
+      pageInfo {
+        ...PageInfoPartial
+      }
+      ...CommentConnectionPartial
+      edges {
+        ...CommentEdgePartial
+        node {
+          ...CommentPartial
+          author {
+            _count {
+              ...UserCountPartial
+            }
+            ...UserPartial
+          }
+        }
+      }
+    }
+  }
+  ${PageInfoPartial}
+  ${CommentConnectionPartial}
+  ${CommentEdgePartial}
+  ${CommentPartial}
+  ${UserCountPartial}
+  ${UserPartial}
+`;
+export const viewerEntriesViaContext = gql`
+  query viewerEntriesViaContext(
+    $findViewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput!
+  ) {
+    viewerEntriesPaginated(
+      viewerEntriesPaginatedInput: $findViewerEntriesPaginatedInput
+    ) {
+      ...EntryConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...EntryEdgePartial
+        node {
+          ...EntryPartial
+          _count {
+            ...EntryCountPartial
+          }
+        }
+      }
+    }
+  }
+  ${EntryConnectionPartial}
+  ${PageInfoPartial}
+  ${EntryEdgePartial}
+  ${EntryPartial}
+  ${EntryCountPartial}
+`;
+export const viewerFieldsConnectionViaContext = gql`
+  query viewerFieldsConnectionViaContext(
+    $viewerFieldsPaginatedInput: ViewerFieldsPaginatedInput!
+  ) {
+    viewerFieldsPaginated(
+      viewerFieldsPaginatedInput: $viewerFieldsPaginatedInput
+    ) {
+      pageInfo {
+        ...PageInfoPartial
+      }
+      ...ViewerFieldsPaginatedConnectionPartial
+      edges {
+        ...ViewerFieldsPaginatedEdgePartial
+        node {
+          _count {
+            ...UserCountPartial
+          }
+          ...ViewerFieldsPaginatedPartial
+          profile {
+            ...ProfilePartial
+          }
+          commentConnection {
+            pageInfo {
+              ...PageInfoPartial
+            }
+            ...CommentConnectionPartial
+            edges {
+              ...CommentEdgePartial
+              node {
+                ...CommentPartial
+              }
+            }
+          }
+          entryConnection {
+            pageInfo {
+              ...PageInfoPartial
+            }
+            ...EntryConnectionPartial
+            edges {
+              ...EntryEdgePartial
+              node {
+                ...EntryPartial
+                _count {
+                  ...EntryCountPartial
+                }
+              }
+            }
+          }
+          sessionConnection {
+            pageInfo {
+              ...PageInfoPartial
+            }
+            ...SessionConnectionPartial
+            edges {
+              ...SessionEdgePartial
+              node {
+                ...SessionPartial
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  ${PageInfoPartial}
+  ${ViewerFieldsPaginatedConnectionPartial}
+  ${ViewerFieldsPaginatedEdgePartial}
+  ${UserCountPartial}
+  ${ViewerFieldsPaginatedPartial}
+  ${ProfilePartial}
+  ${CommentConnectionPartial}
+  ${CommentEdgePartial}
+  ${CommentPartial}
+  ${EntryConnectionPartial}
+  ${EntryEdgePartial}
+  ${EntryPartial}
+  ${EntryCountPartial}
+  ${SessionConnectionPartial}
+  ${SessionEdgePartial}
+  ${SessionPartial}
+`;
 export const viewerAuthFromContext = gql`
   query viewerAuthFromContext {
     viewerAuthInfoFromContext {
@@ -3293,6 +3516,42 @@ export const viewerAuthFromContext = gql`
   ${JwtPayloadPartial}
   ${JwtDecodedPartial}
   ${ViewerAuthInfoPartial}
+`;
+export const viewerProfileViaContext = gql`
+  query viewerProfileViaContext {
+    viewerProfile {
+      ...ProfilePartial
+      user {
+        ...UserPartial
+      }
+    }
+  }
+  ${ProfilePartial}
+  ${UserPartial}
+`;
+export const viewerSessionsViaContext = gql`
+  query viewerSessionsViaContext(
+    $findManySessionsInput: FindManySessionsPaginatedInput!
+  ) {
+    viewerSessionsPaginated(
+      viewerSessionssPaginatedInput: $findManySessionsInput
+    ) {
+      pageInfo {
+        ...PageInfoPartial
+      }
+      ...SessionConnectionPartial
+      edges {
+        ...SessionEdgePartial
+        node {
+          ...SessionPartial
+        }
+      }
+    }
+  }
+  ${PageInfoPartial}
+  ${SessionConnectionPartial}
+  ${SessionEdgePartial}
+  ${SessionPartial}
 `;
 export const Viewer = gql`
   query Viewer {
@@ -3901,7 +4160,8 @@ export type ResolversTypes = ResolversObject<{
     | ResolversTypes["Profile"]
     | ResolversTypes["Session"]
     | ResolversTypes["User"]
-    | ResolversTypes["ViewerDetailed"];
+    | ResolversTypes["ViewerDetailed"]
+    | ResolversTypes["ViewerFieldsPaginated"];
   NodeBaseFieldUnion: DeepPartial<
     | ResolversTypes["Account"]
     | ResolversTypes["Category"]
@@ -4031,9 +4291,6 @@ export type ResolversTypes = ResolversObject<{
     | ResolversTypes["MediaItem"]
     | ResolversTypes["User"]
   >;
-  UnionOnEdgeObjectType: ResolverTypeWrapper<
-    DeepPartial<UnionOnEdgeObjectType>
-  >;
   User: ResolverTypeWrapper<DeepPartial<User>>;
   UserConnection: ResolverTypeWrapper<DeepPartial<UserConnection>>;
   UserCount: ResolverTypeWrapper<DeepPartial<UserCount>>;
@@ -4087,6 +4344,21 @@ export type ResolversTypes = ResolversObject<{
   ViewerDetailed: ResolverTypeWrapper<DeepPartial<ViewerDetailed>>;
   ViewerEntriesWhereInput: ResolverTypeWrapper<
     DeepPartial<ViewerEntriesWhereInput>
+  >;
+  ViewerFieldsPaginated: ResolverTypeWrapper<
+    DeepPartial<ViewerFieldsPaginated>
+  >;
+  ViewerFieldsPaginatedConnection: ResolverTypeWrapper<
+    DeepPartial<ViewerFieldsPaginatedConnection>
+  >;
+  ViewerFieldsPaginatedEdge: ResolverTypeWrapper<
+    DeepPartial<ViewerFieldsPaginatedEdge>
+  >;
+  ViewerFieldsPaginatedInput: ResolverTypeWrapper<
+    DeepPartial<ViewerFieldsPaginatedInput>
+  >;
+  ViewerFieldsSubConnectionInputs: ResolverTypeWrapper<
+    DeepPartial<ViewerFieldsSubConnectionInputs>
   >;
 }>;
 
@@ -4267,7 +4539,8 @@ export type ResolversParentTypes = ResolversObject<{
     | ResolversParentTypes["Profile"]
     | ResolversParentTypes["Session"]
     | ResolversParentTypes["User"]
-    | ResolversParentTypes["ViewerDetailed"];
+    | ResolversParentTypes["ViewerDetailed"]
+    | ResolversParentTypes["ViewerFieldsPaginated"];
   NodeBaseFieldUnion: DeepPartial<
     | ResolversParentTypes["Account"]
     | ResolversParentTypes["Category"]
@@ -4335,7 +4608,6 @@ export type ResolversParentTypes = ResolversObject<{
     | ResolversParentTypes["MediaItem"]
     | ResolversParentTypes["User"]
   >;
-  UnionOnEdgeObjectType: DeepPartial<UnionOnEdgeObjectType>;
   User: DeepPartial<User>;
   UserConnection: DeepPartial<UserConnection>;
   UserCount: DeepPartial<UserCount>;
@@ -4357,6 +4629,11 @@ export type ResolversParentTypes = ResolversObject<{
   ViewerAuthInfo: DeepPartial<ViewerAuthInfo>;
   ViewerDetailed: DeepPartial<ViewerDetailed>;
   ViewerEntriesWhereInput: DeepPartial<ViewerEntriesWhereInput>;
+  ViewerFieldsPaginated: DeepPartial<ViewerFieldsPaginated>;
+  ViewerFieldsPaginatedConnection: DeepPartial<ViewerFieldsPaginatedConnection>;
+  ViewerFieldsPaginatedEdge: DeepPartial<ViewerFieldsPaginatedEdge>;
+  ViewerFieldsPaginatedInput: DeepPartial<ViewerFieldsPaginatedInput>;
+  ViewerFieldsSubConnectionInputs: DeepPartial<ViewerFieldsSubConnectionInputs>;
 }>;
 
 export type AccountResolvers<
@@ -4996,7 +5273,8 @@ export type NodeResolvers<
     | "Profile"
     | "Session"
     | "User"
-    | "ViewerDetailed",
+    | "ViewerDetailed"
+    | "ViewerFieldsPaginated",
     ParentType,
     ContextType
   >;
@@ -5319,7 +5597,7 @@ export type QueryResolvers<
     RequireFields<QuerynodeArgs, "id">
   >;
   nodeField?: Resolver<
-    ResolversTypes["NodeBaseFieldUnion"],
+    Array<ResolversTypes["NodeBaseFieldUnion"]>,
     ParentType,
     ContextType,
     RequireFields<QuerynodeFieldArgs, "cursor">
@@ -5396,6 +5674,29 @@ export type QueryResolvers<
       QueryviewerEntriesPaginatedArgs,
       "viewerEntriesPaginatedInput"
     >
+  >;
+  viewerFieldsPaginated?: Resolver<
+    ResolversTypes["ViewerFieldsPaginatedConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryviewerFieldsPaginatedArgs,
+      "viewerFieldsPaginatedInput"
+    >
+  >;
+  viewerMediaItemsPaginated?: Resolver<
+    ResolversTypes["MediaItemConnection"],
+    ParentType,
+    ContextType,
+    RequireFields<
+      QueryviewerMediaItemsPaginatedArgs,
+      "viewerMediaItemsPaginatedInput"
+    >
+  >;
+  viewerProfile?: Resolver<
+    ResolversTypes["Profile"],
+    ParentType,
+    ContextType
   >;
   viewerSessionsPaginated?: Resolver<
     ResolversTypes["SessionConnection"],
@@ -5516,18 +5817,6 @@ export type TypesUnionResolvers<
     ParentType,
     ContextType
   >;
-}>;
-
-export type UnionOnEdgeObjectTypeResolvers<
-  ContextType = ResolverContext,
-  ParentType extends ResolversParentTypes["UnionOnEdgeObjectType"] = ResolversParentTypes["UnionOnEdgeObjectType"]
-> = ResolversObject<{
-  unionOnEdge?: Resolver<
-    ResolversTypes["UnionOnEdgeObjectType"],
-    ParentType,
-    ContextType
-  >;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type UserResolvers<
@@ -5770,6 +6059,101 @@ export type ViewerDetailedResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type ViewerFieldsPaginatedResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["ViewerFieldsPaginated"] = ResolversParentTypes["ViewerFieldsPaginated"]
+> = ResolversObject<{
+  _count?: Resolver<ResolversTypes["UserCount"], ParentType, ContextType>;
+  commentConnection?: Resolver<
+    ResolversTypes["CommentConnection"],
+    ParentType,
+    ContextType
+  >;
+  createdAt?: Resolver<
+    ResolversTypes["DateTime"],
+    ParentType,
+    ContextType
+  >;
+  email?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  emailVerified?: Resolver<
+    Maybe<ResolversTypes["DateTime"]>,
+    ParentType,
+    ContextType
+  >;
+  entryConnection?: Resolver<
+    ResolversTypes["EntryConnection"],
+    ParentType,
+    ContextType
+  >;
+  firstName?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  image?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  lastName?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  mediaItemConnection?: Resolver<
+    ResolversTypes["MediaItemConnection"],
+    ParentType,
+    ContextType
+  >;
+  password?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  profile?: Resolver<
+    Maybe<ResolversTypes["Profile"]>,
+    ParentType,
+    ContextType
+  >;
+  role?: Resolver<Maybe<ResolversTypes["Role"]>, ParentType, ContextType>;
+  sessionConnection?: Resolver<
+    ResolversTypes["SessionConnection"],
+    ParentType,
+    ContextType
+  >;
+  status?: Resolver<ResolversTypes["UserStatus"], ParentType, ContextType>;
+  updatedAt?: Resolver<
+    Maybe<ResolversTypes["DateTime"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ViewerFieldsPaginatedConnectionResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["ViewerFieldsPaginatedConnection"] = ResolversParentTypes["ViewerFieldsPaginatedConnection"]
+> = ResolversObject<{
+  edges?: Resolver<
+    Array<ResolversTypes["ViewerFieldsPaginatedEdge"]>,
+    ParentType,
+    ContextType
+  >;
+  pageInfo?: Resolver<ResolversTypes["PageInfo"], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ViewerFieldsPaginatedEdgeResolvers<
+  ContextType = ResolverContext,
+  ParentType extends ResolversParentTypes["ViewerFieldsPaginatedEdge"] = ResolversParentTypes["ViewerFieldsPaginatedEdge"]
+> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  node?: Resolver<
+    ResolversTypes["ViewerFieldsPaginated"],
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type Resolvers<ContextType = ResolverContext> = ResolversObject<{
   Account?: AccountResolvers<ContextType>;
   Auth?: AuthResolvers<ContextType>;
@@ -5816,13 +6200,15 @@ export type Resolvers<ContextType = ResolverContext> = ResolversObject<{
   SessionEdge?: SessionEdgeResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   TypesUnion?: TypesUnionResolvers<ContextType>;
-  UnionOnEdgeObjectType?: UnionOnEdgeObjectTypeResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserConnection?: UserConnectionResolvers<ContextType>;
   UserCount?: UserCountResolvers<ContextType>;
   UserEdge?: UserEdgeResolvers<ContextType>;
   ViewerAuthInfo?: ViewerAuthInfoResolvers<ContextType>;
   ViewerDetailed?: ViewerDetailedResolvers<ContextType>;
+  ViewerFieldsPaginated?: ViewerFieldsPaginatedResolvers<ContextType>;
+  ViewerFieldsPaginatedConnection?: ViewerFieldsPaginatedConnectionResolvers<ContextType>;
+  ViewerFieldsPaginatedEdge?: ViewerFieldsPaginatedEdgeResolvers<ContextType>;
 }>;
 
 export type AccountPartialFragment = {
@@ -6092,6 +6478,31 @@ export type ViewerAuthInfoPartialFragment = {
   __typename: "ViewerAuthInfo";
   accessToken: string;
   refreshToken: string;
+};
+
+export type ViewerFieldsPaginatedConnectionPartialFragment = {
+  __typename: "ViewerFieldsPaginatedConnection";
+  totalCount: number;
+};
+
+export type ViewerFieldsPaginatedEdgePartialFragment = {
+  __typename: "ViewerFieldsPaginatedEdge";
+  cursor: string;
+};
+
+export type ViewerFieldsPaginatedPartialFragment = {
+  __typename: "ViewerFieldsPaginated";
+  createdAt: Date;
+  email: string;
+  emailVerified?: Date | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  id: string;
+  image?: string | null;
+  password: string;
+  role?: Role | null;
+  status: UserStatus;
+  updatedAt?: Date | null;
 };
 
 export type ViewerPartialFragment = {
@@ -7083,6 +7494,253 @@ export type userDecodedFromTokenQuery = {
   };
 };
 
+export type viewerCommentsViaContextQueryVariables = Exact<{
+  viewerCommentsInput: FindManyCommentsPaginatedInput;
+}>;
+
+export type viewerCommentsViaContextQuery = {
+  __typename?: "Query";
+  viewerCommentsPaginated: {
+    __typename: "CommentConnection";
+    totalCount: number;
+    pageInfo: {
+      __typename: "PageInfo";
+      startCursor?: string | null;
+      endCursor?: string | null;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+    edges: Array<{
+      __typename: "CommentEdge";
+      cursor: string;
+      node: {
+        __typename: "Comment";
+        body?: string | null;
+        updatedAt?: Date | null;
+        createdAt: Date;
+        entryId?: string | null;
+        authorId?: string | null;
+        id: string;
+        position?: string | null;
+        reactions?: Array<CommentReactions> | null;
+        author: {
+          __typename: "User";
+          createdAt: Date;
+          email: string;
+          emailVerified?: Date | null;
+          id: string;
+          image?: string | null;
+          firstName?: string | null;
+          lastName?: string | null;
+          password: string;
+          role?: Role | null;
+          status: UserStatus;
+          updatedAt?: Date | null;
+          _count: {
+            __typename: "UserCount";
+            accounts: number;
+            categories: number;
+            comments: number;
+            connections: number;
+            mediaItems: number;
+            entries: number;
+            sessions: number;
+          };
+        };
+      };
+    }>;
+  };
+};
+
+export type viewerEntriesViaContextQueryVariables = Exact<{
+  findViewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput;
+}>;
+
+export type viewerEntriesViaContextQuery = {
+  __typename?: "Query";
+  viewerEntriesPaginated: {
+    __typename: "EntryConnection";
+    totalCount: number;
+    pageInfo: {
+      __typename: "PageInfo";
+      startCursor?: string | null;
+      endCursor?: string | null;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+    edges: Array<{
+      __typename: "EntryEdge";
+      cursor: string;
+      node: {
+        __typename: "Entry";
+        authorId?: string | null;
+        content?: string | null;
+        createdAt: Date;
+        featuredImage?: string | null;
+        title?: string | null;
+        published?: boolean | null;
+        id: string;
+        _count: {
+          __typename: "EntryCount";
+          categories: number;
+          comments: number;
+        };
+      };
+    }>;
+  };
+};
+
+export type viewerFieldsConnectionViaContextQueryVariables = Exact<{
+  viewerFieldsPaginatedInput: ViewerFieldsPaginatedInput;
+}>;
+
+export type viewerFieldsConnectionViaContextQuery = {
+  __typename?: "Query";
+  viewerFieldsPaginated: {
+    __typename: "ViewerFieldsPaginatedConnection";
+    totalCount: number;
+    pageInfo: {
+      __typename: "PageInfo";
+      startCursor?: string | null;
+      endCursor?: string | null;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+    edges: Array<{
+      __typename: "ViewerFieldsPaginatedEdge";
+      cursor: string;
+      node: {
+        __typename: "ViewerFieldsPaginated";
+        createdAt: Date;
+        email: string;
+        emailVerified?: Date | null;
+        firstName?: string | null;
+        lastName?: string | null;
+        id: string;
+        image?: string | null;
+        password: string;
+        role?: Role | null;
+        status: UserStatus;
+        updatedAt?: Date | null;
+        _count: {
+          __typename: "UserCount";
+          accounts: number;
+          categories: number;
+          comments: number;
+          connections: number;
+          mediaItems: number;
+          entries: number;
+          sessions: number;
+        };
+        profile?: {
+          __typename: "Profile";
+          activiyFeed?: string | null;
+          bio?: string | null;
+          city?: string | null;
+          country?: string | null;
+          coverPhoto?: string | null;
+          dob?: string | null;
+          gender?: Gender | null;
+          id: string;
+          lastSeen?: Date | null;
+          memberSince: Date;
+          occupation?: string | null;
+          phoneNumber?: string | null;
+          pronouns?: Pronouns | null;
+          recentActivity?: string | null;
+          userId?: string | null;
+        } | null;
+        commentConnection: {
+          __typename: "CommentConnection";
+          totalCount: number;
+          pageInfo: {
+            __typename: "PageInfo";
+            startCursor?: string | null;
+            endCursor?: string | null;
+            hasNextPage: boolean;
+            hasPreviousPage: boolean;
+          };
+          edges: Array<{
+            __typename: "CommentEdge";
+            cursor: string;
+            node: {
+              __typename: "Comment";
+              body?: string | null;
+              updatedAt?: Date | null;
+              createdAt: Date;
+              entryId?: string | null;
+              authorId?: string | null;
+              id: string;
+              position?: string | null;
+              reactions?: Array<CommentReactions> | null;
+            };
+          }>;
+        };
+        entryConnection: {
+          __typename: "EntryConnection";
+          totalCount: number;
+          pageInfo: {
+            __typename: "PageInfo";
+            startCursor?: string | null;
+            endCursor?: string | null;
+            hasNextPage: boolean;
+            hasPreviousPage: boolean;
+          };
+          edges: Array<{
+            __typename: "EntryEdge";
+            cursor: string;
+            node: {
+              __typename: "Entry";
+              authorId?: string | null;
+              content?: string | null;
+              createdAt: Date;
+              featuredImage?: string | null;
+              title?: string | null;
+              published?: boolean | null;
+              id: string;
+              _count: {
+                __typename: "EntryCount";
+                categories: number;
+                comments: number;
+              };
+            };
+          }>;
+        };
+        sessionConnection: {
+          __typename: "SessionConnection";
+          totalCount: number;
+          pageInfo: {
+            __typename: "PageInfo";
+            startCursor?: string | null;
+            endCursor?: string | null;
+            hasNextPage: boolean;
+            hasPreviousPage: boolean;
+          };
+          edges: Array<{
+            __typename: "SessionEdge";
+            cursor: string;
+            node: {
+              __typename: "Session";
+              accessToken?: string | null;
+              alg?: string | null;
+              exp?: number | null;
+              iat?: number | null;
+              id: string;
+              lastVerified?: Date | null;
+              provider?: string | null;
+              refreshToken?: string | null;
+              scopes?: Array<string> | null;
+              signature?: string | null;
+              tokenState?: string | null;
+              userId?: string | null;
+            };
+          }>;
+        };
+      };
+    }>;
+  };
+};
+
 export type viewerAuthFromContextQueryVariables = Exact<{
   [key: string]: never;
 }>;
@@ -7108,6 +7766,84 @@ export type viewerAuthFromContextQuery = {
         userId?: string | null;
       };
     };
+  };
+};
+
+export type viewerProfileViaContextQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type viewerProfileViaContextQuery = {
+  __typename?: "Query";
+  viewerProfile: {
+    __typename: "Profile";
+    activiyFeed?: string | null;
+    bio?: string | null;
+    city?: string | null;
+    country?: string | null;
+    coverPhoto?: string | null;
+    dob?: string | null;
+    gender?: Gender | null;
+    id: string;
+    lastSeen?: Date | null;
+    memberSince: Date;
+    occupation?: string | null;
+    phoneNumber?: string | null;
+    pronouns?: Pronouns | null;
+    recentActivity?: string | null;
+    userId?: string | null;
+    user: {
+      __typename: "User";
+      createdAt: Date;
+      email: string;
+      emailVerified?: Date | null;
+      id: string;
+      image?: string | null;
+      firstName?: string | null;
+      lastName?: string | null;
+      password: string;
+      role?: Role | null;
+      status: UserStatus;
+      updatedAt?: Date | null;
+    };
+  };
+};
+
+export type viewerSessionsViaContextQueryVariables = Exact<{
+  findManySessionsInput: FindManySessionsPaginatedInput;
+}>;
+
+export type viewerSessionsViaContextQuery = {
+  __typename?: "Query";
+  viewerSessionsPaginated: {
+    __typename: "SessionConnection";
+    totalCount: number;
+    pageInfo: {
+      __typename: "PageInfo";
+      startCursor?: string | null;
+      endCursor?: string | null;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+    edges: Array<{
+      __typename: "SessionEdge";
+      cursor: string;
+      node: {
+        __typename: "Session";
+        accessToken?: string | null;
+        alg?: string | null;
+        exp?: number | null;
+        iat?: number | null;
+        id: string;
+        lastVerified?: Date | null;
+        provider?: string | null;
+        refreshToken?: string | null;
+        scopes?: Array<string> | null;
+        signature?: string | null;
+        tokenState?: string | null;
+        userId?: string | null;
+      };
+    }>;
   };
 };
 
@@ -7493,6 +8229,34 @@ export const ViewerAuthInfoPartialFragmentDoc = gql`
     __typename
     accessToken
     refreshToken
+  }
+`;
+export const ViewerFieldsPaginatedConnectionPartialFragmentDoc = gql`
+  fragment ViewerFieldsPaginatedConnectionPartial on ViewerFieldsPaginatedConnection {
+    __typename
+    totalCount
+  }
+`;
+export const ViewerFieldsPaginatedEdgePartialFragmentDoc = gql`
+  fragment ViewerFieldsPaginatedEdgePartial on ViewerFieldsPaginatedEdge {
+    __typename
+    cursor
+  }
+`;
+export const ViewerFieldsPaginatedPartialFragmentDoc = gql`
+  fragment ViewerFieldsPaginatedPartial on ViewerFieldsPaginated {
+    createdAt
+    email
+    emailVerified
+    firstName
+    lastName
+    id
+    image
+    password
+    role
+    status
+    updatedAt
+    __typename
   }
 `;
 export const ViewerPartialFragmentDoc = gql`
@@ -9198,6 +9962,318 @@ export function refetchuserDecodedFromTokenQuery(
 ) {
   return { query: userDecodedFromTokenDocument, variables: variables };
 }
+export const viewerCommentsViaContextDocument = gql`
+  query viewerCommentsViaContext(
+    $viewerCommentsInput: FindManyCommentsPaginatedInput!
+  ) {
+    viewerCommentsPaginated(
+      viewerCommentsPaginatedInput: $viewerCommentsInput
+    ) {
+      pageInfo {
+        ...PageInfoPartial
+      }
+      ...CommentConnectionPartial
+      edges {
+        ...CommentEdgePartial
+        node {
+          ...CommentPartial
+          author {
+            _count {
+              ...UserCountPartial
+            }
+            ...UserPartial
+          }
+        }
+      }
+    }
+  }
+  ${PageInfoPartialFragmentDoc}
+  ${CommentConnectionPartialFragmentDoc}
+  ${CommentEdgePartialFragmentDoc}
+  ${CommentPartialFragmentDoc}
+  ${UserCountPartialFragmentDoc}
+  ${UserPartialFragmentDoc}
+`;
+
+/**
+ * __useviewerCommentsViaContextQuery__
+ *
+ * To run a query within a React component, call `useviewerCommentsViaContextQuery` and pass it any options that fit your needs.
+ * When your component renders, `useviewerCommentsViaContextQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useviewerCommentsViaContextQuery({
+ *   variables: {
+ *      viewerCommentsInput: // value for 'viewerCommentsInput'
+ *   },
+ * });
+ */
+export function useviewerCommentsViaContextQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    viewerCommentsViaContextQuery,
+    viewerCommentsViaContextQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    viewerCommentsViaContextQuery,
+    viewerCommentsViaContextQueryVariables
+  >(viewerCommentsViaContextDocument, options);
+}
+export function useviewerCommentsViaContextLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    viewerCommentsViaContextQuery,
+    viewerCommentsViaContextQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    viewerCommentsViaContextQuery,
+    viewerCommentsViaContextQueryVariables
+  >(viewerCommentsViaContextDocument, options);
+}
+export type viewerCommentsViaContextQueryHookResult = ReturnType<
+  typeof useviewerCommentsViaContextQuery
+>;
+export type viewerCommentsViaContextLazyQueryHookResult = ReturnType<
+  typeof useviewerCommentsViaContextLazyQuery
+>;
+export type viewerCommentsViaContextQueryResult = Apollo.QueryResult<
+  viewerCommentsViaContextQuery,
+  viewerCommentsViaContextQueryVariables
+>;
+export function refetchviewerCommentsViaContextQuery(
+  variables: viewerCommentsViaContextQueryVariables
+) {
+  return { query: viewerCommentsViaContextDocument, variables: variables };
+}
+export const viewerEntriesViaContextDocument = gql`
+  query viewerEntriesViaContext(
+    $findViewerEntriesPaginatedInput: FindViewerEntriesPaginatedInput!
+  ) {
+    viewerEntriesPaginated(
+      viewerEntriesPaginatedInput: $findViewerEntriesPaginatedInput
+    ) {
+      ...EntryConnectionPartial
+      pageInfo {
+        ...PageInfoPartial
+      }
+      edges {
+        ...EntryEdgePartial
+        node {
+          ...EntryPartial
+          _count {
+            ...EntryCountPartial
+          }
+        }
+      }
+    }
+  }
+  ${EntryConnectionPartialFragmentDoc}
+  ${PageInfoPartialFragmentDoc}
+  ${EntryEdgePartialFragmentDoc}
+  ${EntryPartialFragmentDoc}
+  ${EntryCountPartialFragmentDoc}
+`;
+
+/**
+ * __useviewerEntriesViaContextQuery__
+ *
+ * To run a query within a React component, call `useviewerEntriesViaContextQuery` and pass it any options that fit your needs.
+ * When your component renders, `useviewerEntriesViaContextQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useviewerEntriesViaContextQuery({
+ *   variables: {
+ *      findViewerEntriesPaginatedInput: // value for 'findViewerEntriesPaginatedInput'
+ *   },
+ * });
+ */
+export function useviewerEntriesViaContextQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    viewerEntriesViaContextQuery,
+    viewerEntriesViaContextQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    viewerEntriesViaContextQuery,
+    viewerEntriesViaContextQueryVariables
+  >(viewerEntriesViaContextDocument, options);
+}
+export function useviewerEntriesViaContextLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    viewerEntriesViaContextQuery,
+    viewerEntriesViaContextQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    viewerEntriesViaContextQuery,
+    viewerEntriesViaContextQueryVariables
+  >(viewerEntriesViaContextDocument, options);
+}
+export type viewerEntriesViaContextQueryHookResult = ReturnType<
+  typeof useviewerEntriesViaContextQuery
+>;
+export type viewerEntriesViaContextLazyQueryHookResult = ReturnType<
+  typeof useviewerEntriesViaContextLazyQuery
+>;
+export type viewerEntriesViaContextQueryResult = Apollo.QueryResult<
+  viewerEntriesViaContextQuery,
+  viewerEntriesViaContextQueryVariables
+>;
+export function refetchviewerEntriesViaContextQuery(
+  variables: viewerEntriesViaContextQueryVariables
+) {
+  return { query: viewerEntriesViaContextDocument, variables: variables };
+}
+export const viewerFieldsConnectionViaContextDocument = gql`
+  query viewerFieldsConnectionViaContext(
+    $viewerFieldsPaginatedInput: ViewerFieldsPaginatedInput!
+  ) {
+    viewerFieldsPaginated(
+      viewerFieldsPaginatedInput: $viewerFieldsPaginatedInput
+    ) {
+      pageInfo {
+        ...PageInfoPartial
+      }
+      ...ViewerFieldsPaginatedConnectionPartial
+      edges {
+        ...ViewerFieldsPaginatedEdgePartial
+        node {
+          _count {
+            ...UserCountPartial
+          }
+          ...ViewerFieldsPaginatedPartial
+          profile {
+            ...ProfilePartial
+          }
+          commentConnection {
+            pageInfo {
+              ...PageInfoPartial
+            }
+            ...CommentConnectionPartial
+            edges {
+              ...CommentEdgePartial
+              node {
+                ...CommentPartial
+              }
+            }
+          }
+          entryConnection {
+            pageInfo {
+              ...PageInfoPartial
+            }
+            ...EntryConnectionPartial
+            edges {
+              ...EntryEdgePartial
+              node {
+                ...EntryPartial
+                _count {
+                  ...EntryCountPartial
+                }
+              }
+            }
+          }
+          sessionConnection {
+            pageInfo {
+              ...PageInfoPartial
+            }
+            ...SessionConnectionPartial
+            edges {
+              ...SessionEdgePartial
+              node {
+                ...SessionPartial
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  ${PageInfoPartialFragmentDoc}
+  ${ViewerFieldsPaginatedConnectionPartialFragmentDoc}
+  ${ViewerFieldsPaginatedEdgePartialFragmentDoc}
+  ${UserCountPartialFragmentDoc}
+  ${ViewerFieldsPaginatedPartialFragmentDoc}
+  ${ProfilePartialFragmentDoc}
+  ${CommentConnectionPartialFragmentDoc}
+  ${CommentEdgePartialFragmentDoc}
+  ${CommentPartialFragmentDoc}
+  ${EntryConnectionPartialFragmentDoc}
+  ${EntryEdgePartialFragmentDoc}
+  ${EntryPartialFragmentDoc}
+  ${EntryCountPartialFragmentDoc}
+  ${SessionConnectionPartialFragmentDoc}
+  ${SessionEdgePartialFragmentDoc}
+  ${SessionPartialFragmentDoc}
+`;
+
+/**
+ * __useviewerFieldsConnectionViaContextQuery__
+ *
+ * To run a query within a React component, call `useviewerFieldsConnectionViaContextQuery` and pass it any options that fit your needs.
+ * When your component renders, `useviewerFieldsConnectionViaContextQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useviewerFieldsConnectionViaContextQuery({
+ *   variables: {
+ *      viewerFieldsPaginatedInput: // value for 'viewerFieldsPaginatedInput'
+ *   },
+ * });
+ */
+export function useviewerFieldsConnectionViaContextQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    viewerFieldsConnectionViaContextQuery,
+    viewerFieldsConnectionViaContextQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    viewerFieldsConnectionViaContextQuery,
+    viewerFieldsConnectionViaContextQueryVariables
+  >(viewerFieldsConnectionViaContextDocument, options);
+}
+export function useviewerFieldsConnectionViaContextLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    viewerFieldsConnectionViaContextQuery,
+    viewerFieldsConnectionViaContextQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    viewerFieldsConnectionViaContextQuery,
+    viewerFieldsConnectionViaContextQueryVariables
+  >(viewerFieldsConnectionViaContextDocument, options);
+}
+export type viewerFieldsConnectionViaContextQueryHookResult = ReturnType<
+  typeof useviewerFieldsConnectionViaContextQuery
+>;
+export type viewerFieldsConnectionViaContextLazyQueryHookResult =
+  ReturnType<typeof useviewerFieldsConnectionViaContextLazyQuery>;
+export type viewerFieldsConnectionViaContextQueryResult =
+  Apollo.QueryResult<
+    viewerFieldsConnectionViaContextQuery,
+    viewerFieldsConnectionViaContextQueryVariables
+  >;
+export function refetchviewerFieldsConnectionViaContextQuery(
+  variables: viewerFieldsConnectionViaContextQueryVariables
+) {
+  return {
+    query: viewerFieldsConnectionViaContextDocument,
+    variables: variables
+  };
+}
 export const viewerAuthFromContextDocument = gql`
   query viewerAuthFromContext {
     viewerAuthInfoFromContext {
@@ -9272,6 +10348,153 @@ export function refetchviewerAuthFromContextQuery(
   variables?: viewerAuthFromContextQueryVariables
 ) {
   return { query: viewerAuthFromContextDocument, variables: variables };
+}
+export const viewerProfileViaContextDocument = gql`
+  query viewerProfileViaContext {
+    viewerProfile {
+      ...ProfilePartial
+      user {
+        ...UserPartial
+      }
+    }
+  }
+  ${ProfilePartialFragmentDoc}
+  ${UserPartialFragmentDoc}
+`;
+
+/**
+ * __useviewerProfileViaContextQuery__
+ *
+ * To run a query within a React component, call `useviewerProfileViaContextQuery` and pass it any options that fit your needs.
+ * When your component renders, `useviewerProfileViaContextQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useviewerProfileViaContextQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useviewerProfileViaContextQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    viewerProfileViaContextQuery,
+    viewerProfileViaContextQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    viewerProfileViaContextQuery,
+    viewerProfileViaContextQueryVariables
+  >(viewerProfileViaContextDocument, options);
+}
+export function useviewerProfileViaContextLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    viewerProfileViaContextQuery,
+    viewerProfileViaContextQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    viewerProfileViaContextQuery,
+    viewerProfileViaContextQueryVariables
+  >(viewerProfileViaContextDocument, options);
+}
+export type viewerProfileViaContextQueryHookResult = ReturnType<
+  typeof useviewerProfileViaContextQuery
+>;
+export type viewerProfileViaContextLazyQueryHookResult = ReturnType<
+  typeof useviewerProfileViaContextLazyQuery
+>;
+export type viewerProfileViaContextQueryResult = Apollo.QueryResult<
+  viewerProfileViaContextQuery,
+  viewerProfileViaContextQueryVariables
+>;
+export function refetchviewerProfileViaContextQuery(
+  variables?: viewerProfileViaContextQueryVariables
+) {
+  return { query: viewerProfileViaContextDocument, variables: variables };
+}
+export const viewerSessionsViaContextDocument = gql`
+  query viewerSessionsViaContext(
+    $findManySessionsInput: FindManySessionsPaginatedInput!
+  ) {
+    viewerSessionsPaginated(
+      viewerSessionssPaginatedInput: $findManySessionsInput
+    ) {
+      pageInfo {
+        ...PageInfoPartial
+      }
+      ...SessionConnectionPartial
+      edges {
+        ...SessionEdgePartial
+        node {
+          ...SessionPartial
+        }
+      }
+    }
+  }
+  ${PageInfoPartialFragmentDoc}
+  ${SessionConnectionPartialFragmentDoc}
+  ${SessionEdgePartialFragmentDoc}
+  ${SessionPartialFragmentDoc}
+`;
+
+/**
+ * __useviewerSessionsViaContextQuery__
+ *
+ * To run a query within a React component, call `useviewerSessionsViaContextQuery` and pass it any options that fit your needs.
+ * When your component renders, `useviewerSessionsViaContextQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useviewerSessionsViaContextQuery({
+ *   variables: {
+ *      findManySessionsInput: // value for 'findManySessionsInput'
+ *   },
+ * });
+ */
+export function useviewerSessionsViaContextQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    viewerSessionsViaContextQuery,
+    viewerSessionsViaContextQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    viewerSessionsViaContextQuery,
+    viewerSessionsViaContextQueryVariables
+  >(viewerSessionsViaContextDocument, options);
+}
+export function useviewerSessionsViaContextLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    viewerSessionsViaContextQuery,
+    viewerSessionsViaContextQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    viewerSessionsViaContextQuery,
+    viewerSessionsViaContextQueryVariables
+  >(viewerSessionsViaContextDocument, options);
+}
+export type viewerSessionsViaContextQueryHookResult = ReturnType<
+  typeof useviewerSessionsViaContextQuery
+>;
+export type viewerSessionsViaContextLazyQueryHookResult = ReturnType<
+  typeof useviewerSessionsViaContextLazyQuery
+>;
+export type viewerSessionsViaContextQueryResult = Apollo.QueryResult<
+  viewerSessionsViaContextQuery,
+  viewerSessionsViaContextQueryVariables
+>;
+export function refetchviewerSessionsViaContextQuery(
+  variables: viewerSessionsViaContextQueryVariables
+) {
+  return { query: viewerSessionsViaContextDocument, variables: variables };
 }
 export const ViewerDocument = gql`
   query Viewer {
@@ -9379,7 +10602,12 @@ export const namedOperations = {
     sessionByEncodedCursor: "sessionByEncodedCursor",
     userByEncodedCursor: "userByEncodedCursor",
     userDecodedFromToken: "userDecodedFromToken",
+    viewerCommentsViaContext: "viewerCommentsViaContext",
+    viewerEntriesViaContext: "viewerEntriesViaContext",
+    viewerFieldsConnectionViaContext: "viewerFieldsConnectionViaContext",
     viewerAuthFromContext: "viewerAuthFromContext",
+    viewerProfileViaContext: "viewerProfileViaContext",
+    viewerSessionsViaContext: "viewerSessionsViaContext",
     Viewer: "Viewer"
   },
   Mutation: {
@@ -9425,6 +10653,10 @@ export const namedOperations = {
     UserConnectionPartial: "UserConnectionPartial",
     UserEdgePartial: "UserEdgePartial",
     ViewerAuthInfoPartial: "ViewerAuthInfoPartial",
+    ViewerFieldsPaginatedConnectionPartial:
+      "ViewerFieldsPaginatedConnectionPartial",
+    ViewerFieldsPaginatedEdgePartial: "ViewerFieldsPaginatedEdgePartial",
+    ViewerFieldsPaginatedPartial: "ViewerFieldsPaginatedPartial",
     ViewerPartial: "ViewerPartial"
   }
 };

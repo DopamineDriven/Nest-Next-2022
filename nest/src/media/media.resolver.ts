@@ -1,4 +1,4 @@
-import { Resolver, Query, Args } from "@nestjs/graphql";
+import { Resolver, Query, Args, Context } from "@nestjs/graphql";
 import { MediaItemConnection } from "./model/media-connection";
 import { FindManyMediaItemsPaginatedInput } from "./inputs/find-many-media-items-paginated.input";
 import { MediaItem } from "./model/media.model";
@@ -9,6 +9,7 @@ import { AuthGuard } from "src/common/guards/gql-context.guard";
 import { findManyCursorConnection } from "@devoxa/prisma-relay-cursor-connection";
 import { MediaItemService } from "./media.service";
 import { fromGlobalId, toGlobalId } from "graphql-relay";
+import { AppContext } from "src/gql-config.service";
 
 @Resolver(() => MediaItem)
 export class MediaResolver {
@@ -64,5 +65,19 @@ export class MediaResolver {
   @Query(() => MediaItem)
   findUniqueMediaItem(@Args("mediaItemId") mediaItemId: string) {
     return this.mediaItemService.relayFindUniqueMediaItem({ id: mediaItemId });
+  }
+
+  @Query(() => MediaItemConnection)
+  async viewerMediaItemsPaginated(
+    @Args("viewerMediaItemsPaginatedInput", {
+      type: () => FindManyMediaItemsPaginatedInput
+    })
+    params: FindManyMediaItemsPaginatedInput,
+    @Context() { viewerId }: AppContext
+  ): Promise<MediaItemConnection | null> {
+    return viewerId ? await this.mediaItemService.getViewerMediaItemsPaginated(
+      params,
+      viewerId as string
+    ) : null;
   }
 }

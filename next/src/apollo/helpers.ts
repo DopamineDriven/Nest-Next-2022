@@ -523,6 +523,9 @@ export type QueryKeySpecifier = (
   | "viewerAuthInfoFromContext"
   | "viewerCommentsPaginated"
   | "viewerEntriesPaginated"
+  | "viewerFieldsPaginated"
+  | "viewerMediaItemsPaginated"
+  | "viewerProfile"
   | "viewerSessionsPaginated"
   | QueryKeySpecifier
 )[];
@@ -558,6 +561,9 @@ export type QueryFieldPolicy = {
   viewerAuthInfoFromContext?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerCommentsPaginated?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerEntriesPaginated?: FieldPolicy<any> | FieldReadFunction<any>;
+  viewerFieldsPaginated?: FieldPolicy<any> | FieldReadFunction<any>;
+  viewerMediaItemsPaginated?: FieldPolicy<any> | FieldReadFunction<any>;
+  viewerProfile?: FieldPolicy<any> | FieldReadFunction<any>;
   viewerSessionsPaginated?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type SessionKeySpecifier = (
@@ -621,13 +627,6 @@ export type SubscriptionFieldPolicy = {
   commentCreated?: FieldPolicy<any> | FieldReadFunction<any>;
   entryCreated?: FieldPolicy<any> | FieldReadFunction<any>;
   profileCreated?: FieldPolicy<any> | FieldReadFunction<any>;
-};
-export type UnionOnEdgeObjectTypeKeySpecifier = (
-  | "unionOnEdge"
-  | UnionOnEdgeObjectTypeKeySpecifier
-)[];
-export type UnionOnEdgeObjectTypeFieldPolicy = {
-  unionOnEdge?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type UserKeySpecifier = (
   | "_count"
@@ -774,6 +773,65 @@ export type ViewerDetailedFieldPolicy = {
   sessions?: FieldPolicy<any> | FieldReadFunction<any>;
   status?: FieldPolicy<any> | FieldReadFunction<any>;
   updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type ViewerFieldsPaginatedKeySpecifier = (
+  | "_count"
+  | "commentConnection"
+  | "createdAt"
+  | "email"
+  | "emailVerified"
+  | "entryConnection"
+  | "firstName"
+  | "id"
+  | "image"
+  | "lastName"
+  | "mediaItemConnection"
+  | "password"
+  | "profile"
+  | "role"
+  | "sessionConnection"
+  | "status"
+  | "updatedAt"
+  | ViewerFieldsPaginatedKeySpecifier
+)[];
+export type ViewerFieldsPaginatedFieldPolicy = {
+  _count?: FieldPolicy<any> | FieldReadFunction<any>;
+  commentConnection?: FieldPolicy<any> | FieldReadFunction<any>;
+  createdAt?: FieldPolicy<any> | FieldReadFunction<any>;
+  email?: FieldPolicy<any> | FieldReadFunction<any>;
+  emailVerified?: FieldPolicy<any> | FieldReadFunction<any>;
+  entryConnection?: FieldPolicy<any> | FieldReadFunction<any>;
+  firstName?: FieldPolicy<any> | FieldReadFunction<any>;
+  id?: FieldPolicy<any> | FieldReadFunction<any>;
+  image?: FieldPolicy<any> | FieldReadFunction<any>;
+  lastName?: FieldPolicy<any> | FieldReadFunction<any>;
+  mediaItemConnection?: FieldPolicy<any> | FieldReadFunction<any>;
+  password?: FieldPolicy<any> | FieldReadFunction<any>;
+  profile?: FieldPolicy<any> | FieldReadFunction<any>;
+  role?: FieldPolicy<any> | FieldReadFunction<any>;
+  sessionConnection?: FieldPolicy<any> | FieldReadFunction<any>;
+  status?: FieldPolicy<any> | FieldReadFunction<any>;
+  updatedAt?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type ViewerFieldsPaginatedConnectionKeySpecifier = (
+  | "edges"
+  | "pageInfo"
+  | "totalCount"
+  | ViewerFieldsPaginatedConnectionKeySpecifier
+)[];
+export type ViewerFieldsPaginatedConnectionFieldPolicy = {
+  edges?: FieldPolicy<any> | FieldReadFunction<any>;
+  pageInfo?: FieldPolicy<any> | FieldReadFunction<any>;
+  totalCount?: FieldPolicy<any> | FieldReadFunction<any>;
+};
+export type ViewerFieldsPaginatedEdgeKeySpecifier = (
+  | "cursor"
+  | "node"
+  | ViewerFieldsPaginatedEdgeKeySpecifier
+)[];
+export type ViewerFieldsPaginatedEdgeFieldPolicy = {
+  cursor?: FieldPolicy<any> | FieldReadFunction<any>;
+  node?: FieldPolicy<any> | FieldReadFunction<any>;
 };
 export type StrictTypedTypePolicies = {
   Account?: Omit<TypePolicy, "fields" | "keyFields"> & {
@@ -1049,13 +1107,6 @@ export type StrictTypedTypePolicies = {
       | (() => undefined | SubscriptionKeySpecifier);
     fields?: SubscriptionFieldPolicy;
   };
-  UnionOnEdgeObjectType?: Omit<TypePolicy, "fields" | "keyFields"> & {
-    keyFields?:
-      | false
-      | UnionOnEdgeObjectTypeKeySpecifier
-      | (() => undefined | UnionOnEdgeObjectTypeKeySpecifier);
-    fields?: UnionOnEdgeObjectTypeFieldPolicy;
-  };
   User?: Omit<TypePolicy, "fields" | "keyFields"> & {
     keyFields?:
       | false
@@ -1097,6 +1148,30 @@ export type StrictTypedTypePolicies = {
       | ViewerDetailedKeySpecifier
       | (() => undefined | ViewerDetailedKeySpecifier);
     fields?: ViewerDetailedFieldPolicy;
+  };
+  ViewerFieldsPaginated?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | ViewerFieldsPaginatedKeySpecifier
+      | (() => undefined | ViewerFieldsPaginatedKeySpecifier);
+    fields?: ViewerFieldsPaginatedFieldPolicy;
+  };
+  ViewerFieldsPaginatedConnection?: Omit<
+    TypePolicy,
+    "fields" | "keyFields"
+  > & {
+    keyFields?:
+      | false
+      | ViewerFieldsPaginatedConnectionKeySpecifier
+      | (() => undefined | ViewerFieldsPaginatedConnectionKeySpecifier);
+    fields?: ViewerFieldsPaginatedConnectionFieldPolicy;
+  };
+  ViewerFieldsPaginatedEdge?: Omit<TypePolicy, "fields" | "keyFields"> & {
+    keyFields?:
+      | false
+      | ViewerFieldsPaginatedEdgeKeySpecifier
+      | (() => undefined | ViewerFieldsPaginatedEdgeKeySpecifier);
+    fields?: ViewerFieldsPaginatedEdgeFieldPolicy;
   };
 };
 export type TypedTypePolicies = StrictTypedTypePolicies & TypePolicies;

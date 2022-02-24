@@ -26,6 +26,7 @@ import { SessionModule } from "./session/session.module";
 import { ExpressContext } from "apollo-server-express";
 import { SignJWT, jwtVerify } from "jose";
 import { nanoid } from "nanoid";
+import { ViewerFieldsPaginatedModule } from "./user/viewer-fields-paginated.module";
 
 export type AppContext = {
   req: ExpressContext["req"];
@@ -188,6 +189,7 @@ export class GqlConfigService implements GqlOptionsFactory {
         PaginationModule,
         PrismaModule,
         ProfileModule,
+        ViewerFieldsPaginatedModule,
         SessionModule
       ],
       bodyParserConfig: {}

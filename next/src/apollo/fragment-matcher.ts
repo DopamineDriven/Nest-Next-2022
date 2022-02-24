@@ -10,7 +10,8 @@ export type PossibleTypesResultData = {
       "Profile",
       "Session",
       "User",
-      "ViewerDetailed"
+      "ViewerDetailed",
+      "ViewerFieldsPaginated"
     ];
     NodeBaseFieldUnion: [
       "Account",
@@ -46,7 +47,8 @@ const result: PossibleTypesResultData = {
       "Profile",
       "Session",
       "User",
-      "ViewerDetailed"
+      "ViewerDetailed",
+      "ViewerFieldsPaginated"
     ],
     NodeBaseFieldUnion: [
       "Account",

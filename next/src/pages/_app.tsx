@@ -53,6 +53,7 @@ export default function NestNextApp({ pageProps, Component }: AppProps) {
   const apolloClient = useApollo(
     pageProps.initialApolloState ?? null,
     pageProps.resolverContext ?? {}
+    // xResolvers(pageProps.resolverContext)
   ) as ApolloClient<NormalizedCacheObject>;
   const router = useRouter();
 

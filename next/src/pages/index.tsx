@@ -1,6 +1,5 @@
 import { CookieValueTypes } from "cookies-next/lib/types";
 import { Inspector } from "@/components/UI";
-import { ViewerQuery } from "@/graphql/queries/viewer.graphql";
 import {
   ApolloError,
   ApolloQueryResult,
@@ -16,18 +15,17 @@ import { UnwrapInputProps, UnwrapButtonProps } from "@/types/mapped";
 import {
   signInUserDocument,
   usesignInUserMutation,
-  signInUserMutation,
   AuthDetailed,
-  signInUserMutationResult,
-  signInUserMutationVariables,
-  namedOperations,
+  ViewerQuery,
   Viewer,
-  ViewerQueryVariables
+  ViewerQueryVariables,
+  ViewerDocument
 } from "@/graphql/generated/graphql";
 import { setCookies } from "cookies-next";
 import {
   GetServerSidePropsContext,
   GetServerSidePropsResult,
+  InferGetServerSidePropsType,
   NextPage
 } from "next";
 import * as SuperJSON from "superjson";
@@ -35,26 +33,11 @@ import { QueryDocumentKeys } from "graphql/language/visitor";
 import { ParsedUrlQuery } from "@/types/query-parser";
 import { initializeApollo } from "@/apollo/apollo";
 import Layout from "@/components/Layout/layout";
-import useAuth from "@/hooks/use-auth";
-
-type userImageJsonField = {
-  id: string;
-  uploadedAt: string;
-  fileLastModified: string;
-  filename: string;
-  src: string;
-  srcSet: string;
-  type: MimeTypes;
-  size: string;
-  width: number;
-  quality: number;
-  height: number;
-  title: string;
-  ariaLabel: string;
-  caption: string;
-  destination: MediaItemDestination;
-  unique: string;
-};
+import useAuth, { AuthData } from "@/hooks/use-auth";
+import { xResolvers } from "@/apollo/resolver-context";
+import { _DeepPartialObject } from "utility-types/dist/mapped-types";
+import { GraphQLResolveInfo } from "graphql";
+import Profile from "@/components/UI/Profile";
 
 const ReusableInput = ({
   ...props
@@ -77,14 +60,18 @@ const ReusableInput = ({
   | "minLength"
   | "value"
 >) => <input {...props} />;
+
 export type IndexProps = {
-  viewerServer: ViewerQuery;
-  parseAuthHeaderFromNest: string;
+  viewerServer: ViewerQuery | null;
+  parseAuthHeaderFromNest: string | null;
   normalizedCacheObject: NormalizedCacheObject;
-  cookiesCalled: CookieValueTypes;
 };
 // typedViewerDocument: TypedDocumentNode<ViewerQuery, ViewerQueryVariables>
-export default function Index() {
+export default function Index<T extends typeof getServerSideProps>({
+  normalizedCacheObject,
+  parseAuthHeaderFromNest,
+  viewerServer
+}: InferGetServerSidePropsType<T>) {
   const router = useRouter();
 
   const [
@@ -128,17 +115,6 @@ export default function Index() {
           }, 4000)
         : () => {};
     })();
-    if (authDetailedState != null) {
-      // const fetcher = fetch(
-      //   `/api/viewer/viewer?token=${authDetailedState.auth?.accessToken}`.trim(),
-      //   {
-      //     headers: {
-      //       authorization: "Bearer " + authDetailedState.auth?.accessToken
-      //     }
-      //   }
-      // ).then((res) => res);
-      // console.log(fetcher ?? "no fetcher data")
-    }
   }, [authDetailedState, router]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -200,7 +176,7 @@ export default function Index() {
           {authDetailedState !== null ? (
             <>
               <Inspector>
-                {JSON.stringify(accessTokenVal, null, 2)}
+                {JSON.stringify(viewerServer ?? "no viewer", null, 2)}
               </Inspector>
               <Inspector>
                 {JSON.stringify(authDetailedState, null, 2)}
@@ -285,29 +261,60 @@ export default function Index() {
   );
 }
 
+export const getServerSideProps = async (
+  ctx: GetServerSidePropsContext<ParsedUrlQuery>
+): Promise<GetServerSidePropsResult<IndexProps>> => {
+  const apolloClient = initializeApollo(
+    {},
+    { req: ctx.req, res: ctx.res }
+  );
+  const AuthHeaderPresent = ctx.req.headers.authorization;
+
+  AuthHeaderPresent != undefined && AuthHeaderPresent.length > 10
+    ? await apolloClient.query<ViewerQuery, ViewerQueryVariables>({
+        query: ViewerDocument,
+        fetchPolicy: "cache-first",
+        returnPartialData: true,
+        context: xResolvers(ctx),
+        notifyOnNetworkStatusChange: true,
+        partialRefetch: true
+      })
+    : null;
+
+  return {
+    props: {
+      normalizedCacheObject: apolloClient.cache.extract(true),
+      parseAuthHeaderFromNest: AuthHeaderPresent
+        ? AuthHeaderPresent
+        : null,
+      viewerServer: apolloClient.cache.readQuery<
+        ViewerQuery,
+        ViewerQueryVariables
+      >({
+        query: ViewerDocument
+      })
+    }
+  };
+};
+
 Index.Layout = Layout;
-/*
-    { refetchQueries: [namedOperations.Query.myQuery] }
-https://www.graphql-code-generator.com/plugins/named-operations-object
-               */
-// const sessionCb = useCallback((authDetailed: AuthDetailed) => {
-
-//   const objectToSerialize = {
-//     scaffold: {
-//       user: authDetailed.auth?.user,
-//       accessToken: authDetailed.auth?.accessToken,
-//       refreshToken: authDetailed.auth?.refreshToken,
-//       session: authDetailed.auth?.session,
-//       jwt: authDetailed.jwt
-//     },
-//     timestamp: new Date(Date.now()),
-//     id: /authDetailed/
-//   }
-
-//   const { json, meta } = SuperJSON.serialize(objectToSerialize as typeof objectToSerialize)
-//   if (window.sessionStorage.getItem("superSession") != null) {
-
-//   }
-//   SuperJSON.default.stringify({user: authDetailedState ? authDetailedState as AuthDetailed : {}})
-//   window.sessionStorage.setItem("superSession", SuperJSON.default.stringify({user: authDetailedState ? authDetailedState as AuthDetailed : {}}))
-// }, [])
+/**
+ * type userImageJsonField = {
+  id: string;
+  uploadedAt: string;
+  fileLastModified: string;
+  filename: string;
+  src: string;
+  srcSet: string;
+  type: MimeTypes;
+  size: string;
+  width: number;
+  quality: number;
+  height: number;
+  title: string;
+  ariaLabel: string;
+  caption: string;
+  destination: MediaItemDestination;
+  unique: string;
+};
+ */

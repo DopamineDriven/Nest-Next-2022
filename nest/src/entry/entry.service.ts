@@ -126,7 +126,7 @@ export class EntryService {
               take: params.take,
               skip: params.skip,
               where: {
-                authorId: user.id,
+                authorId: {equals: user.id},
                 ...params.where
               },
               cursor: {
@@ -141,11 +141,11 @@ export class EntryService {
             after: params.pagination.after
           },
           {
-            getCursor: (record: { id: string } = user) => {
+            getCursor: (record: { id: string }) => {
               return record;
             },
-            decodeCursor: (cursor: string = user.id) => fromGlobalId(cursor),
-            encodeCursor: (cursor: { id: string } = user) =>
+            decodeCursor: (cursor: string) => fromGlobalId(cursor),
+            encodeCursor: (cursor: { id: string }) =>
               toGlobalId(Entry.name, cursor.id)
           }
         );

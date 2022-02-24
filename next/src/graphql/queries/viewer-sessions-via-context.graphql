@@ -1,0 +1,23 @@
+# import SessionConnectionPartial from "../fragments/session-partial.graphql";
+# import SessionEdgePartial from "../fragments/session-partial.graphql";
+# import SessionPartial from "../fragments/session-partial.graphql";
+# import PageInfoPartial from "../fragments/page-info-partial.graphql";
+
+query viewerSessionsViaContext(
+  $findManySessionsInput: FindManySessionsPaginatedInput!
+) {
+  viewerSessionsPaginated(
+    viewerSessionssPaginatedInput: $findManySessionsInput
+  ) {
+    pageInfo {
+      ...PageInfoPartial
+    }
+    ...SessionConnectionPartial
+    edges {
+      ...SessionEdgePartial
+      node {
+        ...SessionPartial
+      }
+    }
+  }
+}

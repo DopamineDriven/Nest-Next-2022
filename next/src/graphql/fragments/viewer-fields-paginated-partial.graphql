@@ -1,0 +1,24 @@
+fragment ViewerFieldsPaginatedConnectionPartial on ViewerFieldsPaginatedConnection {
+  __typename
+  totalCount
+}
+
+fragment ViewerFieldsPaginatedEdgePartial on ViewerFieldsPaginatedEdge {
+  __typename
+  cursor
+}
+
+fragment ViewerFieldsPaginatedPartial on ViewerFieldsPaginated {
+  createdAt
+  email
+  emailVerified
+  firstName
+  lastName
+  id
+  image
+  password
+  role
+  status
+  updatedAt
+  __typename
+}

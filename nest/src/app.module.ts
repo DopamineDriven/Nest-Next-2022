@@ -31,6 +31,7 @@ import { CategoryModule } from "./category/category.module";
 import { ConnectionModule } from "./connection/connection.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
+import { ViewerFieldsPaginatedModule } from "./user/viewer-fields-paginated.module";
 
 @Module({
   imports: [
@@ -147,6 +148,7 @@ import { join } from "path";
     CategoryModule,
     ConnectionModule,
     ProfileModule,
+    ViewerFieldsPaginatedModule,
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       useClass: GqlConfigService,
